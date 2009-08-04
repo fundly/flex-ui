@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas styleName="mainContainer"
+	creationComplete="handleCreationComplete()"
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:mn="com.enilsson.elephantadmin.views.main.*"
+	xmlns:et="com.enilsson.graphics.*"
+	xmlns:fx="com.enilsson.effects.*"
+	xmlns:common="com.enilsson.elephantadmin.views.common.*"
+	horizontalScrollPolicy="off" verticalScrollPolicy="off">
+
+	<mx:VBox top="90" right="10" left="10" bottom="0"
+		cornerRadius="10" borderStyle="solid" 
+		paddingLeft="5" paddingTop="5" paddingRight="5" paddingBottom="5" 
+		backgroundColor="#FFFFFF" >
+		<mx:Canvas id="contentBox" width="100%" height="100%">
+			<mx:ViewStack id="mainVS"
+				enabled="{_model.siteLayoutLoaded}"
+				selectedIndex="{_model.mainViewState}" 
+				change="new ViewStateEvent(event.currentTarget as ViewStack).dispatch();"
+				width="100%" height="100%">
+				<dashboard:Dashboard id="dashboardView"
+					width="100%" height="100%"
+					runInit="{_model.runInit}"
+					label="DASHBOARD" icon="{Icons.OVERVIEW}"
+					moduleID="{EAModelLocator.DASHBOARD_VIEW}"
+					showEffect="fadeIn" hideEffect="fadeOut"
+					presentationModel="{_dashboardModel}"
+					xmlns:dashboard="com.enilsson.elephantadmin.views.modules.dashboard.*"/>
+				<users:Users
+					runInit="{_model.runInit}"
+					width="100%" height="100%"
+					icon="{Icons.CONTACTS}"
+					moduleID="{EAModelLocator.USERS_VIEW}"
+					mainModel="{_model}"
+					showEffect="fadeIn" hideEffect="fadeOut"
+					xmlns:users="com.enilsson.elephantadmin.views.modules.users.*"/>
+				<search:Search id="searchView"
+					width="100%" height="100%"
+					label="SEARCH" icon="{Icons.SEARCH}"
+					runInit="{_model.runInit}"
+					moduleID="{EAModelLocator.SEARCH_VIEW}"
+					showEffect="fadeIn" hideEffect="fadeOut"
+					xmlns:search="com.enilsson.elephantadmin.views.modules.search.*"/>
+				<record:Record id="recordView"
+					width="100%" height="100%"
+					icon="{Icons.RECORD}"
+					runInit="{_model.runInit}"
+					moduleID="{EAModelLocator.RECORD_VIEW}"
+					showEffect="fadeIn" hideEffect="fadeOut"
+					xmlns:record="com.enilsson.elephantadmin.views.modules.record.*"/>
+				<browse:Browse id="browseView"
+					width="100%" height="100%"
+					icon="{Icons.DOWNLINE}"
+					runInit="{_model.runInit}"
+					moduleID="{EAModelLocator.BROWSE_VIEW}"
+					showEffect="fadeIn" hideEffect="fadeOut"
+					xmlns:browse="com.enilsson.elephantadmin.views.modules.browse.*"/>
+				<reporting:Reporting id="reportingView"
+					width="100%" height="100%"
+					runInit="{_model.runInit}"
+					icon="{Icons.MY_HISTORY}"
+					moduleID="{EAModelLocator.REPORTING_VIEW}"
+					showEffect="fadeIn" hideEffect="fadeOut"
+					xmlns:reporting="com.enilsson.elephantadmin.views.modules.reporting.*"/>
+				<news:News id="newsView"
+					width="100%" height="100%"
+					icon="{Icons.CALLS}"
+					runInit="{_model.runInit}"
+					moduleID="{EAModelLocator.NEWS_VIEW}"
+					showEffect="fadeIn" hideEffect="fadeOut"
+					xmlns:news="com.enilsson.elephantadmin.views.modules.news.*"/>
+				<events:Events id="eventsView"
+					runInit="{_model.runInit}"
+					width="100%" height="100%"
+					icon="{Icons.EVENTS}"
+					mainModel="{_model}"
+					moduleID="{EAModelLocator.EVENTS_VIEW}"
+					showEffect="fadeIn" hideEffect="fadeOut"
+					xmlns:events="com.enilsson.elephantadmin.views.modules.events.*"/>
+				<resources:Resources id="resourcesView"
+					width="100%" height="100%"
+					icon="{Icons.RESOURCES}"
+					runInit="{_model.runInit}"
+					moduleID="{EAModelLocator.RESOURCES_VIEW}"
+					showEffect="fadeIn" hideEffect="fadeOut"
+					xmlns:resources="com.enilsson.elephantadmin.views.modules.resources.*"/>
+				<app_store:App_store id="app_storeView"
+					runInit="{_model.runInit}"
+					width="100%" height="100%"
+					icon="{Icons.OVERVIEW}"
+					moduleID="{EAModelLocator.APP_STORE_VIEW}"
+					showEffect="fadeIn" hideEffect="fadeOut"
+					xmlns:app_store="com.enilsson.elephantadmin.views.modules.app_store.*"/>
+				<email:Email_Log id="emailLogView"
+					runInit="{_model.runInit}"
+					width="100%" height="100%"
+					icon="{Icons.EMAIL}"
+					moduleID="{EAModelLocator.EMAIL_LOG_VIEW}"
+					showEffect="fadeIn" hideEffect="fadeOut"
+					xmlns:email="com.enilsson.elephantadmin.views.modules.email.*"/>
+				<email:Email_System id="emailSystemView"
+					runInit="{_model.runInit}"
+					width="100%" height="100%"
+					icon="{Icons.EMAIL}"
+					moduleID="{EAModelLocator.EMAIL_SYSTEM_VIEW}"
+					showEffect="fadeIn" hideEffect="fadeOut"
+					xmlns:email="com.enilsson.elephantadmin.views.modules.email.*"/>
+				<email:Email_User id="emailUserView"
+					runInit="{_model.runInit}"
+					width="100%" height="100%"
+					icon="{Icons.EMAIL}"
+					moduleID="{EAModelLocator.EMAIL_USER_VIEW}"
+					showEffect="fadeIn" hideEffect="fadeOut"
+					xmlns:email="com.enilsson.elephantadmin.views.modules.email.*"/>
+				<email:Email_Attachments id="emailAttachmentsView"
+					runInit="{_model.runInit}"
+					width="100%" height="100%"
+					icon="{Icons.EMAIL}"
+					moduleID="{EAModelLocator.EMAIL_ATTACHMENTS_VIEW}"
+					showEffect="fadeIn" hideEffect="fadeOut"
+					xmlns:email="com.enilsson.elephantadmin.views.modules.email.*"/>
+				<checks:Checks id="checksView"
+					runInit="{_model.runInit}"
+					width="100%" height="100%"
+					icon="{Icons.EMAIL}"
+					moduleID="{EAModelLocator.CHECKS}"
+					showEffect="fadeIn" hideEffect="fadeOut"
+					xmlns:checks="com.enilsson.elephantadmin.views.modules.checks.*"/>
+				<custom_reporting:CustomReporting id="customReportingView"
+					runInit="{_model.runInit}"
+					width="100%" height="100%"
+					icon="{Icons.MY_HISTORY}"
+					moduleID="{EAModelLocator.CUSTOM_REPORTING}"
+					showEffect="fadeIn" hideEffect="fadeOut"
+					xmlns:custom_reporting="com.enilsson.elephantadmin.views.modules.custom_reporting.*"/>
+				<pledges:Pledges
+					runInit="{_model.runInit}"
+					width="100%" height="100%"
+					icon="{Icons.PLEDGE}"
+					moduleID="{EAModelLocator.PLEDGES}"
+					mainModel="{_model}"
+					showEffect="fadeIn" hideEffect="fadeOut"
+					xmlns:pledges="com.enilsson.elephantadmin.views.modules.pledges.*"/>
+				<transactions:Transactions id="transactionsView"
+					runInit="{_model.runInit}"
+					width="100%" height="100%"
+					icon="{Icons.CREDIT_CARD}"
+					moduleID="{EAModelLocator.TRANSACTIONS_VIEW}"
+					showEffect="fadeIn" hideEffect="fadeOut"
+					xmlns:transactions="com.enilsson.elephantadmin.views.modules.transactions.*"/>
+				<transactions:Transactions_Failed id="transactionsFailedView"
+					runInit="{_model.runInit}"
+					width="100%" height="100%"
+					icon="{Icons.CREDIT_CARD}"
+					moduleID="{EAModelLocator.TRANSACTIONS_FAILED_VIEW}"
+					showEffect="fadeIn" hideEffect="fadeOut"
+					xmlns:transactions="com.enilsson.elephantadmin.views.modules.transactions.*"/>
+				<contacts:Contacts id="contactsView"
+					runInit="{_model.runInit}"
+					width="100%" height="100%"
+					icon="{Icons.CONTACTS}"
+					moduleID="{EAModelLocator.CONTACTS_VIEW}"
+					mainModel="{_model}"
+					showEffect="fadeIn" hideEffect="fadeOut"
+					xmlns:contacts="com.enilsson.elephantadmin.views.modules.contacts.*"/>
+				<paypaltransactions:PaypalTransactions id="paypalTransactionsView"
+					runInit="{_model.runInit}"
+					width="100%" height="100%"
+					icon="{Icons.CREDIT_CARD}"
+					moduleID="{EAModelLocator.PAYPAL_VIEW}"
+					showEffect="fadeIn" hideEffect="fadeOut"
+					xmlns:paypaltransactions="com.enilsson.elephantadmin.views.modules.paypal_transactions.*"/>
+				<batch:Batch id="batchView"
+					runInit="{_model.runInit}"
+					width="100%" height="100%"
+					icon="{Icons.CHECK}"
+					moduleID="{EAModelLocator.BATCH_VIEW}"
+					label="{_model.viewStateNames.getItemAt(EAModelLocator.BATCH_VIEW)}"
+					presentationModel="{_batchModel}"
+					showEffect="fadeIn" hideEffect="fadeOut"
+					xmlns:batch="com.enilsson.elephantadmin.views.modules.batch.*"/>
+				<appoptions:AppOptions id="appOptionsView"
+					presentationModel="{_appOptionsPM}"
+					width="100%" height="100%"
+					icon="{Icons.CHECK}"
+					moduleID="{EAModelLocator.APP_OPTIONS_VIEW}"
+					label="{_model.viewStateNames.getItemAt(EAModelLocator.APP_OPTIONS_VIEW)}"
+					showEffect="fadeIn" hideEffect="fadeOut"
+					xmlns:appoptions="com.enilsson.elephantadmin.views.modules.app_options.view.*" />
+			</mx:ViewStack>
+		</mx:Canvas>
+	</mx:VBox>
+	
+	<mx:ProgressBar 
+		visible="{_model.dataLoading &amp;&amp; _model.screenState == EAModelLocator.MAIN_SCREEN &amp;&amp; !_model.mastheadOpen}"
+		y="51"
+		width="100%" height="30"
+		barColor="#CCCCCC" 
+		indeterminate="true" />
+	<mx:Label text="loading data..."
+		visible="{_model.dataLoading &amp;&amp; _model.screenState == EAModelLocator.MAIN_SCREEN &amp;&amp; !_model.mastheadOpen}"
+		left="20" top="65"
+		color="#e0e0e0" fontSize="9" />
+
+	<mn:SearchBar id="searchBar" filters="{[shadow]}"
+		horizontalScrollPolicy="off" verticalScrollPolicy="off"
+		width="100%" y="{topNav.height}"
+		searchStart="handleSearchStart();" />
+
+	<mn:TopNav id="topNav"
+		width="100%" y="0"
+		horizontalScrollPolicy="off" verticalScrollPolicy="off"
+		dataProvider="{_model.navLayout}" />
+
+	<mx:Text text="{_model.appInstanceID} : {_model.session.data.instance_name}"
+		visible="{_model.siteURL == ''}" includeInLayout="{_model.siteURL == ''}"
+		top="70" right="10"
+		color="#FFFFFF" fontSize="8" fontFamily="Silkscreen" />
+
+	<common:ErrorMsgBox id="errorBox" 
+		params="{_model.errorVO}" 
+		onClose="{_model.onClose}" />
+
+
+	<mx:Fade id="fadeIn" alphaTo="1" duration="300" />
+	<mx:Fade id="fadeOut" alphaTo="0" duration="300" />
+	<mx:Resize id="resizeFX" duration="300" />
+	<mx:DropShadowFilter id="shadow" blurX="6" blurY="6" angle="90" distance="2" alpha="0.5" />
+
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephantadmin.views.modules.app_options.model.pm.AppOptionsPM;
+			import com.enilsson.elephantadmin.views.modules.app_options.model.AppOptionsModel;
+			import com.enilsson.elephantadmin.models.Icons;
+			import com.enilsson.elephantadmin.views.modules.batch.model.BatchModel;
+			import com.enilsson.elephantadmin.utils.DispatchingTimer;
+			import com.enilsson.elephantadmin.events.session.SessionFailEvent;
+			import com.enilsson.elephantadmin.events.GetVersionEvent;
+			import com.enilsson.elephantadmin.views.modules.pledges.model.PledgesModel;
+			import com.enilsson.elephantadmin.views.modules.dashboard.model.DashboardModel;
+			import com.enilsson.elephantadmin.views.common.SearchBox;
+			import mx.controls.Alert;
+			import mx.utils.ObjectUtil;
+			import com.enilsson.elephantadmin.events.session.SessionEvent;
+			import com.enilsson.elephantadmin.events.main.ViewStateEvent;
+			import com.enilsson.elephantadmin.events.session.PingEvent;
+			import com.enilsson.elephantadmin.models.EAModelLocator;
+
+			import org.osflash.thunderbolt.Logger;
+			
+			[Bindable] private var _model:EAModelLocator = EAModelLocator.getInstance();
+			[Bindable] private var _batchModel : BatchModel = new BatchModel( _model );
+			[Bindable] private var _dashboardModel : DashboardModel = new DashboardModel( _model );			
+			[Bindable] private var _appOptionsPM : AppOptionsPM = new AppOptionsPM(_model);
+
+			private function handleCreationComplete():void
+			{				
+				addEventListener( "clearSearch", handleClearSearch );
+			}
+			
+			private function handleSearchStart() : void
+			{
+				_model.mainViewState = EAModelLocator.SEARCH_VIEW;
+				searchView.searchOption = searchBar.topSearchBox.searchOption.table;
+				searchView.query = searchBar.topSearchBox.searchBox.searchTerm;
+			}
+			
+			private function handleClearSearch( event : Event ) : void
+			{
+				searchView.query = null;
+			}
+		]]>
+	</mx:Script>
+		
+</mx:Canvas>

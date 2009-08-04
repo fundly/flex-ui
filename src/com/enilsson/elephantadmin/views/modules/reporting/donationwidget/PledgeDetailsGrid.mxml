@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" verticalGap="0"
+	xmlns:module="com.enilsson.elephantadmin.views.modules.reporting.base.*">
+
+		<mx:Canvas width="100%" styleName="controlBar">
+			<mx:HBox paddingTop="3" paddingBottom="3" left="5" horizontalGap="5" verticalAlign="middle">
+				<mx:Box horizontalGap="2" verticalGap="2" horizontalAlign="right"
+					direction="{this.width &gt; 1200 ? 'horizontal' : 'vertical'}">
+				<mx:FormItem label="from:">
+					<mx:DateField id="range_start" width="100" color="#000000" formatString="MM/DD/YYYY" selectedDate="{EDateUtil.dateFromTimestamp(_presentationModel.startDate)}" change="_presentationModel.startDate = EDateUtil.dateToTimestamp(event.target.selectedDate)" textAlign="center" enabled="{!_presentationModel.dataLoading}" />
+				</mx:FormItem>
+				<mx:FormItem label="to:">
+					<mx:DateField id="range_end" width="100" color="#000000" formatString="MM/DD/YYYY" selectedDate="{EDateUtil.dateFromTimestamp(_presentationModel.endDate)}" change="_presentationModel.endDate = EDateUtil.dateToTimestamp(event.target.selectedDate)" textAlign="center" enabled="{!_presentationModel.dataLoading}" />
+				</mx:FormItem>
+				</mx:Box>
+
+				<mx:FormItem label="type:">
+					<mx:ComboBox width="150" color="#000000" dataProvider="{_presentationModel.typeFilter}" id="contribType" enabled="{!_presentationModel.dataLoading}" change="_presentationModel.typeChangeHandler(event)"/>
+				</mx:FormItem>
+				<mx:Box horizontalGap="2" verticalGap="2" horizontalAlign="right"
+					direction="{this.width &gt; 900 ? 'horizontal' : 'vertical'}">
+					<mx:Label text="Total Contributed:"
+						fontSize="10"
+						color="#FFFFFF"
+						/>
+					<mx:Text
+						text=" {currencyFormatter.format(_presentationModel.totalContribSum)}"
+						fontSize="10"
+						color="#FFFFFF"
+						/>
+				</mx:Box>
+			</mx:HBox>
+			<mx:Box direction="{this.width &gt; 1000 ? 'horizontal' : 'vertical'}"
+				right="5" 
+				horizontalGap="2" horizontalAlign="center"
+				verticalGap="2" verticalAlign="middle" verticalCenter="0">
+				<mx:Text id="recordsDesc"
+					htmlText="{_presentationModel.recordsHtmlText}"
+					fontSize="10"
+					color="#FFFFFF"	/>
+				<mx:HBox horizontalGap="5" >
+					<mx:Button width="80" label="Generate" color="#000000"
+						click="_presentationModel.generate()"
+						enabled="{!_presentationModel.dataLoading}" />
+					<mx:Button width="80" label="Export" color="#000000"
+						click="_presentationModel.exportGrid(gridColumns)"
+						enabled="{!_presentationModel.dataLoading}" />
+				</mx:HBox>
+			</mx:Box>
+		</mx:Canvas>
+
+	<module:PaginationGrid id="grid" height="100%"
+		dataProvider="{_presentationModel.gridRecords}"
+		newPage="_presentationModel.newPage(event)" 
+		selectedPage="{_presentationModel.gridCurrentPage}" 
+		itemsPerPage="{_presentationModel.itemsPerPage}"
+		itemsTotal="{_presentationModel.gridTotalRecords}"
+		headerRelease="_presentationModel.sortRecords(event)"
+		columns="{gridColumns}"/>
+
+	<mx:Array id="gridColumns">
+		<mx:DataGridColumn width="80" dataField="type" headerText="Type" />
+		<mx:DataGridColumn width="115" dataField="amount" headerText="Contribution Amount" labelFunction="money_labelFunc" sortCompareFunction="amountCompare"/>
+		<mx:DataGridColumn width="110" dataField="created_on" headerText="Created on" labelFunction="datetime_labelFunc"/>
+		<mx:DataGridColumn width="65" dataField="pledge_date" headerText="Pledge Date" labelFunction="date_labelFunc" />
+		<mx:DataGridColumn width="100" dataField="fname" headerText="First Name" />
+		<mx:DataGridColumn width="100" dataField="lname" headerText="Last Name" />
+		<mx:DataGridColumn width="150" dataField="address1" headerText="Address" />
+		<mx:DataGridColumn width="100" dataField="city" headerText="City" />
+		<mx:DataGridColumn width="35" dataField="state" headerText="State" />
+		<mx:DataGridColumn width="45" dataField="zip" headerText="Zip" />
+		<mx:DataGridColumn width="80" dataField="home_phone" headerText="Home Phone" />
+		<mx:DataGridColumn width="80" dataField="office_phone" headerText="Office Phone" />
+		<mx:DataGridColumn width="80" dataField="cell_phone" headerText="Cell Phone" />
+		<mx:DataGridColumn width="150" dataField="email" headerText="Email" />
+		<mx:DataGridColumn width="150" dataField="occupation" headerText="Occupation"/>
+		<mx:DataGridColumn width="200" dataField="employer" headerText="Employer"/>
+		<mx:DataGridColumn width="90" dataField="contribution_type" headerText="Contribution Type"/>
+		<mx:DataGridColumn width="90" dataField="full_name" headerText="Name on Card or Account"/>
+		<mx:DataGridColumn width="60" dataField="fund_type" headerText="Fund Type"/>
+		<mx:DataGridColumn width="90" dataField="source_code" headerText="Source Code"/>
+		<mx:DataGridColumn width="80" dataField="fundraiser_id" headerText="Fundraiser ID" />
+		<mx:DataGridColumn width="100" dataField="fundraiser_fname" headerText="Fundraiser First Name" />
+		<mx:DataGridColumn width="100" dataField="fundraiser_lname" headerText="Fundraiser Last Name" />
+		<mx:DataGridColumn width="50" dataField="mod_group_id" headerText="Region ID"  sortCompareFunction="region_idCompare" />
+		<mx:DataGridColumn width="100" dataField="mod_group_name" headerText="Region Name" />
+	</mx:Array>
+
+	<mx:CurrencyFormatter id="currencyFormatter" precision="0" currencySymbol="$" useNegativeSign="false" />
+	<mx:DateFormatter id="dateFormatter"/>
+
+	<mx:Script>
+		<![CDATA[
+			import mx.utils.ObjectUtil;
+			import com.enilsson.utils.EDateUtil;
+			import com.enilsson.elephantadmin.views.modules.reporting.donationwidget.model.DonationWidgetModel;
+			import mx.collections.ArrayCollection;
+
+			[Bindable] private var _presentationModel:DonationWidgetModel;
+			
+			public function set presentationModel(model:DonationWidgetModel):void
+			{
+				_presentationModel = model;
+			}
+
+			private function amountCompare(obj1:Object, obj2:Object):int
+			{
+				return ObjectUtil.numericCompare(obj1.amount,obj2.amount);
+			} 
+
+			private function pledge_amountCompare(obj1:Object, obj2:Object):int
+			{
+				return ObjectUtil.numericCompare(obj1.pledge_amount,obj2.pledge_amount);
+			} 
+
+			private function region_idCompare(obj1:Object, obj2:Object):int
+			{
+				return ObjectUtil.numericCompare(obj1.mod_group_id,obj2.mod_group_id);
+			} 
+
+			private function money_labelFunc(item:Object, column:DataGridColumn):String {
+				return currencyFormatter.format(item[column.dataField]);
+			} 
+			
+			private function date_labelFunc(item:Object, column:DataGridColumn):String 
+			{
+				dateFormatter.formatString = "MM/DD/YY"
+				return dateFormatter.format(EDateUtil.dateFromTimestamp(item[column.dataField]));
+			}
+
+			private function datetime_labelFunc(item:Object, column:DataGridColumn):String 
+			{
+				dateFormatter.formatString = "MM/DD/YY L:NNA"
+				return dateFormatter.format(new Date(item[column.dataField] * 1000));
+			}
+
+		]]>
+	</mx:Script>
+	
+</mx:VBox>

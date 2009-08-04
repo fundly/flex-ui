@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox 
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	verticalAlign="middle" horizontalAlign="center" 
+	horizontalScrollPolicy="off" 
+	width="{explicitWidth}">
+	
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephanttrakker.views.modules.pledge_workspace.events.SPWEvent;
+			import com.enilsson.elephanttrakker.views.modules.pledge_workspace.model.PledgeWorkspaceVO;
+			import mx.collections.ArrayCollection;
+			import mx.utils.ObjectUtil;
+			import org.osflash.thunderbolt.Logger;
+			import mx.validators.CreditCardValidator;
+			import com.enilsson.elephanttrakker.models.ETModelLocator;
+		
+			[Bindable] private var _model:ETModelLocator = ETModelLocator.getInstance();
+			
+	
+			private function showEventDetails():void
+			{
+				_model.events.showDetails = true;
+				_model.events.eventDetails = data;
+			}
+
+			private function recordRSVP(eventID:uint, eventName:String):void
+			{
+				_model.events.selectedEventID = eventID;
+				_model.events.selectedEventName = eventName;
+				_model.events.selectedContactID = 0;
+				_model.events.selectedContactName = '';
+				_model.events.showRSVPForm = true;
+			}
+			
+
+			private function newPledge(source_code:String):void
+			{
+				var p:PledgeWorkspaceVO = new PledgeWorkspaceVO();
+				p.eventID = data.id;
+				
+				new SPWEvent ( SPWEvent.ADD_NEW, p ).dispatch();
+				
+			/* 				
+				// assign the contact data to the pledge
+				_model.call_logging.pledgeData = new Object();
+				_model.call_logging.pledgeData.source_code = source_code;
+				_model.call_logging.eventsLabel = data.source_code;
+				_model.call_logging.eventsValue = data.id;
+				_model.call_logging.recordID = 0;
+				_model.call_logging.transactionData = null;
+				_model.call_logging.contactData  = null;
+							
+				// set the vstack to the first item
+				_model.call_logging.vindex = 0;
+				
+				// change the main view to see the call logging
+				_model.mainViewState = ETModelLocator.CALL_LOGGING_VIEW		 
+			*/
+			}
+						
+		]]>
+		
+	</mx:Script>
+	
+<!--	<mx:Button styleName="btnExamine" 
+		toolTip="Show details of the {data.name}"
+		click="showEventDetails()"
+		useHandCursor="true" buttonMode="true"
+		/>-->
+	<mx:Button styleName="btnRecordDonation" 
+		toolTip="Record a donation for the {data.name}" 
+		click="newPledge(data.source_code)"
+		useHandCursor="true" buttonMode="true"
+		/>
+<!--	<mx:Button styleName="btnRSVP" 
+		toolTip="RSVP one of your contacts to the {data.name}"
+		click="recordRSVP(data.id, data.name)"
+		useHandCursor="true" buttonMode="true"
+		/>-->
+		
+		
+</mx:HBox>

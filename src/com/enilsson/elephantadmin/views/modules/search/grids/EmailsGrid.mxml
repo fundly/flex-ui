@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<grids:SearchResultGrid xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:grids="com.enilsson.elephantadmin.views.modules.search.grids.*">
+	
+	<grids:columns>
+		<mx:DataGridColumn id="senderColumn" dataField="created_by" />
+		<mx:DataGridColumn id="toColumn" dataField="mailto" />
+		<mx:DataGridColumn id="subjectColumn" dataField="subject" />
+		<mx:DataGridColumn id="timestampColumn" dataField="created_on_plain" />
+		<mx:DataGridColumn id="showRecordColumn" width="{SearchResultGrid.SHOW_RECORD_COLUMN_WIDTH}" 
+			itemRenderer="com.enilsson.elephantadmin.views.modules.search.renderers.MagnifierIcon" />
+	</grids:columns>
+</grids:SearchResultGrid>

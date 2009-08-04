@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:ColumnChart xmlns:mx="http://www.adobe.com/2006/mxml"
+	showDataTips="true" dataTipFunction="{pledgesDataTipFunction}">
+
+	<mx:horizontalAxisRenderers>
+		<mx:AxisRenderer labelRenderer="com.enilsson.elephantadmin.views.modules.reporting.base.ModuleAxisLabelRenderer"
+			canDropLabels="true" axis="{timeAxis}"/>
+	</mx:horizontalAxisRenderers>
+	<mx:verticalAxisRenderers>
+		<mx:AxisRenderer labelRenderer="com.enilsson.elephantadmin.views.modules.reporting.base.ModuleAxisLabelRenderer"
+			canDropLabels="true" axis="{pledgesAxis}"/>
+	</mx:verticalAxisRenderers>
+
+	<mx:verticalAxis>
+		<mx:LinearAxis id="pledgesAxis" displayName="Number of Pledges" title="Number of Pledges"/>
+	</mx:verticalAxis>
+
+	<mx:horizontalAxis>
+		<mx:CategoryAxis id="timeAxis" displayName="Time"
+			dataFunction="{timeDataFunction}" labelFunction="{timeLabel}"/>
+	</mx:horizontalAxis>
+
+	<mx:series>
+		<mx:ColumnSeries id="pledgesSeries" yField="pledges_number" xField="time_from" dataFunction="{pledgesDataFunction}"
+			showDataEffect="{seriesInterpolate}" displayName="Number of Pledges" >
+			<mx:fills>
+				<mx:Array>
+					<mx:LinearGradient angle="90">
+						<mx:entries>
+							<mx:Array>
+								<mx:GradientEntry color="#006CD7" ratio="0" />
+								<mx:GradientEntry color="#7FCEFF" ratio="1" />
+							</mx:Array>
+						</mx:entries>
+					</mx:LinearGradient>
+				</mx:Array>
+			</mx:fills>
+		</mx:ColumnSeries>
+	</mx:series>
+	
+	<mx:SeriesInterpolate id="seriesInterpolate" duration="{INTERPOLATE_DURATION}" />
+	
+	<mx:DateFormatter id="dateFormatter" formatString="LA"/>
+	<mx:CurrencyFormatter id="cf" precision="0" />
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.core.ContextualClassFactory;
+			import mx.charts.AxisRenderer;
+			import mx.charts.HitData;
+			import mx.charts.chartClasses.Series;
+			import mx.charts.chartClasses.IAxis;
+			import mx.charts.CategoryAxis;
+
+			
+			private static const INTERPOLATE_DURATION : Number = 1000;
+
+			private function timeLabel(categoryValue:Object, previousCategoryValue:Object, axis:CategoryAxis, categoryItem:Object ):String
+			{
+				return dateFormatter.format(categoryValue);
+			}
+
+			private function timeDataFunction (axis:CategoryAxis, item:Object):Object
+			{
+				return new Date(item.time_from * 1000);
+			}
+
+			private function pledgesDataFunction(series:Series, item:Object, fieldName:String):Object
+			{
+				if(fieldName == 'xValue')
+					return new Date(item.time_from * 1000);
+				if(fieldName == 'yValue')
+					return item.pledges_number;
+				else
+					return null;
+			}
+
+			private function pledgesDataTipFunction(data:HitData):String
+			{
+				var s:String;
+				s = "<B>" + data.item.pledges_number + " Pledges</B>\n";
+				s += dateFormatter.format(new Date(data.item.time_from * 1000)) + " - " + dateFormatter.format(new Date( (data.item.time_from + 3600 )* 1000)) + "\n";
+				s += "Total: " + cf.format(data.item.pledges_amount);
+				return s;
+			}
+		]]>
+	</mx:Script>
+	
+</mx:ColumnChart>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<!-- 
+	This file is only here for backwards compatibility with the nested build.xml files in the server dir.
+	Those files include build-base-blueswarm.xml.
+	The main action happens in build-blueswarm.xml and build-blueswarm-with-modules.xml.
+-->
+
+<project name="buildbase.blueswarm" default="compile">
+	
+	<import file="build-blueswarm-modules.xml" />
+	
+	<target name="deploy.admin" depends="build.blueswarm.deploy.admin" />
+	<target name="deploy.client" depends="build.blueswarm.deploy.client" />
+	<target name="deploy.instance.assets" depends="build.blueswarm.deploy.instance.assets" />
+	<target name="deploy.report.modules" depends="build.blueswarm.modules.deploy.report.modules" />
+	<target name="deploy" depends="build.blueswarm.deploy, build.blueswarm.modules.deploy.report.modules" />
+		
+</project>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	verticalGap="0"
+	horizontalScrollPolicy="off" verticalScrollPolicy="off"
+	>
+	
+	<mx:Text styleName="acTitle" text="{data.name} ({data.source_code})" />
+	<mx:Text styleName="acDesc" text="{data.location} {data.state}" width="{explicitWidth}" />
+	
+</mx:VBox>

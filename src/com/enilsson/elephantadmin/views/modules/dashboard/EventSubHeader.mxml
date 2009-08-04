@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml">
+	
+	<mx:Script>
+		<![CDATA[
+			[Bindable] public var eventName : String;
+			[Bindable] public var eventDescription : String;
+			
+			private function getEventNameString( value : String ) : String
+			{
+				if( value && value.length > 0 )
+					return value + ": ";
+				else
+					return "";				
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:Label id="eventNameLabel" text="{getEventNameString(eventName)}" styleName="firstDashboardHeaderElement" />
+	<mx:Label id="eventDescLabel" text="{eventDescription}" styleName="dashboardHeaderElement"/>
+	
+</mx:HBox>

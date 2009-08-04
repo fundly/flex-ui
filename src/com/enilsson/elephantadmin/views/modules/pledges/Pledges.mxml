@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<common:LabeledContainer
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:common="com.enilsson.elephantadmin.views.common.*"
+	xmlns:recordModule="com.enilsson.elephantadmin.views.manage_record_base.*"
+	xmlns:tabs="com.enilsson.elephantadmin.views.modules.pledges.tabs.*"
+	verticalScrollPolicy="off" horizontalScrollPolicy="off" >
+
+	<recordModule:ManageRecord id="recordModule" width="100%" height="100%">
+		<tabs:Pledges_Contributions />
+	</recordModule:ManageRecord>
+
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephantadmin.views.modules.pledges.renderers.Pledges_ListRenderer;
+			import com.adobe.cairngorm.model.ModelLocator;
+			import com.enilsson.elephantadmin.views.modules.pledges.model.PledgesModel;
+			import com.enilsson.elephantadmin.views.manage_record_base.model.RecordModuleConfiguration;
+			import mx.collections.ArrayCollection;
+
+			[Bindable] public var mainModel : ModelLocator;
+			private var _config : RecordModuleConfiguration;
+			
+			override protected function init():void
+			{
+				super.init();
+				
+				if(!_config)
+				{
+					recordModule.presentationModel = new PledgesModel(mainModel);
+
+					_config = new RecordModuleConfiguration();
+					_config.table = 'pledges';
+					_config.eSQL = 'pledges(contact_id<lname>)';
+					_config.browseField = 'lname';
+					_config.searchOptions = new ArrayCollection([ 
+						{ label : "EVERYTHING", data : 0 }, 
+						{ label : "FIRST NAME", data : "pledges.fname" }, 
+						{ label : "LAST NAME", data : "pledges.lname" },
+						{ label : "ADDRESS 1", data : "pledges.address1" },
+						{ label : "CITY", data : "pledges.city" },
+						{ label : "STATE", data : "pledges.state" },
+						{ label : "ZIP", data : "pledges.zip" },
+						{ label : "OCCUPATION", data : "pledges.occupation" },
+						{ label : "EMPLOYER", data : "pledges.employer" }
+					]);
+					_config.gridFields = [ 'fname', 'lname', 'state', 'zip', 'pledge_amount', 'contrib_total','pledge_date'];
+					_config.searchListItemRenderer = new ClassFactory(Pledges_ListRenderer);
+					recordModule.configuration(_config);
+				}
+			}
+		]]>
+	</mx:Script>	
+	 
+</common:LabeledContainer>

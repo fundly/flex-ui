@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:common="com.enilsson.elephantadmin.views.common.*"
+	height="20" width="100"  moveEffect="move"
+	horizontalScrollPolicy="off" verticalScrollPolicy="off"	
+	clipContent="true" cornerRadius="5" backgroundAlpha="0"
+	rollOver="rollOverHandler(event)" rollOut="rollOutHandler(event)"
+	currentState="collapse" creationComplete="init()">
+	<mx:states>
+		<mx:State name="collapse">
+			<mx:SetProperty target="{this}" name="height" value="{comboSelected.height}"/>
+		</mx:State>
+		<mx:State name="expand">
+			<mx:SetProperty target="{this}" name="height" value="{comboSelected.height + comboExpand.height}"/>
+		</mx:State>
+
+		<mx:State name="dropUpMode">
+			<mx:RemoveChild target="{comboSelected}"/>
+			<mx:AddChild relativeTo="{comboBox}" position="lastChild" target="{comboSelected}"/>
+			<mx:RemoveChild target="{divider}"/>
+			<mx:AddChild relativeTo="{comboExpand}" position="lastChild" target="{divider}"/>
+			<mx:SetStyle target="{comboBox}" name="bottom" value="0" />
+		</mx:State>
+		
+		<mx:State name="collapseUp" basedOn="dropUpMode">
+			<mx:SetProperty target="{this}" name="height" value="{comboSelected.height}"/>
+		</mx:State>
+
+		<mx:State name="expandUp" basedOn="dropUpMode">
+			<mx:SetProperty target="{this}" name="height" value="{comboSelected.height + comboExpand.height}"/>
+		</mx:State>
+	</mx:states>
+
+	<mx:Metadata>
+		[Event(name="itemClick", type="mx.events.ListEvent")]
+	</mx:Metadata>
+
+	<mx:Script>
+		<![CDATA[
+			import mx.states.State;
+			import mx.collections.ArrayCollection;
+			import mx.binding.utils.BindingUtils;
+			import mx.binding.utils.ChangeWatcher;
+			import mx.events.CloseEvent;
+			import org.osflash.thunderbolt.Logger;
+			import mx.events.ListEvent;
+			import mx.events.ItemClickEvent;
+			import com.enilsson.elephantadmin.models.EAModelLocator;
+
+			[Bindable] public function get dataProvider():ArrayCollection
+			{
+				return _dataProvider;
+			}
+			private var _dataProvider:ArrayCollection;
+			public function set dataProvider(value:ArrayCollection):void
+			{
+				_dataProvider = value;
+				if(_dataProvider.length > 0)
+				{
+					selectedIndex = 0;
+					_selectedItemLabel = _dataProvider.getItemAt(0).label;
+				}
+			}
+		
+			[Bindable] private var _model:EAModelLocator = EAModelLocator.getInstance();
+			[Bindable] public var expandUp:Boolean = false;
+			[Bindable] public var labelHeight:Number = 20;
+			[Bindable] private var _selectedItemLabel:String = "";
+
+			private function init():void {
+				if(expandUp)
+					setCurrentState("collapseUp");
+			}
+			
+			private function collapse() : void
+			{
+				this.endEffectsStarted();
+				if(expandUp)
+					setCurrentState("collapseUp");
+				else
+					setCurrentState("collapse");
+				filters = [];
+			}
+
+			private function rollOverHandler(event:MouseEvent):void
+			{
+				this.endEffectsStarted();
+				if(expandUp)
+					setCurrentState("expandUp");
+				else
+					setCurrentState("expand");
+				this.filters = [shadow];
+			}
+ 
+			private function rollOutHandler(event:MouseEvent):void
+			{
+				collapse();
+			}
+			
+			private function itemClickHandler(e:ListEvent):void
+			{
+				_selectedItemLabel = comboBoxList.selectedItem.label;
+				dispatchEvent(e);
+				collapse();
+			}
+			
+			public function get selectedItem() : Object
+			{
+				return comboBoxList.selectedItem;
+			}
+			
+			public function set selectedItem( value : Object ) : void
+			{
+				comboBoxList.selectedItem = value;
+			}
+			[Bindable]
+			public function get selectedIndex() : int
+			{
+				return comboBoxList.selectedIndex;
+			}
+			
+			public function set selectedIndex( value : int ) : void
+			{
+				comboBoxList.selectedIndex = value;
+			}
+			
+		]]>
+	</mx:Script>
+
+	<mx:Fade id="fadeIn" alphaFrom="0" alphaTo="1" duration="300" />
+	<mx:Fade id="fadeOut" alphaFrom="1" alphaTo="0" duration="300" />
+
+	<mx:DropShadowFilter id="shadow" blurX="30" blurY="30" distance="0" alpha="0.5"/>	
+	
+	<mx:VBox id="comboBox" width="100%" horizontalAlign="center" verticalGap="0" y="0">
+		<mx:HBox paddingTop="2" width="100%" height="{labelHeight}" verticalAlign="middle" horizontalAlign="center" horizontalGap="0" id="comboSelected" backgroundColor="#FFFFFF" >
+			<mx:Label id="selectedComboBoxItem" styleName="comboBoxLabel"
+				width="{this.width - 25}" paddingTop="2"
+				text="{_selectedItemLabel}"/>
+			<mx:Image source="@Embed('/assets/images/dropdown_arrow.png')"/>
+		</mx:HBox>
+		<mx:VBox id="comboExpand" width="100%" horizontalAlign="center" verticalGap="0" backgroundColor="#FFFFFF">
+			<mx:HRule id="divider" strokeWidth="1" width="90%" strokeColor="#000000"/>
+			<mx:Spacer height="7"/>
+			<mx:List id="comboBoxList" styleName="comboBoxList"
+				width="100%" verticalAlign="middle"
+				dataProvider="{this.dataProvider}" 
+				rowCount="{this.dataProvider.length}"
+				itemClick="itemClickHandler(event)" 
+				useHandCursor="true" buttonMode="true"
+				labelField="label" selectedIndex="{this.selectedIndex}"/>
+			<mx:Spacer height="7"/>
+		</mx:VBox>
+	</mx:VBox>
+</mx:Canvas>

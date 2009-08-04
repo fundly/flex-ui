@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="utf-8"?>
+<business:ServiceLocator
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:business="com.adobe.cairngorm.business.*">
+
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephantadmin.models.Icons;
+			import mx.events.CloseEvent;
+			import mx.utils.ObjectUtil;
+			import org.osflash.thunderbolt.Logger;
+			import mx.controls.Alert;
+			import mx.rpc.events.FaultEvent;
+			import com.enilsson.elephantadmin.models.EAModelLocator;
+			
+			[Bindable] private var _model:EAModelLocator = EAModelLocator.getInstance();
+			private var _alert : Alert;
+			
+			private function handleFault( event : FaultEvent ) : void 
+			{
+				if(_model.debug) Logger.info("handleFault", ObjectUtil.toString(event.fault));
+				
+				if(	event.fault.faultCode == "Client.Error.MessageSend" ||
+					event.fault.faultCode == "Client.Error.DeliveryInDoubt"  )
+				{
+					_model.reset(); 
+					
+					if(!_alert)
+					{
+						_alert = Alert.show(	
+							'Your ' + _model.appName + ' session is not authenticated, please login to continue!',
+							'Session authentication error', 
+							0, 
+							null,
+							handleClose,
+							Icons.ALERT
+						);
+					}
+				}
+			}
+			
+			private function handleClose( event : CloseEvent ) : void {
+				_alert = null;
+			}
+		]]>
+	</mx:Script>
+
+	<mx:RemoteObject id="authentikator" 
+		endpoint="{_model.authURL}" 
+		destination="amfphp" 
+		source="e_auth.e_auth" 
+		showBusyCursor="true"
+		fault="handleFault(event)">
+		<mx:method name="list_instances" />
+		<mx:method name="random_gateway" />
+	</mx:RemoteObject>
+
+	<mx:RemoteObject id="struktorPayment"
+		endpoint="{_model.gatewayURL}" 
+		destination="amfphp" 
+		source="payments.authorizedotnet" 
+		showBusyCursor="true"
+		fault="handleFault(event)">
+		<mx:method name="bill_card" />
+	</mx:RemoteObject>
+
+	<mx:RemoteObject id="struktorAuth"
+		endpoint="{_model.gatewayURL}" 
+		destination="amfphp" 
+		source="struktor.auth" 
+		showBusyCursor="true"
+		fault="handleFault(event)">
+		<mx:method name="get_session_info" />
+		<mx:method name="end_session" />
+	</mx:RemoteObject>
+
+	<mx:RemoteObject id="struktorSys"
+		endpoint="{_model.gatewayURL}" 
+		destination="amfphp" 
+		source="struktor.sys"
+		fault="handleFault(event)">
+		<mx:method name="ping" />
+	</mx:RemoteObject>
+
+	<mx:RemoteObject id="struktorPluginsDownline"
+		endpoint="{_model.gatewayURL}" 
+		destination="amfphp" 
+		source="plugins.{_model.appInstanceID}.downline" 
+		showBusyCursor="true"
+		fault="handleFault(event)">
+		<mx:method name="get_downline" />
+	</mx:RemoteObject>
+
+	<mx:RemoteObject id="struktorPluginsRSS"
+		endpoint="{_model.gatewayURL}" 
+		destination="amfphp" 
+		source="plugins.{_model.appInstanceID}.rssExtractor" 
+		showBusyCursor="true"
+		fault="handleFault(event)">
+		<mx:method name="selective_feed" />
+	</mx:RemoteObject>
+
+	<mx:RemoteObject id="struktorPluginsEmail"
+		endpoint="{_model.gatewayURL}" 
+		destination="amfphp" 
+		source="plugins.{_model.appInstanceID}.email"
+		showBusyCursor="true"
+		fault="handleFault(event)">
+		<mx:method name="send_test_email" />
+		<mx:method name="send_system_email" />
+		<mx:method name="send_user_email" />
+		<mx:method name="send_invite" />
+	</mx:RemoteObject>    
+
+    <mx:RemoteObject id="struktorPluginsContacts"
+    	endpoint="{_model.gatewayURL}" 
+    	destination="amfphp" 
+    	source="plugins.{_model.appInstanceID}.contacts" 
+    	showBusyCursor="true"
+    	fault="handleFault(event)">
+    	<mx:method name="list_contacts" />
+    	<mx:method name="search" />
+    	<mx:method name="upsert_contact" />
+    </mx:RemoteObject>
+	
+	<mx:RemoteObject id="struktorSelect"
+		endpoint="{_model.gatewayURL}" 
+		destination="amfphp" 
+		source="struktor.select" 
+		showBusyCursor="true"
+		fault="handleFault(event)">
+		<mx:method name="get_related_tree" />
+		<mx:method name="record_tree" />
+		<mx:method name="get_sid_tree" />
+		<mx:method name="get_sid_record" />
+	</mx:RemoteObject>
+
+	<mx:RemoteObject id="struktorCounting"
+		endpoint="{_model.gatewayURL}" 
+		destination="amfphp" 
+		source="struktor.counting" 
+		showBusyCursor="true"
+		fault="handleFault(event)">
+		<mx:method name="global_count" />
+		<mx:method name="personal_count" />
+	</mx:RemoteObject>
+
+	<mx:RemoteObject id="struktorSearch"
+		endpoint="{_model.gatewayURL}" 
+		destination="amfphp" 
+		source="struktor.search" 
+		showBusyCursor="true"
+		fault="handleFault(event)">
+		<mx:method name="similar" />
+		<mx:method name="table" />
+	</mx:RemoteObject>
+
+	<mx:RemoteObject id="struktorEdit"
+		endpoint="{_model.gatewayURL}" 
+		destination="amfphp" 
+		source="struktor.edit" 
+		showBusyCursor="true"
+		fault="handleFault(event)">
+		<mx:method name="del" />
+		<mx:method name="upsert" />
+		<mx:method name="batch_upserts" />
+	</mx:RemoteObject>
+
+	<mx:RemoteObject id="struktorLayout"
+		endpoint="{_model.gatewayURL}" 
+		destination="amfphp" 
+		source="struktor.layout" 
+		showBusyCursor="true"
+		fault="handleFault(event)">
+		<mx:method name="fetch_layout" />  	
+	</mx:RemoteObject>
+
+	<mx:RemoteObject id="struktorTicket"
+		endpoint="{_model.gatewayURL}" 
+		destination="amfphp" 
+		source="struktor.ticket" 
+		showBusyCursor="true"
+		fault="handleFault(event)">
+		<mx:method name="create" />
+	</mx:RemoteObject>
+
+	<mx:RemoteObject id="struktorAudit"
+		endpoint="{_model.gatewayURL}" 
+		destination="amfphp" 
+		source="struktor.audit" 
+		showBusyCursor="true"
+		fault="handleFault(event)">
+		<mx:method name="history" />
+		<mx:method name="histogram" />
+		<mx:method name="fetch_archive" />
+		<mx:method name="fetch_archives" />
+		<mx:method name="add" />
+		<mx:method name="restore" />
+	</mx:RemoteObject>
+
+	<mx:RemoteObject id="struktorS3"
+		endpoint="{_model.gatewayURL}"
+		destination="amfphp" 
+		source="struktor.s3" 
+		showBusyCursor="true"
+		fault="handleFault(event)">
+		<mx:method name="delete_object" />
+		<mx:method name="get_bucket" />
+		<mx:method name="get_credentials" />
+	</mx:RemoteObject>
+
+	<mx:RemoteObject id="authentikatorManagement"
+		endpoint="{_model.gatewayURL}"
+		destination="amfphp"
+		source="authentikator.management"
+		showBusyCursor="true"
+		fault="handleFault(event)">
+		<mx:method name="list_users_groups" />
+		<mx:method name="list_groups" />
+		<mx:method name="list_profiles" />
+		<mx:method name="add_user" />
+		<mx:method name="add_user_to_groups" />
+		<mx:method name="add_user_to_profile" />
+		<mx:method name="delete_user_from_groups" />
+		<mx:method name="delete_profile_from_user" />
+		<mx:method name="enable_user" />
+		<mx:method name="disable_user" />
+		<mx:method name="get_online_users" />
+		<mx:method name="add_user_superuser" />
+		<mx:method name="delete_user_from_superuser" />
+		<mx:method name="add_user_poweruser" />
+		<mx:method name="delete_user_from_poweruser" />
+		<mx:method name="get_user_email" />
+	</mx:RemoteObject>
+
+	<mx:RemoteObject id="authentikatorPassword"
+		endpoint="{_model.gatewayURL}" 
+		destination="amfphp" 
+		source="authentikator.password" 
+		showBusyCursor="true"
+		fault="handleFault(event)">
+		<mx:method name="change_email" />
+		<mx:method name="change_password" />
+		<mx:method name="wheel" />
+	</mx:RemoteObject>
+
+	<mx:RemoteObject id="struktorPluginsPledges"
+		endpoint="{_model.gatewayURL}" 
+		destination="amfphp" 
+		source="plugins.{_model.appInstanceID}.pledges" 
+		requestTimeout="120"
+		showBusyCursor="true"
+		fault="handleFault(event)">
+		<mx:method name="process_pledge" />
+	</mx:RemoteObject>
+
+	<mx:RemoteObject id="struktorPluginsChecks"
+		endpoint="{_model.gatewayURL}" 
+		destination="amfphp" 
+		source="plugins.{_model.appInstanceID}.checks" 
+		requestTimeout="120"
+		showBusyCursor="true"
+		fault="handleFault(event)">
+		<mx:method name="insert_checks_batches" />
+		<mx:method name="list_unfulfilled_checks" />
+		<mx:method name="list_batch_checks" />
+	</mx:RemoteObject>
+	
+	<mx:RemoteObject id="struktorPluginsBatches"
+		endpoint="{_model.gatewayURL}" 
+		destination="amfphp" 
+		source="plugins.{_model.appInstanceID}.reporting.batch" 
+		requestTimeout="120"
+		showBusyCursor="true"
+		fault="handleFault(event)">
+		<mx:method name="export_batch" />
+	</mx:RemoteObject>
+	
+	<mx:HTTPService id="versionService"
+		url="{_model.versionInfoUrl}"
+		contentType="application/xml"
+		resultFormat="e4x"
+		showBusyCursor="true" />	
+
+</business:ServiceLocator>

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:common="com.enilsson.elephantadmin.views.common.*" 
+	styleName="hBoxRenderer" 
+	horizontalScrollPolicy="off" verticalScrollPolicy="off"
+	mouseOver="this.mouseOverHandler( event )"
+	mouseOut="this.mouseOutHandler( event )"
+	>
+	
+	<mx:HBox width="{explicitWidth}"
+		verticalAlign="middle">
+		
+		<mx:Image useHandCursor="true" buttonMode="true"
+			toolTip="View details on this contribution" 
+			source="{ data.paymentType == 'Check' ? 
+				Icons.CHECK : 
+				data.paymentType == 'PayPal' ? 
+					Icons.PAY_PAL : 
+					Icons.CREDIT_CARD}"
+			click="new SidEvent( data.sid ).dispatch()" />
+		
+		<mx:VBox verticalGap="0" paddingBottom="0">
+			
+			<mx:Text styleName="listTitle" 
+				text="{data.paymentType}{data.amount &lt; 0 ? ' (refund)' : ''}" />
+			<mx:Text styleName="listDesc" 
+				visible="{data.paymentType == 'Check'}"
+				includeInLayout="{data.paymentType == 'Check'}"
+				text="Date Created: {toDateString(data.created_on)}" /> 						
+			<mx:Text styleName="listDesc" 
+				visible="{data.paymentType == 'Credit Card' &amp;&amp; data.card_number_type != ''}"
+				includeInLayout="{data.paymentType == 'Credit Card' &amp;&amp; data.card_number_type != ''}"
+				text="{data.card_number_type} - {data.card_number}" /> 						
+			<mx:Text styleName="listDesc" 
+				visible="{data.paymentType == 'Credit Card'}"
+				includeInLayout="{data.paymentType == 'Credit Card'}"
+				text="Billing Address: {data.address}, {data.city} {data.state} {data.zip}" /> 			
+			<mx:Text styleName="listDesc" 
+				visible="{data.paymentType == 'PayPal'}"
+				includeInLayout="{data.paymentType == 'PayPal'}"
+				text="TransactionID: {data.transactionid}" /> 			
+			<mx:Text styleName="listDesc" 
+				color="{data.amount &lt; 0 ? 0xFF0000 : 0x333333}"
+				text="{cf.format(data.amount)} - {generateDate()}" /> 		
+		</mx:VBox>		
+		
+	</mx:HBox>
+	
+	<common:CMSDeleteBtn id="deleteRefund"
+		visible="false"
+		verticalCenter="0" right="20"
+		label="DELETE"
+		width="70"
+		click="deleteAction()"
+		toolTip="Delete this refund!"
+		filters="{[dropShadow]}" />
+
+	
+	<mx:CurrencyFormatter id="cf" precision="2" currencySymbol="$" useNegativeSign="false" />
+	<mx:DateFormatter id="df" formatString="MM/DD/YY" />
+	<mx:DropShadowFilter id="dropShadow"
+		alpha="0.75"
+		angle="90"
+		color="0x000000"
+		blurX="6" blurY="6"
+		distance="1" />	
+
+
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephantadmin.models.Icons;
+			import com.enilsson.utils.EDateUtil;
+			import com.enilsson.elephantadmin.vo.RecordVO;
+			import mx.controls.Alert;
+			import com.enilsson.elephantadmin.events.modules.PledgeEvent;
+			import mx.events.CloseEvent;
+			import com.enilsson.elephantadmin.events.main.SidEvent;
+			import com.enilsson.elephantadmin.models.EAModelLocator;
+			
+			[Bindable] private var _model:EAModelLocator = EAModelLocator.getInstance();
+			
+			private function generateDate ():String
+			{
+				if ( data.paymentType == 'Check' )
+				{
+					if ( data.entry_date > 0 )
+						return df.format( EDateUtil.dateFromTimestamp(data.entry_date) );
+					else
+						return 'unfulfilled';
+				}
+				else
+					return df.format(new Date(data.created_on * 1000));
+			}
+			
+			private function toDateString(unixTimestamp:int):String
+			{
+				var date:Date = new Date(unixTimestamp * 1000);
+				return df.format(date);
+			}
+			
+			private function mouseOverHandler ( event:MouseEvent ):void
+			{
+				if( data.amount < 0 ) deleteRefund.visible = true;
+			}
+
+			private function mouseOutHandler ( event:MouseEvent ):void
+			{
+				deleteRefund.visible = false;
+			}
+			
+			private function deleteAction():void
+			{
+				Alert.show(
+					'Are you sure you want to delete this refund?',
+					'Delete refund',
+					(Alert.YES | Alert.NO),
+					null,
+					doDelete,
+					Icons.ALERT
+				);
+			}	
+			
+			private function doDelete ( event:CloseEvent ):void
+			{
+				if( event.detail != Alert.YES ) return;
+				
+				new PledgeEvent (
+					PledgeEvent.DELETE_CHECKREFUND,
+			 		parentDocument.presentationModel,
+			 		new RecordVO ( 'checks', data.id, null )
+				).dispatch();		
+
+			}
+
+		]]>
+	</mx:Script>
+	
+</mx:Canvas>

@@ -1,0 +1,556 @@
+<?xml version="1.0" encoding="utf-8"?>
+<common:LabeledContainer
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:common="com.enilsson.elephantadmin.views.common.*" 
+	xmlns:controls="com.enilsson.controls.*"
+	label="{_model.viewStateNames.getItemAt(moduleID) + ( browseTableChoice.selectedItem ? ' - ' + browseTableChoice.selectedItem.label : '' ) }">
+	
+	<mx:VBox verticalGap="0" 
+		width="100%" height="100%">
+		<mx:HBox horizontalGap="0" 
+			width="100%" height="100%">
+			<mx:DataGrid id="browseGrid" 
+				columns="{_model.browse.columns}" 
+				dataProvider="{_model.browse.records}"
+				styleName="greyGrid" 
+				headerRelease="sortAction(event)"
+				width="100%" height="100%" />
+			<common:IndexBar id="indexBar" 
+				height="100%" 
+				backgroundColor="#e0e0e0" 
+				indexSearch="indexSearchStart(event)" />
+		</mx:HBox>
+
+		<mx:Canvas id="paginationBox"
+			styleName="paginationBox" 
+			height="0" width="100%"
+			visible="{_model.browse.totalRecords > _model.itemsPerPage}"
+			showEffect="slideUp" hideEffect="slideDown">		
+			<controls:Paginator id="paginator"
+				selectedIndex="{_model.browse.currPage / _model.itemsPerPage}" 
+				styleName="paginator" 
+				debugMode="{_model.debug}" 
+				rangeCount="4"
+				verticalCenter="0"
+				horizontalCenter="0"
+				buttonHeight="18" 
+				newPage="newPageAction(event);" 
+				itemsPerPage="{_model.itemsPerPage}" 
+				itemsTotal="{_model.browse.totalRecords}" />
+		</mx:Canvas>
+
+		<mx:Canvas styleName="gridFooter" 
+			enabled="{!_model.dataLoading}"
+			height="38" width="100%">
+			<mx:Text id="recordInfoText" 
+				htmlText="{getRecordsInfoText(_model.browse.currPage, _model.browse.totalRecords)}"
+				verticalCenter="0" 
+				left="10" 
+				visible="{_model.browse.totalRecords > 0}" />			
+			<mx:HBox verticalCenter="0" 
+				right="10" 
+				verticalAlign="middle">
+				<mx:Text text="Select table:" />
+				<mx:ComboBox id="browseTableChoice" 
+					dataProvider="{listOfTables}" 
+					change="loadLayout()"
+					styleName="browseChoice"
+					width="100" height="22" />
+				<mx:Text text="Browse by:" />
+				<mx:ComboBox id="browseColumnChoice" 
+					dataProvider="{browsableColumns}"
+					labelField="headerText"
+					styleName="browseChoice"
+					width="120" height="22" />
+				<mx:Button id="clearSearchButton"
+					visible="false"
+					label="show all"
+					height="22"
+					click="clearBrowse(event)" />
+				<mx:Button id="exportBtn" 
+					label="EXPORT"
+					enabled="{browseTableChoice.selectedItem != null}"
+					click="exportClickHandler(event)" 
+					icon="{Icons.EXPORT}" 
+					width="85" height="25" 
+					styleName="actionsList"/>
+				<common:SearchBox id="searchBox" 
+					width="120" 
+					searchStart="searchStart(event)" 
+					clearSearch="clearSearch(event)" 
+					fontSize="11" />
+			</mx:HBox>
+		</mx:Canvas>
+	</mx:VBox>
+
+
+	<mx:Resize id="slideUp" heightTo="35" duration="1000" />
+	<mx:Resize id="slideDown" heightTo="0" duration="1000" />	
+
+	<mx:NumberFormatter id="numberFormatter" precision="0" useThousandsSeparator="true"/>
+	<mx:CurrencyFormatter id="cf" precision="0" />
+	<mx:DateFormatter id="df" formatString="MM/DD/YY" />
+
+	<mx:Array id="listOfTables">
+		<mx:Object data="checks" label="Checks" />
+		<mx:Object data="contacts" label="Contacts" />
+		<mx:Object data="email_log" label="Emails" />
+		<mx:Object data="events" label="Events" />
+		<mx:Object data="pledges" label="Pledges" />
+		<mx:Object data="tr_users" label="Users" />
+		<mx:Object data="transactions" label="Transactions" />
+	</mx:Array>
+
+
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephantadmin.models.Icons;
+			import mx.collections.SortField;
+			import mx.collections.Sort;
+			import mx.utils.ObjectUtil;
+			import com.enilsson.elephantadmin.views.modules.search.renderers.MagnifierIcon;
+			import mx.events.DataGridEvent;
+			import mx.controls.dataGridClasses.DataGridColumn;
+			import com.enilsson.elephantadmin.vo.SearchVO;
+			import mx.collections.ArrayCollection;
+			import com.enilsson.elephantadmin.vo.RecordsVO;
+			import com.enilsson.elephantadmin.vo.RecordVO;
+			import com.enilsson.elephantadmin.events.modules.BrowseEvent;
+			import com.enilsson.elephantadmin.events.session.PingEvent;
+			import org.osflash.thunderbolt.Logger;
+			import com.enilsson.elephantadmin.models.EAModelLocator;
+			
+			[Bindable] private var _model:EAModelLocator = EAModelLocator.getInstance();
+			[Bindable] private var _currentFields : ArrayCollection;
+			
+			private var _whereObject : Object;
+			
+			private var _moduleName:String = 'browse';
+			public var sortOrder:String = '';
+			public var sortActions:Object = {'created_on':'DESC'};
+			
+			[Bindable]
+			private function get browsableColumns() : ArrayCollection { return _browsableColumns; }
+			private function set browsableColumns( value : ArrayCollection ) : void 
+			{
+				_browsableColumns = value;
+				
+				if(_browsableColumns)
+				{
+					_browsableColumns.filterFunction = browsableColumnsFilterFunction;
+					_browsableColumns.refresh();
+				}
+			}
+			private var _browsableColumns : ArrayCollection;
+			
+			private function browsableColumnsFilterFunction( item : Object ) : Boolean
+			{
+				for each( var field : Object in _currentFields)
+				{
+					if(field.hasOwnProperty('type') && field.hasOwnProperty('fieldname'))
+					{
+						var isText : Boolean = field.type == 'text' || field.type == 'longtext';					
+						if( item.dataField == field.fieldname && isText) {
+							return true;
+						}	
+					}
+				}
+				
+				return false;
+			}
+
+			override protected function init():void
+			{
+				super.init();
+
+				// get the email layout if needed
+				loadLayout();
+			}			
+			
+
+			private function loadLayout():void
+			{
+				if (_model.dataLoading) return;
+				
+				if(browseTableChoice.selectedItem == null)
+				{
+					browsableColumns = null;
+					_currentFields = null;
+					_model.browse.columns = null;
+					_model.browse.records = null;
+					return;
+				}
+				
+				_model.browse.table = browseTableChoice.selectedItem.data;
+				
+				// set the sort order
+				sortOrder = browseTableChoice.selectedItem.data+'.created_on DESC';
+				sortActions = {'created_on':'DESC'};
+				
+				// Clear the searchbox
+				_model[_moduleName].usingSearch = false;
+				searchBox.clearSearch.visible = false;
+				clearSearchButton.visible = false;
+				_model[_moduleName].currPage = 0;
+				searchBox.searchTerm = '';
+
+				_currentFields = new ArrayCollection(_model.struktorLayout[browseTableChoice.selectedItem.data].fields);
+				
+				var cols:Array = new Array();
+				
+				for(var i:String in _currentFields)
+				{
+					if(_currentFields[i].in_sql)
+					{
+						var dgCol:DataGridColumn = new DataGridColumn();
+						dgCol.headerText = _currentFields[i].label;
+						dgCol.minWidth = 40;
+						dgCol.dataField = _currentFields[i].fieldname;
+						
+						switch(_currentFields[i].type)
+						{
+							case 'utc_date' :
+								dgCol.labelFunction = utcDateLabel;
+							break;
+							case 'date' :
+								dgCol.labelFunction = dateLabel;
+							break;
+							case 'currency' :								
+								dgCol.labelFunction = currencyLabel;
+								dgCol.setStyle('textAlign', 'right');
+								dgCol.setStyle( 'paddingRight', 5 );
+							break;
+						}
+						cols.push(dgCol);
+					}		
+				}
+				
+				// create an additional column for the record inspection
+				var col : DataGridColumn = new DataGridColumn();
+				col.minWidth = col.width = 40;
+				col.headerText = "";
+				col.dataField = "sid";
+				col.itemRenderer = new ClassFactory(MagnifierIcon);
+				cols.push( col );
+				
+				_model.browse.columns = cols;			
+				_model.browse.records = new ArrayCollection();
+				browsableColumns = new ArrayCollection(cols);
+				
+				new BrowseEvent( 
+					BrowseEvent.RECORDS, { 
+						'recordsVO' : new RecordsVO( 
+							browseTableChoice.selectedItem.data, 
+							null, 
+							sortOrder, 
+							_model[_moduleName].currPage, 
+							_model.itemsPerPage, 
+							'P'
+						)
+					} 
+				).dispatch();
+			}
+			
+			private function utcDateLabel( item:Object, column:DataGridColumn ):String
+			{
+				if ( item[column.dataField] == 0 )
+					return '';
+				else
+				{
+					var utcDate:Date = new Date( item[column.dataField] * 1000 );
+					return df.format( new Date( utcDate.getUTCFullYear(), utcDate.getUTCMonth(), utcDate.getUTCDate() ) );			
+				}				
+			}
+
+			private function dateLabel(item:Object, column:DataGridColumn):String
+			{
+				if ( item[column.dataField] == 0 )
+					return '';
+				else
+					return df.format( new Date( item[column.dataField] * 1000 ) );
+			}
+			
+			private function currencyLabel(item:Object, column:DataGridColumn):String
+			{
+				return cf.format( item[column.dataField] );
+			}			
+			
+			private function clearSearch(event:Event):void 
+			{
+				if (_model.dataLoading) return;
+
+				_model[_moduleName].usingSearch = false;
+				searchBox.clearSearch.visible = false;
+				
+				_model[_moduleName].currPage = 0;
+				new BrowseEvent( 
+					BrowseEvent.RECORDS, { 
+						'recordsVO' : new RecordsVO( 
+										browseTableChoice.selectedItem.data, 
+										null, 
+										sortOrder, 
+										_model[_moduleName].currPage, 
+										_model.itemsPerPage, 
+										'P'
+									)
+					} 
+				).dispatch();
+			}
+			
+			private function clearBrowse( event : Event ) : void
+			{
+				_whereObject = null;
+				clearSearchButton.visible = false;
+				clearSearch(event);
+			}
+			
+			private function newPageAction(event:Event):void 
+			{
+				if (_model.dataLoading) return;
+
+				_model[_moduleName].currPage = paginator.selectedIndex * _model.itemsPerPage;
+
+				switch(_model[_moduleName].usingSearch)
+				{
+					case false:
+						if (_model.debug) Logger.info('BROWSE RECORDS',sortOrder);
+						new BrowseEvent( 
+							BrowseEvent.RECORDS, { 
+								'recordsVO' : new RecordsVO( 
+												browseTableChoice.selectedItem.data, 
+												_whereObject, 
+												sortOrder, 
+												_model[_moduleName].currPage, 
+												_model.itemsPerPage, 
+												'')
+							} 
+						).dispatch();
+ 					break;
+
+					case true:
+						new BrowseEvent(
+							BrowseEvent.SEARCH,  {
+								'searchVO' : new SearchVO(
+									browseTableChoice.selectedItem.data,
+									searchBox.searchTerm,
+									null,
+									_model[_moduleName].currPage,
+									_model.itemsPerPage,
+									sortOrder)
+							}
+						).dispatch();
+					break;
+				}
+			}
+			
+			private function searchStart(event:Event):void 
+			{
+				if (_model.dataLoading) return;
+
+				if(searchBox.searchTerm != "")
+				{
+					searchBox.clearSearch.visible = true;
+					clearSearchButton.visible = false;
+					_whereObject = null;
+
+					if (_model[_moduleName].isSearching) return;
+
+					if (_model.debug) Logger.info('Searching...', _model[_moduleName].isSearching, searchBox.searchTerm);
+					
+					_model[_moduleName].usingSearch = true;
+					
+					new BrowseEvent(
+						BrowseEvent.SEARCH,  {
+							'searchVO' : new SearchVO(
+								browseTableChoice.selectedItem.data,
+								searchBox.searchTerm,
+								null,
+								0,
+								_model.itemsPerPage)
+						}
+					).dispatch();
+				}
+			}						
+			
+			/**
+			 * Handle a search based on the index letters
+			 */
+			private function indexSearchStart(event:Event):void 
+			{
+				clearSearchButton.visible = true;
+
+				var tablename : String = "";
+				var colname : String = "";
+				
+				if( ! browseTableChoice.selectedItem) {
+					browseTableChoice.selectedItem = browseTableChoice.dataProvider[0];
+				}
+				if( ! browseColumnChoice.selectedItem ) {
+					browseColumnChoice.selectedItem = browseColumnChoice.dataProvider[0];
+				}
+
+				tablename = browseTableChoice.selectedItem.data;				
+				colname = browseColumnChoice.selectedItem.dataField;
+				
+				_whereObject =  new Object();
+				_whereObject['statement'] = '(1)';
+				_whereObject[1] = { 
+						'what' : tablename + "." + colname,
+						'val' : indexBar.searchLetter+"%",
+						'op' : 'LIKE'
+					};
+				
+				new BrowseEvent( 
+					BrowseEvent.RECORDS, { 
+						'recordsVO' : new RecordsVO( 
+										tablename, 
+										_whereObject, 
+										sortOrder, 
+										_model[_moduleName].currPage, 
+										_model.itemsPerPage,
+										'P')
+					} 
+				).dispatch();
+			}
+			
+			/**
+			 * Handle the sort action
+			 */			
+			private function sortAction(e:DataGridEvent):void
+			{
+				// dont allow a sort if the data is loading
+				if (_model.dataLoading) 
+				{
+					e.preventDefault();
+					return;
+				}
+				
+				// some debugging
+			 	if(_model.debug) Logger.info('SortAction', e.dataField);
+			 	
+			 	// if there are more records than those displayed make a call to sort
+			 	if (_model[_moduleName].totalRecords > _model.itemsPerPage)
+			 	{
+				 	// stop the default sort action
+				 	e.preventDefault();
+				 	
+				 	// get the fieldname
+				 	var fieldName:String = e.dataField;
+				 	var sort:String = '';
+	
+				 	// loop through and highlight the sorted column
+				 	for ( var i:int=0; i<browseGrid.columns.length; i++)
+				 	{
+				 		if(e.columnIndex == i)
+				 			browseGrid.columns[i].setStyle('backgroundColor','#ededed');
+				 		else
+				 			browseGrid.columns[i].setStyle('backgroundColor','none');
+				 	}
+				 	
+				 	// run the sort action, desc first or toggle the existing
+				 	sortOrder = sortActions[fieldName];
+			 		var direction:String = ((sortOrder) ? ((sortOrder == 'DESC') ? 'ASC' : 'DESC') : 'ASC');
+			 		sortActions[fieldName] = direction;
+			 		sortOrder = browseTableChoice.selectedItem.data + '.'+fieldName + ' ' + direction;
+
+					_model[_moduleName].currPage = 0;
+			 		new BrowseEvent( 
+						BrowseEvent.RECORDS, 
+						{ 
+							'recordsVO' : new RecordsVO( 
+											browseTableChoice.selectedItem.data, 
+											_whereObject, 
+											sortOrder, 
+											_model[_moduleName].currPage, 
+											_model.itemsPerPage, 
+											'P'
+										)
+						} 
+					).dispatch();
+			 	} 
+			 	// if only trying to sort the data in the grid use normal sort unless it is a custom field
+			 	else
+			 	{
+			 		var field:Object = getFieldData( e.dataField );
+			 		
+			 		switch ( field.type )
+			 		{
+			 			case 'currency' :
+			 				// stop the default behaviour
+			 				e.preventDefault();
+							
+							// grab a sort order if this field has already been sorted
+						 	sortOrder = sortActions[fieldName];
+					 		var dir:String = ((sortOrder) ? ((sortOrder == 'DESC') ? 'ASC' : 'DESC') : 'ASC');
+					 		sortActions[fieldName] = dir;
+			 				
+			 				// sort the dataProvider based on numeric comparison
+							var currSort:Sort = new Sort();
+							var sField:SortField = new SortField();
+							sField.name = e.dataField;
+							sField.numeric = true;
+							sField.descending = sortOrder == 'DESC';
+							currSort.fields=[sField];
+							_model.browse.records.sort = currSort;
+							_model.browse.records.refresh();
+			 			break;
+			 			default :
+			 			break;			 			
+			 		}
+			 	}
+			}
+			
+			private function getFieldData ( field:String ):Object
+			{
+				for each ( var item:Object in _currentFields )
+					if ( item.fieldname == field )
+						return item;
+				
+				return null;
+			}
+			
+			/**
+			 * Generate the text displaying the number of records and the current page
+			 */
+			private function getRecordsInfoText( page : Number, totalRecords : Number ) : String
+			{
+				var itemsPerPage : Number = _model.itemsPerPage;
+				
+				var str:String = "<b>" + numberFormatter.format(page+1) + "</b> - <b>";
+				str += numberFormatter.format( ( (page + itemsPerPage) > totalRecords ) ? totalRecords : (page + itemsPerPage) );
+				str += "</b> of <b>" + numberFormatter.format(totalRecords) + "</b> records";
+				
+				return str;
+			}
+			
+			
+			/**
+			 * Handle the export of data
+			 */
+			private function exportClickHandler( event : MouseEvent ) : void
+			{
+				var params:Object = new Object();
+				params.limit = _model.browse.totalRecords;
+				
+				// get the in_sql fields for export
+				var layout:Object = _model.struktorLayout[browseTableChoice.selectedItem.data];
+				var eSQL:String = browseTableChoice.selectedItem.data + '<';
+				var inSQL:Array = [];
+				for ( var i:String in layout.fields )
+				{
+					var field:Object = layout.fields[i];
+					if( field.in_sql ) inSQL.push( field.fieldname );
+				}
+				for ( i in inSQL )
+				{
+					eSQL += Number(i) == 0 ? '' : ':';
+					eSQL += inSQL[i];
+				}
+				eSQL += '>';
+				
+  				new BrowseEvent( BrowseEvent.EXPORT, { 'recordVO' :  new RecordVO ( eSQL, 0, params ) } ).dispatch(); 
+ 			}	
+		]]>
+	</mx:Script>
+
+</common:LabeledContainer>

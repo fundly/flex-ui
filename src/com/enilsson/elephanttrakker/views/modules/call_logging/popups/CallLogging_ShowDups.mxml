@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
+	width="450" height="275">
+
+	<mx:Metadata>
+		[Event(name="completeCall", type="flash.events.Event")]
+	</mx:Metadata>
+	
+	<mx:Script>
+		<![CDATA[
+			import org.osflash.thunderbolt.Logger;
+			import com.enilsson.elephanttrakker.events.modules.call_logging.PledgeWorkspaceEvent;
+			import com.enilsson.elephanttrakker.models.ETModelLocator;
+			import com.enilsson.elephanttrakker.views.modules.call_logging.renderers.Dups_Item;
+			import com.enilsson.graphics.enDropShadows;
+			
+			[Bindable] private var _model:ETModelLocator = ETModelLocator.getInstance();
+			
+			private function choseExistingContact():void
+			{
+				var c:Object = dupsList.selectedItem;
+				
+				_model.call_logging.contactID = c.id;
+				_model.call_logging.initialContactData = c;
+				
+				_model.call_logging.showDupBox = false;
+			}
+			
+			/**
+			 * Proceed with the processing of the pledge, by checking for pledge dups
+			 */
+			private function processPledge():void
+			{
+				_model.call_logging.showDupBox = false;
+				new PledgeWorkspaceEvent ( PledgeWorkspaceEvent.DUP_SEARCH, { 'table' : 'pledges' } ).dispatch();
+			}
+			
+			/**
+			 * Make a quick check when the component is shown to highlight the a contact if there is only one.
+			 */
+			public function set runInit( value:Boolean ):void
+			{				
+				if( !value ) return;
+				
+				if( _model.call_logging.contactDups.length == 1 )	
+					dupsList.selectedIndex = 0;
+				else
+					dupsList.selectedIndex = -1;
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:Canvas styleName="popupContent"
+		filters="{[com.enilsson.graphics.enDropShadows.standardDS()]}"
+		width="100%" height="{height - 15}"
+		top="15">
+		
+		<mx:VBox top="30" right="15"
+			width="{width - 30}" height="{height - 55}">			
+			<mx:Text width="100%" fontSize="10" 
+				text="The contact record you have entered is similar to the following previously entered contacts. Please confirm that your new contact is not a duplicate of a previously entered contact."
+				/>			
+			<mx:List id="dupsList"
+				styleName="dupsList"
+				width="100%" height="100%"
+				variableRowHeight="true" 
+				dataProvider="{_model.call_logging.contactDups}" 
+				itemRenderer="{new ClassFactory(Dups_Item)}" />			
+			<mx:HBox horizontalAlign="center" verticalAlign="middle" width="100%">
+				<mx:LinkButton styleName="choiceBtn"
+					label="process pledge with entered details" 
+					toolTip="Process this pledge with the contact information you entered!"
+					click="processPledge()" 
+					 />
+				<mx:Button styleName="choiceBtnProceed" 
+					height="28"
+					label="select existing contact" 
+					enabled="{dupsList.selectedIndex > -1}"
+					click="choseExistingContact()"
+					toolTip="Chose one of the listed contacts to assign this pledge too."
+					 />		
+			</mx:HBox>
+		</mx:VBox>
+			
+	</mx:Canvas>
+	
+	<mx:Image source="{_model.icons.contacts}" 
+		filters="{[com.enilsson.graphics.enDropShadows.standardDS()]}"
+		top="0" left="5" />
+	<mx:Text text="Duplicate contacts found" color="#FFFFFF" fontSize="18" fontWeight="bold" top="15" left="45" />
+	
+</mx:Canvas>

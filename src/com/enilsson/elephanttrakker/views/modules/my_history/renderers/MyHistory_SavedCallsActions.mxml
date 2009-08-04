@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" 
+	verticalAlign="middle" horizontalScrollPolicy="off" 
+	width="{explicitWidth}">
+
+	<mx:Button styleName="btnEdit" 
+		toolTip="Continue this pledge"
+		click="editAction(data)"
+		useHandCursor="true" buttonMode="true"
+		/>
+	<mx:Button styleName="btnDelete" 
+		toolTip="Delete this saved pledge"
+		click="deletePledge(data)"
+		useHandCursor="true" buttonMode="true"
+		/>
+
+	
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephanttrakker.views.modules.pledge_workspace.model.PledgeWorkspaceVO;
+			import com.enilsson.elephanttrakker.views.modules.pledge_workspace.events.SPWEvent;
+			import com.enilsson.elephanttrakker.events.modules.my_history.MyHistoryEvent;
+			
+			private function editAction(savedObj:Object):void
+			{
+				// create a new PW VO
+				var p:PledgeWorkspaceVO= new PledgeWorkspaceVO();
+				
+				// add the saved ID
+				p.savedID = savedObj.id;
+								
+				// add the contact id, if this is an existing contact
+				if(savedObj.data.vo.pledge.hasOwnProperty('contact_id'))
+					p.contactID = savedObj.data.vo.pledge.contact_id;
+					
+				// build a contact object including a created_by_id
+				var contactObj:Object = savedObj.data.vo.pledge;
+				contactObj['created_by_id'] = savedObj.data.contactOwner;
+				p.contactData = contactObj;
+				
+				// add the pledge data
+				p.pledgeData = savedObj.data.vo.pledge
+				
+				// add any check data
+				p.checkData = savedObj.data.vo.check;
+				
+				new SPWEvent ( SPWEvent.RESTORE_SAVED, p ).dispatch();
+			}
+			
+			private function deletePledge( data:Object ):void
+			{
+				new MyHistoryEvent( MyHistoryEvent.DELETE_SAVED_PLEDGE, { 'id' : data.id } ).dispatch();
+			}
+		]]>
+	</mx:Script>
+	
+</mx:HBox>

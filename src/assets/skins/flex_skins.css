@@ -1,0 +1,90 @@
+TabBar.qcmTab{
+	firstTabStyleName: "fbTabStyle";
+	tabStyleName: "tabStyle";
+	lastTabStyleName: "lbTabStyle";
+	horizontalGap:0;
+	textRollOverColor:#FF0000;
+	verticalAlign:"top";
+}
+
+.fbTabStyle {
+/*
+	disabledSkin: Embed("/assets/images/skins/qcm2_buttonbar_firstnormal.png", scaleGridTop="8", scaleGridBottom="26", scaleGridLeft="12", scaleGridRight="35");
+	downSkin: Embed("/assets/images/skins/qcm2_buttonbar_firstnormal.png", scaleGridTop="8", scaleGridBottom="26", scaleGridLeft="12", scaleGridRight="35");
+	overSkin: Embed("/assets/images/skins/qcm2_buttonbar_firstnormal.png", scaleGridTop="8", scaleGridBottom="26", scaleGridLeft="12", scaleGridRight="35");
+	selectedDisabledSkin: Embed("/assets/images/skins/qcm2_buttonbar_firstselected.png", scaleGridTop="8", scaleGridBottom="26", scaleGridLeft="12", scaleGridRight="35");
+	selectedDownSkin: Embed("/assets/images/skins/qcm2_buttonbar_firstselected.png", scaleGridTop="8", scaleGridBottom="26", scaleGridLeft="12", scaleGridRight="35");
+	selectedOverSkin: Embed("/assets/images/skins/qcm2_buttonbar_firstselected.png", scaleGridTop="8", scaleGridBottom="26", scaleGridLeft="12", scaleGridRight="35");
+	selectedUpSkin: Embed("/assets/images/skins/qcm2_buttonbar_firstselected.png", scaleGridTop="8", scaleGridBottom="26", scaleGridLeft="12", scaleGridRight="35");
+	upSkin: Embed("/assets/images/skins/qcm2_buttonbar_firstnormal.png", scaleGridTop="8", scaleGridBottom="26", scaleGridLeft="12", scaleGridRight="35");
+*/
+	disabledSkin: Embed("../images/skins/qcm2_buttonbar_firstnormal_arrow.png", scaleGridTop="5", scaleGridBottom="18", scaleGridLeft="12", scaleGridRight="29");
+	downSkin: Embed("../images/skins/qcm2_buttonbar_firstnormal_arrow.png", scaleGridTop="5", scaleGridBottom="18", scaleGridLeft="12", scaleGridRight="29");
+	overSkin: Embed("../images/skins/qcm2_buttonbar_firstnormal_arrow.png", scaleGridTop="5", scaleGridBottom="18", scaleGridLeft="12", scaleGridRight="29");
+	selectedDisabledSkin: Embed("../images/skins/qcm2_buttonbar_firstselected_arrow.png", scaleGridTop="5", scaleGridBottom="18", scaleGridLeft="12", scaleGridRight="29");
+	selectedDownSkin: Embed("../images/skins/qcm2_buttonbar_firstselected_arrow.png", scaleGridTop="5", scaleGridBottom="18", scaleGridLeft="12", scaleGridRight="29");
+	selectedOverSkin: Embed("../images/skins/qcm2_buttonbar_firstselected_arrow.png", scaleGridTop="5", scaleGridBottom="18", scaleGridLeft="12", scaleGridRight="29");
+	selectedUpSkin: Embed("../images/skins/qcm2_buttonbar_firstselected_arrow.png", scaleGridTop="5", scaleGridBottom="18", scaleGridLeft="12", scaleGridRight="29");
+	upSkin: Embed("../images/skins/qcm2_buttonbar_firstnormal_arrow.png", scaleGridTop="5", scaleGridBottom="18", scaleGridLeft="12", scaleGridRight="29");
+	
+	color:#FFFFFF;
+	
+	paddingLeft:15;
+	paddingRight:15;
+	paddingTop:0;
+	paddingBottom:8;
+}
+.tabStyle {
+/*
+	disabledSkin: Embed("../images/qcm2_transparent.png");
+	downSkin: Embed("../images/skins/qcm2_buttonbar_middlenormal.png", scaleGridTop="8", scaleGridBottom="26", scaleGridLeft="2", scaleGridRight="35");
+	overSkin: Embed("../images/skins/qcm2_buttonbar_middlenormal.png", scaleGridTop="8", scaleGridBottom="26", scaleGridLeft="2", scaleGridRight="35");
+	selectedDisabledSkin: Embed("../images/skins/qcm2_buttonbar_middleselected.png", scaleGridTop="8", scaleGridBottom="26", scaleGridLeft="2", scaleGridRight="35");
+	selectedDownSkin: Embed("../images/skins/qcm2_buttonbar_middleselected.png", scaleGridTop="8", scaleGridBottom="26", scaleGridLeft="2", scaleGridRight="35");
+	selectedOverSkin: Embed("../images/skins/qcm2_buttonbar_middleselected.png", scaleGridTop="8", scaleGridBottom="26", scaleGridLeft="2", scaleGridRight="35");
+	selectedUpSkin: Embed("../images/skins/qcm2_buttonbar_middleselected.png", scaleGridTop="8", scaleGridBottom="26", scaleGridLeft="2", scaleGridRight="35");
+	upSkin: Embed("../images/skins/qcm2_buttonbar_middlenormal.png", scaleGridTop="8", scaleGridBottom="26", scaleGridLeft="2", scaleGridRight="35");
+*/
+	disabledSkin: Embed("../images/skins/qcm2_buttonbar_middlenormal_arrow.png", scaleGridTop="5", scaleGridBottom="18", scaleGridLeft="12", scaleGridRight="29");
+	downSkin: Embed("../images/skins/qcm2_buttonbar_middlenormal_arrow.png", scaleGridTop="5", scaleGridBottom="18", scaleGridLeft="12", scaleGridRight="29");
+	overSkin: Embed("../images/skins/qcm2_buttonbar_middlenormal_arrow.png", scaleGridTop="5", scaleGridBottom="18", scaleGridLeft="12", scaleGridRight="29");
+	selectedDisabledSkin: Embed("../images/skins/qcm2_buttonbar_middleselected_arrow.png", scaleGridTop="5", scaleGridBottom="18", scaleGridLeft="12", scaleGridRight="29");
+	selectedDownSkin: Embed("../images/skins/qcm2_buttonbar_middleselected_arrow.png", scaleGridTop="5", scaleGridBottom="18", scaleGridLeft="12", scaleGridRight="29");
+	selectedOverSkin: Embed("../images/skins/qcm2_buttonbar_middleselected_arrow.png", scaleGridTop="5", scaleGridBottom="18", scaleGridLeft="12", scaleGridRight="29");
+	selectedUpSkin: Embed("../images/skins/qcm2_buttonbar_middleselected_arrow.png", scaleGridTop="5", scaleGridBottom="18", scaleGridLeft="12", scaleGridRight="29");
+	upSkin: Embed("../images/skins/qcm2_buttonbar_middlenormal_arrow.png", scaleGridTop="5", scaleGridBottom="18", scaleGridLeft="12", scaleGridRight="29");
+
+	color:#FFFFFF;
+
+	paddingLeft:15;
+	paddingRight:15;
+	paddingTop:0;
+	paddingBottom:8;
+}
+.lbTabStyle {
+/*
+	disabledSkin: Embed("../images/qcm2_transparent.png");
+	downSkin: Embed("../images/skins/qcm2_buttonbar_middlenormal.png", scaleGridTop="8", scaleGridBottom="26", scaleGridLeft="2", scaleGridRight="35");
+	overSkin: Embed("../images/skins/qcm2_buttonbar_middlenormal.png", scaleGridTop="8", scaleGridBottom="26", scaleGridLeft="2", scaleGridRight="35");
+	selectedDisabledSkin: Embed("../images/skins/qcm2_buttonbar_middleselected.png", scaleGridTop="8", scaleGridBottom="26", scaleGridLeft="2", scaleGridRight="35");
+	selectedDownSkin: Embed("../images/skins/qcm2_buttonbar_middleselected.png", scaleGridTop="8", scaleGridBottom="26", scaleGridLeft="2", scaleGridRight="35");
+	selectedOverSkin: Embed("../images/skins/qcm2_buttonbar_middleselected.png", scaleGridTop="8", scaleGridBottom="26", scaleGridLeft="2", scaleGridRight="35");
+	selectedUpSkin: Embed("../images/skins/qcm2_buttonbar_middleselected.png", scaleGridTop="8", scaleGridBottom="26", scaleGridLeft="2", scaleGridRight="35");
+	upSkin: Embed("../images/skins/qcm2_buttonbar_middlenormal.png", scaleGridTop="8", scaleGridBottom="26", scaleGridLeft="2", scaleGridRight="35");
+*/
+	disabledSkin: Embed("../images/skins/qcm2_buttonbar_lastnormal_arrow.png", scaleGridTop="5", scaleGridBottom="18", scaleGridLeft="12", scaleGridRight="29");
+	downSkin: Embed("../images/skins/qcm2_buttonbar_lastnormal_arrow.png", scaleGridTop="5", scaleGridBottom="18", scaleGridLeft="12", scaleGridRight="29");
+	overSkin: Embed("../images/skins/qcm2_buttonbar_lastnormal_arrow.png", scaleGridTop="5", scaleGridBottom="18", scaleGridLeft="12", scaleGridRight="29");
+	selectedDisabledSkin: Embed("../images/skins/qcm2_buttonbar_lastselected_arrow.png", scaleGridTop="5", scaleGridBottom="18", scaleGridLeft="12", scaleGridRight="29");
+	selectedDownSkin: Embed("../images/skins/qcm2_buttonbar_lastselected_arrow.png", scaleGridTop="5", scaleGridBottom="18", scaleGridLeft="12", scaleGridRight="29");
+	selectedOverSkin: Embed("../images/skins/qcm2_buttonbar_lastselected_arrow.png", scaleGridTop="5", scaleGridBottom="18", scaleGridLeft="12", scaleGridRight="29");
+	selectedUpSkin: Embed("../images/skins/qcm2_buttonbar_lastselected_arrow.png", scaleGridTop="5", scaleGridBottom="18", scaleGridLeft="12", scaleGridRight="29");
+	upSkin: Embed("../images/skins/qcm2_buttonbar_lastnormal_arrow.png", scaleGridTop="5", scaleGridBottom="18", scaleGridLeft="12", scaleGridRight="29");
+
+	color:#FFFFFF;
+
+	paddingLeft:15;
+	paddingRight:15;
+	paddingTop:0;
+	paddingBottom:8;
+}

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox 
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	verticalAlign="middle" horizontalScrollPolicy="off" 
+	width="{explicitWidth}">
+
+	<mx:Button styleName="btnExamine" 
+		toolTip="View the pledge this contribution belongs to."
+		click="editAction()"
+		useHandCursor="true" buttonMode="true" />
+	
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephanttrakker.views.modules.pledge_workspace.events.SPWEvent;
+			import com.enilsson.elephanttrakker.views.modules.pledge_workspace.model.PledgeWorkspaceVO;
+			import com.enilsson.elephanttrakker.models.ETModelLocator;
+		
+			[Bindable] private var _model:ETModelLocator = ETModelLocator.getInstance();
+			
+			private function editAction():void
+			{
+				var p:PledgeWorkspaceVO = new PledgeWorkspaceVO();
+				p.pledgeID = data.pledge_id
+				
+				new SPWEvent ( SPWEvent.EDIT, p ).dispatch();
+			}
+		]]>
+	</mx:Script>
+	
+</mx:HBox>

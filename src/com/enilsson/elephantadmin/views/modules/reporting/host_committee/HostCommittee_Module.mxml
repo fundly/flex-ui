@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="utf-8"?>
+<module:ReportModule 
+	xmlns:module="com.enilsson.elephantadmin.views.modules.reporting.base.*"
+	xmlns:ns="com.enilsson.elephantadmin.views.modules.reporting.host_committee.*"
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:reporting="com.enilsson.elephantadmin.views.modules.reporting.events.*" 
+	xmlns:components="modules.components.*"	 
+	layout="absolute" backgroundColor="#333333"
+	width="100%" height="100%" 	
+	clipContent="true"
+	verticalGap="0"
+	paddingTop="0" paddingBottom="0" 
+	horizontalScrollPolicy="off"
+	verticalScrollPolicy="off"
+	creationComplete="init()">
+
+	<mx:Array id="hostsColumns">
+		<mx:DataGridColumn width="100" dataField="fname" headerText="First Name" />
+		<mx:DataGridColumn width="100" dataField="lname" headerText="Last Name" />
+		<mx:DataGridColumn dataField="fundraising_goal" headerText="Host Goal" labelFunction="money_labelFunc" sortCompareFunction="fundraising_goalCompare"/>
+		<mx:DataGridColumn dataField="pledge_total" headerText="Total Pledged" labelFunction="money_labelFunc" sortCompareFunction="pledge_totalCompare"/>
+		<mx:DataGridColumn dataField="contrib_total" headerText="Total Contributed" labelFunction="money_labelFunc" sortCompareFunction="contrib_totalCompare"/>
+		<mx:DataGridColumn dataField="outstanding" headerText="Outstanding" labelFunction="money_labelFunc" sortCompareFunction="outstandingCompare"/>
+	</mx:Array>
+
+	<mx:Array id="pledgesColumns">
+		<mx:DataGridColumn width="100" dataField="fname" headerText="First Name" />
+		<mx:DataGridColumn width="100" dataField="lname" headerText="Last Name" />
+		<mx:DataGridColumn width="90" dataField="pledge_amount" headerText="Pledge Amount" labelFunction="money_labelFunc" sortCompareFunction="pledge_amountCompare"/>
+		<mx:DataGridColumn width="100" dataField="contrib_total" headerText="Total Contribution" labelFunction="money_labelFunc" sortCompareFunction="contrib_totalCompare"/>
+		<mx:DataGridColumn width="60" dataField="status" headerText="Status" />
+		<mx:DataGridColumn width="110" dataField="created_on" headerText="Created on" labelFunction="datetime_labelFunc"/>
+		<mx:DataGridColumn width="65" dataField="pledge_date" headerText="Pledge Date" labelFunction="date_labelFunc" />
+		<mx:DataGridColumn width="150" dataField="address1" headerText="Address" />
+		<mx:DataGridColumn width="100" dataField="city" headerText="City" />
+		<mx:DataGridColumn width="35" dataField="state" headerText="State" />
+		<mx:DataGridColumn width="45" dataField="zip" headerText="Zip" />
+		<mx:DataGridColumn width="80" dataField="home_phone" headerText="Home Phone" />
+		<mx:DataGridColumn width="80" dataField="office_phone" headerText="Office Phone" />
+		<mx:DataGridColumn width="80" dataField="cell_phone" headerText="Cell Phone" />
+		<mx:DataGridColumn width="150" dataField="email" headerText="Email" />
+		<mx:DataGridColumn width="150" dataField="occupation" headerText="Occupation"/>
+		<mx:DataGridColumn width="200" dataField="employer" headerText="Employer"/>
+		<mx:DataGridColumn width="90" dataField="source_code" headerText="Source Code"/>
+		<mx:DataGridColumn width="80" dataField="fundraiser_id" headerText="Fundraiser ID" />
+		<mx:DataGridColumn width="100" dataField="fundraiser_fname" headerText="Fundraiser First Name" />
+		<mx:DataGridColumn width="100" dataField="fundraiser_lname" headerText="Fundraiser Last Name" />
+		<mx:DataGridColumn width="50" dataField="mod_group_id" headerText="Region ID"  sortCompareFunction="region_idCompare" />
+		<mx:DataGridColumn width="100" dataField="mod_group_name" headerText="Region Name" />
+	</mx:Array>
+
+	<mx:VBox width="100%" height="100%" verticalGap="5">
+		<mx:HBox width="100%" styleName="controlBar" paddingTop="3" paddingLeft="5" paddingRight="5">
+			<mx:Box direction="{this.width &gt; 900 ? 'horizontal' : 'vertical'}" horizontalGap="10" verticalGap="2">
+				<mx:FormItem label="Event:">
+					<mx:ComboBox id="event"
+						width="200"
+						rowCount="20"
+						color="#000000"
+						prompt="Select an Event"
+						dataProvider="{_presentationModel.eventFilter}"
+						enabled="{!dataLoading}"
+						change="_presentationModel.eventChangeHandler(event);"
+						selectedIndex="{_presentationModel.eventSelectedIndex}"
+						dropdownFactory="{eventDropdownFactory}"
+						dropdownWidth="400"
+						/>
+				</mx:FormItem>
+				<mx:HBox verticalAlign="middle" visible="{event.selectedIndex &gt; -1}" includeInLayout="{event.selectedIndex &gt; -1}">
+					<mx:FormItem label="Goal:">
+						<mx:Label text="{currencyFormatter.format(ArrayCollection(_presentationModel.eventFilter).getItemAt(_presentationModel.eventSelectedIndex).fundraising_goal)}"/>
+					</mx:FormItem>
+					<mx:VRule height="20" strokeWidth="1" alpha="0.6" />
+					<mx:FormItem label="Pledged:" >
+						<mx:Label text="{currencyFormatter.format(ArrayCollection(_presentationModel.eventFilter).getItemAt(_presentationModel.eventSelectedIndex).pledge_total)}"/>
+					</mx:FormItem>
+					<mx:VRule height="20" strokeWidth="1" alpha="0.6" />
+					<mx:FormItem label="Contributed:" >
+						<mx:Label text="{currencyFormatter.format(ArrayCollection(_presentationModel.eventFilter).getItemAt(_presentationModel.eventSelectedIndex).contrib_total)}"/>
+					</mx:FormItem>
+				</mx:HBox>
+			</mx:Box>
+			<mx:Spacer width="100%" />
+				<mx:HBox verticalAlign="middle">
+					<mx:Text id="recordsDesc"
+						htmlText="{_presentationModel.recordsHtmlText}"
+						fontSize="10"
+						color="#FFFFFF"
+						visible="{event.selectedIndex &gt; -1}" />
+					<mx:VRule height="20" strokeWidth="1" alpha="0.6" visible="{event.selectedIndex &gt; -1}" />
+					<mx:Button id="exportButton"
+						label="Export"
+						color="#000000"
+						enabled="{!dataLoading &amp;&amp; event.selectedIndex != -1}"
+						click="export()"
+						/>
+					<mx:Button id="exportMultipleButton"
+						label="Export Multiple"
+						enabled="{!dataLoading}"
+						color="#000000"
+						click="exportMultiple()"
+						/>
+				</mx:HBox>
+		</mx:HBox>
+
+		<mx:TabNavigator id="tabNavigator"
+			width="100%" height="100%" 
+			styleName="squareTabs"
+			creationPolicy="all"
+			selectedIndex="{_presentationModel.viewstack}"
+			change="_presentationModel.viewstackChangeHandler(event)">
+			<mx:HBox width="100%" height="100%" 
+				label="Host Committee Event Report">
+				<mx:VBox verticalGap="0" width="100%" height="100%">
+					<mx:DataGrid id="hostsGrid" 
+						width="100%" height="100%"
+						itemClick="hostCommitteeGridClick( event )"
+						dataProvider="{presentationModel.gridRecords}" 
+						columns="{hostsColumns}" />
+					<mx:DataGrid id="hostsTotalGrid" 
+						height="22" width="100%"
+						fontWeight="bold" color="#FFFFFF"
+						alternatingItemColors="{['#666666','#666666']}"
+						rowCount="1" showHeaders="false" columns="{hostsColumns}"
+						dataProvider="{_presentationModel.gridTotal}"/>
+				</mx:VBox>
+				<ns:EventChart id="eventChart" dataProvider="{_presentationModel.chart.chartData}"
+					width="100%" height="100%"/>
+			</mx:HBox>
+			<mx:VBox label="Pledges for this Event">
+				<mx:FormItem label="host:" color="#333333">
+					<mx:ComboBox id="hostCombo"
+						width="200"
+						color="#000000" 
+						dataProvider="{_presentationModel.hostFilter}"
+						enabled="{!dataLoading &amp;&amp; _presentationModel.hostFilter.length > 1}"
+						change="_presentationModel.hostChangeHandler(event);"/>
+				</mx:FormItem>
+				<mx:Canvas
+					width="100%" height="100%"
+					verticalScrollPolicy="off" horizontalScrollPolicy="on">
+					<module:PaginationGrid id="pledgesGrid" width="100%" height="100%"
+						dataProvider="{_presentationModel.pledgeRecords}" color="#000000"
+						newPage="presentationModel.newPage(event)" 
+						selectedPage="{_presentationModel.pledgeCurrentPage}" 
+						itemsPerPage="{presentationModel.itemsPerPage}"
+						itemsTotal="{_presentationModel.pledgeTotalRecords}"
+						headerRelease="presentationModel.sortRecords(event)"
+						columns="{pledgesColumns}" />
+				</mx:Canvas> 
+			</mx:VBox>
+		</mx:TabNavigator>
+
+	</mx:VBox>
+
+	<mx:CurrencyFormatter id="currencyFormatter" precision="0" currencySymbol="$" useNegativeSign="false" />
+	<mx:DateFormatter id="dateFormatter" />
+
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephantadmin.views.modules.reporting.host_committee.events.ExportEvent;
+			import mx.core.Application;
+			import mx.events.FlexEvent;
+			import mx.core.IFlexDisplayObject;
+			import mx.managers.PopUpManager;
+			import com.enilsson.utils.EDateUtil;
+			import mx.controls.List;
+			import mx.collections.ArrayCollection;
+			import com.enilsson.elephantadmin.views.modules.reporting.host_committee.model.EventChartModel;
+			import com.enilsson.elephantadmin.views.modules.reporting.host_committee.model.HostCommitteeModel;
+
+			import mx.events.ListEvent;
+			import mx.utils.ObjectUtil;
+			import mx.events.DataGridEvent;
+		
+			[Bindable] public var _presentationModel:HostCommitteeModel;
+			[Bindable] private var eventDropdownFactory:ClassFactory; 
+
+			private function init():void
+			{
+				_presentationModel = new HostCommitteeModel();
+				presentationModel = _presentationModel;
+
+				_presentationModel.init();
+				eventChart.presentationModel = _presentationModel;
+
+				eventDropdownFactory = new ClassFactory(List);
+				eventDropdownFactory.properties = {showDataTips:true, dataTipFunction:eventDataTipFunction}
+			}
+
+			private function eventDataTipFunction(value:Object):String
+			{
+				return value.label;
+			} 
+
+			private function fundraiserNameLabel(item:Object, column:DataGridColumn):String
+			{
+				return item.fundraiser_fname + " " + item.fundraiser_lname;
+			}
+
+			private function outstandingCompare(obj1:Object, obj2:Object):int
+			{
+				return ObjectUtil.numericCompare(obj1.outstanding,obj2.outstanding);
+			} 
+
+			private function pledge_totalCompare(obj1:Object, obj2:Object):int
+			{
+				return ObjectUtil.numericCompare(obj1.pledge_total,obj2.pledge_total);
+			} 
+
+			private function pledge_amountCompare(obj1:Object, obj2:Object):int
+			{
+				return ObjectUtil.numericCompare(obj1.pledge_amount,obj2.pledge_amount);
+			} 
+
+			private function contrib_totalCompare(obj1:Object, obj2:Object):int
+			{
+				return ObjectUtil.numericCompare(obj1.contrib_total,obj2.contrib_total);
+			} 
+
+			private function region_idCompare(obj1:Object, obj2:Object):int
+			{
+				return ObjectUtil.numericCompare(obj1.mod_group_id,obj2.mod_group_id);
+			}
+
+			private function fundraising_goalCompare(obj1:Object, obj2:Object):int
+			{
+				return ObjectUtil.numericCompare(obj1.fundraising_goal,obj2.fundraising_goal);
+			} 
+
+			private function money_labelFunc(item:Object, column:DataGridColumn):String {
+				return currencyFormatter.format(item[column.dataField]);
+			} 
+			
+			private function date_labelFunc(item:Object, column:DataGridColumn):String 
+			{
+				dateFormatter.formatString = "MM/DD/YY"
+				return dateFormatter.format(EDateUtil.dateFromTimestamp(item[column.dataField]));
+			}
+
+			private function datetime_labelFunc(item:Object, column:DataGridColumn):String 
+			{
+				dateFormatter.formatString = "MM/DD/YY L:NNA"
+				return dateFormatter.format(new Date(item[column.dataField] * 1000));
+			}
+			
+			private function hostCommitteeGridClick( event:ListEvent ):void
+			{
+				_presentationModel.hostID = event.currentTarget.selectedItem.user_id;
+				_presentationModel.viewstack = 1;
+				
+				for ( var i:int=0; i < _presentationModel.hostFilter.length; i++ )
+					if ( _presentationModel.hostFilter[i].data == _presentationModel.hostID )
+						hostCombo.selectedIndex = i;
+			}
+
+			private function export():void
+			{
+				switch(tabNavigator.selectedIndex)
+				{
+					case 0:
+						presentationModel.exportGrid(hostsGrid.columns);
+						break;
+					case 1:
+						presentationModel.exportGrid(pledgesGrid.columns);
+						break;
+				}
+			}
+
+			private function exportMultiple():void
+			{
+				var popup:ExportMultiplePopup = ExportMultiplePopup( PopUpManager.createPopUp(DisplayObject(Application.application),ExportMultiplePopup, true) );
+				popup.dataProvider = _presentationModel.eventFilter;
+				popup.addEventListener(ExportEvent.EXPORT_IDS, function (event:ExportEvent):void
+				{
+					_presentationModel.setExportGrid(hostsGrid.columns);
+					_presentationModel.exportMultiple(event);
+				});
+				popup.addEventListener(Event.CLOSE, function (event:Event):void
+				{
+					PopUpManager.removePopUp(ExportMultiplePopup(event.currentTarget));
+				});
+				PopUpManager.centerPopUp(popup);
+			}
+
+			private function resizeCols(event:Event=null) : void
+			{
+				if(hostsGrid.rowCount > hostsGrid.dataProvider.length)
+					hostsTotalGrid.width = hostsGrid.width;
+				else
+					hostsTotalGrid.width = hostsGrid.width-16;
+			}
+			
+			private function resizeCol(event : DataGridEvent) : void
+			{
+				DataGridColumn(hostsGrid.columns[event.columnIndex]).width = DataGridColumn(hostsTotalGrid.columns[event.columnIndex]).width;
+			}
+
+		]]>
+	</mx:Script>
+
+</module:ReportModule>

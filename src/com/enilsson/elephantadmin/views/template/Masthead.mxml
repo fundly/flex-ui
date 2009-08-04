@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas styleName="header"
+		xmlns:mx="http://www.adobe.com/2006/mxml"
+		xmlns:fx="com.enilsson.effects.*" 
+		xmlns:graphics="com.enilsson.graphics.*"
+		verticalScrollPolicy="off">
+		
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephantadmin.models.EAModelLocator;
+			
+			[Bindable] private var _model:EAModelLocator = EAModelLocator.getInstance();
+			
+			private function goToHome():void
+			{
+				if(_model.screenState == EAModelLocator.DASHBOARD_VIEW){ return; }
+				
+				_model.mainViewState = EAModelLocator.DASHBOARD_VIEW;
+			}
+			
+		]]>
+	</mx:Script>
+
+	<mx:Canvas id="appLogoBox"
+		bottom="20" right="25">
+		<mx:Image id="appLogo" 
+			source="{_model.appLogo}"
+			click="goToHome()"
+			bottom="0" right="0"
+			useHandCursor="{_model.screenState > 0}" 
+			buttonMode="{_model.screenState > 0}" />
+	</mx:Canvas>
+	<fx:Reflector target="{appLogoBox}"
+		width="{appLogoBox.width}" height="20" 
+		blurAmount="0" alpha="0.55" falloff="0.55"
+		y="{appLogoBox.height + appLogoBox.y + 2}"
+		x="{appLogoBox.x}" />    
+	<mx:Label text="Admin Panel" 
+		styleName="adminPanel" height="8" 
+		bottom="{23 + appLogo.height}" right="23" />
+
+	<mx:Image id="orgLogo"
+		source="{_model.orgLogo}" 
+		bottom="18" left="10"
+		toolTip="Visit {_model.orgName}"
+		click="navigateToURL( new URLRequest(_model.orgURL), '_blank' )" 
+		useHandCursor="true" buttonMode="true" />
+	<fx:Reflector target="{orgLogo}"
+		width="{orgLogo.width}" height="20" 
+		blurAmount="0" alpha="0.55" falloff="0.3"
+		y="{orgLogo.height + orgLogo.y + 2}"
+		x="{orgLogo.x}" />
+
+	<graphics:ActivityIndicator id="ajaxActivity" 
+		visible="{_model.dataLoading &amp;&amp; _model.screenState == EAModelLocator.MAIN_SCREEN}" 
+		includeInLayout="{_model.dataLoading &amp;&amp; _model.screenState == EAModelLocator.MAIN_SCREEN}"
+		width="85" height="85" 
+		top="16" horizontalCenter="0"
+		showEffect="fadeIn" hideEffect="fadeOut"
+		boxFillColors="[0xCCCCCC, 0x333333]" 
+		textStyleName="activityText" />
+
+</mx:Canvas>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	verticalGap="0" paddingRight="10" paddingLeft="10" paddingBottom="10"
+	>
+	
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephantadmin.events.modules.EmailEvent;
+			import mx.utils.ObjectUtil;
+			import org.osflash.thunderbolt.Logger;
+			import mx.formatters.DateFormatter;
+			import mx.collections.ArrayCollection;
+			import com.enilsson.elephantadmin.models.EAModelLocator;
+			
+			[Bindable] private var _model:EAModelLocator = EAModelLocator.getInstance();
+			
+			public function set dataProvider(value:Object):void
+			{
+				if(value.length == 0) return;
+
+				var recordID:uint = value.id;
+				
+				Logger.info('VALUE',ObjectUtil.toString(value));
+
+				new EmailEvent(
+					EmailEvent.EMAIL_ATTACHMENTS_ACTIVITY, {
+						'table' : 'email_attachments',	
+						'recordID' : recordID	
+					}
+				).dispatch();
+			}
+			
+			/**
+			 * Label function to show the date in the correct format
+			 */
+			private function date_labelFunc(item:Object, column:DataGridColumn):String 
+			{
+		  		return dateFormatter.format( new Date( item[column.dataField] * 1000) );
+			} 
+			/**
+			 * Label function to show the date in the correct format
+			 */
+			private function name_labelFunc(item:Object, column:DataGridColumn):String 
+			{
+		  		return item['fname'] + ' ' + item['lname'];
+			} 
+		]]>
+	</mx:Script>
+	
+	<mx:DateFormatter id="dateFormatter" formatString="MM/DD/YY L:NN A" />
+	
+	<mx:DataGrid 
+		styleName="cmsDataGrid"
+		width="100%" height="100%"
+		dataProvider="{_model.email_attachments.recordActivity}">
+		<mx:columns>
+			<mx:DataGridColumn headerText="Action" dataField="action" />
+			<mx:DataGridColumn headerText="Name" dataField="fname" labelFunction="name_labelFunc"  />
+			<mx:DataGridColumn headerText="Date" dataField="timestamp" labelFunction="date_labelFunc" />			
+		</mx:columns>
+	</mx:DataGrid>
+	
+</mx:VBox>

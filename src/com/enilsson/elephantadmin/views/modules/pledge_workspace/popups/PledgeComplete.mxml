@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
+	width="100%" height="100%"
+	styleName="completedBox"
+	show="init()">
+	
+	<mx:Text id="titleText"
+		styleName="completeBoxTitle" 
+		width="80%" />
+	<mx:Spacer height="12" />		
+	<mx:Button 
+		icon="{Icons.PLEDGE}" 
+		styleName="linkBox" 
+		label="Record another pledge"
+		width="250" 
+		useHandCursor="true" buttonMode="true"
+		click="presentationModel.completedPledge = false;" />
+
+	<mx:Metadata>
+		[Event(name="clearForm", type="flash.events.Event")]
+	</mx:Metadata>
+	
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephantadmin.views.modules.pledge_workspace.events.SPWEvent;
+			import com.enilsson.elephantadmin.views.modules.pledge_workspace.events.PWEvent;
+			import com.enilsson.elephantadmin.views.modules.pledge_workspace.model.PledgeWorkspaceModel;
+			import com.enilsson.elephantadmin.models.Icons;
+			import com.enilsson.elephantadmin.models.EAModelLocator;
+			
+			[Bindable] public var presentationModel:PledgeWorkspaceModel;
+			[Bindable] private var _model:EAModelLocator = EAModelLocator.getInstance();
+			private var contactID:int;
+			
+			[Bindable] private var email:String = "";
+			
+			private function init():void
+			{
+				if ( presentationModel.vo.check != null )
+					titleText.htmlText = presentationModel.successTextCheck;
+				else
+					titleText.htmlText = presentationModel.successTextCC;
+				
+				// if this pledge was processed from a saved one, then removed the saved pledge
+				if( presentationModel.savedID )
+				{
+					new PWEvent( 
+						PWEvent.DELETE_SAVED_PLEDGE, 
+						presentationModel,
+						{ 'id' : presentationModel.savedID } 
+					).dispatch();
+				}
+				
+				contactID = presentationModel.contactID;
+				email = presentationModel.pledgeData.email;
+				
+				// reset the pledge workspace
+				presentationModel.reset();
+			}
+			
+		]]>
+	</mx:Script>
+
+			
+</mx:VBox>

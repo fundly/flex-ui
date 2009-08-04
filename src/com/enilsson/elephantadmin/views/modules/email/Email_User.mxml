@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="utf-8"?>
+<common:LabeledContainer
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:common="com.enilsson.elephantadmin.views.common.*" 
+	xmlns:email="com.enilsson.elephantadmin.views.modules.email.*" 
+	verticalScrollPolicy="off" horizontalScrollPolicy="off"
+	label="{_model.viewStateNames.getItemAt(moduleID)}"
+	>
+	
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephantadmin.models.Icons;
+			import mx.events.CloseEvent;
+			import mx.controls.Alert;
+			import com.enilsson.graphics.enDropShadows;
+			import mx.formatters.DateFormatter;
+			import com.enilsson.elephantadmin.vo.EmailVO;
+			import com.enilsson.graphics.enDropShadows;
+			import mx.utils.ObjectUtil;
+			import mx.collections.ArrayCollection;
+		
+			import com.enilsson.elephantadmin.events.session.PingEvent;
+			import com.enilsson.elephantadmin.models.EAModelLocator;
+			import com.enilsson.elephantadmin.events.modules.EmailEvent;
+			import com.enilsson.elephantadmin.vo.RecordsVO;
+			import com.enilsson.elephantadmin.vo.RecordVO;
+			import com.enilsson.elephantadmin.vo.SearchVO;
+			
+			import org.osflash.thunderbolt.Logger;
+			
+			[Bindable] private var _model:EAModelLocator = EAModelLocator.getInstance();
+
+			override protected function init():void
+			{
+				super.init();
+
+				// get default list
+				clearSearch();
+				// reset the data changed flag
+				_model.dataChanged = false;
+			}
+			
+			private function upsertRecord(event:Event):void 
+			{
+				if( email_form.isValid === false) return;
+
+				// set the form variables and assign the appropriate RLAC
+				var fv:Object = email_form.formVariables;
+				fv['mod_e_read'] = email_options.email_access.visibilityType == 'all' ? 1 : 0;
+				fv['mod_g_read'] = email_options.email_access.visibilityType == 'group' ? 1 : 0;
+				fv['mod_g_write'] = email_options.email_access.visibilityType == 'group' ? 1 : 0;
+				fv['mod_group_id'] = email_options.email_access.visibilityType == 'group' ? email_options.email_access.groupID : 0;
+				
+				if(_model.debug) Logger.info('Email User Form Variables', ObjectUtil.toString(fv));
+
+				new EmailEvent( 
+					EmailEvent.EMAIL_USER_UPSERT, {
+						'recordVO' :  new RecordVO (
+							'email_user_templates',
+							0,
+							fv
+						)
+					}
+				).dispatch();
+			}
+
+			private function sendTestEmail(event:Event):void 
+			{
+				if( email_form.isValid === false) return;
+
+				// set the form variables and assign the appropriate RLAC
+				var fv:Object = email_form.formVariables;
+				
+				if(_model.debug) Logger.info('Email user Form Variables', ObjectUtil.toString(fv));
+
+				// replace variables in the template with appropriate values
+				// Any change here should be reflected in the client UI EmailCommand's onResults_fetchTemplates function
+				var templateText:String = fv.description;
+
+				var df:DateFormatter = new DateFormatter();
+				df.formatString = 'MM/DD/YYYY';
+
+				templateText = templateText.replace(/{full_name}/g, _model.session.fullname);
+				templateText = templateText.replace(/{fname}/g, _model.session.fname);
+				templateText = templateText.replace(/{lname}/g, _model.session.lname);
+				templateText = templateText.replace(/{email}/g, _model.session.email);
+				templateText = templateText.replace(/{fid}/g, _model.session.data._fid);
+				templateText = templateText.replace(/{pledge_total}/g, "$"+_model.session.data._pledge_total);
+				templateText = templateText.replace(/{contrib_total}/g, "$"+_model.session.data._contrib_total);
+				templateText = templateText.replace(/{phone}/g, _model.session.data._phone);
+				templateText = templateText.replace(/{fundraising_goal}/g, "$"+_model.session.data._fundraising_goal);
+				templateText = templateText.replace(/{zip}/g, _model.session.data._zip);
+				templateText = templateText.replace(/{address1}/g, _model.session.data._address1);
+				templateText = templateText.replace(/{address2}/g, _model.session.data._address2);
+				templateText = templateText.replace(/{city}/g, _model.session.data._city);
+				templateText = templateText.replace(/{state}/g, _model.session.data._state);
+				templateText = templateText.replace(/{date}/g, df.format(new Date() ));
+
+				new EmailEvent( 
+					EmailEvent.EMAIL_USER_SEND, {
+						'emailVO' :  new EmailVO (
+							_model.session.email,
+							fv.title,					//email subject - empty means get from template
+							templateText,				//email body - empty means get from template
+							"",							//attachment List
+							undefined					//email template id
+						)
+					}
+				).dispatch();
+			}
+			
+			
+			private function searchStart(event:Event):void 
+			{
+				if(emailList.searchTerm != ""){
+				emailList.clearSearch.visible = true;
+
+					if(emailList.searchOption.data == 0)
+					{				
+						new EmailEvent(
+							EmailEvent.EMAIL_USER_SEARCH,  {
+								'searchVO' : new SearchVO(
+									'email_user_templates',
+									emailList.searchTerm,
+									null,
+									0,
+									_model.itemsPerPage
+								)
+							}
+						).dispatch();
+					}
+					else
+					{
+						var searchField:String = emailList.searchOption.data;
+
+						var whereObj:Object =  new Object();
+							whereObj['statement'] = '(1)';
+							whereObj[1] = { 
+								'what' : searchField,
+								'val' : "%"+emailList.searchTerm+"%",
+								'op' : 'LIKE'
+							};
+		
+						new EmailEvent( 
+							EmailEvent.EMAIL_USER_RECORDS, { 
+								'recordsVO' : new RecordsVO( 
+									'email_user_templates', 
+									whereObj, 
+									'email_user_templates.id ASC', 
+									_model.email_user.currPage, 
+									_model.itemsPerPage, 
+									'P' 
+								) 
+							} 
+						).dispatch();
+					}
+				}
+			}
+			
+			private function indexSearchStart(event:Event):void 
+			{
+				emailList.clearSearch.visible = true;
+				var whereObj:Object =  new Object();
+					whereObj['statement'] = '(1)';
+					whereObj[1] = { 
+						'what' : 'email_user_templates.title',
+						'val' : emailList.indexBar.searchLetter+"%",
+						'op' : 'LIKE'
+					};
+				new EmailEvent( 
+					EmailEvent.EMAIL_USER_RECORDS, { 
+						'recordsVO' : new RecordsVO( 
+							'email_user_templates', 
+							whereObj, 
+							'email_user_templates.id ASC', 
+							_model.email_user.currPage, 
+							_model.itemsPerPage, 
+							'P' 
+						) 
+					} 
+				).dispatch();
+			}
+			
+			private function clearSearch():void 
+			{
+				emailList.clearSearch.visible = false;
+				_model.email_user.currPage = 0;
+				new EmailEvent( 
+					EmailEvent.EMAIL_USER_RECORDS, { 
+						'recordsVO' : new RecordsVO( 
+							'email_user_templates', 
+							null, 
+							'email_user_templates.id ASC', 
+							_model.email_user.currPage, 
+							_model.itemsPerPage, 
+							'P' 
+						) 
+					} 
+				).dispatch();
+			}
+			
+			private function newPageAction(event:Event):void 
+			{
+				_model.email_user.currPage = emailList.selectedPage * _model.itemsPerPage;
+				switch(_model.email_user.lastQuery.type){
+					case EmailEvent.EMAIL_USER_RECORDS:
+						RecordsVO(_model.email_user.lastQuery.params.recordsVO).iFrom = _model.email_user.currPage;
+						_model.email_user.lastQuery.dispatch();
+ 						break;
+					
+					case EmailEvent.EMAIL_USER_SEARCH:
+						SearchVO(_model.email_user.lastQuery.params.searchVO).iFrom = _model.email_user.currPage;
+						_model.email_user.lastQuery.dispatch();
+						break;
+				}
+			}
+
+			private function listClickHandler():void 
+			{
+				_model.email_user.selectedIndex = emailList.selectedIndex;
+				_model.email_user.formRecord = emailList.clickedItem;
+			}
+
+			/**
+			 * Handle the action list clicks
+			 */
+			private function addClickHandler(event:Event):void
+			{
+				var newRecord:Object = {'variables':'{full_name} {fname} {lname} {fid} {date} {email} {phone} {address1} {address2} {city} {state} {zip} {pledge_total} {contrib_total} {fundraising_goal}'};
+				_model.email_user.formRecord = newRecord;
+			}
+
+			/**
+			 * Run the delete event
+			 */
+			private function deleteRecord(event:Event):void
+			{
+				if (emailList.clickedItem == null) {
+					return;
+				}
+				
+				if(_model.debug) Logger.info('Deleting Email User Template', emailList.clickedItem.id);
+
+				var confirmBox:Alert = Alert.show('Are you sure you want to delete this item?', 'Delete', Alert.YES | Alert.NO,this,function(eventObj:CloseEvent):void {
+					if (eventObj.detail==Alert.YES) 
+					{
+						new EmailEvent( 
+							EmailEvent.EMAIL_USER_DELETE, {
+								'recordVO' :  new RecordVO (
+									'email_user_templates',
+									emailList.clickedItem.id
+								)
+							}
+						).dispatch();
+					}
+				},null,Alert.NO); 
+				confirmBox.width = 330;
+			}
+
+		]]>
+	</mx:Script>
+	
+	<mx:DateFormatter id="dateFormatter" formatString="MM/DD/YY L:NN A" />
+
+	<mx:HDividedBox horizontalGap="10" width="100%" height="100%">
+		<common:ModuleList id="emailList" 
+			height="100%" minWidth="240" width="300"
+			dataProvider="{_model.email_user.records}"
+			searchComboList="{_model.email_user.searchBoxCombo}"
+			itemRenderer="com.enilsson.elephantadmin.views.modules.email.Email_User_ModuleList"
+			listItemClick="listClickHandler()" 
+			searchStart="searchStart(event)"
+			indexSearch="indexSearchStart(event)"
+			clearSearch="clearSearch()" 
+			newPage="newPageAction(event)" 
+			selectedIndex="{_model.email_user.selectedIndex}" 
+			selectedPage="{_model.email_user.currPage / _model.itemsPerPage}" 
+			itemsPerPage="{_model.itemsPerPage}" 
+			itemsTotal="{_model.email_user.totalRecords}"
+			/>
+		
+		<email:Email_User_Form id="email_form"
+			width="100%" minWidth="350"
+			height="100%" deleteRecord="deleteRecord(event)"
+			upsertRecord="upsertRecord(event)" sendTestEmail="sendTestEmail(event)"/>
+
+		<mx:VBox width="350" minWidth="300" maxWidth="350" height="100%">
+			<mx:HBox horizontalAlign="right" width="100%" horizontalScrollPolicy="off"
+				height="25">
+				<mx:Button id="addItemBtn" 
+					label="ADD ITEM" 
+					click="addClickHandler(event)" 
+					icon="{Icons.ADD}" 
+					width="100" height="25" 
+					styleName="actionsList"/>
+			</mx:HBox>
+			<email:Email_User_Options id="email_options"
+				width="100%" height="100%"/>
+		</mx:VBox>
+	</mx:HDividedBox>
+
+</common:LabeledContainer>

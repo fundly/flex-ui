@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModuleGrid xmlns="com.enilsson.elephantadmin.views.common.*"
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	dataProvider="{_model.checks.records}"
+	searchComboList="{_model.checks.searchBoxCombo}"
+	listItemClick="listClickHandler()" 
+	searchStart="searchStart(event)"
+	indexSearch="indexSearchStart(event)"
+	clearSearch="clearSearchHandler()" 
+	newPage="newPageAction(event)" 
+	selectedIndex="{_model.checks.selectedIndex}" 
+	selectedPage="{_model.checks.currPage / _model.itemsPerPage}" 
+	itemsPerPage="{_model.itemsPerPage}" 
+	itemsTotal="{_model.checks.totalRecords}"
+	creationComplete="handleCreationComplete()">
+	
+	<columns>
+		<mx:Array>
+			<mx:DataGridColumn id="batchColumn" 
+				headerText="Batch"
+				width="40"
+				sortCompareFunction="batchSortCompare" 
+				labelFunction="batchLabelFunction"
+				dataField="checks.batch_id" />
+			<mx:DataGridColumn id="contactColumn" 
+				headerText="Contact"
+				sortCompareFunction="contactSortCompare" 
+				labelFunction="contactLabelFunction"
+				dataField="checks__pledge_id.lname" />
+			<mx:DataGridColumn id="nameColumn"
+				headerText="Name on Acct"
+				labelFunction="nameLabelFunction"
+				dataField="checks.full_name" />
+			<mx:DataGridColumn id="addressColumn" 
+				headerText="Address"
+				sortCompareFunction="addressSortCompare"
+				labelFunction="addressLabelFunction"
+				dataField="checks__pledge_id.zip" />
+			<mx:DataGridColumn id="fundraiserColumn"
+				headerText="Fundraiser"
+				sortCompareFunction="fundraiserSortCompare"
+				labelFunction="fundraiserLabelFunction"
+				dataField="checks__pledge_id__tr_users_id.lname" />
+			<mx:DataGridColumn id="amountColumn" 
+				headerText="Amount"
+				sortCompareFunction="amountSortCompare" 
+				labelFunction="amountLabelFunction" 
+				width="75"
+				dataField="checks.amount" />
+			<mx:DataGridColumn id="statusColumn" 
+				headerText="Status" 
+				sortCompareFunction="checkStatusSortCompare"
+				labelFunction="checkStatusLabelFunction"
+				width="75"
+				dataField="checks.entry_date"
+				itemRenderer="com.enilsson.elephantadmin.views.modules.checks.renderers.CheckStatusRenderer"/>
+			<mx:DataGridColumn id="dateColumn" 
+				headerText="Pledge Date"
+				sortCompareFunction="dateSortCompare"
+				labelFunction="dateLabelFunction"
+				dataField="checks__pledge_id.pledge_date"
+				width="75" />
+			<mx:DataGridColumn width="22" sortable="false" >
+				<mx:itemRenderer>
+					<mx:Component>
+						<mx:HBox horizontalAlign="center">
+							<mx:Button useHandCursor="true" buttonMode="true"
+								styleName="inspectRecord"
+								click="new SidEvent ( data.pledge_id.sid ).dispatch()"
+								toolTip="Inspect this pledge" />
+							<mx:Script>
+								<![CDATA[
+									import com.enilsson.elephantadmin.events.main.SidEvent;
+								]]>
+							</mx:Script>
+						</mx:HBox>
+					</mx:Component>
+				</mx:itemRenderer>
+			</mx:DataGridColumn>
+		</mx:Array>
+	</columns>
+
+	<mx:Array id="footerButtons">
+		<mx:HBox verticalCenter="0" right="5" verticalAlign="middle">
+			<mx:FormItem label="Filter by Batch" color="#ffffff">
+				<mx:TextInput borderStyle="solid" cornerRadius="3" id="batchInput" width="40" height="20"
+					filters="{[ds]}" color="#333333" restrict="0-9" enter="batchSelectButtonHandler()"/>
+			</mx:FormItem>
+			<CMSSubmitBtn id="batchSelectButton" label="Filter" width="60"
+				click="batchSelectButtonHandler()"/>
+			<CMSSubmitBtn id="batchActionButton" label="Fulfill Batch"
+				 toolTip="Fulfill unfulfilled checks in this page"
+				click="batchActionButtonHandler()" enabled="{batchSelected}"/>
+		</mx:HBox>
+	</mx:Array>
+
+	<mx:DateFormatter id="dateFormatter" formatString="MM/DD/YY" />
+	<mx:CurrencyFormatter id="currencyFormatter" precision="0" currencySymbol="$" useNegativeSign="false" />
+
+	<mx:Script>
+		<![CDATA[
+			import mx.messaging.AbstractConsumer;
+			import mx.controls.Alert;
+			import mx.core.Application;
+			import mx.managers.PopUpManager;
+			import com.enilsson.elephantadmin.vo.RecordVO;
+			import com.enilsson.elephantadmin.vo.BatchRecordVO;
+			import com.enilsson.utils.EDateUtil;
+			import mx.events.FlexEvent;
+			import com.enilsson.elephantadmin.models.CheckStatus;
+			import mx.collections.SortField;
+			import mx.collections.Sort;
+			import mx.utils.ObjectUtil;
+			import org.osflash.thunderbolt.Logger;
+			import com.enilsson.elephantadmin.vo.SearchVO;
+			import com.enilsson.elephantadmin.vo.RecordsVO;
+			import com.enilsson.elephantadmin.events.modules.ChecksEvent;
+			import com.enilsson.elephantadmin.models.EAModelLocator;
+			import mx.events.DataGridEvent;
+			
+			[Bindable]
+			private var batchSelected	: Boolean;
+
+			private var _sortOrder 		: String = 'checks.created_on DESC';
+			private var _sortActions 	: Object = {'created_on':'DESC'};
+			
+			private var _whereObject 	: Object;
+
+			private var _model : EAModelLocator = EAModelLocator.getInstance();
+			
+			private function addComponents() : void
+			{
+				for(var i:int=0; i < footerButtons.length; i++)
+				{
+					footer.addChild( footerButtons[i] );
+				}
+			}
+
+			private function batchSelectButtonHandler():void
+			{
+				batchSelected = true;
+				clearSearch.visible = true;
+				_model.checks.currPage = 0;
+
+					_whereObject = {
+						statement	: '(1)',
+						1			: {	what	: "checks.batch_id", 
+										val		: batchInput.text,
+										op		: '='
+						  }
+					};
+				_model.checks.recordQuery.where = _whereObject;
+				_model.checks.recordQuery.iFrom = 0;
+
+				new ChecksEvent( ChecksEvent.RECORDS, 
+					{ recordsVO: _model.checks.recordQuery } 
+				).dispatch();
+			}
+
+			private function batchActionButtonHandler():void
+			{
+				var popup:ChecksBatchPopUp = ChecksBatchPopUp( PopUpManager.createPopUp(DisplayObject(Application.application),ChecksBatchPopUp, true) );
+				popup.dataProvider = dataProvider;
+				popup.addEventListener(Event.CLOSE, function (event:Event):void
+				{
+					PopUpManager.removePopUp(ChecksBatchPopUp(event.currentTarget));
+				});
+				PopUpManager.centerPopUp(popup);
+			}
+
+			public function getChecks() : void 
+			{
+				batchSelected = false;
+				clearSearch.visible = false;
+
+				_model.checks.currPage = 0;
+				
+				_model.checks.recordQuery = new RecordsVO(
+					'checks(pledge_id<ALL>(tr_users_id<fname:lname:_fid>))',
+					null, 
+					_sortOrder, 
+					_model.checks.currPage, 
+					_model.itemsPerPage, 
+					'P'
+				); 
+
+				// get the data	
+				_model.checks.currPage = 0;
+				new ChecksEvent( 
+					ChecksEvent.RECORDS, { 
+						'recordsVO' : _model.checks.recordQuery
+					} 
+				).dispatch();
+			}
+			
+			private function handleCreationComplete() : void
+			{
+				moduleGrid.addEventListener(DataGridEvent.HEADER_RELEASE, sortAction, false, 0, true );
+				addComponents();
+			}
+			
+			private function sortAction(e:DataGridEvent):void
+			{
+				if (_model.dataLoading) {
+					e.preventDefault();
+					e.stopImmediatePropagation();
+					return;
+				}
+			 	
+			 	if( _model.checks.totalRecords > _model.itemsPerPage)
+			 	{
+				 	// stop the default sort action
+				 	e.preventDefault();
+				 	e.stopImmediatePropagation();
+				 	
+				 	// get the fieldname
+				 	var fieldName:String = e.dataField;
+				 	var sort:String = '';
+	
+				 	// loop through and highlight the sorted column
+				 	for ( var i:int=0; i< moduleGrid.columns.length; i++)
+				 	{
+				 		if(e.columnIndex == i)
+				 			moduleGrid.columns[i].setStyle('backgroundColor','#ededed');
+				 		else
+				 			moduleGrid.columns[i].setStyle('backgroundColor','none');
+				 	}
+				 	
+				 	// run the sort action, desc first or toggle the existing
+				 	_sortOrder = _sortActions[fieldName];
+			 		var direction:String = ((_sortOrder) ? ((_sortOrder == 'DESC') ? 'ASC' : 'DESC') : 'ASC');
+			 		_sortActions[fieldName] = direction;
+			 		_sortOrder = fieldName + ' ' + direction;
+
+					_model.checks.currPage = 0;
+						
+					_model.checks.recordQuery.sort = _sortOrder;
+					
+					new ChecksEvent( 
+							ChecksEvent.RECORDS, {
+								'recordsVO' : _model.checks.recordQuery
+							}
+						).dispatch();
+			 	}
+			}
+			
+			private function indexSearchStart(event:Event):void 
+			{
+				batchSelected = false;
+
+				_whereObject = {
+						'statement' : '(1)',
+						'1' : { 'what' : 'checks__pledge_id.lname', 
+								'val' : indexBar.searchLetter + '%', 
+								'op' : 'LIKE' 
+							  }
+					};
+				
+				_model.checks.recordQuery.where = _whereObject;
+				_model.checks.recordQuery.iFrom = 0;
+				
+				clearSearch.visible = true;
+				_model.checks.currPage = 0;
+
+				new ChecksEvent( 
+					ChecksEvent.RECORDS, { 
+						'recordsVO' : _model.checks.recordQuery
+					} 
+				).dispatch();
+			}
+			
+			private function searchStart(event:Event):void {
+
+				if(searchTerm != "")
+				{
+					batchSelected = false;
+					clearSearch.visible = true;
+					_model.checks.currPage = 0;
+
+					if(searchOption.type == "any")
+					{
+						_whereObject = {
+							'statement' : '(1)',
+							'1' : { 'what' : searchOption.data, 
+									'val' : "%" + searchTerm +"%",
+									'op' : 'LIKE' 
+								  }
+						};
+					} else if(searchOption.type == "exact")
+					{
+						_whereObject = {
+						'statement' : '(1)',
+						'1' : { 'what' : searchOption.data, 
+								'val' : searchTerm,
+								'op' : '=' 
+							  }
+						};
+					} else {
+						_whereObject = {
+							'statement' : '(1)',
+							'1' : { 'what' : searchOption.data, 
+									'val' : searchTerm +"%",
+									'op' : 'LIKE' 
+								  }
+						};
+					}
+					
+					_model.checks.recordQuery.where = _whereObject;
+					_model.checks.recordQuery.iFrom = 0;
+
+					new ChecksEvent( ChecksEvent.RECORDS, 
+						{ recordsVO: _model.checks.recordQuery } 
+					).dispatch();
+				}
+			}
+			
+			private function clearSearchHandler():void 
+			{
+				getChecks();
+			}
+			
+			private function newPageAction(event:Event):void 
+			{
+				_model.checks.currPage = selectedPage * _model.itemsPerPage;
+				_model.checks.recordQuery.iFrom = _model.checks.currPage;
+				_model.checks.lastQuery.dispatch();
+			}
+			
+			private function listClickHandler():void 
+			{
+				_model.checks.sidRecord = false;
+				_model.checks.details = clickedItem;
+			}
+
+			private function batchLabelFunction(item:Object, column:DataGridColumn):String 
+			{
+				if(item.batch_id)
+					return item.batch_id;
+				else
+					return "-";
+			}
+			private function batchSortCompare( itemA : Object, itemB:Object) : int
+			{
+				return ObjectUtil.numericCompare(itemA.batch_id, itemB.batch_id );
+			}
+
+			private function contactLabelFunction(item:Object, column:DataGridColumn):String 
+			{
+				return item.pledge_id.fname + " " + item.pledge_id.lname;
+			}
+			private function contactSortCompare( itemA : Object, itemB:Object) : int
+			{
+				return ObjectUtil.stringCompare(itemA.pledge_id.lname, itemB.pledge_id.lname );
+			}
+
+			private function nameLabelFunction(item:Object, column:DataGridColumn):String 
+			{
+				return item.full_name;
+			}
+
+			private function addressLabelFunction(item:Object, column:DataGridColumn):String 
+			{
+				return item.pledge_id.address1 + ". " + item.pledge_id.city + " " + item.pledge_id.state + " " + item.pledge_id.zip;
+			}
+			private function addressSortCompare( itemA : Object, itemB : Object ) : int 
+			{
+				return ObjectUtil.stringCompare(addressLabelFunction(itemA, null), addressLabelFunction(itemB, null));
+			}
+			
+			private function fundraiserLabelFunction(item:Object, column:DataGridColumn):String 
+			{
+				if (item.pledge_id.tr_users_id.fname == null)
+					return "";
+
+				return item.pledge_id.tr_users_id.fname + " " + item.pledge_id.tr_users_id.lname + " - " + item.pledge_id.tr_users_id._fid;
+			}
+			private function fundraiserSortCompare( itemA : Object, itemB : Object) : int
+			{
+				return ObjectUtil.stringCompare( fundraiserLabelFunction(itemA, null), fundraiserLabelFunction(itemB, null) );
+			}
+			
+			private function amountLabelFunction(item:Object, column:DataGridColumn):String 
+			{
+				return currencyFormatter.format(item.amount);
+			}			
+			private function amountSortCompare( itemA : Object, itemB : Object ) : int
+			{
+				return ObjectUtil.numericCompare(itemA.amount, itemB.amount);
+			}
+
+			private function checkStatusLabelFunction( item : Object, column : DataGridColumn ) : String
+			{
+				var status : String = "";
+								
+				if(Number(item.amount) < 0)
+					status = CheckStatus.REFUND;
+				else
+					status = Number(item.entry_date) > 0 ? CheckStatus.FULFILLED : CheckStatus.UNFULFILLED;		
+					 
+				return status;
+			}			
+			private function checkStatusSortCompare( itemA : Object, itemB : Object ) : int
+			{
+				return ObjectUtil.numericCompare(itemA.entry_date, itemB.entry_date);
+			}
+			
+			private function dateLabelFunction(item:Object, column:DataGridColumn):String 
+			{
+				var today:Date = new Date();
+		  		return dateFormatter.format( EDateUtil.dateFromTimestamp( item.pledge_id.pledge_date ) );
+			}
+			private function dateSortCompare( itemA : Object, itemB : Object) : int
+			{
+				return ObjectUtil.numericCompare( itemA.pledge_id.pledge_date, itemB.pledge_id.pledge_date );
+			}
+		]]>
+	</mx:Script>
+	
+	
+</ModuleGrid>

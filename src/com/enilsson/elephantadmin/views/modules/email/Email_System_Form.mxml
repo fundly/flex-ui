@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:struktorForm="com.enilsson.utils.struktorForm.*" 
+	xmlns:common="com.enilsson.elephantadmin.views.common.*" 
+	xmlns:graphics="com.enilsson.graphics.*"
+	>
+	
+	<mx:Metadata>
+		[Event(name="upsertRecord", type="flash.events.Event")]
+		[Event(name="sendTestEmail", type="flash.events.Event")]
+	</mx:Metadata>
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.managers.PopUpManager;
+			import com.enilsson.elephantadmin.views.modules.email.popups.LinkPopUp;
+			import mx.controls.VRule;
+			import com.enilsson.utils.struktorForm.RTENoRichClipboard;
+			import mx.controls.Button;
+			import com.enilsson.graphics.enDropShadows;
+			import com.enilsson.controls.StackableFormItem;
+			import mx.controls.TextInput;
+			import mx.containers.HBox;
+			import caurina.transitions.Tweener;
+			import mx.events.ListEvent;
+			import mx.controls.ComboBox;
+			import mx.utils.ObjectUtil;
+			import org.osflash.thunderbolt.Logger;
+			import com.enilsson.elephantadmin.vo.RecordVO;
+			import com.enilsson.elephantadmin.models.EAModelLocator;
+			
+			import mx.core.mx_internal;
+
+			use namespace mx_internal;
+
+			[Bindable] private var _model:EAModelLocator = EAModelLocator.getInstance();
+			[Embed(source='/assets/images/linkButton.png')] public const LINK_ICON:Class;
+			[Embed(source='/assets/images/breakLinkButton.png')] public const BREAK_LINK_ICON:Class;
+
+			private var linkButton:Button;
+			private var deleteLinkButton:Button;
+			private var rte:RTENoRichClipboard;
+			
+			/**
+			 * Get the variables from the form
+			 */
+			public function get formVariables():Object
+			{
+				return moduleForm.formVariables;
+			}
+			
+			/**
+			 * Get the status of the form
+			 */
+			public function get isValid():Boolean
+			{
+				return moduleForm.isValid;
+			}
+			
+			[Bindable] private var _showProgress:Boolean = false;
+			public function set showProgress(value:Boolean):void
+			{
+				_showProgress = value;
+			}
+
+
+			private function setCombo():void
+			{
+				if(_model.email_system.attachmentList)
+				{
+					attachmentCombo.selectedIndex = 0;
+					attachmentBox.visible = true;
+					try
+					{
+		 				for(var i:int = 0;i < _model.email_system.attachmentList.length; i++)
+						{
+							if(_model.email_system.attachmentList[i].attachment_id == _model.email_system.formRecord.attachment_id)
+							{
+								attachmentCombo.selectedIndex = i;
+								return;
+							}
+						}
+					}
+					catch(e:Error){
+						return;
+					}
+				}
+			}
+			
+			private function titleLabel(data:Object):String
+			{
+				if(data.filesize)
+					return data.title + ' ('+Math.ceil(data.filesize/1024)+' KB)';
+				else
+					return data.title;
+			}
+			
+			private function reduceRTEHeight():void
+			{
+				moduleForm.getField('description').height = 200;
+			}
+
+			public function addLinkButtons():void 
+			{
+				rte = moduleForm.getField('description') as RTENoRichClipboard;
+
+				var linkBox:HBox = new HBox();
+				linkBox.id = "linkButtons";
+				linkBox.setStyle("horizontalGap",0); //horizontalGap="0";
+				
+				linkButton = new Button();
+				linkButton.width=25;
+				linkButton.setStyle("icon",LINK_ICON);
+				linkButton.addEventListener("click",linkPop);
+				linkButton.toolTip = "Add Link";
+				linkBox.addChild(linkButton);
+				    
+				deleteLinkButton = new Button();
+				deleteLinkButton.width=25;
+				deleteLinkButton.height=23;
+				deleteLinkButton.setStyle("icon",BREAK_LINK_ICON);
+				deleteLinkButton.addEventListener("click",killLink);
+				deleteLinkButton.toolTip = "Remove Link";
+				linkBox.addChild(deleteLinkButton);
+				
+				var spacer:VRule = new VRule();
+				spacer.height = 23;
+				rte.toolbar.addChild(spacer);
+				rte.toolbar.addChild(linkBox);
+	
+				// add a function to test whether or not
+				// the link button should be enabled
+				rte.addEventListener("change",testLink);
+				rte.addEventListener("click",testLink);
+				rte.addEventListener("keyUp",testLink);
+			}
+
+			public function testLink(event:Event):void
+			{
+				if(rte)
+				{
+					var beginIndex:int = rte.textArea.getTextField().selectionBeginIndex;
+					var endIndex:int   = rte.textArea.getTextField().selectionEndIndex;
+					
+					if (beginIndex == endIndex) 
+					{
+						if(linkButton) linkButton.enabled = false;
+					}else{
+						if(linkButton) linkButton.enabled = true;
+					}
+				}
+			}
+
+			/**
+			 * The event listener for the insert-link button's click event creates a pop-up with a LinkPop custom control.
+			 */			
+			public function linkPop(event:Event):void 
+			{
+				var w:LinkPopUp = LinkPopUp(PopUpManager.createPopUp(this, LinkPopUp, true));
+			    w.height = 150;
+			    w.width=228;
+			    
+			    // Pass the a reference to the textArea subcontrol
+			    // so that the custom control can replace the text.
+			    w.RTETextArea = rte.textArea;
+			    PopUpManager.centerPopUp(w);
+			}
+			
+			/**
+			 * The killLink function needs to do two things:
+			 *	1) Remove link formatting from highlighted text 
+			 *	-OR-
+			 *	2) If no text is highlighted, but the current cursor position is at a link, remove the whole link.
+			 */
+			public function killLink(event:Event):void 
+			{
+				var tf:TextFormat  = new TextFormat();
+				tf["url"] = "";
+				tf["target"] = "";
+            	tf['underline'] = false;
+
+				var beginIndex:int = rte.textArea.getTextField().selectionBeginIndex;
+				var endIndex:int   = rte.textArea.getTextField().selectionEndIndex;
+
+				if (beginIndex == endIndex) 
+				{
+					var up:int = endIndex;
+					var down:int = beginIndex;
+					while (up < rte.textArea.getTextField().length - 1)
+					{
+						var tfNext:TextFormat=rte.textArea.getTextField().getTextFormat(up, up + 1);
+						if (!tfNext.url || tfNext.url == "")
+						{		
+							break;
+						}else{
+							up++;
+						}
+					}
+					
+					while(down > 0)
+					{
+						var tfPre:TextFormat=rte.textArea.getTextField().getTextFormat(down-1, down);
+						if (!tfPre.url || tfPre.url == "")
+						{		
+							break;
+						}else{
+							down--;
+						}
+					}
+					beginIndex = down;
+					endIndex = up;
+				}
+		
+				//if we have a link...kill it
+				if(beginIndex != endIndex) rte.textArea.getTextField().setTextFormat(tf,beginIndex,endIndex);
+			}
+		]]>
+	</mx:Script>
+
+	<mx:Style>
+		.rteStyleName {
+			borderAlpha:0;
+			dropShadowEnabled:false;
+			borderThicknessLeft:0;
+			borderThicknessRight:0;
+			borderThicknessTop:0;	
+			color:#333333;	
+			fontFamily:Helvetica;
+			headerHeight:0;
+		}
+		.formActivityText {
+			color:#333333;
+			fontSize:8;
+			fontWeight:'normal';	
+		}
+	</mx:Style>
+	
+	<mx:VBox verticalGap="0" backgroundColor="#CCCCCC" height="{height - footer.height}" horizontalScrollPolicy="off">
+		<struktorForm:StruktorForm id="moduleForm"
+			styleName="processingForm"
+			width="{width}" height="495"
+			layoutProvider="{_model.struktorLayout.email_system_templates}"
+			dataProvider="{_model.email_system.formRecord}" 
+			stackFormItems="true" 
+			selectedFields="{['variables','from_name','replyto_name','replyto_email','cc','bcc','subject','description']}" 
+			dataChange="_model.dataChanged = true" 
+			formBuildComplete="_model.dataChanged = false; setCombo(); reduceRTEHeight(); addLinkButtons()"
+			labelWidth="75" formInputWidth="{width - 50}"
+			/>
+		<mx:VBox id="attachmentBox" width="{width}" height="100%" verticalGap="0" visible="false" paddingTop="0" paddingLeft="15" paddingRight="15">
+			<mx:Label text="File attachment" paddingLeft="5" styleName="labelStyleName"/>
+			<mx:ComboBox id="attachmentCombo" width="{attachmentBox.width - 30}" labelFunction="titleLabel"
+				 dataProvider="{_model.email_system.attachmentList}" styleName="labelStyleName"
+				 change="formVariables['attachment_id'] = attachmentCombo.selectedItem.attachment_id; _model.dataChanged = true"/>
+		</mx:VBox>
+	</mx:VBox>
+	<mx:Canvas id="footer" bottom="0"
+		width="100%" height="28" styleName="controlBar">
+		<common:CMSSubmitBtn
+			label="TEST EMAIL"
+			toolTip="{moduleForm.isValid ? 'This will send a test email to your own email address' : 'Please correctly fill in all form fields'}" 
+			enabled="{moduleForm.isValid}"
+			verticalCenter="0" left="10"
+			click="dispatchEvent( new Event('sendTestEmail') )" />
+		<common:CMSSubmitBtn 
+			label="UPDATE"
+			toolTip="{moduleForm.isValid ? 'This form is ready to submit' : 'Please correctly fill in all form fields'}" 
+			enabled="{moduleForm.isValid}"
+			verticalCenter="0" right="10"
+			click="dispatchEvent( new Event('upsertRecord') )" />
+	</mx:Canvas>
+
+	<mx:Canvas id="formProcessing"
+		width="100%" height="100%"
+		visible="{_model.email_system.formProcessing}"
+		showEffect="fadeIn" hideEffect="fadeOut"
+		backgroundColor="#ededed"
+		alpha="0.75"
+		>
+		<graphics:ActivityIndicator 
+			id="formProcessingActivity"
+			width="110" height="110" 
+			horizontalCenter="0" verticalCenter="0"
+			alpha="1" visible="{formProcessing.visible}"
+			boxFillColors="[0x999999, 0x999999]" 
+			boxCornerRadius="2" 
+			textAlpha="1" 
+			textMessage="form processing"  
+			textStyleName="formActivityText"
+			/>
+	</mx:Canvas>
+	
+</mx:Canvas>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+	label="SHARED" enabled="{!_presentationModel.sharedTabLoading}"
+	implements="com.enilsson.elephantadmin.interfaces.IOptionView"	
+	width="100%" height="100%">
+
+	<mx:VBox verticalGap="2"
+		color="#333333"
+		horizontalAlign="center"
+		top="0" left="10"
+		width="{width - 20}" height="{height-10}">
+		<mx:Text>
+			<mx:htmlText><![CDATA[Below is a list of all <b>Fundraisers</b> that share this contact.]]></mx:htmlText>
+		</mx:Text>
+		<mx:HBox color="#333333" fontSize="11" verticalAlign="middle">
+			<mx:Text htmlText="&lt;b&gt;Owned by&lt;/b&gt;: {_presentationModel.selectedRecord.created_by}" />
+			<mx:VRule height="10" />
+			<mx:Text htmlText="&lt;b&gt;FID&lt;/b&gt;: FUND{_presentationModel.selectedRecord.created_by_id}" />
+		</mx:HBox>
+		<mx:List
+			width="100%" height="100%"
+			alternatingItemColors="['#FFFFFF', '#EDEDED']" 
+			variableRowHeight="true" 
+			itemRenderer="com.enilsson.elephantadmin.views.modules.contacts.renderers.Contacts_SharedRenderer"
+			dataProvider="{_presentationModel.sharedUsers}" />
+	</mx:VBox>
+
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephantadmin.views.manage_record_base.model.RecordModel;
+			import com.enilsson.elephantadmin.views.modules.contacts.model.ContactsModel;
+			import com.enilsson.elephantadmin.interfaces.IRecordModel;
+
+			[Bindable] private var _presentationModel:ContactsModel;
+			public function set presentationModel ( value:IRecordModel ):void
+			{
+				_presentationModel = ContactsModel(value);
+			}
+			public function get presentationModel():IRecordModel
+			{
+				return _presentationModel;
+			}
+
+		]]>
+	</mx:Script>
+	
+</mx:Canvas>

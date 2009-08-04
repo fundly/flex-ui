@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas 
+		xmlns:mx="http://www.adobe.com/2006/mxml"
+		xmlns:fx="com.enilsson.effects.*" 
+		width="400" height="300" 
+		verticalScrollPolicy="off">
+		
+	<mx:Image id="appLogo" 
+		source="{_model.appLogo}"
+		bottom="20" right="25"
+		click="goToHome()"
+		useHandCursor="{_model.screenState > 0}" 
+		buttonMode="{_model.screenState > 0}" />
+	<fx:Reflector target="{appLogo}"
+		width="{appLogo.width}" height="20" 
+		blurAmount="0" alpha="0.55" falloff="0.5"
+		y="{appLogo.height + appLogo.y + 2}"
+		x="{appLogo.x}" />			
+				
+	<mx:Image id="orgLogo"
+		source="{_model.orgLogo}"
+		bottom="20" left="15"
+		maxHeight="65"	
+		toolTip="Visit {_model.orgName}"
+		click="navigateToURL( new URLRequest(_model.orgURL), '_blank' )" 
+		useHandCursor="true" buttonMode="true" />		
+	<fx:Reflector target="{orgLogo}"
+		width="{orgLogo.width}" height="20" 
+		blurAmount="0" alpha="0.55" falloff="0.3"
+		y="{orgLogo.height + orgLogo.y + 2}"
+		x="{orgLogo.x}" />			
+
+	<mx:Text text="{_model.appInstanceID} : {_model.session.data.instance_name}"
+		visible="{_model.siteURL == ''}" includeInLayout="{_model.siteURL == ''}"
+		top="10" right="25"
+		color="#FFFFFF" fontSize="8" fontFamily="silkScreen" />
+
+	
+
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephanttrakker.models.ETModelLocator;
+			
+			[Bindable] private var _model:ETModelLocator = ETModelLocator.getInstance();
+			
+			private function goToHome():void
+			{
+				if(_model.screenState == 0) return;
+				
+				_model.mainViewState = ETModelLocator.OVERVIEW_VIEW;
+			}
+			
+		]]>
+	</mx:Script>		
+	
+</mx:Canvas>

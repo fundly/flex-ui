@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:PieChart xmlns:mx="http://www.adobe.com/2006/mxml"
+	showDataTips="true">
+	<mx:series>
+		<mx:PieSeries 
+			id="pieSeries"
+			field="count" 
+			nameField="paymentMethod"
+			showDataEffect="{seriesInterpolate}">
+			<mx:radialStroke>
+				<mx:Stroke weight="0" color="#FFFFFF" alpha=".2" />
+			</mx:radialStroke>
+			<mx:stroke>
+				<mx:Stroke color="0" alpha=".2" weight="2" /> 
+			</mx:stroke>
+			<mx:fills>
+				<mx:Array>
+					<mx:RadialGradient>
+						<mx:entries>
+							<mx:Array>
+								<mx:GradientEntry color="#122A4C" ratio="0" />
+								<mx:GradientEntry color="#022C69" ratio=".95" />
+								<mx:GradientEntry color="#FFFFFF" ratio="1" />
+							</mx:Array>
+						</mx:entries>
+					</mx:RadialGradient>
+					<mx:RadialGradient>
+						<mx:entries>
+							<mx:Array>
+								<mx:GradientEntry color="#006CD7" ratio="0" />
+								<mx:GradientEntry color="#7FCEFF" ratio=".95" />
+								<mx:GradientEntry color="#FFFFFF" ratio="1" />
+							</mx:Array>
+						</mx:entries>
+					</mx:RadialGradient>
+				</mx:Array>
+			</mx:fills>
+		</mx:PieSeries>
+	</mx:series>
+	
+	<mx:SeriesInterpolate id="seriesInterpolate" duration="{INTERPOLATE_DURATION}" />
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.charts.ChartItem;
+			import mx.events.IndexChangedEvent;
+			import mx.charts.events.ChartItemEvent;
+			
+			private static const INTERPOLATE_DURATION : Number = 1000;
+			
+		]]>
+	</mx:Script>
+	
+</mx:PieChart>

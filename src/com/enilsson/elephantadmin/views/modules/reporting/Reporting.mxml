@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="utf-8"?>
+<common:LabeledContainer
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:common="com.enilsson.elephantadmin.views.common.*" 
+	xmlns:ns="com.enilsson.elephantadmin.views.modules.reporting.*"
+	verticalScrollPolicy="off" horizontalScrollPolicy="off"
+	label="{_model.viewStateNames.getItemAt(moduleID)}"
+	xmlns:ns1="com.enilsson.elephantadmin.views.manage_record_base.*">
+
+	<mx:Canvas id="reportList" x="0"
+			width="270" height="100%">
+			<mx:Canvas id="header" width="240" height="28"
+				styleName="controlBar">
+				<mx:Text id="recordsDesc"
+					verticalCenter="0" left="5" 
+					fontSize="10"
+					color="#FFFFFF"/>
+			</mx:Canvas>
+			<mx:List id="moduleList"
+				height="100%" width="240"
+				alternatingItemColors="[#e0e0e0, #e7e7e7]"
+				dataProvider="{_model.reporting.records}"
+				itemRenderer="com.enilsson.elephantadmin.views.modules.reporting.Reporting_ModuleList"
+				change="listChangeHandler(event)" />
+			<ns1:ModuleGrip id="reportGrip"
+				height="100%" width="30" right="0"
+				styleName="grip" currentState="on"
+				label="REPORTS LIST"
+				icon="@Embed('/assets/images/admin_panel/magnifier_small.png')"
+				toolTip='Show the reports list'
+				mouseChildren="false"
+				click="gripClickHandler(event)"/>
+	</mx:Canvas>
+	<mx:VBox id="moduleLoader"
+			width="100%" height="100%" paddingLeft="5"
+			left="{reportList.x + reportList.width}"/>
+	<common:states>
+		<mx:State name="{COLLAPSE_LIST}">
+			<mx:SetProperty target="{reportList}" name="x" value="-240"/>
+		</mx:State>
+	</common:states>
+
+	<common:transitions>
+		<mx:Transition fromState="*" toState="*">
+			<mx:effect>
+				<mx:Move target="{reportList}" duration="600"/>
+			</mx:effect>
+		</mx:Transition>
+	</common:transitions>
+
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			import com.enilsson.elephantadmin.events.main.SidEvent;
+			import com.enilsson.elephantadmin.views.modules.reporting.base.ReportResultVO;
+			import mx.core.UIComponent;
+			import mx.core.IFlexDisplayObject;
+			import mx.core.Application;
+			import com.enilsson.elephantadmin.views.modules.reporting.base.ReportVO;
+			import mx.modules.IModuleInfo;
+			import mx.modules.ModuleManager;
+			import mx.collections.Sort;
+			import mx.collections.SortField;
+			import mx.events.ModuleEvent;
+			import mx.binding.utils.ChangeWatcher;
+			import mx.binding.utils.BindingUtils;
+			import com.enilsson.elephantadmin.events.modules.ReportModuleEvent;
+			import mx.events.ListEvent;
+			import com.enilsson.elephantadmin.models.EAModelLocator;
+			import com.adobe.cairngorm.control.CairngormEventDispatcher;
+			import mx.utils.ObjectUtil;
+			import mx.events.FlexEvent;
+			import com.enilsson.elephantadmin.vo.SearchVO;
+			import com.enilsson.elephantadmin.vo.RecordsVO;
+			import org.osflash.thunderbolt.Logger;
+			import com.enilsson.elephantadmin.events.modules.ReportingEvent;
+			import com.enilsson.elephantadmin.events.session.PingEvent;
+			import mx.collections.ArrayCollection;
+			import com.enilsson.elephantadmin.interfaces.IReportModule;
+			import mx.modules.Module;
+			import com.enilsson.elephantadmin.views.modules.reporting.base.ModuleAxisLabelRenderer;
+
+			[Bindable] private var _model:EAModelLocator = EAModelLocator.getInstance();
+			private const COLLAPSE_LIST:String = "collapseList";
+			private var dataLoadingWatcher:ChangeWatcher;
+			private var reportVO:ReportVO;
+			private var reportResultVO:ReportResultVO;
+			private var moduleAxisLabelRenderer:ModuleAxisLabelRenderer;
+			protected var _moduleInfo:IModuleInfo;
+
+			public var SID:String;
+
+			override protected function init():void
+			{
+				super.init();
+
+				// get default list
+				if(_model.reporting.records.length == 0)
+				{
+					getModules();
+				}
+				else
+				{
+					if(_model.reporting.reportModule)
+					{
+						for(var i:int = 0; i < _model.reporting.records.length; i++)
+						{
+							if(_model.reporting.records.getItemAt(i).module_name == _model.reporting.reportModule)
+							{
+								moduleList.selectedIndex = i;
+								break;
+							}
+						}
+						loadModule(_model.reporting.reportModule);
+						_model.reporting.reportModule = null;
+					}
+				}
+
+				CairngormEventDispatcher.getInstance().addEventListener(ReportingEvent.RECORDS_LOADED, dataChangeHandler);
+
+				// reset the data change flag
+				_model.dataChanged = false;
+			}
+
+			/**
+			 * Run a new data event when the clear search event is run
+			 */
+			private function getModules():void
+			{
+				_model.reporting.currPage = 0;
+				new ReportingEvent( 
+					ReportingEvent.REPORTING_RECORDS, { 
+						'recordsVO' : new RecordsVO( 
+							'reporting', 
+							null, 
+							'reporting.id DESC', 
+							_model.reporting.currPage, 
+							_model.itemsPerPage, 
+							'P' 
+						) 
+					} 
+				).dispatch();
+			}
+
+			/**
+			 * Run an action when the list items are clicked
+			 */
+			private function listChangeHandler(event:ListEvent):void
+			{
+				Logger.info('open module',moduleList.selectedItem.module_name);
+
+				loadModule(moduleList.selectedItem.module_name);
+			}
+
+			/**
+			 * Function to handle the loading and unloading of the various application modules
+			 */
+			public function loadModule(moduleURL:String):void
+			{
+				_model.dataLoading = true;
+
+				label = _model.viewStateNames.getItemAt(moduleID) + " - "+ moduleList.selectedItem.title;
+
+				// set the module path depending on the environment (testing or production)
+				var modulePath:String;
+				if(Application.application.parameters.siteURL)
+				{
+					modulePath = _model.siteURL + '/report_modules/core/' + moduleURL + '_Module.swf';
+				}
+				else
+				{
+					switch(moduleURL)
+					{
+						case "AllContributions":
+							moduleURL = "all_contributions/" + moduleURL;
+							break;
+						case "AllPledges":
+							moduleURL = "all_pledges/" + moduleURL;
+							break;							
+						case "DonationWidget":
+							moduleURL = "donationwidget/" + moduleURL;
+							break;							
+						case "HostCommittee":
+							moduleURL = "host_committee/" + moduleURL;
+							break;							
+						case "Events":
+							moduleURL = "events/" + moduleURL;
+							break;							
+						case "Fundraisers":
+							moduleURL = "fundraisers/" + moduleURL;
+							break;							
+						case "NetFile":
+							moduleURL = "netfile/" + moduleURL;
+							break;							
+						case "DailyIncome":
+							moduleURL = "dailyincome/" + moduleURL;
+							break;							
+					}
+					modulePath = 'com/enilsson/elephantadmin/views/modules/reporting/' + moduleURL + '_Module.swf?refresh=' + new Date().getTime();
+				}
+				_moduleInfo = ModuleManager.getModule(modulePath);
+               // add some listeners
+				_moduleInfo.addEventListener(ModuleEvent.READY, moduleReadyHandler);
+				_moduleInfo.addEventListener(ModuleEvent.ERROR, moduleErrorHandler);
+				_moduleInfo.addEventListener(ModuleEvent.PROGRESS, moduleProgressHandler);
+
+				if(dataLoadingWatcher)
+				{
+					dataLoadingWatcher.unwatch();
+				}
+				// remove existing module from display list
+				moduleLoader.removeAllChildren();
+
+				// unload existing module from memory
+				_moduleInfo.release();
+
+				// load the new module
+                _moduleInfo.load();
+			}
+
+			private function moduleProgressHandler(event:ModuleEvent):void
+			{
+				if(_model.debug) Logger.info(event.bytesLoaded +"/"+ event.bytesTotal);
+			}
+
+			private function moduleReadyHandler(event:ModuleEvent):void
+			{
+                var moduleInfo:IModuleInfo = event.currentTarget as IModuleInfo;
+                // Add an instance of the module's class to the
+                // display list.
+				var loadedModule:IReportModule = moduleInfo.factory.create() as IReportModule;
+				
+				if(loadedModule)
+				{
+					// add module to the display list
+					moduleLoader.addChild(loadedModule as DisplayObject);
+					// pass required variables to the module
+					loadedModule.gatewayURL = _model.gatewayURL;
+					loadedModule.itemsPerPage = _model.itemsPerPage;
+					loadedModule.allGroups = _model.allGroups;
+					loadedModule.userGroups = _model.orgGroups;
+					loadedModule.instanceID = _model.appInstanceID;
+					if(_model.reporting.reportRecordID != 0)
+					{
+						loadedModule.recordID = _model.reporting.reportRecordID;
+						_model.reporting.reportRecordID = 0;
+					}
+					dataLoadingWatcher = BindingUtils.bindProperty(_model,'dataLoading',loadedModule,'dataLoading');
+				}
+				_model.dataLoading = false;
+			}
+
+			private function moduleErrorHandler(event:ModuleEvent):void
+			{
+				Logger.info('Module load error');
+				if(event.errorText != "SWF is not a loadable module")
+					Alert.show(event.errorText, "Report Module Loading Error");
+				_model.dataLoading = false;
+			}
+
+			public function dataChangeHandler(event:ReportingEvent):void
+			{
+				var _itemsTotal:int = _model.reporting.records.length;
+				var plural:String = _itemsTotal > 1 ? 's' : '';
+
+				var sort:Sort = new Sort();
+				sort.fields = [new SortField("title",true)];
+				_model.reporting.records.sort = sort;
+				_model.reporting.records.refresh();
+
+				recordsDesc.htmlText = '<b>' + _itemsTotal + '</b> record' + plural;
+
+				if(_model.reporting.reportModule)
+				{
+					for(var i:int = 0; i < _model.reporting.records.length; i++)
+					{
+						if(_model.reporting.records.getItemAt(i).module_name == _model.reporting.reportModule)
+						{
+							moduleList.selectedIndex = i;
+							break;
+						}
+					}
+					loadModule(_model.reporting.reportModule);
+				}
+				else if (_itemsTotal > 0)
+				{
+					moduleList.selectedIndex = -1;
+					moduleList.selectedIndex = 0;
+					if(moduleList.selectedItem.module_name)
+						loadModule(moduleList.selectedItem.module_name);
+				}
+			}
+
+			private function gripClickHandler(event:Event):void
+			{
+				if(currentState != COLLAPSE_LIST)
+				{
+					setCurrentState(COLLAPSE_LIST);
+					reportGrip.currentState = 'off';
+				}
+				else
+				{
+					setCurrentState("");
+					reportGrip.currentState = 'on';
+				}
+			}
+		
+		]]>
+	</mx:Script>
+</common:LabeledContainer>

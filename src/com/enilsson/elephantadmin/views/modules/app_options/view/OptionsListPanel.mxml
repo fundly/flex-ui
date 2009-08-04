@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<common:FluidPanel 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:common="com.enilsson.elephantadmin.views.common.*"
+	xmlns:components="com.enilsson.elephantadmin.views.modules.app_options.view.components.*"
+	styleName="panel"
+	layout="vertical"
+	verticalGap="0"
+	title="Available Options">
+	
+	<mx:List id="list"
+		itemRenderer="com.enilsson.elephantadmin.views.modules.app_options.view.renderers.OptionsListRenderer"
+		labelField="title"
+		styleName="list"
+		width="100%" height="100%"
+		dataProvider="{dataProvider}"
+		selectedItem="{selectedItem}"
+		itemClick="dispatchEvent(event)" />
+	
+	<!-- decoration -->
+	<common:ModuleControlBar/>
+	
+	<mx:Binding source="list.selectedItem" destination="selectedItem" />
+	
+	<mx:Metadata>
+		 [Event(name="itemClick", type="mx.events.ListEvent")] 
+	</mx:Metadata>
+		
+	<mx:Script>
+		<![CDATA[
+			import mx.events.ListEvent;
+			import mx.collections.ListCollectionView;
+			
+			[Bindable] public var dataProvider 		: ListCollectionView;
+			[Bindable] public var selectedItem		: Object;
+		]]>
+	</mx:Script>
+	
+</common:FluidPanel>

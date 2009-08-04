@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml"
+	title="My batches" xmlns:controls="com.enilsson.controls.*"
+	styleName="panel" enabled="{!_presentationModel.batchListLoading}"
+	width="50%" height="100%" xmlns:common="com.enilsson.elephantadmin.views.common.*"
+	>
+	<mx:VBox width="100%" height="100%">
+		<mx:List id="batchList"
+			styleName="list"
+			height="100%" width="100%"
+			itemRenderer="com.enilsson.elephantadmin.views.modules.batch.renderers.BatchRenderer"
+			dataProvider="{_presentationModel.batchList}"
+			change="_presentationModel.batchListChangeHandler(event)"
+			selectedIndex="{_presentationModel.batchListSelectedIndex}"
+			/>
+		<mx:Canvas id="paginationBox" 
+			visible="{_presentationModel.batchListTotal &gt; _presentationModel.itemsPerPage}"
+			showEffect="slideUp" hideEffect="slideDown"
+			backgroundColor="#CCCCCC"
+			height="0"
+			width="100%">
+			<controls:Paginator id="paginator" 
+				styleName="paginator" 
+				rangeCount="4" 
+				verticalCenter="0" horizontalCenter="0" 
+				buttonHeight="18" 
+				newPage="_presentationModel.getBatchList(event)"
+				itemsPerPage="{_presentationModel.itemsPerPage}" 
+				itemsTotal="{_presentationModel.batchListTotal}" 
+				/>
+		</mx:Canvas>
+	</mx:VBox>
+	<mx:ControlBar height="32" horizontalAlign="center" verticalAlign="middle" paddingTop="0" paddingBottom="0">
+		<common:CMSSubmitBtn id="newBatchButton"
+			label="NEW BATCH"
+			toolTip="Create a new batch"
+			click="_presentationModel.createNewBatchList()"
+			/>
+	</mx:ControlBar>
+
+	<mx:Fade id="fade" />
+	<mx:Resize id="slideUp" heightTo="35" duration="1000" />
+	<mx:Resize id="slideDown" heightTo="0" duration="1000" />
+
+	<mx:Binding source="_presentationModel.selectedBatch" destination="selectedBatch" />
+
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephantadmin.views.modules.batch.model.BatchListModel;
+
+			public function set presentationModel( value : BatchListModel ) : void
+			{
+				_presentationModel = value;
+			}
+
+			[Bindable] public var selectedBatch:Object;
+
+			[Bindable] protected var _presentationModel:BatchListModel;
+
+
+		]]>
+	</mx:Script>
+
+</mx:Panel>

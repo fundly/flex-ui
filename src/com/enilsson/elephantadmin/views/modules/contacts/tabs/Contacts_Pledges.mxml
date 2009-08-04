@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:common="com.enilsson.elephantadmin.views.common.*"
+	label="PLEDGES" 
+	enabled="{!_presentationModel.pledgesTabLoading}"
+	implements="com.enilsson.elephantadmin.interfaces.IOptionView"	
+	width="100%" 
+	height="100%">
+
+	<mx:VBox verticalGap="2"
+		horizontalAlign="center"
+		top="0" left="10"
+		width="{width - 20}" height="{height-10}">
+		
+		<mx:HBox color="#333333" fontSize="11" 
+			verticalAlign="middle" width="100%">
+			<mx:Text htmlText="&lt;b&gt;Pledged&lt;/b&gt;: {cf.format(_presentationModel.selectedRecord.pledge_total)}" />
+			<mx:VRule height="10" />
+			<mx:Text htmlText="&lt;b&gt;Contributed&lt;/b&gt;: {cf.format(_presentationModel.selectedRecord.contrib_total)}" />
+			<mx:Spacer width="100%" />
+			<common:ListGridToggle stateChange="pledgesVstack.selectedIndex = event.currentTarget.showState == ListGridToggle.LIST ? 0 : 1;" />			
+		</mx:HBox>
+		
+		<mx:Spacer height="5" />
+				
+		<mx:ViewStack id="pledgesVstack" width="100%" height="100%">
+			<mx:Canvas horizontalScrollPolicy="off">
+				<mx:List width="100%" height="100%" 
+					alternatingItemColors="['#FFFFFF', '#EDEDED']" 
+					variableRowHeight="true" 
+					itemRenderer="com.enilsson.elephantadmin.views.modules.contacts.renderers.Contacts_PledgesRenderer"
+					dataProvider="{_presentationModel.pledges}" />			
+			</mx:Canvas>
+			<mx:Canvas>
+				<mx:DataGrid width="100%" height="100%" 
+					alternatingItemColors="['#FFFFFF', '#EDEDED']" 
+					dataProvider="{_presentationModel.pledges}">
+					<mx:columns>
+						<mx:DataGridColumn headerText="Address"
+							dataField="address1" />
+						<mx:DataGridColumn headerText="City"
+							dataField="city" />
+						<mx:DataGridColumn headerText="State"
+							dataField="state" />
+						<mx:DataGridColumn headerText="Pledged"
+							dataField="pledge_amount" 
+							labelFunction="amountLabel" />
+						<mx:DataGridColumn headerText="Contributed"
+							dataField="contrib_total" 
+							labelFunction="amountLabel" />
+						<mx:DataGridColumn headerText="Event" 
+							labelFunction="eventLabel" />
+						<mx:DataGridColumn headerText="Date"
+							labelFunction="dateLabel"
+							dataField="pledge_date"  />
+						<mx:DataGridColumn width="22">
+							<mx:itemRenderer>
+								<mx:Component>
+									<mx:HBox horizontalAlign="center">
+										<mx:Button useHandCursor="true" buttonMode="true"
+											styleName="inspectRecord"
+											click="new SidEvent( data.sid ).dispatch()"
+											toolTip="Inspect this pledge" />
+										<mx:Script>
+											<![CDATA[
+												import com.enilsson.elephantadmin.events.main.SidEvent;
+											]]>
+										</mx:Script>
+									</mx:HBox>
+								</mx:Component>
+							</mx:itemRenderer>
+						</mx:DataGridColumn>
+					</mx:columns>					
+				</mx:DataGrid>		
+			</mx:Canvas>			
+		</mx:ViewStack>
+	</mx:VBox>
+
+	<mx:CurrencyFormatter id="cf"
+		currencySymbol="$"
+		decimalSeparatorFrom="."
+		decimalSeparatorTo="."
+		precision="0"
+		rounding="nearest"
+		thousandsSeparatorFrom=","
+		thousandsSeparatorTo=","
+		useThousandsSeparator="true"
+		/>
+	<mx:DateFormatter id="dateFormat" formatString="MM/DD/YY" />
+
+
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.utils.EDateUtil;
+			import com.enilsson.elephantadmin.views.manage_record_base.model.RecordModel;
+			import com.enilsson.elephantadmin.views.modules.contacts.model.ContactsModel;
+			import com.enilsson.elephantadmin.interfaces.IRecordModel;
+
+			[Bindable] private var _presentationModel:ContactsModel;
+			public function set presentationModel ( value:IRecordModel ):void
+			{
+				_presentationModel = ContactsModel(value);
+			}
+			public function get presentationModel():IRecordModel
+			{
+				return _presentationModel;
+			}
+
+			private function eventLabel(item:Object, column:DataGridColumn):String
+			{
+				return item.event_id.source_code;
+			}
+			
+			private function amountLabel(item:Object, column:DataGridColumn):String
+			{
+				return cf.format(item[column.dataField]);
+			}
+			
+			private function dateLabel(item:Object, column:DataGridColumn):String
+			{
+				return dateFormat.format( EDateUtil.dateFromTimestamp( item[column.dataField] ) );
+			}
+
+		]]>
+	</mx:Script>
+	
+</mx:Canvas>

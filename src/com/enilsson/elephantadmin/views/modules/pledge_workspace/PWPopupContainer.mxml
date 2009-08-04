@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	clipContent="true"
+	verticalScrollPolicy="off" horizontalScrollPolicy="off"
+	xmlns:ns="com.enilsson.elephantadmin.views.modules.pledge_workspace.*"
+	xmlns:graphics="com.enilsson.graphics.*" 
+	xmlns:common="com.enilsson.elephantadmin.views.common.*"
+	width="674" height="410">
+	<mx:Canvas left="0" top="10" 
+		styleName="popupContent" 
+		verticalScrollPolicy="off" horizontalScrollPolicy="off"
+		filters="{[com.enilsson.graphics.enDropShadows.standardDS()]}" 
+		width="{this.width-10}" height="{this.height-10}">
+		<mx:VBox verticalGap="0" 
+			width="{width-40}" height="{height-40}"
+			backgroundColor="#FFFFFF" 
+			top="15" left="15" 
+			fontSize="11">
+			<mx:Canvas backgroundColor="#999999"
+				width="100%" height="37">
+				<mx:Text id="title" 
+					fontSize="18" 
+					width="100%"
+					filters="{[com.enilsson.graphics.enDropShadows.textDS(0x333333)]}"
+					text="Add A New Pledge"
+					verticalCenter="0" left="5" />
+			</mx:Canvas>
+			<ns:PledgeWorkspace id="pws" color="#333333" width="100%" height="100%" defaultType="check"/>
+		</mx:VBox>
+	</mx:Canvas>
+
+	<graphics:enCloseBtn top="0" right="0" size="20" click="closeComponent()" />
+
+	<mx:Script>
+		<![CDATA[
+		
+		
+			private function closeComponent():void
+			{
+				dispatchEvent(new Event(Event.CLOSE));
+			}
+
+		]]>
+	</mx:Script>
+
+</mx:Canvas>

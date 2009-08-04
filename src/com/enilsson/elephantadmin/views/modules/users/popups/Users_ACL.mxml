@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas 
+ 	creationComplete="init()"
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:graphics="com.enilsson.graphics.*" 
+	xmlns:common="com.enilsson.elephantadmin.views.common.*"
+	xmlns:ns="com.enilsson.elephantadmin.views.modules.users.*">
+	
+	
+	<mx:Canvas left="0" top="10" 
+		styleName="popupContent" 
+		verticalScrollPolicy="off" horizontalScrollPolicy="off"
+		filters="{[com.enilsson.graphics.enDropShadows.standardDS()]}" 
+		width="{this.width-10}" height="{this.height-10}">
+		<mx:VBox verticalGap="0" 
+			width="{width-40}" height="{height-40}"
+			backgroundColor="#E0E0E0" 
+			top="15" left="15" 
+			fontSize="11">
+			<mx:Canvas backgroundColor="#999999"
+				width="100%" height="37">
+				<mx:Image source="{Icons.EMAIL}" verticalCenter="-2" left="5" />
+				<mx:Text id="aclDesc" 
+					fontSize="18" 
+					width="100%"
+					filters="{[com.enilsson.graphics.enDropShadows.textDS(0x333333)]}"
+					text="Manage ACL" 
+					verticalCenter="0" left="50" />
+			</mx:Canvas>
+			<mx:DataGrid id="aclLayout"
+				styleName="cmsDataGrid" 
+				dataProvider="{_usersModel.aclPermissions}" 
+				width="{width - 40}" height="100%">
+				<mx:columns>
+					<mx:DataGridColumn headerText="Tables" dataField="name" />
+					<mx:DataGridColumn headerText="Read">
+						<mx:itemRenderer>
+							<mx:Component>
+								<mx:HBox horizontalAlign="center">
+									<mx:CheckBox selected="{data.read}" click="data.read = event.currentTarget.selected" />
+								</mx:HBox>
+							</mx:Component>
+						</mx:itemRenderer>
+					</mx:DataGridColumn>
+					<mx:DataGridColumn headerText="Write">
+						<mx:itemRenderer>
+							<mx:Component>
+								<mx:HBox horizontalAlign="center">
+									<mx:CheckBox selected="{data.write}" click="data.write = event.currentTarget.selected" />
+								</mx:HBox>
+							</mx:Component>
+						</mx:itemRenderer>
+					</mx:DataGridColumn>
+					<mx:DataGridColumn headerText="Modify">
+						<mx:itemRenderer>
+							<mx:Component>
+								<mx:HBox horizontalAlign="center">
+									<mx:CheckBox selected="{data.modify}" click="data.modify = event.currentTarget.selected" />
+								</mx:HBox>
+							</mx:Component>
+						</mx:itemRenderer>
+					</mx:DataGridColumn>
+					<mx:DataGridColumn headerText="Delete">
+						<mx:itemRenderer>
+							<mx:Component>
+								<mx:HBox horizontalAlign="center">
+									<mx:CheckBox selected="{data.del}" click="data.del = event.currentTarget.selected" />
+								</mx:HBox>
+							</mx:Component>
+						</mx:itemRenderer>
+					</mx:DataGridColumn>
+					<mx:DataGridColumn headerText="Export">
+						<mx:itemRenderer>
+							<mx:Component>
+								<mx:HBox horizontalAlign="center">
+									<mx:CheckBox selected="{data.export}" click="data.export = event.currentTarget.selected" />
+								</mx:HBox>
+							</mx:Component>
+						</mx:itemRenderer>
+					</mx:DataGridColumn>
+					<mx:DataGridColumn headerText="Restore">
+						<mx:itemRenderer>
+							<mx:Component>
+								<mx:HBox horizontalAlign="center">
+									<mx:CheckBox selected="{data.restore}" click="data.restore = event.currentTarget.selected" />
+								</mx:HBox>
+							</mx:Component>
+						</mx:itemRenderer>
+					</mx:DataGridColumn>
+					<mx:DataGridColumn headerText="Search">
+						<mx:itemRenderer>
+							<mx:Component>
+								<mx:HBox horizontalAlign="center">
+									<mx:CheckBox selected="{data.search}" click="data.search = event.currentTarget.selected" />
+								</mx:HBox>
+							</mx:Component>
+						</mx:itemRenderer>
+					</mx:DataGridColumn>
+					<mx:DataGridColumn headerText="RLAC">
+						<mx:itemRenderer>
+							<mx:Component>
+								<mx:HBox horizontalAlign="center">
+									<mx:CheckBox selected="{data.rlac}" click="data.rlac = event.currentTarget.selected" />
+								</mx:HBox>
+							</mx:Component>
+						</mx:itemRenderer>
+					</mx:DataGridColumn>
+					<mx:DataGridColumn headerText="Auditing">
+						<mx:itemRenderer>
+							<mx:Component>
+								<mx:HBox horizontalAlign="center">
+									<mx:CheckBox selected="{data.auditing}" click="data.auditing = event.currentTarget.selected" />
+								</mx:HBox>
+							</mx:Component>
+						</mx:itemRenderer>
+					</mx:DataGridColumn>
+				</mx:columns>
+			</mx:DataGrid>
+			<mx:HBox width="100%" paddingTop="10" paddingBottom="10" paddingLeft="10" horizontalAlign="center">
+				<mx:Button label="Save" click="saveACL();" filters="{[innerShadow]}" styleName="submitBtn"/>
+				<mx:Button label="Close" click="closeComponent();" filters="{[innerShadow]}" styleName="closeBtn"/>
+			</mx:HBox>
+		</mx:VBox>
+	</mx:Canvas>
+	
+	<graphics:enCloseBtn top="0" right="0" size="20" click="closeComponent()" />
+	
+	<common:ErrorMsgBox id="errorBox"
+		verticalCenter="0" horizontalCenter="0" 
+		params="{_usersModel.errorVO}" 
+		onClose="{_usersModel.onClose}" />
+		
+		
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephantadmin.models.Icons;
+			import com.enilsson.elephantadmin.views.modules.users.model.UsersModel;
+			import mx.utils.ObjectUtil;
+			import mx.managers.PopUpManager;
+			import com.enilsson.elephantadmin.events.modules.UsersEvent;
+			import com.enilsson.utils.eNilssonUtils;
+			import mx.controls.CheckBox;
+			import mx.containers.HBox;
+			import mx.controls.Text;
+			import mx.collections.ArrayCollection;
+			import org.osflash.thunderbolt.Logger;
+			import com.enilsson.elephantadmin.models.EAModelLocator;
+			
+			[Bindable] private var _usersModel:UsersModel;
+			[Bindable] private var innerShadow:DropShadowFilter = new DropShadowFilter(3, 60, 0, 0.45, 3, 3, 1, 1, true, false);
+
+			public function set presentationModel(model:UsersModel):void
+			{
+				_usersModel = model;
+			}
+
+			private function init():void
+			{
+//				_usersModel.aclPermissions = new ArrayCollection();
+				
+				if( !_usersModel.userACL )
+					new UsersEvent( UsersEvent.GET_ACL, _usersModel, { 'userID' : _usersModel.selectedRecord } ).dispatch();
+			}
+
+			private function saveACL():void
+			{
+				var newPermissions:Object = new Object();
+				for each(var item:Object in _usersModel.aclPermissions)
+				{
+					var total:uint = 0;
+					for (var i:uint=0;i<_usersModel.permissionsName.length;i++)	{
+						total += (item[_usersModel.permissionsName[i].toString().toLowerCase()]? Math.pow(2,i) : 0);
+					}
+					newPermissions[item.table] = total;
+				}
+				
+ 				new UsersEvent( 
+					UsersEvent.SET_ACL, _usersModel, {'userID': _usersModel.recordID, 'acl':newPermissions} 
+				).dispatch();
+			}
+
+			private function closeComponent():void
+			{
+				_usersModel.errorVO = null;
+				PopUpManager.removePopUp(this);
+			}
+
+		]]>
+	</mx:Script>	
+	
+	<mx:Style>
+		.closeBtn {
+			borderColor:#a00001;
+			color:#FFFFFF;
+			fontSize:10;
+			fontWeight:bold;
+			fillAlphas: 1, 1, 1, 1;
+   			fillColors: #CC0001, #890103, #ffffff, #eeeeee;	
+   			focusThickness:0;
+		}
+		.submitBtn {
+			borderColor:#50a000;
+			color:#FFFFFF;
+			fontWeight:bold;
+			fillAlphas: 1, 1, 1, 1;
+   			fillColors: #66cc00, #458a01, #ffffff, #eeeeee;	
+   			focusThickness:0;
+		}
+	</mx:Style>
+		
+		
+</mx:Canvas>	

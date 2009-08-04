@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas 
+	verticalScrollPolicy="off" horizontalScrollPolicy="off"
+	show="init(event)"
+	xmlns:mx="http://www.adobe.com/2006/mxml" >
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			import com.enilsson.elephanttrakker.events.modules.resources.ResourcesEvent;
+			import com.enilsson.elephanttrakker.events.session.PingEvent;
+			import mx.utils.ObjectUtil;
+			import org.osflash.thunderbolt.Logger;
+			import com.enilsson.elephanttrakker.models.ETModelLocator;
+
+			[Bindable] private var fv:Array = new Array();
+			
+			[Bindable] private var _model:ETModelLocator = ETModelLocator.getInstance();		
+			
+			public function set runInit(value:Boolean):void
+			{				
+				if(value && _model.mainViewState == ETModelLocator.RESOURCES_VIEW) {
+					init();			
+				}
+				
+				if (_runInit) {
+					_runInit = false;
+				}
+			}
+			private var _runInit : Boolean = true;
+
+			private function init(e:FlexEvent = null):void
+			{
+				if ((!_runInit && (e != null)) || _runInit) 
+				{
+					if(_model.debug){ Logger.info('Init Resources'); }
+					
+					// ping the server to see all is well
+					new PingEvent().dispatch();
+	
+					// fetch the records;
+					new ResourcesEvent().dispatch();
+				}
+			}	
+
+		]]>
+	</mx:Script>
+		
+	<mx:Image source="@Embed('/assets/images/icons/help_info.png')" top="8" right="3" />
+	<mx:Text id="contentTitle" styleName="contentTitle" text="RESOURCES" right="-102" rotation="90" />
+	
+	<mx:List id="resources" styleName="resources" 
+		dataProvider="{_model.resources.list}" 
+		borderThickness="0"
+		width="630" height="300"
+		columnWidth="630" variableRowHeight="true"
+		top="5" left="0"
+		selectable="false" alternatingItemColors="[0xFFFFFF, 0xf2f2f2]"
+		itemRenderer="com.enilsson.elephanttrakker.views.modules.resources.resourceList" />
+
+</mx:Canvas>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	verticalGap="0" paddingLeft="15"
+	show="init()">
+	
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephanttrakker.events.session.PingEvent;
+			import mx.utils.ObjectUtil;
+			import org.osflash.thunderbolt.Logger;
+			import com.enilsson.elephanttrakker.models.ETModelLocator;
+			
+			[Bindable] private var _model:ETModelLocator = ETModelLocator.getInstance();
+			[Bindable] private var _addFlag:Boolean = false;
+
+			private function init():void
+			{
+				// ping the server to make sure that all is well
+				new PingEvent().dispatch();
+			}
+			
+			private function addPayment(type:String):void
+			{
+				_model.call_logging.transVStack = type == 'creditCard' ? 0 : 1;
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:Text styleName="labelStyleName" text="Below are all the payments made to this pledge:" width="100%" />
+	
+	<mx:Spacer height="6" />
+	
+	<mx:List id="transactions" 
+		width="270" height="141" 
+		alternatingItemColors="['#FFFFFF', '#EDEDED']" variableRowHeight="true" 
+		itemRenderer="com.enilsson.elephanttrakker.views.modules.call_logging.renderers.Payment_Item" 
+		dataProvider="{_model.call_logging.transactionData}" />
+	
+	<mx:HBox width="{transactions.width}" styleName="paymentsBtnBox">
+		<mx:Button styleName="addBtn" height="15"
+			label="add credit card" 
+			toolTip="Add another credit card payment to this pledge"
+			click="addPayment('creditCard')" />		
+		<mx:Button styleName="addBtn" height="15"
+			label="add check" 
+			toolTip="Add another check payment to this pledge"
+			click="addPayment('check')" />
+	</mx:HBox>	
+											
+</mx:VBox>

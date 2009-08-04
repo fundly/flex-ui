@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:struktorForm="com.enilsson.utils.struktorForm.*" 
+	xmlns:common="com.enilsson.elephantadmin.views.common.*" 
+	xmlns:graphics="com.enilsson.graphics.*" xmlns:news="com.enilsson.elephantadmin.views.modules.news.*">
+	
+	<mx:Metadata>
+		[Event(name="upsertRecord", type="flash.events.Event")]
+		[Event(name="deleteRecord", type="flash.events.Event")]
+	</mx:Metadata>
+	
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.utils.struktorForm.ConvertRTEText;
+			import mx.utils.ObjectUtil;
+			import org.osflash.thunderbolt.Logger;
+			import com.enilsson.elephantadmin.vo.RecordVO;
+			import com.enilsson.elephantadmin.events.modules.NewsEvent;
+			import com.enilsson.elephantadmin.models.EAModelLocator;
+			
+			[Bindable] private var _model:EAModelLocator = EAModelLocator.getInstance();
+
+			/**
+			 * Get the variables from the form
+			 */
+			public function get formVariables():Object
+			{
+				// force fontFamily of the body of the news to Lucida Grande
+				newsForm.formVariables.description = ConvertRTEText.forceXHtmlFontFamily(newsForm.formVariables.description,'Lucida Grande');
+				return newsForm.formVariables;
+			}
+			
+			/**
+			 * Get the status of the form
+			 */
+			public function get isValid():Boolean
+			{
+				return newsForm.isValid;
+			}
+
+	
+		]]>
+	</mx:Script>
+
+	<mx:Style>
+		.newsForm {
+			labelWidth:75;
+			formInputWidth:320;
+			formInputStyleName:'userFormInput';
+			formItemStyleName:'userFormLabel';
+			requiredLabelStyleName:'userFormLabel';
+		}
+		.userFormInput {
+			color:#333333;
+			fontSize:14;	
+		}
+		.userFormLabel {
+			fontSize:10;
+			color:#333333;	
+		}
+		.rteStyleName {
+			borderAlpha:0;
+			dropShadowEnabled:false;
+			borderThicknessLeft:0;
+			borderThicknessRight:0;
+			borderThicknessTop:0;	
+			color:#333333;
+			fontFamily:'Lucida Grande';
+			headerHeight:0;
+		}
+		.formActivityText {
+			color:#333333;
+			fontSize:8;
+			fontWeight:'normal';	
+		}
+	</mx:Style>
+	
+	<mx:VBox verticalGap="0" backgroundColor="#CCCCCC">
+		<struktorForm:StruktorForm id="newsForm"
+			styleName="newsForm"
+			width="{width}" 
+			height="{height - footer.height}" 
+			layoutProvider="{_model.struktorLayout.news}" 
+			dataProvider="{_model.news.formRecord}" 
+			stackFormItems="true" 
+			selectedFields="{['title','publish_date','publish','description']}" 
+			dataChange="_model.dataChanged = true" 
+			formBuildComplete="_model.dataChanged = false"
+			/>
+		<mx:Canvas id="footer" 
+			width="100%" height="28" styleName="controlBar">
+			<mx:LinkButton 
+				label="DELETE" fontSize="10" color="#ED1C24" 
+				verticalCenter="0" left="10"
+				click="dispatchEvent( new Event('deleteRecord') )"
+				 />
+			<common:CMSSubmitBtn 
+				label="UPDATE"
+				toolTip="{newsForm.isValid ? 'This form is ready to submit' : 'Please correctly fill in all form fields'}" 
+				enabled="{newsForm.isValid}"
+				verticalCenter="0" right="10"
+				click="dispatchEvent( new Event('upsertRecord') )" />
+		</mx:Canvas>
+	</mx:VBox>
+
+	<mx:Canvas id="formProcessing"
+		width="100%" height="100%"
+		visible="{_model.news.formProcessing}"
+		showEffect="fadeIn" hideEffect="fadeOut"
+		backgroundColor="#ededed"
+		alpha="0.75"
+		>
+		<graphics:ActivityIndicator 
+			id="formProcessingActivity"
+			visible="{formProcessing.visible}"
+			width="110" height="110" 
+			horizontalCenter="0" verticalCenter="0"
+			alpha="1"
+			boxFillColors="[0x999999, 0x999999]" 
+			boxCornerRadius="2" 
+			textAlpha="1" 
+			textMessage="form processing"  
+			textStyleName="formActivityText"
+			/>
+	</mx:Canvas>
+	
+</mx:Canvas>

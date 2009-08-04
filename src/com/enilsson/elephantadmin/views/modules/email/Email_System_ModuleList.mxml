@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	verticalGap="0" dataChange="formatDate();"
+	height="47"
+	paddingTop="0" paddingBottom="0"
+	horizontalScrollPolicy="off" 
+	verticalScrollPolicy="off">
+	
+	<mx:Script>
+		<![CDATA[
+			[Bindable] private var _dateText:String = "";
+			
+			private function formatDate():void
+			{
+				if(data)
+				{
+					if(data.modified_on == 0)
+					{
+						_dateText = "";
+					}
+					else
+						_dateText = df.format(new Date(data.modified_on * 1000)) + " - Last Modified";
+				}
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:DateFormatter id="df" formatString="MM/DD/YYYY L:NNA" />
+	
+	<mx:Text 
+		text="{data.title}" 
+		width="{explicitWidth}" 
+		styleName="listTitle" />
+	<mx:Text text="{_dateText}"
+		width="{explicitWidth}" 
+		styleName="listDesc" />
+</mx:VBox>

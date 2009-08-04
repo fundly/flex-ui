@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<common:LabeledContainer
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:common="com.enilsson.elephantadmin.views.common.*"
+	xmlns:recordModule="com.enilsson.elephantadmin.views.manage_record_base.*"
+	xmlns:tabs="com.enilsson.elephantadmin.views.modules.users.tabs.*">
+
+	<recordModule:ManageRecord id="recordModule" width="100%" height="100%">
+		<tabs:Users_Access />
+		<tabs:Users_Pledges />
+		<tabs:Users_Stats />
+		<tabs:Users_Options />
+	</recordModule:ManageRecord>
+
+	<mx:Script>
+		<![CDATA[
+			import com.adobe.cairngorm.model.ModelLocator;
+			import com.enilsson.elephantadmin.views.modules.users.model.UsersModel;
+			import com.enilsson.elephantadmin.views.modules.users.renderers.Users_ListRenderer;
+			import com.enilsson.elephantadmin.views.manage_record_base.model.RecordModuleConfiguration;
+			import mx.collections.ArrayCollection;
+
+			[Bindable] public var mainModel : ModelLocator;
+			private var _config : RecordModuleConfiguration;
+			
+			override protected function init():void
+			{
+				super.init();
+				
+				if(!_config)
+				{
+					recordModule.presentationModel = new UsersModel(mainModel);
+
+					_config = new RecordModuleConfiguration();
+					_config.table = 'tr_users';
+					_config.browseField = 'lname';
+					_config.searchOptions = new ArrayCollection([ 
+						{ label : "EVERYTHING", data : 0 }, 
+						{ label : "FIRST NAME", data : "tr_users.fname"}, 
+						{ label : "LAST NAME", data : "tr_users.lname"},
+						{ label : "FID", data : "tr_users._fid"},
+						{ label : "ADDRESS 1", data : "tr_users._address1"},
+						{ label : "CITY", data : "tr_users._city"},
+						{ label : "STATE", data : "tr_users._state"},
+						{ label : "ZIP", data : "tr_users._zip"}
+					]);
+					_config.searchListItemRenderer= new ClassFactory(Users_ListRenderer);
+					_config.gridFields = [ 'fname', 'lname', '_city', '_state', '_fid' ];
+					recordModule.configuration(_config);
+				}
+			}
+		]]>
+	</mx:Script>
+	
+</common:LabeledContainer>

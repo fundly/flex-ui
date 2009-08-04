@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas 
+	xmlns:mx="http://www.adobe.com/2006/mxml"	 
+	horizontalScrollPolicy="off" 
+	verticalScrollPolicy="off"
+	mouseOver="viewContact.visible = true"
+	mouseOut="viewContact.visible = false">
+	
+	<mx:VBox verticalGap="0"
+		paddingTop="0" paddingBottom="0">
+		<mx:HBox width="{explicitWidth - 10}"
+			verticalAlign="middle">
+			<mx:Text text="{data.fname} {data.lname}" 
+				styleName="listTitle" />
+		</mx:HBox>
+		<mx:Text text="{data.address1}, {data.city} {data.state} {data.zip}" 
+			width="{explicitWidth}" 
+			styleName="listDesc" />
+		<mx:Text htmlText="Pledged: &lt;b&gt;{cf.format(data.pledge_amount)}&lt;/b&gt; - Contributed: &lt;b&gt;{cf.format(data.contrib_total)}&lt;/b&gt; - Pledge Date: &lt;b&gt;{df.format(EDateUtil.dateFromTimestamp(data.pledge_date ))}&lt;/b&gt;" 
+			width="{explicitWidth}" 
+			styleName="listDesc" />						
+	</mx:VBox>
+
+	<mx:Button id="viewContact"
+		visible="false"
+		verticalCenter="0" right="10"
+		useHandCursor="true" buttonMode="true"
+		styleName="viewContact"
+		click="new SidEvent( data.contact_id.sid ).dispatch()"
+		toolTip="View this contact"
+		filters="{[dropShadow]}" />					
+
+	
+	<mx:CurrencyFormatter id="cf" currencySymbol="$" precision="0" />
+	<mx:DateFormatter id="df" formatString="MM/DD/YY" />
+	<mx:DateFormatter id="df2" formatString="MM/DD/YY L:NN A" />
+	<mx:DropShadowFilter id="dropShadow"
+		alpha="0.75"
+		angle="90"
+		color="0x000000"
+		blurX="6" blurY="6"
+		distance="1" />	
+	
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.utils.EDateUtil;
+			import com.enilsson.elephantadmin.events.main.SidEvent;
+		]]>
+	</mx:Script>
+	
+</mx:Canvas>

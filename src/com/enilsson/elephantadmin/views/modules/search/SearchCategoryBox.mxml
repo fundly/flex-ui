@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:search="com.enilsson.elephantadmin.views.modules.search.*"
+	xmlns:controls="com.enilsson.controls.*"
+	implements="mx.rpc.IResponder"
+	verticalGap="0">
+		
+	<!-- Header -->
+	<mx:Canvas id="headerContainer" 
+		styleName="searchCategoryHeader"
+		height="24" width="100%"
+		backgroundSize="100%">
+		<mx:Button id="toggleButton" 
+			click="_collapsed = !_collapsed;" 
+			toggle="true" 
+			selected="{!_collapsed}"
+			enabled="{lastResult.totalRecords > 0}" 
+			useHandCursor="true" buttonMode="true"
+			styleName="searchCategoryHeaderButton" 
+			left="8" top="5" height="16" width="16"/>
+		<mx:Image id="categoryIcon"
+			source="{icon}" 
+			left="28" height="24" 
+			verticalCenter="0" />
+		<mx:Label id="categoryLabel" 
+			text="{label}"  
+			left="62" top="3" 
+			styleName="searchCategoryLabel"/>
+		<mx:Text id="recordsLabel" top="4" right="7" textAlign="right"
+			htmlText="&lt;b&gt;{lastResult.totalRecords}&lt;/b&gt; record{lastResult.totalRecords != 1 ? 's' : ''}"
+			styleName="searchCategoryRecords" />
+	</mx:Canvas>
+	
+	<!-- Result Data Renderer -->
+	<mx:VBox id="rendererContainer"
+		paddingTop="0" paddingBottom="0" paddingLeft="0" paddingRight="0"
+		verticalGap="0"
+		width="100%"
+		horizontalAlign="center"
+		visible="{!_collapsed}"
+		includeInLayout="{_includeRenderer}"
+		showEffect="{extendEffect}" 
+		hideEffect="{collapseEffect}">
+		<!-- the datagrid gets added here dynamically by renderer setter -->
+		<mx:Canvas id="paginatorBox"
+			visible="{lastResult.totalRecords > SearchViewClass.ITEMS_PER_PAGE}" 
+			includeInLayout="{lastResult.totalRecords > SearchViewClass.ITEMS_PER_PAGE}" 
+			width="100%" height="30" styleName="searchPaginatorContainer">
+			<controls:Paginator id="paginator"
+				horizontalCenter="0"
+				verticalCenter="0"
+				maxWidth="{paginatorBox.width}"
+				styleName="paginator" 
+				debugMode="{_model.debug}" 
+				buttonHeight="18"
+				newPage="handleNewPage(event)"
+				rangeCount="5" 
+				itemsPerPage="{SearchViewClass.ITEMS_PER_PAGE}"
+				itemsTotal="{lastResult.totalRecords}"/>
+		</mx:Canvas>					
+	</mx:VBox>
+	
+	<!-- Footer -->
+	<mx:Spacer height="{_includeRenderer ? 0 : GAP}" />	
+	<mx:Canvas id="footerContainer" 
+		styleName="searchCategoryFooter"
+		height="8" width="100%" />
+		
+		
+	<!-- Effects -->
+	<mx:Parallel id="collapseEffect" 
+		duration="200" 
+		effectEnd="_includeRenderer = false">
+		<mx:WipeUp id="wipeUp" 
+			target="{rendererContainer}" 
+			moveEasingFunction="{Exponential.easeOut}"/>
+		<mx:Move id="footerMoveUp" 
+			target="{footerContainer}" 
+			yTo="{headerContainer.y + headerContainer.height + GAP}" 
+			easingFunction="{Exponential.easeOut}" />
+	</mx:Parallel>
+	<mx:Parallel id="extendEffect" 
+		duration="200"
+		effectStart="_includeRenderer = true">
+		<mx:WipeDown id="wipeDown" 
+			target="{rendererContainer}"
+			moveEasingFunction="{Exponential.easeIn}"/>
+		<mx:Move id="footerMoveDown"
+			yTo="{headerContainer.y + headerContainer.height + _rendererHeight + (paginatorBox.visible ? paginatorBox.height : 0)}"
+			target="{footerContainer}" 
+			easingFunction="{Exponential.easeIn}"/>
+	</mx:Parallel>
+		
+		
+	<mx:Script>
+		<![CDATA[
+			import mx.utils.ObjectUtil;
+			import mx.effects.easing.Exponential;
+			import mx.core.UIComponent;
+			import com.enilsson.elephantadmin.events.modules.SearchEvent;
+			import org.osflash.thunderbolt.Logger;
+			import com.enilsson.elephantadmin.models.viewclasses.SearchViewClass;
+			import mx.binding.utils.BindingUtils;
+			import mx.controls.DataGrid;
+			import mx.utils.StringUtil;
+			import com.enilsson.elephantadmin.vo.SearchVO;
+			import com.enilsson.elephantadmin.models.EAModelLocator;
+			import com.enilsson.events.PaginatorEvent;
+			
+			private static const GAP : Number = 1;
+			
+			[Bindable] private var _collapsed 	: Boolean = true;
+			[Bindable] private var _includeRenderer : Boolean = false;	
+			[Bindable] private var _rendererHeight : Number = 0;
+			[Bindable] private var _model : EAModelLocator = EAModelLocator.getInstance();
+			[Bindable] public var table : String;
+			[Bindable] public var lastResult : SearchResult = new SearchResult();
+
+			private var _lastResultChanged : Boolean = false;
+			private var _search : SearchVO;
+			private var _watchers : Array = [];
+			
+			
+			override public function set data( value : Object ) : void
+			{
+				super.data = value;
+				label = value.label;
+				table = value.table;
+				icon = value.resultIcon;
+				
+				renderer = new ClassFactory( data.renderer ).newInstance() as DisplayObject;
+			}			
+			
+			public function set searchQuery( query : String ) : void
+			{
+				_searchQuery = query;
+				paginator.selectedIndex = 0;
+				if(_searchQuery && StringUtil.trim(_searchQuery).length > 0 )
+				{
+					search(_searchQuery);
+				}
+				else
+				{
+					lastResult.clear();
+					_collapsed = true;
+				}
+			}			
+			public function get searchQuery() : String { return _searchQuery; }			
+			private var _searchQuery : String;
+			
+			[Bindable]
+			private function get renderer() : DisplayObject { return _renderer; }
+			private function set renderer( value : DisplayObject ) : void
+			{
+				_renderer = value;
+				
+				if( _renderer && _renderer is DataGrid )
+				{
+					var grid : DataGrid = _renderer as DataGrid;
+					grid.setStyle("top", "0");
+										
+					_watchers.push( BindingUtils.bindProperty( _renderer, "dataProvider", this, ["lastResult", "page" ] ) );					
+					_watchers.push( BindingUtils.bindSetter( setGridRowCount, this, ["lastResult","totalRecords"] ) );	
+					
+					rendererContainer.addChildAt( _renderer, 0 );
+				}
+			}
+			private var _renderer : DisplayObject;			
+			
+			private function setGridRowCount( totalRecords : Number ) : void
+			{
+				if(_renderer && _renderer is DataGrid)
+				{
+					var grid : DataGrid = _renderer as DataGrid;
+					grid.rowCount = Math.min( totalRecords, SearchViewClass.ITEMS_PER_PAGE );
+				}
+			}
+			
+			public function result(data:Object) : void
+			{				
+				try{
+					var result : Object = data.result[0];
+					
+					lastResult.clear();
+					lastResult.totalRecords = result["found_rows"];
+					
+					for each( var o : Object in result[result.table_name] )
+					{
+						lastResult.page.addItem(o);
+					}
+					
+				} 
+				catch( e : Error ) 
+				{
+					if(_model.debug) Logger.info("SearchCategoryBox " + label + " couldn't parse incoming result.");
+					
+					lastResult.clear();
+				}
+				
+				_lastResultChanged = true;
+				invalidateProperties();
+			}
+			
+			public function fault(data:Object) : void
+			{
+				if(_model.debug) Logger.info("Fault in SearchCategoryBox " + label );
+				lastResult.clear();
+				_collapsed = true;
+			}
+			
+			public function getRecordsNumber( result : SearchResult ) : int
+			{
+				if( result && result.totalRecords > 0 )
+					return result.totalRecords;
+				else
+					return 0;
+			}
+			
+			private function search(query : String) : void
+			{
+				if(_model.debug) Logger.info( 'Box Search', query );
+				
+				if(! table || table == "") { return; };
+				
+				if(! _search) { _search = new SearchVO( table, "" ); }
+				
+				_search.query	= query;
+				_search.iFrom	= paginator.selectedIndex * SearchViewClass.ITEMS_PER_PAGE;
+				_search.iCount	= SearchViewClass.ITEMS_PER_PAGE;
+				
+				var queryObj:Object = { 
+					table : table,
+					event : new SearchEvent(_search, this)
+				}
+				
+				//_model.search.queue.push( queryObj );
+				
+				new SearchEvent(_search, this).dispatch();				
+			}
+			
+			private function handleNewPage( event : PaginatorEvent ) : void
+			{
+				search(_searchQuery);
+			}
+			
+			override protected function commitProperties():void
+			{
+				super.commitProperties();
+				
+				if(_lastResultChanged)
+				{
+					_lastResultChanged = false;
+					
+					// measure the renderer height so that the yTo property for the footer effect gets
+					// set correctly
+					UIComponent(_renderer).validateNow();
+					_rendererHeight = UIComponent(_renderer).getExplicitOrMeasuredHeight(); 
+					
+					_collapsed = ( ! lastResult || ! lastResult.page || lastResult.page.length == 0 );
+				}
+			}
+		]]>
+	</mx:Script>
+
+</mx:VBox>

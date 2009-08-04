@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SortableListPanel title="{_presentationModel.title}"
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns="com.enilsson.elephantadmin.views.modules.batch.*"
+	xmlns:common="com.enilsson.elephantadmin.views.common.*"
+	sortFieldsPrompt="SORT BY"
+	sortOptionsPrompt="ORDER"
+	sortFields="{CheckListModel.ORDER_FIELDS}"
+	sortOptions="{CheckListModel.SORT_OPTIONS}"
+	sortChange="_presentationModel.sortChecks( selectedSortField, selectedSortOption );"
+	enabled="{!_presentationModel.checkListLoading}"
+	styleName="panel"
+	width="50%" height="100%">
+	<mx:VBox height="100%" width="100%">
+		<CheckWrapperList id="checkList"
+			height="100%" width="100%"
+			dataProvider="{_presentationModel.checkList}" />
+		<mx:Canvas id="paginationBox" 
+			visible="{_presentationModel.checkListTotal &gt; _presentationModel.itemsPerPage}"
+			showEffect="slideUp" hideEffect="slideDown"
+			backgroundColor="#CCCCCC"
+			height="0"
+			width="100%">
+			<controls:Paginator id="paginator"
+				xmlns:controls="com.enilsson.controls.*" 
+				styleName="paginator" 
+				rangeCount="4" 
+				verticalCenter="0" horizontalCenter="0" 
+				buttonHeight="18"
+				newPage="_presentationModel.getCheckList(event)"
+				itemsPerPage="{_presentationModel.itemsPerPage}" 
+				itemsTotal="{_presentationModel.checkListTotal}" 
+				/>
+		</mx:Canvas>
+	</mx:VBox>
+	<mx:ControlBar height="32" horizontalAlign="left" verticalAlign="middle" paddingTop="0" paddingBottom="0">
+		
+		<common:ListSearchBox id="searchBox" 
+			width="200" height="22"
+			searchStart="_presentationModel.searchCheckList(searchBox.searchOption, searchBox.searchTerm)"
+			clearSearch="_presentationModel.clearSearch()" 
+			dataProvider="{new ArrayCollection(CheckListModel.SEARCH_OPTIONS)}" />
+		
+		<mx:Spacer width="100%" />
+			
+		<common:CMSSubmitBtn
+			label="ADD ALL"
+			toolTip="Add all checks in this page to the new batch"
+			width="80"
+			filters="{[dropShadow]}"
+			click="_presentationModel.addAllChecksToBatch()"
+			/>
+		<common:CMSSubmitBtn
+			label="NEW CHECK"
+			toolTip="Add a new check not listed here"
+			width="90"
+			click="popupPledgeWorkspace();"
+			filters="{[dropShadow]}"
+			/>
+	</mx:ControlBar>
+
+	<mx:Resize id="slideUp" heightTo="35" duration="1000" />
+	<mx:Resize id="slideDown" heightTo="0" duration="1000" />
+
+	<mx:DropShadowFilter id="dropShadow"
+		alpha="0.75"
+		angle="90"
+		color="0x000000"
+		blurX="6" blurY="6"
+		distance="1" />
+
+	<mx:Script>
+		<![CDATA[
+			import mx.core.Application;
+			import com.enilsson.elephantadmin.views.modules.pledge_workspace.PWPopupContainer;
+			import com.enilsson.elephantadmin.views.modules.pledge_workspace.PledgeWorkspace;
+			import mx.managers.PopUpManager;
+			import mx.collections.ArrayCollection;
+			import com.enilsson.elephantadmin.views.modules.batch.model.CheckListModel;
+
+			public function set presentationModel( value : CheckListModel ) : void {
+				_presentationModel = value;
+			}
+
+			public function popupPledgeWorkspace():void
+			{
+				var popup:PWPopupContainer = new PWPopupContainer();
+				PopUpManager.addPopUp(popup, DisplayObject(Application.application), true);
+				popup.addEventListener(Event.CLOSE, function (event:Event):void
+				{
+					PopUpManager.removePopUp(PWPopupContainer(event.currentTarget));
+					// refresh the check list to display new check if any
+					_presentationModel.getCheckList();
+				});
+				PopUpManager.centerPopUp(popup);
+			}
+
+			[Bindable] protected var _presentationModel:CheckListModel;
+		]]>
+	</mx:Script>
+
+</SortableListPanel>

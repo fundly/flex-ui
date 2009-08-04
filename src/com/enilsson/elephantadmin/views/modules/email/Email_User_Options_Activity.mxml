@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	verticalGap="0" paddingRight="10" paddingLeft="10" paddingBottom="10"
+	>
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.containers.Box;
+			import com.enilsson.elephantadmin.events.modules.NewsEvent;
+			import com.enilsson.elephantadmin.events.modules.RecordEvent;
+			import com.enilsson.elephantadmin.events.modules.EmailEvent;
+			import mx.utils.ObjectUtil;
+			import org.osflash.thunderbolt.Logger;
+			import mx.formatters.DateFormatter;
+			import mx.collections.ArrayCollection;
+			import com.enilsson.elephantadmin.models.EAModelLocator;
+			
+			[Bindable] private var _model:EAModelLocator = EAModelLocator.getInstance();
+			
+			public function set dataProvider(value:Object):void
+			{
+				if(value.length == 0) return;
+
+				var recordID:uint = value.id;
+				
+				new EmailEvent(
+					EmailEvent.EMAIL_USER_ACTIVITY, {
+						'table' : 'email_user_templates',	
+						'recordID' : recordID	
+					}				
+				).dispatch();
+			}
+			
+			/**
+			 * Label function to show the date in the correct format
+			 */
+			private function date_labelFunc(item:Object, column:DataGridColumn):String 
+			{
+		  		return dateFormatter.format( new Date( item[column.dataField] * 1000 ) );
+			} 
+			/**
+			 * Label function to show the date in the correct format
+			 */
+			private function name_labelFunc(item:Object, column:DataGridColumn):String 
+			{
+		  		return item['fname'] + ' ' + item['lname'];
+			} 
+			
+			public function inspectHandler(data:Object):void {
+				Logger.info("clicked",data.sid.toString());
+				_model.record.sid = data.sid;
+				_model.mainViewState = _model.viewStateList.indexOf('record');
+			}
+		]]>
+	</mx:Script>
+
+	<mx:DateFormatter id="dateFormatter" formatString="MM/DD/YY L:NN A" />
+
+	<mx:DataGrid
+		styleName="cmsDataGrid"
+		width="100%" height="100%"
+		dataProvider="{_model.email_user.recordActivity}">
+		<mx:columns>
+			<mx:DataGridColumn headerText="Name" dataField="fname" labelFunction="name_labelFunc" width="90"/>
+			<mx:DataGridColumn headerText="Action" dataField="action" width="50"/>
+			<mx:DataGridColumn headerText="Date" dataField="timestamp" labelFunction="date_labelFunc" width="100"/>			
+			<mx:DataGridColumn width="22">
+				<mx:itemRenderer>
+					<mx:Component>
+						<mx:Box horizontalAlign="center">
+							<mx:Button useHandCursor="true" buttonMode="true"
+								styleName="inspectRecord"
+								toolTip="Inspect this version"
+								click="(this.outerDocument as Email_User_Options_Activity).inspectHandler(this.data);" />
+						</mx:Box>
+					</mx:Component>
+				</mx:itemRenderer>
+			</mx:DataGridColumn>
+		</mx:columns>
+	</mx:DataGrid>
+	
+</mx:VBox>

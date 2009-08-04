@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	width="{explicitWidth}" 
+	verticalScrollPolicy="off" 
+	horizontalScrollPolicy="off"
+	mouseOver="pledgeBtn.visible = true"
+	mouseOut="pledgeBtn.visible = false">
+
+	<mx:VBox left="0"
+		verticalGap="-2" 
+		verticalScrollPolicy="off" horizontalScrollPolicy="off">
+		<mx:HBox verticalAlign="middle" horizontalGap="0">
+			<mx:Text styleName="listItemTitle"
+				text="{data.fname} {data.lname}" />
+			<mx:Spacer width="5"
+				includeInLayout="{data.created_by_id != _model.session.user_id}" />
+			<mx:Text styleName="listItemTitle" color="#999999" fontWeight="normal"
+				text="{data.created_by_id != _model.session.user_id ? '(shared)' : ''}" 
+				includeInLayout="{data.created_by_id != _model.session.user_id}" />			
+		</mx:HBox>
+		<mx:Text styleName="listItemDesc"
+			width="{explicitWidth - 25}"
+			htmlText="{data.city}, {data.state} - Pledged: &lt;b&gt;{currencyFormatter.format(data.pledge_total)}&lt;/b&gt;" />
+	</mx:VBox>
+	
+	<mx:HBox right="10" verticalAlign="middle">
+		<mx:Image id="pledgeBtn"
+			visible="false"
+			source="{_model.icons.pledge}"
+			toolTip="Record a pledge for {data.fname} {data.lname}"
+			click="donationAction(data)"
+			filters="{[dropShadow]}"
+			useHandCursor="true" buttonMode="true" />
+		<mx:Image source="{_model.icons.singleUser}"
+			verticalCenter="0" right="30"
+			alpha=".90" toolTip="Me!"
+			visible="{data.id == _model.session.data._contact_id}" 
+			filters="{[dropShadow]}"
+			includeInLayout="{data.id == _model.session.data._contact_id}" />	
+	</mx:HBox>
+	
+
+	<mx:CurrencyFormatter id="currencyFormatter" precision="0" currencySymbol="$" useNegativeSign="false" />
+	<mx:DropShadowFilter id="dropShadow"
+		alpha="0.75"
+		angle="90"
+		color="0x000000"
+		blurX="6" blurY="6"
+		distance="1" />	
+	
+	
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephanttrakker.views.modules.pledge_workspace.model.PledgeWorkspaceVO;
+			import org.osflash.thunderbolt.Logger;
+			import com.enilsson.elephanttrakker.views.modules.pledge_workspace.events.SPWEvent;
+			import com.enilsson.elephanttrakker.models.ETModelLocator;
+			
+			[Bindable] private var _model:ETModelLocator = ETModelLocator.getInstance();
+			
+			private var grayMatrix:Array = [
+				0.3086, 0.609, 0.282, 0, 0,
+				0.3086, 0.609, 0.282, 0, 0,
+				0.3086, 0.609, 0.282, 0, 0,
+				0, 0, 0, 1, 0
+			];
+			
+			/**
+			 * Action for when the donation button
+			 */
+			private function donationAction(data:Object):void
+			{
+ 				var params:PledgeWorkspaceVO = new PledgeWorkspaceVO();
+				params.contactID = data.id;
+				params.contactData = data;
+				
+				if ( data.shared === true )
+					new SPWEvent ( SPWEvent.ADD_SHARED, params ).dispatch();					
+				else
+					new SPWEvent ( SPWEvent.ADD_EXISTING, params ).dispatch();					
+
+ 				
+/*  				// clear the call logging workspace
+				_model.call_logging.reset();
+
+				// assign a contact ID to the call logging class
+				_model.call_logging.contactID = data.id;
+				
+				// assign the user_id to the call_logging
+				_model.call_logging.userID = _model.session.user_id;
+				
+				// assign the contact data to the pledge
+				_model.call_logging.initialContactData = data;				
+				_model.call_logging.initialPledgeData = data;
+				
+				// change the main view to see the call logging
+				_model.mainViewState = ETModelLocator.CALL_LOGGING_VIEW;
+ */
+			}
+
+			private function rsvpContact():void
+			{
+				_model.events.selectedEventID = 0;
+				_model.events.selectedEventName = '';
+				_model.events.selectedContactID = data.id;
+				_model.events.selectedContactName = data.lname + ', '+ data.fname;
+				
+				_model.events.selectedData = data;
+				_model.events.selectedData['fullName'] = data.lname + ', '+ data.fname;
+				_model.events.showRSVPFormOnStart = true;
+
+	
+				// change the main view to see the call logging
+				_model.mainViewState = ETModelLocator.EVENTS_VIEW;
+			}
+
+		]]>
+	</mx:Script>
+	
+</mx:Canvas>

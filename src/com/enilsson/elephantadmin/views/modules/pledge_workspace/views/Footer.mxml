@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:common="com.enilsson.elephantadmin.views.common.*" 
+	width="40"
+	show="init()"
+	horizontalScrollPolicy="off" verticalScrollPolicy="off">
+
+	<mx:LinkButton id="saveBT"
+		styleName="saveBT"
+		label="save" 
+		enabled="{presentationModel.action != PledgeWorkspaceModel.EDIT}"
+		verticalCenter="0" left="95"
+		toolTip="{presentationModel.action != PledgeWorkspaceModel.EDIT ? 
+			'Save this pledge to finish at a later date' : 
+			'You can not save an existing pledge!'}" 
+		tabIndex="2"
+		click="presentationModel.save()" />
+	
+	<mx:HBox id="buttons" horizontalCenter="0" top="6">
+		<common:ValidFormIndicator 
+			status="{presentationModel.workspaceValid}" 
+			showToolTips="false"
+			rollOver="presentationModel.showErrorList = true"
+			rollOut="presentationModel.showErrorList = false"		
+			/>
+		<mx:Button id="submit" 
+			name="submit" 
+			styleName="submitBtn"
+			label="{presentationModel.action != PledgeWorkspaceModel.EDIT ? 'complete':'update'} this pledge"
+			click="presentationModel.process()" 
+			keyUp="submitBtnKeyHandler(event)"
+			enabled="{presentationModel.workspaceValid}"
+			/>
+	</mx:HBox>
+	
+	<mx:LinkButton id="clearBT" styleName="clearBT"
+		label="clear" 
+		verticalCenter="0" right="85"
+		toolTip="Clear the form"
+		click="clearHandler( event )" 
+		tabIndex="3" />
+	
+	<mx:Button id="backMove" styleName="backMove" 
+		left="5" verticalCenter="0"  
+		useHandCursor="true" buttonMode="true"
+		toolTip="Return to previous section" 
+		tabIndex="4"
+		enabled="{presentationModel.vindex != 0}" 
+		click="presentationModel.vindex--"  />
+	
+	<mx:Button id="forwardMove" styleName="forwardMove" 
+		verticalCenter="0" right="5" 
+		enabled="{presentationModel.vindex &lt; (presentationModel.numTabs - 1)}"
+		toolTip="Progress to next section" 
+		tabIndex="5" 
+		useHandCursor="true" buttonMode="true" 
+		click="presentationModel.vindex++" />
+
+	
+	<mx:Metadata>
+		[Event(name="completeCall", type="flash.events.Event")]
+	</mx:Metadata>
+	
+	<mx:Binding source="presentationModel.setSubmitFocus" destination="setSubmitFocus" />
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.events.CloseEvent;
+			import mx.controls.Alert;
+			import com.enilsson.elephantadmin.views.modules.pledge_workspace.events.SPWEvent;
+			import com.enilsson.elephantadmin.views.modules.pledge_workspace.model.PledgeWorkspaceModel;
+			import mx.managers.ToolTipManager;
+			
+			[Bindable] public var presentationModel:PledgeWorkspaceModel;
+			
+			private function init():void
+			{
+				ToolTipManager.enabled = true;	
+			}
+			
+			/**
+			 * Binding handler for setting the submit btn focus from the presentation model
+			 */
+			public function set setSubmitFocus ( value:Boolean ):void
+			{
+				if ( !value ) return;
+				
+				submit.setFocus();
+				presentationModel.setSubmitFocus = !value;
+			}
+			
+			/**
+			 * Keyboard handler for the submit btn
+			 */
+			private function submitBtnKeyHandler(e:KeyboardEvent):void
+			{
+				if(e.keyCode == Keyboard.ENTER)
+					presentationModel.process();
+			}
+			
+			/**
+			 * Provide an Alert choice to clearing the workspace to stop accidental clicks
+			 */
+			private function clearHandler ( event:MouseEvent ):void
+			{
+				Alert.show( 
+					'Are you sure you want to clear the workspace?',
+					'Clear Workspace',
+					(Alert.YES | Alert.NO),
+					null,
+					alertHandler
+				);				
+			}
+			
+			private function alertHandler( event:CloseEvent ):void
+			{
+				if ( event.detail == Alert.YES )
+					new SPWEvent( SPWEvent.ADD_NEW ).dispatch();
+			}
+			
+		]]>
+	</mx:Script>
+		
+</mx:Canvas> 	

@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<common:LabeledContainer
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:common="com.enilsson.elephantadmin.views.common.*" 
+	xmlns:email="com.enilsson.elephantadmin.views.modules.email.*" 
+	verticalScrollPolicy="off" horizontalScrollPolicy="off"
+	label="{_model.viewStateNames.getItemAt(moduleID)}"
+	>
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.graphics.enDropShadows;
+			import mx.formatters.DateFormatter;
+			import com.enilsson.elephantadmin.vo.EmailVO;
+			import com.enilsson.graphics.enDropShadows;
+			import mx.utils.ObjectUtil;
+			import mx.collections.ArrayCollection;
+		
+			import com.enilsson.elephantadmin.events.session.PingEvent;
+			import com.enilsson.elephantadmin.models.EAModelLocator;
+			import com.enilsson.elephantadmin.events.modules.EmailEvent;
+			import com.enilsson.elephantadmin.vo.RecordsVO;
+			import com.enilsson.elephantadmin.vo.RecordVO;
+			import com.enilsson.elephantadmin.vo.SearchVO;
+			
+			import org.osflash.thunderbolt.Logger;
+			
+			[Bindable] private var _model:EAModelLocator = EAModelLocator.getInstance();
+
+			override protected function init():void
+			{
+				super.init();
+
+				getAttachmentList(); // populate the dataprovider for attachmentList combo box
+
+				// get the data	
+				clearSearch();
+				_model.dataChanged = false;
+			}
+			
+			private function upsertRecord(event:Event):void {
+			if( email_form.isValid === false) return;
+
+				// set the form variables and assign the appropriate RLAC
+				var fv:Object = email_form.formVariables;
+				
+				if(_model.debug) Logger.info('Email system Form Variables', ObjectUtil.toString(fv));
+
+				new EmailEvent( 
+					EmailEvent.EMAIL_SYSTEM_UPSERT, {
+						'recordVO' :  new RecordVO (
+							'email_system_templates',
+							0,
+							fv
+						)
+					}
+				).dispatch();
+			}
+
+			private function sendTestEmail(event:Event):void {
+			if( email_form.isValid === false) return;
+
+				// set the form variables and assign the appropriate RLAC
+				var fv:Object = email_form.formVariables;
+				
+				if(_model.debug) Logger.info('Email system Form Variables', ObjectUtil.toString(fv));
+
+				var varNames:Array = String(fv.variables).replace(/[{}]/g,"").split(" ");
+				var vars:Array = new Array();
+
+				for each(var item:String in varNames){
+					switch(item) {
+						case "":
+							break
+						case "fname":
+							vars["fname"] = "XXXXX";
+							break;
+						case "lname":
+							vars["lname"] = "XXXXXX";
+							break;
+						case "password":
+							vars["password"] = "XXXXXXX";
+							break;
+						case "date":
+							vars["date"] = "XX/XX/XX";
+							break;
+						case "pledge_amount":
+							vars["pledge_amount"] = "X,XXX"
+							break;
+						case "url":
+							vars["url"] = "http://XXX.XXXX.XXX"
+							break;
+						default:
+							vars[item] = "XXXXX";
+							break;
+					}
+				}
+
+				new EmailEvent( 
+					EmailEvent.EMAIL_SYSTEM_TEST, {
+						'emailVO' :  new EmailVO (
+							_model.session.email,
+							fv.subject,					//email subject - empty means get from template
+							fv.description,				//email content - empty means get from template
+							_model.email_system.formRecord.attachment_id,			//attachment List
+							undefined,					//email template id
+							vars,						//key-value pairs of variable-replacement string
+							false						//logged?
+						)
+					}
+				).dispatch();
+			}
+			
+			private function searchStart(event:Event):void {
+
+				if(emailList.searchTerm != ""){
+				emailList.clearSearch.visible = true;
+
+					if(emailList.searchOption.data == 0)
+					{				
+						new EmailEvent(
+							EmailEvent.EMAIL_SYSTEM_SEARCH,  {
+								'searchVO' : new SearchVO(
+									'email_system_templates',
+									emailList.searchTerm,
+									null,
+									0,
+									_model.itemsPerPage
+								)
+							}
+						).dispatch();
+					}
+					else
+					{
+						var searchField:String = emailList.searchOption.data;
+
+						var whereObj:Object =  new Object();
+							whereObj['statement'] = '(1)';
+							whereObj[1] = { 
+								'what' : searchField,
+								'val' : "%"+emailList.searchTerm+"%",
+								'op' : 'LIKE'
+							};
+
+						new EmailEvent( 
+							EmailEvent.EMAIL_SYSTEM_RECORDS, { 
+								'recordsVO' : new RecordsVO( 
+									'email_system_templates', 
+									whereObj, 
+									'email_system_templates.id ASC', 
+									_model.email_system.currPage, 
+									_model.itemsPerPage, 
+									'P' 
+								) 
+							} 
+						).dispatch();
+					}
+				}
+			}
+			
+			private function indexSearchStart(event:Event):void {
+				emailList.clearSearch.visible = true;
+				var whereObj:Object =  new Object();
+					whereObj['statement'] = '(1)';
+					whereObj[1] = { 
+						'what' : 'email_system_templates.title',
+						'val' : emailList.indexBar.searchLetter+"%",
+						'op' : 'LIKE'
+					};
+				new EmailEvent( 
+					EmailEvent.EMAIL_SYSTEM_RECORDS, { 
+						'recordsVO' : new RecordsVO( 
+							'email_system_templates', 
+							whereObj, 
+							'email_system_templates.id ASC', 
+							_model.email_system.currPage, 
+							_model.itemsPerPage, 
+							'P' 
+						) 
+					} 
+				).dispatch();
+			}
+			
+			private function clearSearch():void {
+				emailList.clearSearch.visible = false;
+				_model.email_system.currPage = 0;
+				new EmailEvent( 
+					EmailEvent.EMAIL_SYSTEM_RECORDS, { 
+						'recordsVO' : new RecordsVO( 
+							'email_system_templates', 
+							null, 
+							'email_system_templates.id ASC', 
+							_model.email_system.currPage, 
+							_model.itemsPerPage, 
+							'P' 
+						) 
+					} 
+				).dispatch();
+				
+			}
+			
+			private function newPageAction(event:Event):void {
+				_model.email_system.currPage = emailList.selectedPage * _model.itemsPerPage;
+				switch(_model.email_system.lastQuery.type){
+					case EmailEvent.EMAIL_SYSTEM_RECORDS:
+						RecordsVO(_model.email_system.lastQuery.params.recordsVO).iFrom = _model.email_system.currPage;
+						_model.email_system.lastQuery.dispatch();
+ 						break;
+					
+					case EmailEvent.EMAIL_SYSTEM_SEARCH:
+						SearchVO(_model.email_system.lastQuery.params.searchVO).iFrom = _model.email_system.currPage;
+						_model.email_system.lastQuery.dispatch();
+						break;
+				}
+			}
+			
+			private function listClickHandler():void {
+				_model.email_system.selectedIndex = emailList.selectedIndex;
+				_model.email_system.formRecord = emailList.clickedItem;
+			}
+
+			private function getAttachmentList():void
+			{
+				if(_model.debug){ Logger.info('Get Attachment List'); }
+
+				var whereObj:Object =  new Object();
+					whereObj['statement'] = '(1)';
+					whereObj[1] = { 
+						'what' : 'email_attachments.publish',
+						'val' : 1,
+						'op' : '='
+					};
+				new EmailEvent( 
+					EmailEvent.EMAIL_SYSTEM_GET_ATTACHMENTS, { 
+						'recordsVO' : new RecordsVO( 
+							'email_attachments', 
+							whereObj, 
+							'email_attachments.id ASC', 
+							0, 
+							1000
+						) 
+					} 
+				).dispatch();
+			}
+
+		]]>
+	</mx:Script>
+	
+	<mx:DateFormatter id="dateFormatter" formatString="MM/DD/YY L:NN A" />
+
+	<mx:HDividedBox horizontalGap="10" width="100%" height="100%">
+		<common:ModuleList id="emailList" 
+			height="100%" minWidth="240" width="300"
+			dataProvider="{_model.email_system.records}"
+			searchComboList="{_model.email_system.searchBoxCombo}"
+			itemRenderer="com.enilsson.elephantadmin.views.modules.email.Email_System_ModuleList"
+			listItemClick="listClickHandler()" 
+			searchStart="searchStart(event)"
+			indexSearch="indexSearchStart(event)"
+			clearSearch="clearSearch()" 
+			newPage="newPageAction(event)" 
+			selectedIndex="{_model.email_system.selectedIndex}" 
+			selectedPage="{_model.email_system.currPage / _model.itemsPerPage}" 
+			itemsPerPage="{_model.itemsPerPage}" 
+			itemsTotal="{_model.email_system.totalRecords}"
+			/>
+		
+		<email:Email_System_Form id="email_form"
+			width="100%" minWidth="350"
+			height="100%"
+			upsertRecord="upsertRecord(event)"
+			sendTestEmail="sendTestEmail(event)"
+			/>
+
+		<email:Email_System_Options id="email_options"
+			width="350" minWidth="300" maxWidth="350" height="100%"/>
+	</mx:HDividedBox>
+
+</common:LabeledContainer>

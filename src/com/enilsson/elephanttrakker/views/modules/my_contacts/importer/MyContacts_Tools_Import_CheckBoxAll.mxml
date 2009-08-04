@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
+	horizontalScrollPolicy="off" 
+	verticalScrollPolicy="off">
+
+	<mx:Script>
+		<![CDATA[
+			import mx.utils.ObjectUtil;
+			import org.osflash.thunderbolt.Logger;
+			import com.enilsson.elephanttrakker.models.ETModelLocator;
+			
+			[Bindable] private var _model:ETModelLocator = ETModelLocator.getInstance();
+			
+			private function selectAll(select:Boolean):void
+			{
+				for(var index:String in _model.my_contacts.importData) {
+					_model.my_contacts.importData[index]['selected'] = select;
+				}
+				_model.my_contacts.importData.refresh();	
+				
+				if ( select )
+					_model.my_contacts.importIgnore.push(data.id);
+				else
+					delete _model.my_contacts.importIgnore[data.id];
+			}
+
+		]]>
+	</mx:Script>
+	
+	<mx:HBox width="100%" horizontalAlign="center">
+		 <mx:CheckBox id="chk" 
+		 	toolTip="Click to include this record in your upload"
+		 	selected="true" 
+		 	change="selectAll(chk.selected)" />
+	</mx:HBox>
+</mx:Canvas>

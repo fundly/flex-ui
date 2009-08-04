@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<common:LabeledContainer
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:common="com.enilsson.elephantadmin.views.common.*" 
+	xmlns:record="com.enilsson.elephantadmin.views.modules.record.*"
+	verticalScrollPolicy="off" horizontalScrollPolicy="off"
+	label="{_model.viewStateNames.getItemAt(moduleID)}"
+	>
+	
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephantadmin.models.Icons;
+			import com.enilsson.elephantadmin.events.modules.RecordEvent;
+			import mx.events.CloseEvent;
+			import mx.controls.Alert;
+			import com.enilsson.elephantadmin.events.session.PingEvent;
+			import org.osflash.thunderbolt.Logger;
+			import com.enilsson.elephantadmin.models.EAModelLocator;
+			import com.enilsson.graphics.enDropShadows;
+			
+			[Bindable] private var _model:EAModelLocator = EAModelLocator.getInstance();
+			private var _showingAlert:Boolean = false;
+
+			override protected function init():void
+			{
+				super.init();
+
+				_model.record.sid = "0ca00t0d0";
+
+				// if there is no SID then alert the user and redirect
+				if(_model.browserFragments.length == 1)
+				{
+					//redirectUser();
+					//return;
+				}
+				
+				// set the sid for the record to be viewed
+				//_model.record.sid = _model.browserFragments[1];
+				
+				//if(_model.debug) 
+				Logger.info('Record SID', _model.record.sid);
+				
+				// if the SID is not the correct length then redirect
+				if(_model.record.sid.length != 9)
+				{
+					redirectUser();
+					return;
+				}
+					
+				// get the list of stuktor layouts if not present
+				if(!_model.struktorLayout.loaded)
+					new RecordEvent( RecordEvent.GET_LAYOUTS ).dispatch();
+					
+				// get the full record data if the layout is already present
+				if(_model.struktorLayout.loaded)
+					new RecordEvent( RecordEvent.GET_FULL_RECORD, { sid : _model.record.sid } ).dispatch();
+			}
+			
+			/**
+			 * Send the user back to the first module when they have read the alert message
+			 */
+			private function redirectUser():void
+			{
+				if(_showingAlert) return;
+				
+				_showingAlert = true;
+				
+				Alert.show(	
+					'Please select a valid record id before attempting to show record details',
+					'No record selected', 
+					0, 
+					null,
+					function(e:CloseEvent):void { 
+						_showingAlert = false;
+						_model.mainViewState = 0; 
+					},
+					Icons.ALERT
+				);
+			}
+			
+			/**
+			 * Listen for the layout being loaded then get the data for the listed record
+			 */
+			public function set loadSingleRecord( value:Boolean ):void
+			{
+				if( !value ) return;
+				
+				if( _model.record.sid.length != 9 ) return;
+				
+				new RecordEvent( RecordEvent.GET_FULL_RECORD, { sid : _model.record.sid } ).dispatch();
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<mx:Binding source="_model.struktorLayout.loaded" destination="this.loadSingleRecord" />
+	
+	<mx:HBox horizontalGap="10" width="100%" height="100%">
+		
+		<mx:ViewStack 
+			width="100%" height="100%">
+			<record:Record_SingleRecord />
+			<record:Record_DeletedRecord />
+		</mx:ViewStack>
+		
+		<mx:Canvas width="300" height="100%">
+			<mx:Box styleName="controlBar" width="100%" height="32" y="0"/>
+			<mx:TabNavigator id="optionsViewStack"
+			 	styleName="optionsTabNav"
+				width="100%" height="{height - 4}" bottom="0" 
+				paddingLeft="5" paddingBottom="5">
+				<record:Record_AuditTrail label="AUDIT TRAIL" width="290" />
+				<record:Record_Access label="ACCESS" />
+			</mx:TabNavigator>
+		</mx:Canvas>
+
+	</mx:HBox>
+</common:LabeledContainer>

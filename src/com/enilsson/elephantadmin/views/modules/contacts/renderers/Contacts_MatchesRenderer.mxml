@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	horizontalScrollPolicy="off" 
+	verticalScrollPolicy="off"
+	height="65"
+	mouseOver="viewContact.visible = true"
+	mouseOut="viewContact.visible = false">
+
+	<mx:VBox verticalGap="0" paddingTop="0" paddingBottom="0">
+		<mx:Text text="{data.fname} {data.lname}{data.id == data.match_id ? ' (original record)' : ''}" 
+			width="{explicitWidth}" 
+			selectable="false"
+			styleName="listTitle" />
+		<mx:Text text="{data.address1}, {data.city} {data.state} {data.zip}" 
+			width="{explicitWidth}" 
+			styleName="listDesc" />
+		<mx:Text text="Contact owned by: {data.created_by_id.fname} {data.created_by_id.lname} - {data.created_by_id._fid}" 
+			width="{explicitWidth}" 
+			selectable="false"
+			styleName="listDesc" />
+	</mx:VBox>
+
+	<mx:Button id="viewUser"
+		visible="{viewContact.visible}"
+		verticalCenter="0" right="10"
+		useHandCursor="true" buttonMode="true"
+		styleName="viewUser"
+		click="new SidEvent( data.created_by_id.sid ).dispatch()"
+		toolTip="View the owner of this contact"
+		filters="{[dropShadow]}" />	
+
+	<mx:Button id="viewContact"
+		visible="false"
+		verticalCenter="0" right="50"
+		useHandCursor="true" buttonMode="true"
+		styleName="viewContact"
+		click="new SidEvent( data.sid ).dispatch()"
+		toolTip="View this contact"
+		filters="{[dropShadow]}" />	
+
+	<mx:DropShadowFilter id="dropShadow"
+		alpha="0.75"
+		angle="90"
+		color="0x000000"
+		blurX="6" blurY="6"
+		distance="1" />	
+		
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephantadmin.events.main.SidEvent;
+		]]>
+	</mx:Script>		
+
+</mx:Canvas>

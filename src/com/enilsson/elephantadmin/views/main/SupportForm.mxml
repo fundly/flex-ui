@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	width="500" height="500"
+	creationComplete="init()"
+	xmlns:common="com.enilsson.elephantadmin.views.common.*"
+	xmlns:graphics="com.enilsson.graphics.*"
+	>
+	
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephantadmin.models.Icons;
+			import com.adobe.cairngorm.control.CairngormEventDispatcher;
+			import com.enilsson.utils.eNilssonUtils;
+			import com.enilsson.elephantadmin.events.main.SupportEvent;
+			import com.enilsson.elephantadmin.models.EAModelLocator;
+			import mx.managers.PopUpManager;
+			import mx.effects.Fade;
+			import mx.rpc.http.HTTPService;
+			import mx.rpc.events.ResultEvent;			
+			import mx.core.Application;
+			import org.osflash.thunderbolt.Logger;
+			import mx.utils.ObjectUtil;
+
+			import mx.events.ValidationResultEvent;
+
+			[Bindable] private var _model:EAModelLocator = EAModelLocator.getInstance();
+			[Bindable] private var isFormValid:Boolean = false;
+			
+			private var _formValidate:Array = new Array();
+			
+			private function init():void
+			{
+				description.text = _model.supportDescription;
+				_model.supportDescription = '';
+			
+				eNilssonUtils.setFieldValidator('required', username, _formValidate);
+				eNilssonUtils.setFieldValidator('email', email, _formValidate);
+				eNilssonUtils.setFieldValidator('required', description, _formValidate);
+				
+				username.addEventListener(FocusEvent.FOCUS_OUT, validateFields);
+				username.addEventListener(KeyboardEvent.KEY_UP, validateFields);	
+				email.addEventListener(FocusEvent.FOCUS_OUT, validateFields);	
+				email.addEventListener(KeyboardEvent.KEY_UP, validateFields);	
+				phone.addEventListener(FocusEvent.FOCUS_OUT, validateFields);	
+				phone.addEventListener(KeyboardEvent.KEY_UP, validateFields);	
+				description.addEventListener(FocusEvent.FOCUS_OUT, validateFields);	
+				description.addEventListener(KeyboardEvent.KEY_UP, validateFields);
+	
+			}
+			
+			private function sendSupport():void
+			{
+				new SupportEvent(
+					SupportEvent.EVENT_SEND_SUPPORT,
+					{
+						username : username.text, 
+						email : email.text, 
+						phone : phone.text, 
+						contact : contactMe.selection.label, 
+						description : description.text, 
+						title : 'Support from ' + _model.appName,
+						priority : priority.selectedItem.value
+					}
+				).dispatch();
+				
+				closePopup();
+			}
+			
+			private function validateFields(e:Event=null):void
+			{
+				var flag:Boolean = true;
+				for(var i:String in _formValidate)
+				{
+					var vResult:ValidationResultEvent = _formValidate[i].validator.validate(null, true);
+					if (vResult.type==ValidationResultEvent.INVALID) {
+						flag = false;
+						if(_formValidate[i].source == e.currentTarget){
+							e.currentTarget.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_OVER));
+						}
+					}
+					if(vResult.type == ValidationResultEvent.VALID){
+						_formValidate[i].source.errorString = null;
+					}
+				}
+				isFormValid = flag;
+			}
+			
+			private function test():void 
+			{
+				
+				if (contactMe.selectedValue == "Phone") 
+				{
+					 frmPhone.required = true;
+					 eNilssonUtils.setFieldValidator('required', phone, _formValidate);
+				} 
+				else 
+				{
+					frmPhone.required = false;
+					phone.errorString = null;
+					for(var i:String in _formValidate)
+					{
+						if ((_formValidate[i].rule == 'required') && (_formValidate[i].source == phone)) 
+						{
+							_formValidate.splice(i,i);
+							break;						
+						}
+					}
+				}
+			}
+			
+			public function closePopup():void
+			{
+				PopUpManager.removePopUp(this);
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<mx:Style>
+		.titleStyle {
+			color:#FFFFFF;
+			fontSize:14;
+			fontWeight:"bold";
+		}
+		.supportForm {
+			fontSize:10;
+			paddingTop:0;
+			paddingBottom:0;	
+		}
+		.successBox {
+			borderStyle:"solid";
+			borderThickness:5;
+			borderColor:#8bac12;
+			backgroundColor:#8bac12;
+			cornerRadius:8;
+			dropShadowEnabled: true;
+		   	shadowDistance: 4;
+		   	shadowDirection: center;
+		}
+		.errorBox {
+			borderStyle:"solid";
+			borderThickness:5;
+			borderColor:#CC3300;
+			backgroundColor:#CC3300;
+			cornerRadius:8;
+			dropShadowEnabled: true;
+		   	shadowDistance: 4;
+		   	shadowDirection: center;
+		}
+	</mx:Style>
+	
+	<mx:EmailValidator source="{email}" property="text" />
+	<mx:PhoneNumberValidator source="{phone}" property="text" required="false" />
+	<mx:Fade id="fadeIn" alphaTo="1" duration="300" />
+	<mx:Fade id="fadeOut" alphaTo="0" duration="300" />
+
+	<mx:Canvas left="0" top="10" styleName="popupContent" 
+		verticalScrollPolicy="off" horizontalScrollPolicy="off"
+		filters="{[com.enilsson.graphics.enDropShadows.standardDS()]}" 
+		width="{this.width-10}" height="{this.height-10}">
+	
+		<mx:VBox top="15" left="15"
+			width="{width-40}" height="{height-40}"
+			backgroundColor="#FFFFFF" verticalGap="0"
+			color="#333333">
+			
+			<mx:VBox verticalGap="5" height="100%" width="100%">
+				<mx:Canvas width="100%" backgroundColor="#999999" height="37">
+					<mx:Image source="{Icons.PURPLE_INFO}" left="10" verticalCenter="-1" />
+					<mx:Text id="supportDesc" 
+						text="Lodge a support request"
+						fontSize="18" width="100%"
+						color="#FFFFFF"
+						filters="{[com.enilsson.graphics.enDropShadows.textDS(0x333333)]}" 
+						verticalCenter="0" left="50" />
+				</mx:Canvas>
+				<mx:Form width="100%" styleName="supportForm">
+					<mx:FormHeading label="Your Details" labelWidth="80" />
+					<mx:FormItem label="Your Name" width="100%" required="true" labelWidth="80">
+						<mx:TextInput id="username" text="{_model.session.fullname}" width="100%" />
+					</mx:FormItem>
+					<mx:FormItem label="Email" width="100%" required="true" labelWidth="80">
+						<mx:TextInput id="email" text="{_model.session.email}" width="100%" />
+					</mx:FormItem>
+					<mx:FormItem label="Phone" width="100%" labelWidth="80" id="frmPhone">
+						<mx:TextInput id="phone" width="100%" text="{_model.session.phone}" />
+					</mx:FormItem>
+					<mx:FormItem label="Contact me via" width="100%" labelWidth="80">
+						<mx:RadioButtonGroup id="contactMe" change="test()" />
+						<mx:RadioButton groupName="contactMe" id="cm1" label="Email" selected="true"/>
+			        	<mx:RadioButton groupName="contactMe" id="cm2" label="Phone"/>
+					</mx:FormItem>
+				</mx:Form>
+				<mx:Form width="100%" styleName="supportForm" 
+					verticalScrollPolicy="off" horizontalScrollPolicy="off">
+					<mx:FormHeading label="Tell us about your issue" labelWidth="80" />
+					<mx:FormItem label="Priority" width="100%" labelWidth="80">
+						<mx:ComboBox id="priority" buttonMode="true" useHandCursor="true" width="100%">
+						 	 <mx:Array>
+						        <mx:Object label="Low - Not a big deal but can you please fix" value="3"></mx:Object>
+						        <mx:Object label="Medium - I can live with this problem for a little while." value="2"></mx:Object>
+						        <mx:Object label="High - I need help ASAP!!!" value="1"></mx:Object>
+							</mx:Array>
+						</mx:ComboBox>
+					</mx:FormItem>		
+					<mx:FormItem label="Description" width="100%" height="125" labelWidth="80" required="true">
+						<mx:TextArea id="description" width="100%" height="100%"/>
+					</mx:FormItem>		
+				</mx:Form>
+			</mx:VBox>
+				
+			<mx:HBox id="buttons" 
+				paddingBottom="15"
+				width="100%" horizontalAlign="center">
+				<common:ValidFormIndicator status="{isFormValid}" />
+				<mx:Button id="sendEmail" styleName="loginSubmitBtn"
+					horizontalCenter="0" 
+					useHandCursor="true" buttonMode="true" 
+					label="Send Support Request" 
+					click="sendSupport()" 
+					enabled="{isFormValid &amp;&amp; !_model.dataLoading}" />
+			</mx:HBox>
+			
+		</mx:VBox>
+	
+	</mx:Canvas>
+
+	<graphics:enCloseBtn top="0" right="0" size="20" click="closePopup()" />
+
+</mx:Canvas>

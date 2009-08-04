@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas width="100%"
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	horizontalScrollPolicy="off" 
+	verticalScrollPolicy="off" >
+	
+	<mx:Label bottom="5" left="10" 
+		visible="{_model.revision != ''}"
+		text="{versionText()}" />
+	<mx:Label bottom="5" right="42" 
+		text="SOFTWARE BY" />
+	<mx:Image source="{Icons.BLUE_SWARM_SMALL}" 
+		width="36" 
+		bottom="2" right="4"
+		toolTip="Visit BlueSwarm!"
+		click="navigateToURL(new URLRequest('http://www.blue-swarm.com/'),'blank')" 
+		useHandCursor="true" buttonMode="true" 
+		/>
+		
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephantadmin.models.Icons;
+			import com.enilsson.elephantadmin.models.EAModelLocator;
+			
+			[Bindable] public var _model:EAModelLocator = EAModelLocator.getInstance();
+		
+			private function versionText():String
+			{
+				var regX:RegExp = /[a-zA-Z]/gi;
+				var rev:String = _model.revision;
+				
+				return 'VERSION '  + _model.version + '.' + rev.replace(regX, '');
+			}
+		]]>
+	</mx:Script>
+	
+</mx:Canvas>

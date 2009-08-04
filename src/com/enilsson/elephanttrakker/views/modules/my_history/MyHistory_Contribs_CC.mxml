@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:en="com.enilsson.controls.*"
+	xmlns:graphics="com.enilsson.graphics.*" 
+	xmlns:common="com.enilsson.elephanttrakker.views.common.*"
+	show="init()">
+
+	<mx:DataGrid id="pledgesDG" dataProvider="{_model.my_history.transactions}" 
+		width="100%" height="{this.height - 41}" 
+		top="5" selectable="true" verticalGridLines="false" horizontalScrollPolicy="off" 
+		headerRelease="sortAction(event)">
+		<mx:columns>
+            <mx:DataGridColumn textAlign="left" dataField="full_name" headerText="Name on Card" />
+            <mx:DataGridColumn textAlign="left" dataField="card_number" headerText="Card Number" />
+            <mx:DataGridColumn textAlign="left" headerText="Amount" dataField="amount" labelFunction="money_labelFunc"  />            
+            <mx:DataGridColumn textAlign="left" headerText="Date" dataField="created_on" labelFunction="date_labelFunc" />            
+            <mx:DataGridColumn textAlign="left" headerText="Time" dataField="created_on" labelFunction="time_labelFunc" />            
+            <mx:DataGridColumn textAlign="left" headerText="Actions" width="50" 
+            	itemRenderer="com.enilsson.elephanttrakker.views.modules.my_history.renderers.MyHistory_ContribsActions" />
+        </mx:columns>
+	</mx:DataGrid>
+	
+	<common:DataGridFooter id="dgFooter" 
+		bottom="0" 
+		searchStart="handleSearch()" 
+		changePage="newPageAction()" 
+		clearSearch="clearSearchAction()"
+		itemsPerPage="{_model.itemsPerPage}" 
+		itemsTotal="{_model.my_history.numContribs}" />
+
+	<mx:CurrencyFormatter id="currencyFormatter" precision="0" currencySymbol="$" useNegativeSign="false" />
+	<mx:DateFormatter id="dfDate" formatString="MM/DD/YY" />
+	<mx:DateFormatter id="dfTime" formatString="L:NN A" />
+
+	
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.utils.EDateUtil;
+			import com.enilsson.utils.eNilssonUtils;
+			import com.enilsson.elephanttrakker.events.modules.my_history.MyHistorySearchEvent;
+			import org.osflash.thunderbolt.Logger;
+			import com.enilsson.elephanttrakker.events.modules.my_history.MyHistoryGetContribsEvent;
+			import mx.events.DataGridEvent;
+			import mx.events.ItemClickEvent;
+			import mx.messaging.AbstractConsumer;
+			import com.enilsson.elephanttrakker.models.ETModelLocator;
+			
+			[Bindable] private var _model:ETModelLocator = ETModelLocator.getInstance();
+			private var sortActions:Object = new Object();			
+			private var lastSort:String = 'transactions.created_on DESC';
+			
+			/**
+			 * Initialisation routine
+			 */
+			public function init() : void
+			{
+				if(_model.session)
+				{
+					new MyHistoryGetContribsEvent(
+						MyHistoryGetContribsEvent.EVENT_MYHISTORY_GET_CONTRIBS,
+						0, 
+						_model.itemsPerPage, 
+						'P', 
+						lastSort
+					).dispatch();
+				}
+			}
+			
+			/**
+			 * Handle a search
+			 */
+			private function handleSearch():void
+			{
+				if(_model.debug) Logger.info('Start Search', dgFooter.searchTerm);
+				
+				new MyHistorySearchEvent( 'transactions', dgFooter.searchTerm, 0, 200).dispatch();
+				dgFooter.reset();
+			}
+			
+			/**
+			 * Handle pagination event
+			 */
+			private function newPageAction():void
+			{
+				if(_model.debug) Logger.info('New Page', dgFooter.selectedPage);
+
+				new MyHistoryGetContribsEvent(
+					MyHistoryGetContribsEvent.EVENT_MYHISTORY_GET_CONTRIBS,
+					dgFooter.selectedPage * _model.itemsPerPage, 
+					_model.itemsPerPage, 
+					'', 
+					lastSort
+				).dispatch();
+			}
+			
+			/**
+			 * Clear the search and reset the grid
+			 */
+			private function clearSearchAction():void
+			{
+				if(_model.debug) Logger.info('Clear Search');
+				
+				new MyHistoryGetContribsEvent(
+					MyHistoryGetContribsEvent.EVENT_MYHISTORY_GET_CONTRIBS,
+					0, 
+					_model.itemsPerPage, 
+					'P', 
+					lastSort
+				).dispatch();				
+			}
+			
+			/**
+			 * Handle column sorting
+			 */
+			private function sortAction(e:DataGridEvent):void
+			{
+				if (_model.my_history.isSorting) 
+				{
+					e.preventDefault();
+					return;
+				}
+				
+				_model.my_history.isSorting = true;
+				
+			 	if(_model.debug) Logger.info('SortAction', e.dataField);
+			 	
+			 	// stop the default sort action
+			 	e.preventDefault();
+			 	
+			 	// get the fieldname
+			 	var fieldName:String = e.dataField.replace("_plain","");
+			 	var sort:String = '';
+			 	
+			 	// loop through and highlight the sorted column
+			 	for ( var i:int=0; i<pledgesDG.columns.length; i++)
+			 	{
+			 		if(e.columnIndex == i)
+			 			pledgesDG.columns[i].setStyle('backgroundColor','#ededed');
+			 		else 
+			 			pledgesDG.columns[i].setStyle('backgroundColor','none');
+			 	}
+			 	
+			 	// run the sort action, desc first or toggle the existing
+			 	if(sortActions[fieldName])
+			 	{
+			 		var direction:String = sortActions[fieldName] == 'ASC' ? 'DESC' : 'ASC';
+			 		sortActions[fieldName] = direction;
+			 		sort = 'transactions.' + fieldName + ' ' + direction;	
+			 		lastSort = sort;		 		
+			 		new MyHistoryGetContribsEvent('myhistory_get_cc_contribs',0, _model.itemsPerPage, 'P', sort).dispatch();
+			 		dgFooter.reset();			 		
+			 	} 
+			 	else 
+			 	{
+			 		sortActions[fieldName] = 'DESC';
+			 		sort = 'transactions.' + fieldName + ' DESC';
+			 		lastSort = sort;
+			 		new MyHistoryGetContribsEvent('myhistory_get_cc_contribs',0, _model.itemsPerPage, 'P', sort).dispatch();
+			 		dgFooter.reset();
+			 	}
+			}
+			
+			/**
+			 * Label function to show the dollars in the correct format
+			 */
+			private function money_labelFunc(item:Object, column:DataGridColumn):String 
+			{
+		  		return currencyFormatter.format(item[column.dataField]);
+			} 
+
+			/**
+			 * Label function to show the time in the correct format
+			 */
+			private function time_labelFunc(item:Object, column:DataGridColumn):String 
+			{
+				return dfTime.format( new Date(item[column.dataField]*1000) );
+			} 
+
+			/**
+			 * Label function to show the date in the correct format
+			 */
+			private function date_labelFunc(item:Object, column:DataGridColumn):String 
+			{
+		  		return dfDate.format( EDateUtil.dateFromTimestamp( item[column.dataField] ) );
+			} 
+
+		]]>
+	</mx:Script>
+
+</mx:Canvas>

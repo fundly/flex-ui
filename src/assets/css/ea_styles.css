@@ -1,0 +1,932 @@
+/* 
+CSS file for BlueSwarm Admin Panel
+Author: James Nicol, www.enilsson.com, September 2008
+*/	
+
+Application {
+	fontFamily: appFont;
+	fontSize: 12;
+	backgroundImage: "";
+	backgroundColor: #333333;
+	color: #333333;
+	paddingTop: 0;
+	paddingBottom: 0;
+	paddingLeft: 0;
+	paddingRight: 0;
+}
+
+
+/*--- Fonts ---*/
+@font-face {
+    src: url("../fonts/Lucida_Grande.ttf");
+    fontFamily: appFont;
+    advancedAntiAliasing: true;
+    unicode-range:U+0021-U+007F, U+00A6-U+00A9, U+00AE-U+00B9;
+}
+@font-face {
+    src: url("../fonts/Lucida_Grande_Bold.ttf");
+    fontFamily: appFont;
+    fontWeight: bold;
+    advancedAntiAliasing: true;
+    unicode-range:U+0021-U+007F, U+00A6-U+00A9, U+00AE-U+00B9;
+}
+@font-face {
+    src: url("../fonts/slkscr.ttf"); 
+    fontFamily: silkScreen;
+    advancedAntiAliasing: true;
+   	unicode-range:U+0021-U+007F;
+}
+@font-face
+{
+    src: url("../fonts/MyriadPro-Regular.otf");
+    fontFamily: myriadPro;
+ 	fontWeight: normal;
+	fontStyle: normal;
+	unicode-range:U+0021-U+007F;
+}
+/*--- End Fonts ---*/
+
+
+
+/**
+* Site Layout Styles
+**/
+
+/*--- Main Container Styles ---*/
+.mainContainer {
+	backgroundColor:#333333;
+	borderStyle:none;
+}
+.loginMainContainer {
+	backgroundImage: none;
+}		
+.activityText {
+	fontFamily: silkScreen;
+	color:#FFFFFF;
+	fontSize:8;
+	fontWeight:'normal';	
+}
+.activityBox {
+	borderSkin:ClassReference("com.enilsson.graphics.skins.SimpleGradientBorder");
+	fillColors:#12288c, #0b1850;
+	cornerRadius:6;
+}
+.adminPanel {
+	fontFamily: silkScreen;
+	color:#FF0000;
+	fontSize:8;
+	fontWeight:'normal';	
+}
+/*--- End Main Container Styles ---*/
+
+/*--- Top Nav Styles ---*/
+.topSearch {
+	horizontalCenter:0;
+	backgroundImage: Embed(source="../images/searchbar_box.png");
+	background-size: "100%";
+}
+.topSearchBar {
+	backgroundImage: Embed(source="/assets/images/searchbar.png");
+	background-size: "100%";
+}
+.bnUserInfo {
+	borderStyle:"solid";
+	borderColor:#8C8C8C;
+	cornerRadius:4;
+	backgroundColor:#8C8C8C;
+	color:#FFFFFF;	
+	fontSize:10;
+	fontWeight: "bold";
+	horizontalScrollPolicy:"off";
+}
+.bnUserLinks {
+	backgroundAlpha:0;
+	fontSize:9;
+	useRollOver: true;
+	rollOverColor: #13162f;
+	borderStyle: none;
+	selectionColor: #013db5;
+	textRollOverColor:#333333;
+	textSelectedColor:#FFFFFF;
+	paddingLeft:5;
+	paddingTop:2; 
+}
+.topNav {
+	fontFamily: myriadPro;
+	borderStyle: none;
+	fontSize:11;
+	paddingLeft:10;
+	paddingRight:10;
+	paddingTop:5;
+	paddingBottom:4;
+	color:#FFFFFF;
+	backgroundImage: Embed(source="/assets/skins/admin_panel_skin.swf", symbol="NavBarBtn_UpSkin");
+	backgroundSize: "100%";
+}
+TextShadowButton {
+	fontFamily: myriadPro;
+	fontWeight: normal;
+	horizontalGap: 5;
+	color:#FFFFFF;
+	fontSize:12;
+	cornerRadius: 0;
+	textRollOverColor: #FFFFFF;
+	paddingLeft: 20;
+	paddingRight: 20;
+	upSkin: Embed(source="/assets/skins/admin_panel_skin.swf", symbol="NavBarBtn_UpSkin");
+	downSkin: Embed(source="/assets/skins/admin_panel_skin.swf", symbol="NavBarBtn_DownOverSkin");
+	overSkin: Embed(source="/assets/skins/admin_panel_skin.swf", symbol="NavBarBtn_DownOverSkin");
+	selectedSkin: Embed(source="/assets/skins/admin_panel_skin.swf", symbol="NavBarBtn_DownOverSkin");
+	disabledSkin: Embed(source="/assets/skins/admin_panel_skin.swf", symbol="NavBarBtn_DisabledSkin");
+	selectedDisabledSkin: Embed(source="/assets/skins/admin_panel_skin.swf", symbol="NavBarBtn_DisabledSkin");
+	selectedDownSkin: Embed(source="/assets/skins/admin_panel_skin.swf", symbol="NavBarBtn_DownOverSkin");
+	selectedOverSkin: Embed(source="/assets/skins/admin_panel_skin.swf", symbol="NavBarBtn_DownOverSkin");
+	selectedUpSkin: Embed(source="/assets/skins/admin_panel_skin.swf", symbol="NavBarBtn_DownOverSkin");
+	icon: Embed(source="/assets/skins/admin_panel_skin.swf", symbol="NavBtnArrow_UpSkin");
+	leading: 0;
+	textDropShadow: true;
+	textDropShadowColor: #000000;
+	textDropShadowDistance: 1;
+	textDropShadowBlur:2;
+	textDropShadowStrength: 1;
+	textDropShadowAngle: 90;
+}
+TextShadowButton.fullScreenButton {
+	upIcon: Embed(source="/assets/skins/admin_panel_skin.swf", symbol="NavCollapseBtn_UpSkin");
+	downIcon: Embed(source="/assets/skins/admin_panel_skin.swf", symbol="NavCollapseBtn_UpSkin");
+	overIcon: Embed(source="/assets/skins/admin_panel_skin.swf", symbol="NavCollapseBtn_UpSkin");
+	selectedDownIcon: Embed(source="/assets/skins/admin_panel_skin.swf", symbol="NavCollapseBtn_SelectedUpSkin");
+	selectedOverIcon: Embed(source="/assets/skins/admin_panel_skin.swf", symbol="NavCollapseBtn_SelectedUpSkin");
+	selectedUpIcon: Embed(source="/assets/skins/admin_panel_skin.swf", symbol="NavCollapseBtn_SelectedUpSkin");
+}
+.topSearchBar {
+	borderThickess:1;
+	borderColor:#161616;
+	borderStyle: solid;
+	borderSides: top;
+}
+TopSearchBox.searchForm {
+	backgroundColor: #FFFFFF;
+	cornerRadius: 5;
+	borderStyle: solid;
+	borderThickness: 1;
+	borderColor: #FFFFFF;
+}
+TopSearchBox.searchButton {
+	color: #CCE25F;
+	fontFamily: appFont;
+	fontSize: 10;
+	fontWeight: bold;
+	rollOverColor: #7FCEFF;
+    selectionColor: #7FCEFF;
+    textRollOverColor: #000000;
+    paddingTop:2;
+}
+HoverComboBox {
+	color: #000000;
+	backgroundColor: #FFFFFF;
+	fontFamily: silkScreen;
+	fontSize: 8;
+	fontWeight: normal;
+	textAlign: left;
+	cornerRadius: 10;
+	borderStyle: solid;
+	borderThickness: 1;
+	borderColor: #FFFFFF;
+}
+HoverComboBox.comboBoxList {
+	alternatingItemColors: #FFFFFF, #EEEEEE;
+	paddingLeft: 7;
+	paddingTop: 6;
+	paddingBottom: 2;
+	borderStyle: none;
+}
+/*--- End Top Nav Styles ---*/
+
+
+/*--- Content Box Style ---*/
+.contentTitleBox {
+	borderStyle:"none";
+	backgroundColor:#FFFFFF;
+ 	backgroundImage: Embed("../images/admin_content_bgrounded.png", 
+		scaleGridTop="10", scaleGridBottom="13", 
+		scaleGridLeft="1", scaleGridRight="2");
+ 	backgroundSize:"100%";
+}
+.contentTitle {
+	fontSize:20;
+	fontWeight:"bold";
+	top:37;
+	color:#FFFFFF;
+}
+/*--- End Content Box Style ---*/
+
+
+/*--- Footer Style ---*/
+.header {
+	backgroundImage: Embed(source="../images/header.png");
+	backgroundSize: "100%";
+	borderThickess: 1;
+	borderColor:#999999;
+	borderStyle:solid;
+	borderSides: bottom;
+}
+.footer {
+	fontFamily: silkScreen;
+	fontSize:"8"; 
+	color:#FFFFFF;
+}
+/*--- End Footer Style ---*/
+
+
+
+
+/**
+* General and Application Wide Styles
+**/
+
+/*--- General Component Styles ---*/
+ToolTip {
+	backgroundAlpha: 0.95;
+	cornerRadius: 3;
+	paddingLeft: 5;
+	paddingRight: 5;
+	backgroundColor:#FFFF66;
+	fontFamily: appFont;
+	color:#000000;
+	fontSize:10;
+}
+DataGrid {
+	fontSize:9;
+	alternatingItemColors: #ffffff, #f0f0f0;	
+   	/* headerColors:#02318a, #001e5a; */
+    headerColors:#999999, #666666;	
+ 	color:#333333;   	
+	headerStyleName: "mydataGridHeaderStyle";
+	headerSeparatorSkin: Embed(source="../images/qcm2_transparent.png");
+}
+.mydataGridHeaderStyle {
+	color: #fdffff;
+	borderThickness:0;
+}
+/* VScrollBar {
+ 	upArrowSkin: ClassReference(null);
+ 	downArrowSkin : ClassReference(null);
+ 	trackSkin: Embed(source="../images/skins/paginator_track.png", scaleGridLeft="2", scaleGridTop="2", scaleGridRight="6", scaleGridBottom="16");
+ 	thumbSkin: Embed(source="../images/skins/paginator_thumb.png", scaleGridLeft="2", scaleGridTop="4", scaleGridRight="4", scaleGridBottom="46");
+} */
+VScrollBar {
+  thumbDownSkin:
+    Embed(source="/assets/skins/scroll_thumb.png",
+      scaleGridLeft="7", scaleGridTop="5",
+      scaleGridRight="8", scaleGridBottom="7");
+  thumbUpSkin:
+    Embed(source="/assets/skins/scroll_thumb.png",
+      scaleGridLeft="7", scaleGridTop="5",
+      scaleGridRight="8", scaleGridBottom="7");       
+  thumbOverSkin:
+    Embed(source="/assets/skins/scroll_thumb.png",
+      scaleGridLeft="7", scaleGridTop="5",
+      scaleGridRight="8", scaleGridBottom="7");       
+  trackSkin:
+    Embed(source="/assets/skins/scroll_scrolltrack.png",
+      scaleGridLeft="7", scaleGridTop="4",
+      scaleGridRight="8", scaleGridBottom="6");  
+  upArrowSkin: ClassReference( null );
+  downArrowSkin: ClassReference( null );
+}
+HScrollBar {
+ 	upArrowSkin: ClassReference(null);
+ 	downArrowSkin : ClassReference(null);
+ 	trackSkin: Embed(source="../images/skins/paginator_track.png", scaleGridLeft="2", scaleGridTop="2", scaleGridRight="6", scaleGridBottom="16");
+ 	thumbSkin: Embed(source="../images/skins/paginator_thumb.png", scaleGridLeft="2", scaleGridTop="4", scaleGridRight="4", scaleGridBottom="46");
+}
+TabNavigator {
+	cornerRadius: 0;
+	horizontalGap: 5;
+	backgroundColor: #cccccc;
+	borderStyle: none;
+	color: #ffffff;
+	dropShadowEnabled: false;
+	tabStyleName: "squareTabs";
+	selectedTabTextStyleName: "selectedSquareTabs";
+	tabOffset: 15;
+	borderColor: #CCCCCC;
+	focusAlpha: 0;
+	textAlign: left;
+}
+.squareTabs {
+	cornerRadius: 0;
+	highlightAlphas: 0, 0;
+	fillAlphas: 0, 0;
+	backgroundAlpha: 1.0;
+	borderColor: #CCCCCC;
+	borderStyle: solid;
+	fontSize:11;
+	color: #FFFFFF;
+	textRollOverColor: #FFFFFF;
+	textSelectedColor: #FFFFFF;
+	paddingTop: 2;
+	paddingBottom: 3;
+	upSkin: ClassReference("mx.skins.ProgrammaticSkin");
+	overSkin: ClassReference("mx.skins.ProgrammaticSkin");
+	downSkin: ClassReference("mx.skins.ProgrammaticSkin");
+	disabledSkin: ClassReference("mx.skins.ProgrammaticSkin");
+	selectedUpSkin: Embed(source="../images/admin_tab_bg.png");
+	selectedOverSkin: Embed(source="../images/admin_tab_bg.png");
+	selectedDownSkin: Embed(source="../images/admin_tab_bg.png");
+	selectedDisabledSkin: Embed(source="../images/admin_tab_bg.png");
+}
+.selectedSquareTabs {
+	color: #333333;
+	textRollOverColor: #ffffff;
+}
+HRule{
+	strokeWidth: 2;
+	strokeColor: #E4E4E4;
+	shadowColor: #B3B3B3;
+}
+/*--- End General Styles ---*/
+
+
+/*--- Alert Box styles ---*/
+Alert{
+	color:#FFFFFF;
+	titleStyleName:alertTitle;
+	messageStyleName:alertMessage;
+	bottomStyleName:alertButton;
+	borderThickness:0;
+	headerHeight:26;
+	dropShadowEnabled: true;
+	backgroundColor:#999999;
+	cornerRadius:6;
+	borderStyle:solid;
+	headerColors:#333333, #666666;
+	highlightAlphas:0.72, 0;	
+	borderColor:#999999;
+	borderAlpha:0.90;
+	backgroundAlpha:0.90;
+	modalTransperancyColor:#CCCCCC;
+	modalTransperancy:0.95;
+}
+.alertTitle{
+	fontFamily: appFont;
+	fontSize:14;
+	fontWeight:bold;
+	textAlign:left;
+	color:#ffffff;
+}
+.alertMessage {
+	paddingTop:10;
+	paddingBottom:10;
+	leading:2;
+	fontFamily: appFont;
+	fontSize:12;
+}
+.alertButton {
+	paddingTop:10;	
+}
+/*--- End Alert Box Styles ---*/
+
+
+/*--- Application wide Styles ---*/
+.successBox {
+	borderStyle:"solid";
+	borderThickness:5;
+	borderColor:#8bac12;
+	backgroundColor:#8bac12;
+	cornerRadius:8;
+}
+.errorBox {
+	borderStyle:"solid";
+	borderThickness:5;
+	borderColor:#CC3300;
+	backgroundColor:#CC3300;
+	cornerRadius:8;
+}
+.errorMsg {
+	color: #FFFFFF;
+	fontSize: 11;	
+} 
+.errorClose {
+	upSkin: Embed("../images/qcm2_popup_close.png");
+	overSkin: Embed("../images/qcm2_popup_close.png");
+	downSkin: Embed("../images/qcm2_popup_close.png");
+	right:3;
+	top:3;
+}
+.paginationBox {
+	backgroundColor: #CCCCCC;
+}
+.paginator {
+	fontSize:8;
+	fontWeight:'normal';
+	color:#333333;
+}
+.pageLinkStyleName {
+	paddingLeft:0;
+	paddingRight:0;
+	paddingTop:0;
+	paddingBottom:0;
+	cornerRadius:0;
+}
+.popupContent {
+	borderSkin:ClassReference("com.enilsson.graphics.skins.SimpleGradientBorder");
+	fillColors:#666666, #333333;
+	cornerRadius:8;
+	color:#FFFFFF;
+	fontSize:12;
+}
+.controlBar {
+	borderSkin:ClassReference("com.enilsson.graphics.skins.SimpleGradientBorder");
+	fillColors:#666666, #333333;
+	color: #FFFFFF;
+	fontSize:10;
+	fontWeight:bold;
+}
+Button.actionsList {
+	borderColor: #CCCCCC;
+	color: #FFFFFF;
+	fillAlphas: 1.0, 1.0;
+	fillColors: #EEEEEE, #666666;
+	fontSize: 10;
+}
+LinkButton.indexBar {
+	color: #000000;
+	fontFamily: Silkscreen;
+	fontSize: 8;
+    paddingLeft: 1;
+	paddingRight: 0;
+	paddingTop: 0;
+	paddingBottom: 0;
+	fontWeight: normal;
+	cornerRadius: 0;
+	leading: 0;
+	textAlign: left;
+}
+TitleWindow.popup {
+	border-style: solid;
+	border-thickness: 0;
+	border-skin: ClassReference("com.enilsson.graphics.skins.SimpleGradientBorder");
+	fill-colors: #00328B, #12162F;
+	corner-radius: 10;
+	drop-shadow-enabled: true;
+	paddingTop: 13;
+	paddingRight: 13;
+	paddingLeft: 13;
+	paddingBottom: 13;
+	headerHeight: 45;
+  	titleBackgroundSkin: ClassReference("mx.skins.ProgrammaticSkin");
+  	roundedBottomCorners: true;
+}
+
+.listTitle {
+	fontSize:14;
+	fontWeight:bold;
+	color:#333333;	
+}
+.listDesc {
+	fontSize:10;
+	fontWeight:normal;
+	color:#666666;	
+}
+
+
+.panel {
+	borderColor: #b7babc;
+	borderAlpha: 1;
+	borderThicknessLeft: 0;
+	borderThicknessTop: 0;
+	borderThicknessBottom: 0;
+	borderThicknessRight: 0;
+	headerHeight: 32;
+	roundedBottomCorners: true;
+	backgroundAlpha: 1;
+	highlightAlphas: 0, 0;
+	headerColors: #8e8e8e, #080808;
+	footerColors: #666666, #969696;
+	dropShadowEnabled: true;
+	titleStyleName: "panelTitle";
+}
+.panelTitle {
+	color: #FFFFFF;
+	fontSize: 14;
+	fontWeight: bold;	
+}
+.list {
+	borderStyle: "solid";
+	borderSides: 'left, right';
+	borderColor: #cccccc;
+	alternatingItemColors: #FFFFFF, #EEEEEE;
+}
+
+ModuleControlBar {
+	borderSkin:ClassReference("com.enilsson.graphics.skins.SimpleGradientBorder");
+	fillColors:#666666, #333333;
+	color: #FFFFFF;
+	fontSize:10;
+	fontWeight:bold;
+	horizontalAlign: center;
+	verticalAlign: middle;
+	paddingTop: 0;
+	paddingBottom: 0;
+	horizontalGap: 30;
+}
+
+/*--- End Application wide Styles ---*/
+
+
+/*--- Struktor Form Styles ---*/
+.processingForm {
+	formItemStyleName: 'struktorLabel';
+	formInputStyleName: 'struktorInput';
+	requiredLabelStyleName : 'struktorLabel';
+	formInputWidth: 150;
+	formLabelWidth: 110;
+	verticalGap:0;
+}
+.formActivityText {
+	color:#333333;
+	fontSize:8;
+	fontWeight:'normal';
+	}
+.struktorLabel {
+	paddingTop:0;
+	paddingBottom:6;
+	labelStyleName:'labelStyleName';
+}
+.labelStyleName {
+	fontSize:10;
+	color:#333333;
+}
+.struktorInput {
+	fontSize:10;
+	color:#333333;	
+}
+/*--- End Struktor Form Styles ---*/
+
+
+
+/**
+* Module Styles
+**/
+
+/*--- Login Form Styles ---*/
+.loginSubmitBtn {
+   	cornerRadius: 6;
+   	paddingLeft: 11;
+  	paddingRight: 11;
+   	paddingTop: 2;
+   	paddingBottom: 2;
+   	highlightAlphas: 0.82, 0;
+   	fillAlphas: 0.6, 1, 0.7, 0.91;
+   	fillColors: #ffffff, #999999, #ffffff, #eeeeee;
+   	fontSize:16;
+   	fontWeight: normal;
+   	color:#000000;
+}
+/*--- End Login Form Styles ---*/
+
+/*--- User Module Styles ---*/
+.textHeading {
+	fontSize:12;
+	fontWeight:bold;
+	color:#333333;
+}
+.textDesc {
+	fontSize: 11;
+	fontWeight: normal;
+	color: #333333;
+}
+.emailForm {
+	backgroundColor:#e0e0e0;
+	borderStyle:solid;
+	borderColor:#e0e0e0;
+	cornerRadius:0;	
+	paddingTop:10;
+	color:#333333;
+}
+.statsHeading {
+	fontSize:16;
+	fontWeight:bold;
+	color:#333333;	
+}
+.statsDesc {
+	fontSize:12;
+	fontWeight:normal;
+	color:#333333;
+}
+/*--- End User Module Styles ---*/
+
+/*--- Record Module Styles ---*/
+.singleRecordHeader {
+	backgroundImage: Embed(source="../images/searchBoxHeader.png", 
+		scaleGridTop="5", scaleGridBottom="7", 
+		scaleGridLeft="5", scaleGridRight="7");
+	backgroundSize: "100%";
+	color:#FFFFFF;
+	fontWeight:bold;
+	fontSize:14;
+	verticalAlign:middle;
+	horizontalGap:2; 
+	paddingLeft:10;
+}
+.roundedOuterBox {
+	verticalGap:0;	
+}
+.greyGrid {
+  	headerColors:#999999, #666666;
+  	verticalGridLines: false;
+}
+.gridHeaderBox {
+	borderSkin:ClassReference("com.enilsson.graphics.skins.SimpleGradientBorder");
+	fillColors:#02318c, #13162f;
+	color:#FFFFFF;
+	fontSize:14;
+	fontWeight:bold;
+	paddingLeft:5;
+	paddingTop:2;
+	verticalAlign:middle;
+}
+.inspectRecord {
+	upSkin: Embed("../images/icons/magnifier16.png");
+	overSkin: Embed("../images/icons/magnifier16.png");
+	downSkin: Embed("../images/icons/magnifier16.png");	
+}
+.deleteRecord {
+	upSkin: Embed("../images/icons/small/delete.png");
+	overSkin: Embed("../images/icons/small/delete.png");
+	downSkin: Embed("../images/icons/small/delete.png");	
+}
+.viewContact {
+	upSkin: Embed("../images/new_icons/nav/contacts.png");
+	overSkin: Embed("../images/new_icons/nav/contacts.png");
+	downSkin: Embed("../images/new_icons/nav/contacts.png");	
+}
+.viewUser {
+	upSkin: Embed("../images/qcm2_person_logo.png");
+	overSkin: Embed("../images/qcm2_person_logo.png");
+	downSkin: Embed("../images/qcm2_person_logo.png");	
+}
+.tblWindowShade {
+	headerClass:ClassReference('mx.controls.LinkButton');
+	header-style-name: linkButtonStyle;	
+	backgroundAlpha:1;
+	backgroundColor:#ededed;
+	borderColor:#666666;
+	borderThickness:1;
+	borderStyle:solid;
+	cornerRadius:6;
+	paddingLeft:10;
+	paddingRight:10;
+	paddingBottom:10;
+}
+.linkButtonStyle {
+	color:#333333;
+	fontSize:12;
+	fontWeight:bold;
+   	corner-radius:6;	
+   	fill-alphas:1,1;
+   	padding-left:10;
+}
+.smallScrollBar {
+ 	upArrowSkin: ClassReference(null);
+ 	downArrowSkin : ClassReference(null);
+ 	trackSkin: Embed(source="../images/skins/paginator_track.png", scaleGridLeft="2", scaleGridTop="2", scaleGridRight="6", scaleGridBottom="16");
+ 	thumbSkin: Embed(source="../images/skins/paginator_thumb.png", scaleGridLeft="2", scaleGridTop="4", scaleGridRight="4", scaleGridBottom="46");
+}
+.footerBtnBox {
+	backgroundColor:#8d8b8c;
+	verticalAlign:middle; 
+	horizontalAlign:right;
+	paddingRight:10;	
+}
+.recordOwners {
+	borderSkin:ClassReference("com.enilsson.graphics.skins.SimpleGradientBorder");
+	fillColors:#f0f0f0, #f0f0f0;
+	color:#666666;
+	fontSize:10;
+	fontWeight:bold;
+	cornerRadius:6;
+}
+.openCloseBtns {
+	fontSize:10;
+	paddingLeft:5;
+	paddingRight:5;
+	paddingTop:1;
+	paddingBottom:1;
+	color:#666666;	
+}
+/*--- End Record Module Styles ---*/
+
+/*--- Search Module Styles ---*/
+Button.searchCategoryHeaderButton {
+	upSkin: Embed(source="/assets/skins/admin_panel_skin.swf", symbol="ArrowToggleBtn_UpSkin");
+	overSkin: Embed(source="/assets/skins/admin_panel_skin.swf", symbol="ArrowToggleBtn_OverSkin");
+	downSkin: Embed(source="/assets/skins/admin_panel_skin.swf", symbol="ArrowToggleBtn_DownSkin");
+	disabledSkin: Embed(source="/assets/skins/admin_panel_skin.swf", symbol="ArrowToggleBtn_DisabledSkin");
+	selectedUpSkin: Embed(source="/assets/skins/admin_panel_skin.swf", symbol="ArrowToggleBtn_SelectedUpSkin");
+	selectedOverSkin: Embed(source="/assets/skins/admin_panel_skin.swf", symbol="ArrowToggleBtn_SelectedOverSkin");
+	selectedDownSkin: Embed(source="/assets/skins/admin_panel_skin.swf", symbol="ArrowToggleBtn_SelectedDownSkin");
+	selectedDisabledSkin: Embed(source="/assets/skins/admin_panel_skin.swf", symbol="ArrowToggleBtn_SelectedDisabledSkin");
+}
+Label.searchCategoryLabel {
+	color: #FFFFFF;
+	fontSize: 14;
+}
+Label.searchCategoryRecords {
+	color: #FFFFFF;
+	fontSize: 11;
+}
+.searchCategoryHeader {
+	color: #FFFFFF;
+	fontSize: 14;
+	fontWeight: bold;
+	colors:#ABABAB, #7B7B7B;
+	cornerRadius: 5;
+	borderSkin: ClassReference("com.enilsson.elephantadmin.views.common.skins.HeaderSkin");
+}
+.searchCategoryFooter {
+	backgroundImage: Embed(source="../images/searchBoxFooter.png", scaleGridTop="1", scaleGridBottom="4", scaleGridLeft="6", scaleGridRight="7");
+	backgroundSize: "100%";
+}
+Container.searchPaginatorContainer {
+	backgroundColor: #E0E0E0;
+}
+/*--- End Search Module Styles ---*/
+
+
+/*-- Dashboard Module Styles --*/
+.dashboardHeader {
+	color: #FFFFFF;
+	fontSize: 14;
+	fontWeight: bold;
+	colors:#666666, #333333;
+	cornerRadius: 5;
+	skin: ClassReference("com.enilsson.elephantadmin.views.common.skins.HeaderSkin");
+	buttonStyle: dashboardHeaderButton;
+}
+
+.dashboardHeaderButton {
+	color: #FFFFFF;
+	fontSize: 8;
+	fontWeight: normal;
+	fontFamily:Silkscreen;
+	paddingRight: 2;
+	paddingLeft: 2;
+}
+DataGrid.dashboardGrid {
+	borderStyle: "none";
+	headerColors: #666666,#666666;
+	verticalGridLines: false;
+	fontSize:8;
+}
+.firstDashboardHeaderElement {
+	fontSize: 10;
+	fontWeight: bold;
+	color: #FFFFFF;
+}
+.dashboardHeaderElement {
+	fontSize: 10;
+	fontWeight: normal;
+	color: #FFFFFF;
+}
+.eventSubHeader {
+	backgroundColor: #666666;
+	verticalAlign: "bottom";
+	paddingLeft: 5;
+	paddingBottom: -4;
+	horizontalGap: 0;
+}	
+.fundraisingChart {
+	fontFamily:Arial;
+	fontSize:8;
+	fontWeight:normal; 
+	color:#333333;
+  	paddingLeft:5;
+  	paddingRight:5;
+} 
+.chartLegend {
+	fontSize:7;
+	fontWeight:normal; 
+    color:#333333;
+    backgroundColor:#f4f4f4;
+}
+.rangeLabelStyle {
+	color:#333333;
+	fontSize:9;
+	fontWeight:"bold";	
+}
+.sliderText {
+	color:#333333;
+	fontSize:9;	
+}
+.dashboardInfoBox {
+	cornerRadius:10;
+	backgroundColor:#DFDDDE;
+	borderColor:#DFDDDE;
+	borderStyle: solid;
+	left:20;
+	right:20;
+ 	color:#2b2b2b;
+	fontSize:12;
+}
+.dashboardInfoBoxItem {
+ 	color:#2b2b2b;
+	fontSize:12;
+	fontWeight:bold;
+}
+.dashboardSearchBox {
+	cornerRadius:10;
+	backgroundColor:#DFDDDE;
+	borderColor:#DFDDDE;
+	borderStyle: solid;
+	left:10;
+	right:10;
+ 	color:#2b2b2b;
+	fontSize:12;
+}
+.dashboardSearchBoxText {
+	fontSize:10;
+}
+/*-- End Dashboard Module Styles --*/
+
+
+/*-- Browse Module styles --*/
+.gridFooter {
+	borderSkin:ClassReference("com.enilsson.graphics.skins.SimpleGradientBorder");
+	fillColors:#e0e0e0, #666666;
+	borderStyle:solid;
+	borderColor:#b7babc;
+	borderSides:bottom,right,left;
+}
+.browseChoice {
+	fontFamily: appFont;
+	color:#333333;
+	fontSize:9;
+	fontWeight:'normal';
+	paddingTop:3;		
+}
+/*-- End Browse Module styles --*/
+
+/*-- Check Entry Module styles --*/
+.checksForm {
+	labelWidth:75;
+	formInputWidth:225;
+	formItemStyleName: 'struktorLabel';
+	formInputStyleName: 'struktorInput';
+	requiredLabelStyleName : 'struktorLabel';
+}
+.detailsLabel {
+	fontSize: 10;
+	fontWeight: bold;	
+}
+.detailsItem {
+	fontSize: 10;
+	fontWeight: normal;	
+}
+.displayForm {
+	paddingTop: 0;
+	paddingBottom: 0;
+	labelWidth: 90;
+	verticalGap: 2;	
+}
+/*-- End Check Entry Module styles --*/
+
+/*-- Pledges management --*/
+.popupFormBg {
+	backgroundColor:#CCCCCC;
+}
+/*-- End Pledges management --*/
+
+/*-- Update PopUp --*/
+.updateWindow {
+	color:#FFFFFF;
+	titleStyleName:updateWindowTitle;
+	borderThickness:0;
+	headerHeight:26;
+	dropShadowEnabled: true;
+	backgroundColor:#999999;
+	cornerRadius:6;
+	borderStyle:solid;
+	headerColors:#333333, #666666;
+	highlightAlphas:0.72, 0;	
+	borderColor:#999999;
+	borderAlpha:0.90;
+	backgroundAlpha:0.90;
+	modalTransperancyColor:#CCCCCC;
+	modalTransperancy:0.95;
+}
+
+.updateWindowTitle{
+	fontFamily: appFont;
+	fontSize:14;
+	fontWeight:bold;
+	textAlign:left;
+	color:#ffffff;
+}
+/*-- End Update PopUp --*/
+
+/*-- Application Options Module --*/
+
+/*-- End Application Options Module --*/

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:main="com.enilsson.elephanttrakker.views.main.*"
+	styleName="popupContent"
+	filters="{[com.enilsson.graphics.enDropShadows.standardDS()]}"
+	verticalScrollPolicy="off" horizontalScrollPolicy="off"
+	width="715" height="375"
+	creationComplete="showHandler()">
+	
+	<mx:ViewStack id="vStack"
+		top="15" left="15"
+		width="{width - 30}" height="{height - 30}">
+		<main:FirstLoginBox_details 
+			showEffect="fadeIn" hideEffect="fadeOut"
+			width="100%" height="100%" />				
+		<main:AgentAgreement 
+			showEffect="fadeIn" hideEffect="fadeOut"
+			width="100%" height="100%" 
+			closeBox="closeBoxPopup()" />
+	</mx:ViewStack>		
+
+	<mx:Fade id="fadeIn" alphaTo="1" duration="300" />
+	<mx:Fade id="fadeOut" alphaTo="0" duration="300" />
+	
+	<mx:Binding source="_model.firstlogin.loginBoxState" destination="this.boxChange" />
+
+	<mx:Script>
+		<![CDATA[
+			import mx.utils.ObjectUtil;
+			import com.enilsson.elephanttrakker.events.modules.first_login.FirstLoginEvent;
+			import org.osflash.thunderbolt.Logger;
+			import mx.managers.PopUpManager;
+			import com.enilsson.elephanttrakker.models.ETModelLocator;
+			import com.enilsson.graphics.enDropShadows;
+			
+			[Bindable] private var _model:ETModelLocator = ETModelLocator.getInstance();
+
+			private function showHandler():void
+			{
+				// if the user is refreshing the page and has already filled in the form
+				// jump straight to the agents agreement if needed
+				if ( _model.session.data._contact_id > 0 && _model.options.agents_agreement != null )
+					vStack.selectedIndex = 1;
+			}
+
+			/**
+			 * Remove the open popup box and fire an event to register the user having logged in for the first time
+			 */			
+			private function closeBoxPopup():void
+			{
+				// update the first login time only when the box is closed. This accounts for people you try and skip the agents agreement by reloading
+				var fv:Object = { 
+					'user_id' : _model.session.user_id, 
+					'_firstlogin' : Math.round( new Date().getTime()/1000 ) 
+				};
+				
+				// dispatch event to register the login.
+				new FirstLoginEvent ( FirstLoginEvent.FIRSTLOGIN_LOGGEDIN, fv ).dispatch();
+				
+				//_model.my_details.loginBoxState = 0;
+				PopUpManager.removePopUp(this);
+			}
+			
+			/**
+			 * Handle the changing of the vStack via binding to the model
+			 * Only flip to the agent agreement if one is specified in the config layout
+			 */
+			public function set boxChange ( value:int ):void
+			{
+				if(value == 0) return;
+				
+				if( _model.options.agents_agreement == null )
+					closeBoxPopup();
+				else
+					vStack.selectedIndex = value;				
+			}
+		]]>
+	</mx:Script>	
+	
+</mx:Canvas>

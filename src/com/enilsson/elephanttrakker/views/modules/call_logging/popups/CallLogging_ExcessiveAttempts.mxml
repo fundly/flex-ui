@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:graphics="com.enilsson.graphics.*" 
+	width="270" visible="false"
+	showEffect="fadeIn" hideEffect="fadeIn">
+	
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephanttrakker.models.ETModelLocator;
+			
+			[Bindable] private var _model:ETModelLocator = ETModelLocator.getInstance();
+		]]>
+	</mx:Script>
+	
+	<mx:Fade id="fadeIn" alphaFrom="0" alphaTo="1" duration="300" />
+	<mx:Fade id="fadeOut" alphaTo="0" duration="300" />		
+
+	<mx:VBox id="messageBox" top="10" left="0" width="{this.width-10}">
+		<mx:Text id="errorMsg" styleName="errorMsg" 
+			htmlText="{_model.call_logging.errorVO.message}"
+			selectable="false" 
+			width="{this.width - 40}" />
+		<mx:Text id="errorMsg" styleName="errorMsg" 
+			text="You have now made {_model.call_logging.transactionAttempts} attempts at processing this pledge. Would you like to save this pledge so it can be rerun at a later date?"
+			selectable="false" 
+			width="{this.width - 40}" />
+		<mx:LinkButton id="saveBT"
+			styleName="saveBT"
+			/>
+	</mx:VBox>
+	
+	<graphics:enCloseBtn 
+		id="closeBtn"
+		top="0" right="0"
+		useHandCursor="true" buttonMode="true" 
+		click="this.visible = false;"
+		/>
+	
+</mx:Canvas>

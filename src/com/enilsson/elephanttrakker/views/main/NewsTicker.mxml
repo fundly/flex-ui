@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas 
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	creationComplete="init()"
+	width="100%" height="100%">
+
+	<mx:VBox bottom="9" left="10" autoLayout="false">
+		<mx:Image id="bnExpand" source="@Embed('/assets/images/qcm2_uparrow.png')" 
+			toolTip="Expand News ticker"
+			useHandCursor="true" buttonMode="true" />
+	</mx:VBox>
+
+	<mx:Canvas id="newsTicker" styleName="newsTicker" 
+		left="30" bottom="0" 
+		clipContent="true"
+		width="442" height="29" 
+		horizontalScrollPolicy="off">
+		<mx:Text id="newsItem" styleName="newsItem" 
+			visible="{!rssList.visible}" 
+			selectable="false" 
+			useHandCursor="true" buttonMode="true" 
+			text="Loading news...." 
+			/>
+		<mx:Button id="newsBtn" 
+			styleName="bnMailTo" 
+			toolTip="Email this story to a friend"   
+			useHandCursor="true" buttonMode="true" 
+			visible="{!rssList.visible}"
+			/>
+		<mx:List id="rssList" styleName="rssFeed" 
+			alternatingItemColors="[#FFFFFF, #F0F0F0]"
+			width="{newsTicker.width - 15}" height="{newsTicker.height - 20}" 
+			variableRowHeight="true" 
+			itemRenderer="com.enilsson.elephanttrakker.views.renderers.rssItem"
+			dataProvider="{_model.rssData}" 
+			visible="false" horizontalScrollPolicy="off"
+			/>
+	</mx:Canvas>	
+
+
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephanttrakker.vo.RssVO;
+			import mx.events.CloseEvent;
+			import mx.managers.PopUpManager;
+			import org.osflash.thunderbolt.Logger;
+			import mx.events.TweenEvent;
+			import mx.effects.Rotate;
+			import com.enilsson.utils.eNilssonUtils;
+			import caurina.transitions.Tweener;
+			import com.enilsson.elephanttrakker.models.ETModelLocator;
+			import com.enilsson.elephanttrakker.views.renderers.rssItem;
+			
+			[Bindable] private var _model:ETModelLocator = ETModelLocator.getInstance();
+			
+			private var tickerTimer:Timer
+			private var tickerCurr:Number = 0;
+			private var bSpinning:Boolean = false;
+		
+			private function init():void
+			{
+				tickerChange();
+				newsBtn.addEventListener(MouseEvent.CLICK, launchEmailPopUp);
+			}
+		
+			/**
+			 * Loop through the news ticker and fade between titles
+			 */
+			private function tickerChange():void
+			{	
+				tickerTimer = new Timer(6000);
+				tickerTimer.addEventListener("timer", fadeTicker);
+				tickerTimer.start();
+				
+				function fadeTicker(event:TimerEvent):void 
+				{	
+					if(!_model.rssData){ return; }					
+					
+					Tweener.addTween(newsItem, { alpha: 0, time: 1, transition: 'linear', onComplete: function():void {
+						tickerCurr++;
+						tickerCurr = tickerCurr == rssList.dataProvider.length ? 0 : tickerCurr;
+						newsItem.text = eNilssonUtils.charLimiter(rssList.dataProvider[tickerCurr].title, 70);
+						Tweener.addTween(newsItem, { alpha: 1, time: 1, transition: 'linear' });
+						 
+					}});
+				}
+				
+				bnExpand.addEventListener(MouseEvent.CLICK, function(event:MouseEvent):void {
+					if (!bSpinning) 
+					{ 
+						bSpinning = true;
+						Tweener.addTween(newsTicker, { height : (newsTicker.height == 29 ? 270 : 29), time: 0.4, transition : 'linear' });	
+						if(newsTicker.height==29)
+						{
+							rssList.visible = true;
+							var rotater:Rotate = new Rotate(bnExpand);
+							rotater.angleTo = 180;
+							rotater.play();
+							rotater.addEventListener(TweenEvent.TWEEN_END,function():void { bSpinning = false;  });
+							bnExpand.toolTip = 'Collapse news ticker';			
+						} 
+						else 
+						{
+							rssList.visible = false;
+							var rotater2:Rotate = new Rotate(bnExpand);
+							rotater2.angleFrom = 180;
+							rotater2.angleTo = 0;
+							rotater2.play();
+							rotater2.addEventListener(TweenEvent.TWEEN_END,function():void { bSpinning = false; });
+							bnExpand.toolTip = 'Expand news ticker';
+						}
+					}
+				});
+			}
+			
+			private function launchEmailPopUp(e:MouseEvent):void
+			{
+				var rssObj:Object = rssList.dataProvider[tickerCurr];
+				
+				_model.rss_message = rssObj.description + '\n\n' + rssObj.link;						
+				_model.rss_subject = rssObj.title;		
+
+			 	var pClass:Class = EmailToAFriend as Class;			 	
+			 	var p:* = PopUpManager.createPopUp( _model.mainScreen, pClass, true );
+			    PopUpManager.centerPopUp(p);
+			}			
+		
+		]]>
+	</mx:Script>
+	
+	
+</mx:Canvas>
