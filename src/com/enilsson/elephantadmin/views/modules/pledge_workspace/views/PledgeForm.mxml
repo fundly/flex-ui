@@ -43,8 +43,8 @@
 					selectedIndex="{presentationModel.ccVStack}"
 					width="330" height="200"
 					top="0" horizontalCenter="-8">
-					<struktorForm:StruktorForm id="ccForm" 
-						styleName="processingForm" 
+					<struktorForm:StruktorForm id="ccForm"
+						styleName="processingForm" validateOnKeyPress="true"
 						showEffect="fadeIn" hideEffect="fadeOut"
 						layoutProvider="{presentationModel.transactionLayout}"
 						isValidChanged="this.isValid = true" 
