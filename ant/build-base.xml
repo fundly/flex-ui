@@ -2,7 +2,7 @@
 
 <project name="buildbase" default="compile">
 	<property name="flex.src.dir" value="${basedir}/src" />
-	<property name="flex.lib.dir" value="${basedir}/libs" />
+	<property name="flex.lib.dir" value="libs" />
 	<property name="build.dir" value="${basedir}/build" />
 	<property name="package.dir" value="${basedir}/deploy" />
 	
