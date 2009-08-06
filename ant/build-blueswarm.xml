@@ -30,7 +30,6 @@
 	<property name="client.build.dir" value="${build.dir}/client" />
 	<property name="admin.build.dir" value="${build.dir}/admin" />
 	
-	<property name="rsl.url" value="https://assets.blue-swarm.com/rsls" />
 	<property name="framework.swz.url" value="${rsl.url}/${framework.file}" />
 	<property name="framework.swf.url" value="${rsl.url}/${framework.fallback.file}" />
 	<property name="rpc.swz.url" value="${rsl.url}/${rpc.file}" />
