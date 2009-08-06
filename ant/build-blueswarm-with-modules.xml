@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 
-<project name="build.blueswarm.modules" default="deploy.report.modules">
+<project name="build.blueswarm.with.modules" default="compile">
 
 	<import file="build-blueswarm.xml" />
 	
@@ -89,6 +89,6 @@
 		</condition>
 	</target>
 	
-	<target name="deploy.report.modules" depends="clean.deploy, compile.report.modules, copy.admin.build.files" />
+	<target name="compile" depends="build.blueswarm.compile, compile.report.modules" />
 
 </project>

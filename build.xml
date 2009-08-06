@@ -2,7 +2,7 @@
 
 <project name="BlueSwarm" default="deploy">
 	
-	<import file="ant/build-base-blueswarm.xml" />
+	<import file="ant/build-blueswarm-with-modules.xml" />
 		
 	<macrodef name="deploy.all">
 		<attribute name="target"/>
@@ -29,9 +29,13 @@
 		<deploy.all target="deploy.assets" />
 	</target>
 	
+	<!--
 	<target name="deploy" description="deploys the client and the administrator UI to all servers">
 		<deploy.all target="deploy"/>
 	</target>
+	-->
+	
+	<target name="deploy" description="deploy" depends="build.blueswarm.with.modules.compile, build.blueswarm.package" />
 	
 	<target name="deploy.sandboxes">
 		<deploy.all target="deploy.sandbox"/>
