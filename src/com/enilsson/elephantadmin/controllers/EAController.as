@@ -15,7 +15,7 @@ package com.enilsson.elephantadmin.controllers
 	import com.enilsson.elephantadmin.events.popups.*;
 	import com.enilsson.elephantadmin.events.session.*;
 	import com.enilsson.elephantadmin.views.modules.pledge_workspace.commands.*;
-	import com.enilsson.elephantadmin.views.modules.pledge_workspace.events.PWEvent;
+	import com.enilsson.elephantadmin.views.modules.pledge_workspace.events.*;
 
 	public class EAController extends FrontController
 	{
@@ -238,13 +238,15 @@ package com.enilsson.elephantadmin.controllers
  			 */
 			this.addCommand(PWEvent.GET_PLEDGE, PWCommand);
 			this.addCommand(PWEvent.GET_CONTACT, PWCommand);
-			this.addCommand(PWEvent.LOOKUP_INPUT_SEARCH, PWCommand);			
+			this.addCommand(PWEvent.LOOKUP_INPUT_SEARCH, PWCommand);
 			this.addCommand(PWEvent.GET_LABEL, PWCommand);	
 			this.addCommand(PWEvent.SAVE, PWCommand);
 			this.addCommand(PWEvent.DUP_SEARCH, PWCommand);	
 			this.addCommand(PWEvent.DO_TRANSACTION, PWCommand);
 			this.addCommand(PWEvent.SEND_EMAIL, PWCommand);
 			this.addCommand(PWEvent.DELETE_SAVED_PLEDGE, PWCommand);
+			// Start Pledge workspace command
+			this.addCommand(SPWEvent.ADD_NEW, SPWCommand);
 		}
 	}
 }

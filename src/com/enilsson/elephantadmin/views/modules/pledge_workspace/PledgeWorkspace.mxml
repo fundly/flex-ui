@@ -112,7 +112,8 @@
 			[Bindable] public var model:EAModelLocator = EAModelLocator.getInstance();
 			[Bindable] public var presentationModel:PledgeWorkspaceModel;
 			public var transVStack:int = 0;
-			
+			public var tabVStack:int = 0;
+
 			[Inspectable(type="String", enumeration="credit,check,edit")]
 			public function set defaultType(value:String):void
 			{
@@ -130,6 +131,21 @@
 				}
 			}
 			
+			[Inspectable(type="String", enumeration="contact,pledge")]
+			public function set defaultTab(value:String):void
+			{
+				switch(value)
+				{
+					case "contact":
+						tabVStack = 0;
+						break;
+					case "pledge":
+						tabVStack = 1;
+						break;
+				}
+			}
+
+
 			private function initialiseHandler():void
 			{
 				if ( !presentationModel )
@@ -147,6 +163,7 @@
 				// move the vstack back the first page
 				presentationModel.init();
 				presentationModel.transVStack = transVStack;
+				presentationModel.vindex = tabVStack;
 			}
 
 			private function lnkbarCreated():void

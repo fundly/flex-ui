@@ -15,7 +15,7 @@
 			/>
 		<mx:Button id="submit" 
 			name="submit" 
-			styleName="submitBtn"
+			styleName="loginSubmitBtn"
 			label="{presentationModel.action != PledgeWorkspaceModel.EDIT ? 'complete':'update'} this pledge"
 			click="presentationModel.process()" 
 			keyUp="submitBtnKeyHandler(event)"

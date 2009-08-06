@@ -139,6 +139,7 @@ package com.enilsson.elephantadmin.views.modules.users.model
 
 			addUserPopUp.addEventListener(CloseEvent.CLOSE, function(e:CloseEvent):void{
 				PopUpManager.removePopUp(Users_Add(e.currentTarget));
+				newPage(searchListCurrPage / itemsPerPage);
 			});
 			
 			PopUpManager.addPopUp(addUserPopUp, DisplayObject(Application.application), true);
