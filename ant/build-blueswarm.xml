@@ -68,8 +68,8 @@
 			<source-path path-element="${flex.sdk.home}" />
 			<source-path path-element="${flex.src.dir}" />
 			
-			<external-library-path dir="${flex.lib.dir}" append="true">
-				<include name="**/*.swc" />
+			<external-library-path dir="${basedir}" append="true">
+				<include name="${flex.lib.dir}" />
 			</external-library-path>
 			
 			<runtime-shared-library-path 
@@ -111,8 +111,8 @@
 			<source-path path-element="${flex.sdk.home}" />
 			<source-path path-element="${flex.src.dir}" />
 			
-			<library-path dir="${flex.lib.dir}" append="true">
-				<include name="**/*.swc" />
+			<library-path dir="${basedir}" append="true">
+				<include name="${flex.lib.dir}" />
 			</library-path>
 			
 			<runtime-shared-library-path 
