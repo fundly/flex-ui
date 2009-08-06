@@ -37,43 +37,36 @@
 		
 	<target name="compile.report.modules" depends="init, export.revision, check.report.modules.uptodate" unless="report.modules.uptodate">
 		
-		<echo message="Compiling module: ${module.all_contributions}" />
 		<antcall target="compile.module">
 			<param name="param.mxml" value="${all_contributions.dir}/${module.all_contributions}.mxml" />
 			<param name="param.swf" value="${report.modules.build.dir}/${module.all_contributions}.swf" />
 		</antcall>
 	
-		<echo message="Compiling module: ${module.all_pledges}" />
 		<antcall target="compile.module">
 			<param name="param.mxml" value="${all_pledges.dir}/${module.all_pledges}.mxml" />
 			<param name="param.swf" value="${report.modules.build.dir}/${module.all_pledges}.swf" />
 		</antcall>
 		
-		<echo message="Compiling module: ${module.host_committee}" />
 		<antcall target="compile.module">
 			<param name="param.mxml" value="${host_committee.dir}/${module.host_committee}.mxml" />
 			<param name="param.swf" value="${report.modules.build.dir}/${module.host_committee}.swf" />
 		</antcall>
 	
-		<echo message="Compiling module: ${module.donationwidget}" />
 		<antcall target="compile.module">
 			<param name="param.mxml" value="${donationwidget.dir}/${module.donationwidget}.mxml" />
 			<param name="param.swf" value="${report.modules.build.dir}/${module.donationwidget}.swf" />
 		</antcall>
 		
-		<echo message="Compiling module: ${module.netfile}" />
 		<antcall target="compile.module">
 			<param name="param.mxml" value="${netfile.dir}/${module.netfile}.mxml" />
 			<param name="param.swf" value="${report.modules.build.dir}/${module.netfile}.swf" />
 		</antcall>
 				
-		<echo message="Compiling module: ${module.fundraisers}" />
 		<antcall target="compile.module">
 			<param name="param.mxml" value="${fundraisers.dir}/${module.fundraisers}.mxml" />
 			<param name="param.swf" value="${report.modules.build.dir}/${module.fundraisers}.swf" />
 		</antcall>
 		
-		<echo message="Compiling module: ${module.dailyincome}" />
 		<antcall target="compile.module">
 			<param name="param.mxml" value="${dailyincome.dir}/${module.dailyincome}.mxml" />
 			<param name="param.swf" value="${report.modules.build.dir}/${module.dailyincome}.swf" />

@@ -180,13 +180,8 @@
 	
 	<!--  Writes the current SVN revision number into an external xml file -->
 	<target name="export.revision" description="Exports the revision number to an XML file, also places it into the html template.">
-		<echo message="Reading current revision number..." />
 		<exec outputproperty="revision.number" executable="${svnversion}" dir="${flex.src.dir}" />
-		<echo message="Current revision is ${revision.number}" />
-		
-		<echo message="Creating file ${revision.file} from template ${revision.file.template}..." />
 		<copy file="${revision.file.template}" tofile="${revision.file}" overwrite="true" />		
-		<echo message="Writing revision number to ${revision.file}..." />
 		<replace file="${revision.file}" token="#REVISION#" value="${revision.number}" />
 		
 		<!--
