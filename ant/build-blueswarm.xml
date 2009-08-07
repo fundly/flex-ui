@@ -62,7 +62,8 @@
 			keep-generated-actionscript="false"
 			optimize="true"
 			static-rsls="false"
-			debug="${swf.debug}">
+			debug="${swf.debug}"
+			warn-internal-error="false">
 			
 			<source-path path-element="${flex.sdk.home}" />
 			<source-path path-element="${flex.src.dir}" />
@@ -105,7 +106,8 @@
 			keep-generated-actionscript="false"
 			optimize="true"
 			static-rsls="false"
-			debug="${swf.debug}">
+			debug="${swf.debug}"
+			warn-internal-error="false">
 			
 			<source-path path-element="${flex.sdk.home}" />
 			<source-path path-element="${flex.src.dir}" />
