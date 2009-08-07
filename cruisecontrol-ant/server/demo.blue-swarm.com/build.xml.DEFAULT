@@ -1,0 +1,37 @@
+<project default="deploy" basedir="../..">
+	
+	<property name="user" value="www-data" />
+	<property name="password" value="" />
+	<property name="host" value="client1.blue-swarm.com" />
+	<property name="domain" value="demo.blue-swarm.com" />
+	<property name="path" value="/mnt/s3/www/${domain}" />
+	<property name="port" value="2234" />
+
+	
+	
+	<import file="../../ant/build-base-blueswarm.xml" />
+	
+	<target name="deploy.admin" 
+		depends="buildbase.blueswarm.deploy.admin, upload" 
+		description="deploys administrator UI"/>
+	<target name="deploy.client" 
+		depends="buildbase.blueswarm.deploy.client, upload"
+		description="deploys client UI"/>
+	<target name="deploy.report.modules"
+		depends="buildbase.blueswarm.deploy.report.modules, upload"
+		description="deploys the report modules" />
+	<target name="deploy.assets"
+		depends="copy.assets, upload"
+		description="deploys all common files"/>
+	<target name="deploy"
+		depends="buildbase.blueswarm.deploy, upload"
+		description="deploys administrator and client UI"/>
+	
+	<target name="copy.assets">
+		<antcall target="deploy.instance.assets" />
+	</target>	
+	<target name="upload">
+		<antcall target="upload.instance" />
+	</target>
+	
+</project>

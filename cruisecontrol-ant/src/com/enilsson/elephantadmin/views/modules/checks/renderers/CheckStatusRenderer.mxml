@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Label xmlns:mx="http://www.adobe.com/2006/mxml" 
+	initialize="handleInitialize()">
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephantadmin.models.CheckStatus;
+			
+			private static var _color : Number;
+			
+			private function handleInitialize() : void
+			{
+				_color = getStyle("color") as Number;
+			}
+			
+			override public function set text(value:String):void
+			{
+				super.text = value;
+				
+				if(value == CheckStatus.REFUND)
+					setStyle("color", 0xFF0000);
+				else
+					setStyle("color", _color);
+			}
+		]]>
+	</mx:Script>	
+</mx:Label>

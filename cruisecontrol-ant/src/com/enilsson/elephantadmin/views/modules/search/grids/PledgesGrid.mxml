@@ -1,0 +1,16 @@
+<grids:SearchResultGrid xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:grids="com.enilsson.elephantadmin.views.modules.search.grids.*">	
+
+	<grids:columns>
+		<mx:DataGridColumn id="nameColumn" labelFunction="{LabelFunctionCollection.getFullName}" />
+		<mx:DataGridColumn id="cityStateColumn" labelFunction="{LabelFunctionCollection.getCityAndState}" />
+		<mx:DataGridColumn id="contributionTypeColumn" dataField="contribution_type" />
+		<mx:DataGridColumn id="fundTypeColumn" dataField="fund_type" />
+		<mx:DataGridColumn id="pledgeAmountColumn" labelFunction="{LabelFunctionCollection.getPledgeAmount}" />
+		<mx:DataGridColumn id="contribTotalColumn" labelFunction="{LabelFunctionCollection.getContribTotal}"/>
+		<mx:DataGridColumn id="pledgeDateColumn" labelFunction="{LabelFunctionCollection.getPledgeDate}" />
+		<mx:DataGridColumn id="showRecordColumn" width="{SearchResultGrid.SHOW_RECORD_COLUMN_WIDTH}" 
+			itemRenderer="com.enilsson.elephantadmin.views.modules.search.renderers.MagnifierIcon" />
+	</grids:columns>
+
+</grids:SearchResultGrid>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
+	verticalGap="0" 
+	horizontalScrollPolicy="off" verticalScrollPolicy="off"
+	paddingTop="0" paddingBottom="0">
+
+	<mx:CurrencyFormatter id="cf" precision="2" currencySymbol="$" useNegativeSign="false" />
+	
+	<mx:Text styleName="irTitle" text="{data.fname} {data.lname}" width="{explicitWidth}" />
+	<mx:Text styleName="irDesc" text="{data.address1}, {data.city} {data.state} {data.zip}" /> 	
+	<mx:Text styleName="irDesc" 
+		htmlText="&lt;b&gt;Pledged&lt;/b&gt;: {cf.format(data.pledge_total)} - &lt;b&gt;Contributed&lt;/b&gt;: {cf.format(data.contrib_total)}" />	
+	
+</mx:VBox>

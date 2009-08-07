@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:ns="com.enilsson.elephantadmin.views.modules.resources.*"
+	xmlns:graphics="com.enilsson.graphics.*"
+	backgroundColor="#CCCCCC" color="#333333"
+	horizontalScrollPolicy="off" verticalScrollPolicy="off">
+
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephantadmin.models.EAModelLocator;
+			
+			[Bindable] private var _model:EAModelLocator = EAModelLocator.getInstance();
+			
+		]]>
+	</mx:Script>
+	
+	<mx:Style>
+		.formActivityText {
+			color:#333333;
+			fontSize:8;
+			fontWeight:'normal';	
+		}
+	</mx:Style>
+	
+	<mx:Box styleName="controlBar" width="100%" height="28" y="0"/>
+
+	<mx:TabNavigator id="optionsViewStack"
+		height="{height - 3}" styleName="optionsTabNav"
+		width="100%" y="5"
+		selectedIndex="{_model.resources.optionsViewStack}"
+		>
+		<common:AccessOptionsTab id="resources_access"
+			xmlns:common="com.enilsson.elephantadmin.views.common.*"
+			label="ACCESS"
+			headerText="Resource Item visibility"
+			text="You can either set the resource item to be available to all users with the checkbox below. Or chose to restrict it to members of one of the state groups listed below"
+			dataProvider="{_model.email_user.formRecord}"
+			setGroups="{_model.orgGroups}" />
+		
+		<ns:Resources_Options_Activity 
+			label="AUDIT TRAIL" 
+			dataProvider="{_model.resources.formRecord}" />
+	
+	</mx:TabNavigator>
+	
+</mx:Canvas>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:common="com.enilsson.elephanttrakker.views.common.*" 
+	xmlns:struktorForm="com.enilsson.utils.struktorForm.*"
+	verticalGap="0">
+
+	<mx:HBox id="warning" 
+		styleName="sharedWarning" 
+		width="100%" height="0" 
+		showEffect="slideUpWarn" hideEffect="slideDown" 
+		visible="{_model.my_contacts.sharedName != ''}">
+		<mx:Text width="100%" textAlign="center"
+			htmlText="This contact is shared with &lt;b&gt;{_model.my_contacts.sharedName}&lt;/b&gt;"
+			visible="{_model.my_contacts.sharedName != ''}" />
+	</mx:HBox>
+	
+	<mx:VBox width="100%" height="{this.height - formFooter.height - warning.height}">
+		<struktorForm:StruktorForm id="contactsForm" 
+			styleName="contactsVSForm" 
+			width="{this.width-25}" 
+			layoutProvider="{_model.struktorLayout.contacts}" 
+			dataProvider="{_model.my_contacts.contactData}"
+			defaultButton="{submitForm}"
+			formBuildComplete="formBuildCompleteHandler(event)"
+			selectedGroups="{[1,2,3]}"
+			/>		
+	</mx:VBox>
+
+	<mx:Canvas id="formFooter" styleName="formFooter"
+		width="100%" height="0"
+		visible="{_model.my_contacts.currCreatedID == _model.session.user_id ? true : false}"
+		showEffect="slideUp" hideEffect="slideDown"
+		verticalScrollPolicy="off">
+		<common:ValidFormIndicator id="formStatus" 
+			verticalCenter="1" left="70"
+			visible="{_model.my_contacts.currCreatedID == _model.session.user_id ? true : false}" 
+			status="{contactsForm.isValid}" />
+		<mx:Button id="submitForm" styleName="submitBtn" 
+			verticalCenter="0" right="60"
+			label="Edit Contact"
+			useHandCursor="true" buttonMode="true" 
+			visible="{_model.my_contacts.currCreatedID == _model.session.user_id ? true : false}" 
+			enabled="{contactsForm.isValid &amp;&amp; !_model.my_contacts.isSubmitting}"  
+			click="upsertContact(event)" />	
+	</mx:Canvas>
+	
+
+	<mx:Resize id="slideUp" heightTo="36" duration="1000" />
+	<mx:Resize id="slideUpWarn" heightTo="19" duration="1000" />
+	<mx:Resize id="slideDown" heightTo="0" duration="1000" />		
+
+
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephanttrakker.events.modules.my_contacts.GetContactEvent;
+			import mx.utils.ObjectUtil;
+			import com.enilsson.graphics.enDropShadows;
+			import org.osflash.thunderbolt.Logger;
+			import com.enilsson.elephanttrakker.events.modules.my_contacts.UpsertContactEvent;
+			import com.enilsson.elephanttrakker.models.ETModelLocator;
+			
+			[Bindable] private var _model:ETModelLocator = ETModelLocator.getInstance();
+			
+			private function upsertContact(event:MouseEvent):void
+			{
+				if(_model.debug)
+					Logger.info('upsertContact', contactsForm.formVariables);
+				
+				new UpsertContactEvent( contactsForm.formVariables ).dispatch()
+			}
+			
+			private function formBuildCompleteHandler(event:Event):void
+			{
+				contactsForm.runValidation();	
+				
+				if (_model.my_contacts.contactData.shared) 
+					new GetContactEvent(GetContactEvent.EVENT_GET_CONTACT_INFO, _model.my_contacts.contactData.created_by_id).dispatch()
+				else
+					_model.my_contacts.sharedName = "";
+			}
+			
+		]]>
+	</mx:Script>
+
+</mx:VBox>

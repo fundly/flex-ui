@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:common="com.enilsson.elephantadmin.views.common.*" 
+	creationComplete="init()"
+	minHeight="20"
+	minWidth="200"
+	horizontalScrollPolicy="off" verticalScrollPolicy="off" 
+	clipContent="false" xmlns:controls="com.enilsson.controls.*">
+
+	<mx:Metadata>
+		[Event(name="searchStart", type="flash.events.Event")]
+		[Event(name="clearSearch", type="flash.events.Event")]
+	</mx:Metadata>
+
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			import mx.binding.utils.BindingUtils;
+			import mx.binding.utils.ChangeWatcher;
+			import mx.events.CloseEvent;
+			import mx.managers.PopUpManager;
+			import mx.events.ListEvent;
+			import mx.events.ItemClickEvent;
+			import com.enilsson.elephantadmin.models.EAModelLocator;
+			import mx.collections.ArrayCollection;
+			
+			[Bindable] private var _model:EAModelLocator = EAModelLocator.getInstance();
+			[Bindable] private var _dataProvider:ArrayCollection;
+				  
+			public var searchOption:Object;
+
+			private function init():void
+			{
+
+			}
+			
+			[Bindable]
+			public function get searchTerm() : String { return searchBox ? searchBox.searchTerm : ""; }
+			public function set searchTerm( value : String ) : void { 
+				if(searchBox) 
+					searchBox.searchTerm = value; 
+			} 
+			
+			public function set dataProvider(data:ArrayCollection):void{
+				_dataProvider = data;
+				if(_dataProvider.length > 0)
+					searchOption = _dataProvider.getItemAt(0);
+			}
+			
+			private function searchComboClickHandler(event:ListEvent):void
+			{
+				searchOption = event.itemRenderer.data;
+			}
+			
+			override protected function updateDisplayList(w:Number, h:Number):void 
+			{
+				super.updateDisplayList(w,h);
+				
+				vRule.x = searchComboBoxContainer.x - 2;
+				vRule.height = height - 8;
+				vRule.y = 4;
+			}
+		]]>
+	</mx:Script>
+
+	<mx:Fade id="fadeIn" alphaFrom="0" alphaTo="1" duration="300" />
+	<mx:Fade id="fadeOut" alphaFrom="1" alphaTo="0" duration="300" />
+	<mx:Resize id="resize" duration="300" />
+
+	<mx:Canvas id="searchBoxContainer" 
+		styleName="searchForm"
+		width="100%" height="100%"
+		horizontalScrollPolicy="off" verticalScrollPolicy="off"
+		clipContent="false">
+		<mx:filters>
+			<mx:DropShadowFilter inner="true" distance="3" alpha="0.35" blurX="2" blurY="2"/>
+		</mx:filters>
+		<common:SearchBox id="searchBox" 
+			fontSize="9"
+			height="100%"
+			width="50%" 
+			y="1" left="3"
+			clearSearch="dispatchEvent(event)" 
+			searchStart="dispatchEvent(event)" 
+			/>
+		<mx:VRule id="vRule" strokeColor="#000000"/>
+	</mx:Canvas>
+	
+	<mx:HBox id="searchComboBoxContainer"
+		horizontalAlign="right"
+		verticalAlign="bottom"
+		right="2"
+		bottom="2"
+		width="50%"
+		maxWidth="110"
+		height="{searchComboBox.height}"
+		horizontalScrollPolicy="off" 
+		verticalScrollPolicy="off">
+		<common:HoverComboBox id="searchComboBox"
+			height="100%"
+			dataProvider="{_dataProvider}" 
+			expandUp="true"
+			labelHeight="16"
+			itemClick="searchComboClickHandler(event)" 
+			resizeEffect="resize"/>
+	</mx:HBox>
+</mx:Canvas>

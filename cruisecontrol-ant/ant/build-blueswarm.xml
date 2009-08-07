@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<project name="build.blueswarm" default="compile">
+
+	<import file="build-base.xml" />
+	
+	<property name="revision.file.template" value="${flex.src.dir}/revision.xml.template" />
+	<property name="revision.filename" value="revision.xml"/>
+	<property name="revision.file" value="${flex.src.dir}/${revision.filename}" />
+	
+	<property name="module.client" value="ET_cairngorm" />
+	<property name="module.admin" value="ET_admin" />
+	<property name="swf.client" value="${module.client}.swf" />
+	<property name="swf.admin" value="${module.admin}.swf" />
+	
+	<!-- 
+	<property name="server.dir" value="server" />
+	<property name="server.common.dir" value="${server.dir}/common" />
+	<property name="html.template" value="html-template" />
+	<property name="html.template.dir" value="${server.common.dir}/${html.template}" />
+	-->
+	<!--
+	<property name="swf.container.template" value="${html.template.dir}/index.template.php" />
+	<property name="swf.container" value="${html.template.dir}/index.php" />	
+	<property name="config.file" value="config.php" />
+	-->
+	
+	<property name="client.dir" value="${package.dir}" />
+	<property name="admin.dir" value="${package.dir}/admin"/>
+	<property name="client.build.dir" value="${build.dir}/client" />
+	<property name="admin.build.dir" value="${build.dir}/admin" />
+	
+	<property name="framework.swz.url" value="${rsl.url}/${framework.file}" />
+	<property name="framework.swf.url" value="${rsl.url}/${framework.fallback.file}" />
+	<property name="rpc.swz.url" value="${rsl.url}/${rpc.file}" />
+	<property name="rpc.swf.url" value="${rsl.url}/${rpc.fallback.file}" />
+	<property name="crossdomain.file" value="" />
+	
+	<!--
+	<property name="sandbox.root" value="/mnt/s3/public_html/sandbox.blue-swarm.com" />
+	-->
+	
+	<target name="init" depends="buildbase.init">
+		<mkdir dir="${admin.dir}" />
+		<mkdir dir="${client.dir}" />
+		<mkdir dir="${admin.build.dir}" />
+		<mkdir dir="${client.build.dir}" />
+	</target>
+	
+	<!-- 
+		compiles any module with mxmlc
+		@param.mxml: the path to the mxmlc file to be compiled
+		@param.swf: the path to the resulting swf file
+	--> 
+	<target name="compile.module">
+		<mxmlc
+			file="${param.mxml}"
+			output="${param.swf}"
+			incremental="true"
+			locale="en_US"
+			actionscript-file-encoding="UTF-8"
+			keep-generated-actionscript="false"
+			optimize="true"
+			static-rsls="false"
+			debug="${swf.debug}"
+			warn-internal-error="false">
+			
+			<source-path path-element="${flex.sdk.home}" />
+			<source-path path-element="${flex.src.dir}" />
+			
+			<external-library-path dir="${basedir}" append="true">
+				<include name="${flex.lib.dir}" />
+			</external-library-path>
+			
+			<runtime-shared-library-path 
+				path-element="${flex.sdk.home}/frameworks/libs/framework.swc">
+				<url rsl-url="${framework.swz.url}"/>
+				<url policy-file-url="${crossdomain.file}"/>
+				<url rsl-url="${framework.swf.url}"/>
+				<url policy-file-url="${crossdomain.file}"/>
+			</runtime-shared-library-path>
+			<runtime-shared-library-path 
+				path-element="${flex.sdk.home}/frameworks/libs/rpc.swc">
+				<url rsl-url="${rpc.swz.url}"/>
+				<url policy-file-url="${crossdomain.file}"/>
+				<url rsl-url="${rpc.swf.url}"/>
+				<url policy-file-url="${crossdomain.file}"/>
+			</runtime-shared-library-path>
+			
+			<fonts>
+				<manager>flash.fonts.AFEFontManager</manager>
+			</fonts>			
+		</mxmlc>
+		
+	</target>
+	
+	
+	<target name="compile.application">
+		<mxmlc
+			file="${param.mxml}"
+			output="${param.swf}"
+			incremental="true"
+			locale="en_US"
+			default-background-color="0x333333"
+			actionscript-file-encoding="UTF-8"
+			keep-generated-actionscript="false"
+			optimize="true"
+			static-rsls="false"
+			debug="${swf.debug}"
+			warn-internal-error="false">
+			
+			<source-path path-element="${flex.sdk.home}" />
+			<source-path path-element="${flex.src.dir}" />
+			
+			<library-path dir="${basedir}" append="true">
+				<include name="${flex.lib.dir}" />
+			</library-path>
+			
+			<runtime-shared-library-path 
+				path-element="${flex.sdk.home}/frameworks/libs/framework.swc">
+				<url rsl-url="${framework.swz.url}"/>
+				<url policy-file-url="${crossdomain.file}"/>
+				<url rsl-url="${framework.swf.url}"/>
+				<url policy-file-url="${crossdomain.file}"/>
+			</runtime-shared-library-path>
+			<runtime-shared-library-path 
+				path-element="${flex.sdk.home}/frameworks/libs/rpc.swc">
+				<url rsl-url="${rpc.swz.url}"/>
+				<url policy-file-url="${crossdomain.file}"/>
+				<url rsl-url="${rpc.swf.url}"/>
+				<url policy-file-url="${crossdomain.file}"/>
+			</runtime-shared-library-path>
+			<fonts>
+				<manager>flash.fonts.AFEFontManager</manager>
+			</fonts>			
+		</mxmlc>
+	</target>
+	
+	<target name="check.client.uptodate">
+		<condition property="client.uptodate">
+			<filesmatch file1="${revision.file}" file2="${client.build.dir}/${revision.filename}" />
+		</condition>
+	</target>
+
+	<target name="check.admin.uptodate">
+		<condition property="admin.uptodate">
+			<filesmatch file1="${revision.file}" file2="${admin.build.dir}/${revision.filename}" />
+		</condition>
+	</target>
+	
+	<!-- Compiles the client UI and saves it in the build directory -->
+	<target name="compile.client" 
+		depends="init, export.revision, check.client.uptodate" unless="client.uptodate">
+		
+		<antcall target="compile.application">
+			<param name="param.mxml" value="${flex.src.dir}/${module.client}.mxml" />
+			<param name="param.swf" value="${client.build.dir}/${swf.client}" />
+		</antcall>
+		
+		<!-- copy the revision as a marker so that ANT knows when to rebuild -->
+		<copy file="${revision.file}" todir="${client.build.dir}" overwrite="true" />
+	</target>
+	
+	
+	<!-- Compiles the administrator UI and saves it in the build directory -->
+	<target name="compile.admin"
+		depends="init, export.revision, check.admin.uptodate" unless="admin.uptodate">		
+		
+		<antcall target="compile.application">
+			<param name="param.mxml" value="${flex.src.dir}/${module.admin}.mxml" />
+			<param name="param.swf" value="${admin.build.dir}/${swf.admin}" />
+		</antcall>
+		
+		<!-- copy the revision as a marker so that ANT knows when to rebuild -->
+		<copy file="${revision.file}" todir="${admin.build.dir}" overwrite="true" />
+	</target>
+	
+	
+	<!-- Compiles both the client and administrator UIs -->
+	<target name="compile" depends="compile.client, compile.admin" />
+
+	
+	<!--  Writes the current SVN revision number into an external xml file -->
+	<target name="export.revision" description="Exports the revision number to an XML file, also places it into the html template.">
+		<exec outputproperty="revision.number" executable="${svnversion}" dir="${flex.src.dir}" />
+		<copy file="${revision.file.template}" tofile="${revision.file}" overwrite="true" />		
+		<replace file="${revision.file}" token="#REVISION#" value="${revision.number}" />
+		
+		<!--
+		<echo message="Creating file ${swf.container} from template ${swf.container.template}..." />
+		<copy file="${swf.container.template}" tofile="${swf.container}" overwrite="true" />		
+		<echo message="Writing revision number to ${swf.container}..." />
+		<replace file="${swf.container}" token="#REVISION#" value="${revision.number}" />
+		-->
+	</target>
+
+
+	<!-- Copies common server files to the client deployment directory -->
+	<!--
+	<target name="copy.client.html.files" depends="init">
+		<copy todir="${client.dir}" overwrite="true" verbose="false" failonerror="false">
+			<fileset dir="${html.template.dir}" excludes="${swf.container.template}" />
+		</copy>
+	</target>
+	-->
+	
+	
+	<!-- Copies common server files to the admin deployment directory -->
+	<!--
+	<target name="copy.admin.html.files" depends="init">
+		<copy todir="${admin.dir}" overwrite="true" verbose="false" failonerror="false">
+			<fileset dir="${html.template.dir}" excludes="${swf.container.template}" />
+		</copy>
+	</target>
+	-->
+	
+	
+	<!-- Copies common server files to the deployment directory -->
+	<!--
+	<target name="copy.html.files"
+		depends="copy.client.html.files, copy.admin.html.files">
+		<echo message="Copying common server files to the deployment directory" />
+	</target>
+	-->
+	
+	<target name="copy.client.build.files" depends="init">
+		<copy todir="${client.dir}" overwrite="true" verbose="false" failonerror="false">
+			<fileset dir="${client.build.dir}" excludes="**/*.cache, **/${revision.filename}" />
+		</copy>
+	</target>
+	
+	
+	<target name="copy.admin.build.files" depends="init">
+		<copy todir="${admin.dir}" overwrite="true" verbose="false" failonerror="false">
+			<fileset dir="${admin.build.dir}" excludes="**/*.cache, **/${revision.filename}" />
+		</copy>
+	</target>
+	
+	
+	<!-- Copies both the admin and client to the deployment dir -->
+	<target name="copy.build.files" depends="copy.client.build.files, copy.admin.build.files" />
+	
+	
+	<!-- 
+		Copies instance specific files
+		This task gets called via "antcall" from the instance build files.
+	--> 
+	<!--
+	<target name="copy.instance.assets" depends="clean.package">
+		<echo message="Copying instance specific files to deployment dir" />
+		<copy todir="${client.dir}" file="${server.dir}/${domain}/${config.file}" overwrite="true" failonerror="false" />
+		<copy todir="${client.dir}" overwrite="true" verbose="false" failonerror="false">
+			<fileset dir="${server.dir}/${domain}/client" />
+		</copy>
+	</target>
+	-->
+	
+	<!-- 
+		Uploads files in the deploy dir to specified server
+		This task gets called via "antcall" from the instance build files.
+	-->
+	<!--
+	<target name="update.instance">
+	
+		<echo message="Uploading to ${domain}..." />
+		<scp todir="${user}:${password}@${host}:${path}" port="${port}" sftp="true" failonerror="false">
+			<fileset dir="${package.dir}" />			
+		</scp>
+	</target>
+	-->
+	
+	<!--
+	<target name="update.sandbox">
+		<echo message="Updating ${sandbox.root}/${domain}..." />
+		<mkdir dir="${sandbox.root}/${domain}"/>
+		<copy todir="${sandbox.root}/${domain}" failonerror="false">
+			<fileset dir="${package.dir}" />
+		</copy>
+	</target>
+	-->
+	
+	<!-- copies all application files to package dir -->
+	<target name="package" depends="clean.package">
+		<property name="revision.folder" value="${package.dir}/${revision.number}" />
+		<mkdir dir="${revision.folder}"/>
+		
+		<antcall target="copy.build.files" />
+		
+		<move todir="${revision.folder}">
+			<fileset dir="${package.dir}" excludes="${revision.number}" />
+		</move>
+		
+		<copy todir="${revision.folder}" file="${revision.file}" />
+	</target>
+	
+</project>

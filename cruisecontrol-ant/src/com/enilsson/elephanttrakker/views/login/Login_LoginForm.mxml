@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:enControls="com.enilsson.controls.*"
+	preinitialize="manageStoredEmails()"
+	currentState="{_model.login.loginFormState}">
+
+	<mx:Metadata>
+		[Event(name="toggleLayout", type="flash.events.Event")]		
+	</mx:Metadata>
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.utils.ObjectUtil;
+			import org.osflash.thunderbolt.Logger;
+			import mx.managers.PopUpManager;
+			import com.enilsson.utils.eNilssonUtils;
+			import mx.collections.ArrayCollection;
+			import mx.effects.easing.Bounce;
+			import com.enilsson.elephanttrakker.vo.LoginVO;
+			import com.enilsson.elephanttrakker.events.login.LoginEvent;
+			import com.enilsson.elephanttrakker.models.ETModelLocator;
+			
+			[Bindable] private var _model:ETModelLocator = ETModelLocator.getInstance();
+			[Bindable] private var acData:ArrayCollection = new ArrayCollection();
+			private var captchaPopup:Login_Captcha;	
+			
+			private function submitForm():void
+			{
+				if (email.text.length > 255) 
+				{
+					_model.login.loginErrorMessage = 'Invalid email';
+					_model.login.loginErrorVisible =  true;
+					return;
+				}
+
+				if (password.text.length > 255) 
+				{
+					_model.login.loginErrorMessage = 'Invalid password';
+					_model.login.loginErrorVisible =  true;
+					password.text = '';
+					return;
+				}
+				
+				// hide the error message box if it is already open
+				_model.login.loginErrorVisible = false;
+				// if either of the fields is empty... show an error
+				if ((email.text == "") || (password.text == "")) 
+				{
+					_model.login.loginErrorMessage = 'Please enter a email and password!';
+					_model.login.loginErrorVisible =  true;
+					password.text = '';
+					return;
+				}	
+							
+				// add the email to the cookie so it can autocomplete on the next login
+				writeEmailtoCookie(email.text);
+				
+				_model.loggedEmail = email.text;
+				
+				// run the login event
+				var le:LoginEvent = new LoginEvent('login', new LoginVO(email.text, password.text, captchaText.text) );
+				le.dispatch();					
+			}
+			
+			/**
+			 * Return the emails stored as cookies and then add to the autocomplete input
+			 */
+			private function manageStoredEmails():void
+			{ 
+				acData.addItem({ email: '' });
+				var emails:String = eNilssonUtils.readCookie('email');
+				if(emails == null){ return; }
+				var emailArray:Object = emails.split(',');
+				for(var i:String in emailArray){
+					acData.addItem({ email: emailArray[i] });
+				}
+			}
+			
+			/**
+			 * Save the entered email into the Flash cookie (stored object)
+			 */
+			private function writeEmailtoCookie(email:String):void
+			{
+				if(email ==''){ return; }	
+				var emails:String = eNilssonUtils.readCookie('email');
+				if(emails == null){
+					eNilssonUtils.writeCookie('email', email);
+				} else {
+					var emailArray:Object = emails.split(',');
+					if(emailArray.indexOf(email) == -1){ eNilssonUtils.writeCookie('email', email); }					
+				}
+			}
+			
+			private function focusIn_Handler(event:FocusEvent):void
+			{
+				if(captchaPopup)
+					return;
+				
+				var comCoords:Object = event.currentTarget.transform.pixelBounds;
+					
+				captchaPopup = Login_Captcha(PopUpManager.createPopUp(parentDocument as DisplayObject, Login_Captcha));	
+				captchaPopup.x = comCoords.x + event.currentTarget.width - captchaPopup.width/2;
+				captchaPopup.y = comCoords.y + event.currentTarget.height;
+				
+				if(_model.debug) Logger.info('captchaPopup',captchaPopup.height);
+			}
+			
+			private function focusOut_Handler(event:FocusEvent):void
+			{
+				PopUpManager.removePopUp(captchaPopup);
+				captchaPopup = null;
+			}
+			
+			private function showCaptchaTimer():void
+			{
+				var timer:Timer = new Timer(500, 0);
+				timer.addEventListener(TimerEvent.TIMER, function():void { 
+					Logger.info('Timer');
+					timer.stop();
+					captchaText.setFocus(); 
+				});
+				timer.start();
+			}
+			
+		]]>
+	</mx:Script>
+
+    <mx:transitions>
+       <mx:Transition>
+            <mx:Parallel targets="{[loginForm, captchaItem]}">
+                <mx:Resize duration="500" easingFunction="Bounce.easeOut"/>
+            </mx:Parallel>
+        </mx:Transition>
+    </mx:transitions>
+        
+    <mx:states>
+        <mx:State name="Default">
+            <mx:SetProperty target="{captchaItem}" name="includeInLayout" value="false" />  
+            <mx:SetProperty target="{captchaItem}" name="visible" value="false" />
+            <mx:SetProperty target="{password}" name="text" value="" />
+        </mx:State>    
+        <mx:State name="ClearPassword">
+            <mx:SetProperty target="{captchaItem}" name="includeInLayout" value="false" />  
+            <mx:SetProperty target="{captchaItem}" name="visible" value="false" />
+            <mx:SetProperty target="{password}" name="text" value="" />
+        </mx:State>            
+        <mx:State name="Captcha">
+            <mx:SetProperty target="{captchaText}" name="text" value="" />  
+            <mx:SetProperty target="{captchaItem}" name="includeInLayout" value="true" />  
+            <mx:SetProperty target="{captchaItem}" name="visible" value="true" /> 
+        </mx:State>
+    </mx:states>
+
+	<mx:Move id="errorBoxShow" yFrom="140" yTo="43" duration="500" />	
+	<mx:Move id="errorBoxHide" yFrom="43" yTo="140" duration="200" />	
+	
+	<mx:EmailValidator source="{email}" property="text"
+		trigger="{email}" triggerEvent="{FocusEvent.FOCUS_OUT}" 
+		invalid="loginBtn.enabled = false"
+		valid="loginBtn.enabled = true" />
+	
+	<mx:Canvas id="loginErrorBox" styleName="errorBox" 
+		visible="{_model.login.loginErrorVisible}" 
+		showEffect="errorBoxShow" hideEffect="errorBoxHide" 
+		y="130" horizontalCenter="0" height="100" width="340">
+		<mx:Text id="loginErrorMsg" styleName="errorMsg"
+			text="{_model.login.loginErrorMessage}"
+			textAlign="center" horizontalCenter="0" 
+			top="5" width="{loginErrorBox.width-20}" />
+	</mx:Canvas>
+	
+	<mx:Canvas id="loginPanel" 
+		styleName="loginBox" 
+		clipContent="true" 
+		enabled="{!_model.login.loginProcessing}"
+		width="400" height="200" 
+		horizontalScrollPolicy="off" top="80">
+		<mx:Canvas styleName="boxBorder" height="190" width="34" top="0" right="0" />
+		<mx:Image source="@Embed('/assets/images/qcm2_login_logo.png')" top="5" right="2" />
+		<mx:Text id="contentTitle" styleName="contentTitle" 
+			text="LOGIN" top="45" rotation="90" right="{-55}" />	        
+		<mx:Form id="loginForm" defaultButton="{loginBtn}" 
+			verticalCenter="-10" horizontalCenter="-15">
+            <mx:FormItem label="email">
+            	<enControls:AutoComplete id="email" 
+            		styleName="formInputs" 
+            		change="{_model.login.loginErrorVisible =  false;captchaItem.visible = false; captchaItem.includeInLayout = false;}" 
+            		dataProvider="{acData}" 
+              		labelField="email" 
+              		width="230" 
+              		lookAhead="true" />
+            </mx:FormItem>	
+            <mx:FormItem id="loginPassword" label="password">
+                <mx:TextInput id="password" styleName="formInputs" 
+                	displayAsPassword="true" width="230" />
+            </mx:FormItem>
+            <mx:FormItem id="captchaItem" label="captcha"
+            	show="showCaptchaTimer()" 
+            	visible="false" includeInLayout="false" >
+	            <mx:TextInput id="captchaText" styleName="formInputs" width="230" 
+	            	focusIn="focusIn_Handler(event)" 
+	            	focusOut="focusOut_Handler(event)" 
+	            	maxChars="255"
+	            	/>
+            </mx:FormItem>
+        </mx:Form>
+        <mx:Button id="loginBtn" 
+        	styleName="submitBtn"
+        	verticalCenter="75" horizontalCenter="-52" 
+        	useHandCursor="true" buttonMode="true" 
+        	label="Login" 
+        	click="submitForm()" />
+        <mx:LinkButton label="forgot your details?"	
+        	bottom="0" right="50"
+        	fontSize="11" color="#333333" 
+        	click="dispatchEvent( new Event('toggleLayout', true) )"
+        	 />			
+	</mx:Canvas>
+	
+</mx:Canvas>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModalTitleWindow xmlns="com.enilsson.elephanttrakker.views.popups.*" 
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	layout="vertical" 
+	styleName="updateWindow"
+	title="Update Available">
+
+	<mx:Text width="100%" height="100%"
+		htmlText="&lt;br&gt;The version of the {_model.appName} that you are currently using is out of date.&lt;br&gt;&lt;br&gt;Please refresh your browser to download a new version. This may take a few refreshes before your browser cache is cleared."
+		/>
+			
+	<mx:Canvas width="100%">
+		<mx:Button label="Refresh" color="#333333"
+			horizontalCenter="0" verticalCenter="0"
+			click="handleClick()" />
+	</mx:Canvas>
+	
+		
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephanttrakker.models.ETModelLocator;
+			import mx.core.Application;
+			import mx.managers.PopUpManager;
+			import flash.net.navigateToURL;
+		
+			[Bindable] private var _model:ETModelLocator = ETModelLocator.getInstance();
+			
+			private static var _instance : UpdateAvailableWindow;
+		
+			public static function show() : UpdateAvailableWindow
+			{
+				if(_instance)
+					_instance.close();
+					
+				_instance = PopUpManager.createPopUp( Application.application as DisplayObject, UpdateAvailableWindow, true ) as UpdateAvailableWindow;
+				_instance.width = 450;
+				_instance.height = 200;			
+				
+				PopUpManager.centerPopUp( _instance );				
+				return _instance;
+			}
+			
+			private function handleClick() : void
+			{				
+				var url:String = _model.siteURL == '' ? _model.browserManager.url.split('#')[0] : _model.siteURL;
+								
+				navigateToURL(new URLRequest( url ), '_parent');
+			}
+		]]>
+	</mx:Script>
+	
+</ModalTitleWindow>

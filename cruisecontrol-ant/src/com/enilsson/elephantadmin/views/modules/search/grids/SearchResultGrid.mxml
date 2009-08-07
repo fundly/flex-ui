@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:DataGrid xmlns:mx="http://www.adobe.com/2006/mxml"
+	width="100%"
+	allowMultipleSelection="false" 
+	headerHeight="0"
+	rowHeight="20" 
+	verticalGridLines="false"
+	resizableColumns="true">
+	
+	<mx:Script>
+		<![CDATA[
+			public static const SHOW_RECORD_COLUMN_WIDTH : int = 30;
+		]]>
+	</mx:Script>
+	
+</mx:DataGrid>

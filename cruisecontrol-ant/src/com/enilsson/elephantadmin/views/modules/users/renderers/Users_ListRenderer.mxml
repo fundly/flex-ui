@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	verticalGap="0"
+	paddingTop="0" paddingBottom="0" 
+	horizontalScrollPolicy="off" 
+	verticalScrollPolicy="off">
+
+	<mx:Text id="title" 
+		styleName="listTitle"
+		text="{data.fname} {data.lname} {data.enabled == 0 ? '(disabled)' : ''}" 
+		width="{explicitWidth}" />
+	<mx:Text 
+		visible="{data._firstlogin > 0}"
+		includeInLayout="{data._firstlogin > 0}"
+		styleName="listDesc"
+		text="Pledged: {cf.format(data._pledge_total)} - Contributed: {cf.format(data._contrib_total)}" 
+		width="{explicitWidth}" />
+	<mx:Text 
+		visible="{data._firstlogin > 0}"
+		includeInLayout="{data._firstlogin > 0}"
+		styleName="listDesc"
+		text="{data._city} {data._state} - FID: {data._fid}" 
+		width="{explicitWidth}" />
+	<mx:Text 
+		visible="{!data._contact_id}"
+		includeInLayout="{!data._contact_id}"
+		styleName="listDesc"
+		text="NO CONTACT RECORD" 
+		width="{explicitWidth}" />
+	<mx:Text 
+		visible="{data._firstlogin == 0}"
+		includeInLayout="{data._firstlogin == 0}"
+		styleName="listDesc"
+		text="NEVER LOGGED IN - FID: {data._fid}" 
+		width="{explicitWidth}" />
+
+	<mx:CurrencyFormatter id="cf" currencySymbol="$" precision="0" />
+
+	<mx:Script>
+		<![CDATA[
+			override public function set data(value:Object):void
+			{
+				super.data = value;
+				
+				if(data)
+				{
+					if ( data.enabled == "0" )
+						title.setStyle('color',0xFF0000);
+					else if ( data._firstlogin == 0 )
+						title.setStyle('color', 0x999999);
+					else
+						title.setStyle('color',0x333333);
+				}
+			}
+		]]>
+	</mx:Script>
+	
+</mx:VBox>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" 
+	horizontalScrollPolicy="off" 
+	verticalScrollPolicy="off"
+	paddingBottom="0" paddingLeft="0" 
+	paddingRight="0" paddingTop="0">
+	
+	<mx:Button styleName="{data.paymentType == 'Check' ? 'checkBtn' : 'creditCardBtn'}" />
+	<mx:VBox verticalGap="0" paddingBottom="0">
+		<mx:Text styleName="irTitle" text="{data.paymentType}" width="{explicitWidth}" />
+		<mx:Text styleName="irDesc" text="{cf.format(data.amount)} - {df.format(new Date(data.created_on * 1000))}" /> 
+	</mx:VBox>
+	
+	<mx:CurrencyFormatter id="cf" precision="2" currencySymbol="$" useNegativeSign="false" />
+	<mx:DateFormatter id="df" formatString="MM/DD/YY" />
+
+</mx:HBox>

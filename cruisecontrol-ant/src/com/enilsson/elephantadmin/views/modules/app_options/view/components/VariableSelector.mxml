@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" enabled="{dataProvider.length > 0}">
+
+	<mx:ComboBox id="variablesCb" minWidth="130" dataProvider="{dataProvider}" />
+	
+	<mx:Button id="addButton" label="Add variable" 
+		click="dispatchEvent(new Event(ADD_VARIABLE))" 
+		enabled="{variablesCb.selectedIndex > -1}" />
+	
+	<mx:Metadata>
+		[Event(name="addVariable", type="flash.events.Event")]
+	</mx:Metadata>
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ICollectionView;
+			
+			public static const ADD_VARIABLE : String = "addVariable";
+						
+			[Bindable] public var dataProvider : ICollectionView;
+			
+		]]>
+	</mx:Script>
+
+</mx:HBox>

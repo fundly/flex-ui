@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox 
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	verticalGap="-2" 
+	horizontalScrollPolicy="off" verticalScrollPolicy="off"
+	paddingLeft="2" paddingRight="2" paddingTop="1" paddingBottom="1"
+	>
+	
+	<mx:Text text="{data.lname}, {data.fname}" fontSize="11" fontWeight="bold" />
+	<mx:Text text="{data._city} {data._state}{data._state != '' ? ' - ' : ''}FID: {data._fid}" fontSize="9" color="#666666" />
+	
+</mx:VBox>

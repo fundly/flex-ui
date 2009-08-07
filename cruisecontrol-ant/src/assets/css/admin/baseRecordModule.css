@@ -1,0 +1,116 @@
+/**
+* CSS file for the base record module
+*/
+
+/*-- Search List styles --*/
+.searchBox {
+	backgroundColor:#e0e0e0;	
+}
+.searchBarBackground {
+	backgroundColor:#666666;	
+}
+.optionsBox {
+	backgroundColor:#666666;	
+}		
+/*-- End Search List styles --*/
+
+
+/*-- Record Panel styles --*/
+.recordPanel {
+	backgroundImage: Embed(source="/assets/skins/admin_panel_skin.swf", symbol="RecordPanel_Skin");
+	backgroundSize:'100%';	
+}
+.recordOwners {
+	backgroundColor:#f7f7f7;
+	borderStyle:solid;
+	borderColor:#f7f7f7;
+	cornerRadius:6;
+	paddingTop:2;
+}
+.textDesc {
+	fontWeight:normal;
+	fontSize:8;
+}
+.recordPanelForm {
+	formItemStyleName: 'recordPanelLabel';
+	formInputStyleName: 'struktorInput';
+	requiredLabelStyleName : 'struktorLabel';
+	formLabelWidth: 110;
+	verticalGap:0;
+}
+.recordPanelLabel {
+	paddingTop:0;
+	paddingBottom:6;
+	labelStyleName:'labelStyleName';
+}
+.labelStyleName {
+	fontSize:10;
+	color:#333333;
+}
+.struktorInput {
+	fontSize:10;
+	color:#333333;	
+}
+.linkBtn {
+	fontSize:10;
+	overSkin: Embed("/assets/images/clear_bg.png");
+	textRollOverColor:#cce260;	
+}
+.deleteBtn {
+	fontSize:10;
+	color: #FF0000;
+	overSkin: Embed("/assets/images/clear_bg.png");
+	textRollOverColor: #FFFFFF;	
+}
+/*-- End Record Panel styles --*/
+
+
+/*-- Record Details popup styles --*/
+.recordDetails {
+	backgroundColor:#333333;
+	backgroundAlpha:0.75;
+	color:#FFFFFF;
+	fontSize:10;	
+}
+.recordDetailsTitle {
+	 fontSize: 14;
+	 fontWeight: bold;	
+}
+.detailsBox {
+	paddingTop:0;
+	paddingBottom:0;
+	paddingLeft:0;
+	paddingRight:0;
+	borderStyle:solid;
+	borderColor:#999999;
+	fontSize:9;
+	cornerRadius:3;
+	horizontalGap:0;	
+}
+.labelBox {
+	paddingTop:5;
+	paddingBottom:5;
+	backgroundColor:#333333;
+	horizontalAlign:center;
+}
+.valueBox {
+	paddingTop:5;
+	paddingBottom:5;
+	paddingLeft:15;
+	paddingRight:15;
+	borderSides:'left';
+	borderStyle:solid;
+	borderColor:#cccccc;
+	backgroundColor:#f0f0f0;
+	color:#333333;
+	fontWeight:bold;
+}
+/*-- End Record Details popup styles --*/
+
+
+.hBoxRenderer {
+	paddingBottom:0;
+	paddingLeft:0;
+	paddingRight:0;
+	paddingTop:0;	
+}

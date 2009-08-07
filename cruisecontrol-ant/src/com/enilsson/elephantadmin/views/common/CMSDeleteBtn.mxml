@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Button 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	height="20" 
+	paddingLeft="10" paddingRight="10" 
+	styleName="CMSDeleteBtn" 
+	focusSkin="{null}"
+	useHandCursor="true" buttonMode="true" 
+	label="Button" width="100">
+	
+	<mx:Style>
+		.CMSDeleteBtn {
+			cornerRadius:3;
+			borderColor:#a00001;
+			color:#FFFFFF;
+			fontSize:10;
+			fontWeight:bold;
+			fillAlphas: 1, 1, 1, 1;
+			highlightAlphas: 0, 0;
+   			fillColors: #F40000, #970011, #ffffff, #eeeeee;	
+   			focusThickness:0;
+		}
+	</mx:Style>
+	
+</mx:Button>

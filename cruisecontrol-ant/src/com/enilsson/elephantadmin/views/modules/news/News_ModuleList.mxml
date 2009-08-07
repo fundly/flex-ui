@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	verticalGap="0"
+	paddingTop="0" paddingBottom="0" 
+	horizontalScrollPolicy="off" 
+	verticalScrollPolicy="off">
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.utils.EDateUtil;
+		]]>
+	</mx:Script>
+	
+	<mx:DateFormatter id="df" formatString="MM/DD/YYYY" />
+	
+	<mx:Text 
+		text="{data.title}" 
+		width="{explicitWidth}" 
+		styleName="listTitle" />
+	<mx:Text 
+		text="{df.format( EDateUtil.dateFromTimestamp(data.publish_date) )} - {data.publish == 1 ? 'Published' : 'Unpublished'}" 
+		width="{explicitWidth}" 
+		styleName="listDesc" />
+</mx:VBox>

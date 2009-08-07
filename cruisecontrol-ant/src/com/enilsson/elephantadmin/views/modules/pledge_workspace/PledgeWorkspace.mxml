@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas 
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:views="com.enilsson.elephantadmin.views.modules.pledge_workspace.views.*"
+	xmlns:popups="com.enilsson.elephantadmin.views.modules.pledge_workspace.popups.*"
+	xmlns:graphics="com.enilsson.graphics.*"
+	xmlns:common="com.enilsson.elephantadmin.views.common.*"
+	preinitialize="initialiseHandler()"
+	creationComplete="creationCompleteHandler()" backgroundColor="#ffffff"
+	verticalScrollPolicy="off" horizontalScrollPolicy="off">
+
+	<mx:Canvas styleName="tabBarBg" 
+		width="634" height="35"
+		top="0" left="0" />
+	<mx:TabBar id="lnkbar" 
+		styleName="qcmTab"
+		dataProvider="{vstack}" 
+		tabHeight="35" fontSize="10"
+		itemClick="presentationModel.vindex = event.index;"
+		useHandCursor="true" buttonMode="true" />
+		
+	<mx:ViewStack id="vstack" 
+		creationPolicy="all"  
+		width="630" height="242" 
+		top="40" left="5" 
+		change="_IndexChange = event" 
+		childAdd="presentationModel.numTabs = event.currentTarget.numChildren"
+		selectedIndex="{presentationModel.vindex}">
+		<views:ContactForm
+			presentationModel="{presentationModel}"
+			hide="tabMoveHandler(event)"
+			label="contact information" 
+			showEffect="moveLeftShow" 
+			hideEffect="moveRightHide" />
+		<views:PledgeForm 
+			presentationModel="{presentationModel}"
+			hide="tabMoveHandler(event)"
+			label="pledge &amp; payment details" 
+			showEffect="moveLeftShow" 
+			hideEffect="moveRightHide" />
+	</mx:ViewStack>
+	
+	<views:Footer id="cFooter"
+		styleName="buttons"
+		presentationModel="{presentationModel}"
+		width="634" height="40"  
+		bottom="0" left="0" />
+		
+	<mx:Canvas id="formProcessingIndicator" 
+		visible="{presentationModel.formProcessing}"
+		top="0" left="0"
+		width="100%" height="100%" 
+		backgroundColor="#CCCCCC" backgroundAlpha="0.75"
+		showEffect="fadeIn" hideEffect="fadeOut">
+		<graphics:ActivityIndicator id="formActivity"
+			visible="{formProcessingIndicator.visible}"
+			width="85" height="85" 
+			verticalCenter="0" horizontalCenter="0"
+			boxFillColors="[0x12288c, 0x0b1850]" 
+			textStyleName="processingText" 
+			textMessage="Processing" />
+	</mx:Canvas>
+	
+	<mx:Canvas id="duplicatesList" 
+		visible="{presentationModel.showDupBox}"
+		top="0" left="0"
+		width="100%" height="100%" 
+		backgroundColor="#CCCCCC" backgroundAlpha="0.75"
+		showEffect="fadeIn" hideEffect="fadeOut">
+		<popups:PledgeDups />
+	</mx:Canvas>	
+	
+	<mx:Text visible="false"
+		text="Action: {presentationModel.action}" 
+		color="#e0e0e0" fontWeight="bold" fontSize="10"
+		top="5" right="55" />	
+	
+	<popups:ErrorList id="errorsList" 
+		bottom="40" left="68"
+		presentationModel="{presentationModel}"
+		visible="{presentationModel.showErrorList}"
+		showEffect="fadeIn" hideEffect="fadeOut" />
+	<common:ErrorMsgBox id="callLoggingErrorBox"
+		verticalCenter="0" horizontalCenter="0"
+		params="{presentationModel.errorVO}" />
+	<popups:PledgeComplete id="pledgeComplete"
+		presentationModel="{presentationModel}"
+		top="0" left="0" 
+		showEffect="fadeIn" hideEffect="fadeOut" />
+
+
+	<mx:Fade id="fadeIn" alphaTo="1" duration="300" />
+	<mx:Fade id="fadeOut" alphaTo="0" duration="300" />
+	<mx:Move id="moveLeftShow" xFrom="{_showX}" xTo="0" duration="500" />
+    <mx:Move id="moveRightHide" xFrom="0" xTo="{_hideX}" duration="500" /> 
+
+	<mx:Binding source="presentationModel.completedPledge" destination="pledgeComplete.visible" />
+
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephantadmin.models.Icons;
+			import org.osflash.thunderbolt.Logger;
+			import mx.events.FlexEvent;
+			import com.enilsson.elephantadmin.views.modules.pledge_workspace.model.PledgeWorkspaceModel;
+			import com.enilsson.elephantadmin.events.session.PingEvent;
+			import com.enilsson.elephantadmin.models.EAModelLocator;
+			import mx.events.IndexChangedEvent;
+			import mx.events.ItemClickEvent;
+			
+			[Bindable] public var model:EAModelLocator = EAModelLocator.getInstance();
+			[Bindable] public var presentationModel:PledgeWorkspaceModel;
+			public var transVStack:int = 0;
+			
+			[Inspectable(type="String", enumeration="credit,check,edit")]
+			public function set defaultType(value:String):void
+			{
+				switch(value)
+				{
+					case "credit":
+						transVStack = 0;
+						break;
+					case "check":
+						transVStack = 1;
+						break;
+					case "edit":
+						transVStack = 2;
+						break;
+				}
+			}
+			
+			private function initialiseHandler():void
+			{
+				if ( !presentationModel )
+					presentationModel = new PledgeWorkspaceModel ( model );
+			}
+			
+			/**
+			 * Handle the module being shown
+			 */	
+			private function creationCompleteHandler():void
+			{
+				// ping the server to make sure that all is well
+				new PingEvent().dispatch();
+				
+				// move the vstack back the first page
+				presentationModel.init();
+				presentationModel.transVStack = transVStack;
+			}
+
+
+			/**
+			 * Bit of hack to simulate the tabs scrolling from side to side
+			 */
+			[Bindable] private var _showX:Number = 630;
+			[Bindable] private var _hideX:Number = -630;			
+			[Bindable] private var _IndexChange:IndexChangedEvent;
+			private function tabMoveHandler(event:FlexEvent):void
+			{				
+				if( !_IndexChange ) return;
+				
+				if( _IndexChange.newIndex == 0 )
+				{				
+					_showX = 630;
+					_hideX = -630;
+				}				
+				if( _IndexChange.newIndex == (presentationModel.numTabs - 1) )
+				{				
+					_showX = -630;
+					_hideX = 630;
+				}
+			}
+
+		]]>
+	</mx:Script>
+	
+</mx:Canvas>

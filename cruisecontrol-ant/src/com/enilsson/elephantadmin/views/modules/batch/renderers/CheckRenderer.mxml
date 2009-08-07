@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
+	verticalGap="0" paddingTop="0" paddingBottom="0"
+	horizontalScrollPolicy="off" verticalScrollPolicy="off">
+
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.utils.EDateUtil;
+		]]>
+	</mx:Script>
+
+	<mx:DateFormatter id="df" formatString="MM/DD/YYYY" />
+	<mx:CurrencyFormatter id="cf" currencySymbol="$" precision="0" />
+
+	<mx:HBox width="100%">
+		<mx:Label text="{data.full_name}"
+			toolTip="Name on Account"
+			styleName="listTitle" />
+		<mx:Spacer width="100%" />
+		<mx:Label text="{cf.format(data.amount)}"
+			toolTip="Check amount"
+			styleName="listTitle" />
+	</mx:HBox>
+	<mx:HBox width="100%">
+		<mx:Label text="Pledged by: {data.pledge_id.fname} {data.pledge_id.lname}"
+			toolTip="Name of contact"
+			styleName="listDesc" />
+		<mx:Spacer width="100%" />
+		<mx:Label text="Pledge amount: {cf.format(data.pledge_id.pledge_amount)}"
+			toolTip="Pledge amount"
+			styleName="listDesc" />
+	</mx:HBox>
+	<mx:HBox width="100%">
+		<mx:Label text="{data.pledge_id.address1}, {data.pledge_id.city} {data.pledge_id.state} {data.pledge_id.zip}"
+			toolTip="Contact address" 
+			styleName="listDesc" />
+		<mx:Spacer width="100%" />
+		<mx:Label text="Pledge date: {df.format(EDateUtil.dateFromTimestamp(data.pledge_id.pledge_date))}"
+			toolTip="Pledge date"
+			styleName="listDesc" />
+	</mx:HBox>
+</mx:VBox>

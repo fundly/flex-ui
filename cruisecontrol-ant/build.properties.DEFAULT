@@ -1,0 +1,17 @@
+# create a copy of this file with the name "build.properties"
+# edit the values in that file in accordance with local and project-specific settings
+
+# the name of the project
+project.name=BlueSwarm
+swf.debug=false
+
+# this path needs to point to your local Flex SDK folder
+flex.sdk.home=/Applications/Adobe Flex Builder 3 Plug-in/sdks/3.3.0
+flex.framework.version=3.3.0.4852
+FLEX_HOME=${flex.sdk.home}
+
+# url of the runtime shared libraries
+rsl.url=https://assets.blue-swarm.com/rsls
+
+# path to svnversion
+svnversion=/usr/local/bin/svnversion

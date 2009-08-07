@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:controls="com.enilsson.controls.*"
+	show="init()" >
+	
+	<mx:ViewStack id="vstack" 
+		selectedIndex="{_model.my_contacts.pledgeStack}" 
+		width="{width}" height="{height}">
+		
+		<mx:Canvas horizontalScrollPolicy="off">
+			<mx:Text text="Loading pledges..." horizontalCenter="0" top="15" />
+		</mx:Canvas>
+		
+		<mx:VBox horizontalAlign="center" verticalGap="2" 
+			width="100%" height="100%">	
+
+			<mx:DataGrid id="contactHistory"
+				dataProvider="{_model.my_contacts.contactPledges}"
+				rowCount="{_model.my_contacts.contactPledges.length}"
+				width="100%" height="100%" borderSides="bottom"
+				verticalGridLines="false" horizontalScrollPolicy="off" >
+				<mx:columns>
+		            <mx:DataGridColumn textAlign="left" dataField="pledge_date" labelFunction="date_labelFunc"
+		            	headerText="Date" width="55" />            
+		            <mx:DataGridColumn textAlign="left" dataField="state" 
+		            	dataTipField="fullAddress" showDataTips="true" 
+		            	headerText="State" width="35" />
+		            <mx:DataGridColumn textAlign="left" dataField="sourceCode"
+		            	dataTipField="eventName" showDataTips="true"
+		            	headerText="Event" width="45" />
+		            <mx:DataGridColumn textAlign="left" dataField="pledge_amount" 
+		            	headerText="Pledged" width="56" labelFunction="money_labelFunc" />
+		            <mx:DataGridColumn textAlign="left" dataField="contrib_total" 
+		            	headerText="Contrib'd" width="56" labelFunction="money_labelFunc" />
+		            <mx:DataGridColumn textAlign="left" headerText="Actions" width="48" 
+		            	itemRenderer="com.enilsson.elephanttrakker.views.modules.my_contacts.renderers.History_Item" />
+		        </mx:columns>
+			</mx:DataGrid>
+			
+			<mx:Text styleName="pledgesLength"
+				text="{contactHistory.dataProvider.length} pledge{contactHistory.dataProvider.length == 1 ? '' : 's'}"  />	
+								
+		</mx:VBox>
+		
+		<mx:Canvas horizontalScrollPolicy="off">
+			<mx:Text horizontalCenter="0" top="15" 
+				width="90%" 
+				textAlign="center"
+				htmlText="There are no pledges for &lt;b&gt;{_model.my_contacts.contactData.fname}&lt;/b&gt; that you have permission to view." />
+		</mx:Canvas>
+	
+	</mx:ViewStack>
+
+	<controls:InfoBtn 
+		infoTipTitle="Please Note"
+		visible="{_model.my_contacts.currCreatedID != _model.session.user_id}" 
+		right="5" bottom="5" 
+		text="As {_model.my_contacts.contactData.fname} {_model.my_contacts.contactData.lname} is a shared contact, you will only be able to view the pledges for {_model.my_contacts.contactData.fname} that you have taken yourself. The listed Pledged amount of {cF.format(_model.my_contacts.contactData.pledge_total)} is indicative of all pledges recorded to {_model.my_contacts.contactData.fname}, not just those taken by yourself." />
+
+	
+	<mx:CurrencyFormatter id="cF" precision="0" currencySymbol="$" useNegativeSign="false" />
+	<mx:DateFormatter id="dateFormatter" formatString="MM/DD/YY" />
+
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.utils.EDateUtil;
+			import mx.controls.dataGridClasses.DataGridColumn;
+			import com.enilsson.elephanttrakker.events.modules.my_contacts.GetContactHistoryEvent;
+			import com.enilsson.elephanttrakker.models.ETModelLocator;
+			
+			[Bindable] private var _model:ETModelLocator = ETModelLocator.getInstance();
+			
+			private function init():void
+			{				
+				if(!_model.my_contacts.contactPledges)
+					new GetContactHistoryEvent( _model.my_contacts.contactData.id ).dispatch();
+			}
+
+			/**
+			 * Label function to show the dollars in the correct format
+			 */
+			private function money_labelFunc(item:Object, column:DataGridColumn):String {
+		  		return cF.format(item[column.dataField]);
+			} 
+			
+			private function date_labelFunc(item:Object, column:DataGridColumn):String {
+		  		return dateFormatter.format( EDateUtil.dateFromTimestamp( item[column.dataField] ) );
+			}
+			
+		]]>
+	</mx:Script>		
+		
+</mx:Canvas>

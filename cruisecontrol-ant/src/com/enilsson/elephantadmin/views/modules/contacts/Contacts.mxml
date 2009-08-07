@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<common:LabeledContainer
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:common="com.enilsson.elephantadmin.views.common.*"
+	xmlns:recordModule="com.enilsson.elephantadmin.views.manage_record_base.*"
+	xmlns:tabs="com.enilsson.elephantadmin.views.modules.contacts.tabs.*">
+
+	<recordModule:ManageRecord id="recordModule" width="100%" height="100%">
+		<tabs:Contacts_Shared />
+		<tabs:Contacts_MaxOut />
+		<tabs:Contacts_Matches />
+		<tabs:Contacts_Pledges />
+	</recordModule:ManageRecord>
+
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephantadmin.views.modules.contacts.renderers.Contacts_ListRenderer;
+			import com.adobe.cairngorm.model.ModelLocator;
+			import com.enilsson.elephantadmin.views.modules.contacts.model.ContactsModel;
+			import com.enilsson.elephantadmin.views.manage_record_base.model.RecordModuleConfiguration;
+			import mx.collections.ArrayCollection;
+
+			[Bindable] public var mainModel : ModelLocator;
+			
+			private var _config : RecordModuleConfiguration;
+			
+			override protected function init():void
+			{
+				super.init();
+
+				if(!_config)
+				{	
+					recordModule.presentationModel = new ContactsModel(mainModel);
+
+					_config = new RecordModuleConfiguration();
+					_config.table = 'contacts';
+					_config.browseField = 'lname';
+					_config.searchOptions = new ArrayCollection([ 
+						{ label : "EVERYTHING", data : 0 }, 
+						{ label : "FIRST NAME", data : "contacts.fname" }, 
+						{ label : "LAST NAME", data : "contacts.lname" },
+						{ label : "ADDRESS 1", data : "contacts.address1" },
+						{ label : "CITY", data : "contacts.city" },
+						{ label : "STATE", data : "contacts.state" },
+						{ label : "ZIP", data : "contacts.zip" },
+						{ label : "OCCUPATION", data : "contacts.occupation" },
+						{ label : "EMPLOYER", data : "contacts.employer" }
+					]);
+					_config.searchListItemRenderer= new ClassFactory(Contacts_ListRenderer);
+					_config.gridFields = [ 'fname', 'lname', 'email', 'state', 'zip', 'pledge_total', 'contrib_total'];
+					recordModule.configuration(_config);
+				}
+			}
+		]]>
+	</mx:Script>
+
+</common:LabeledContainer>

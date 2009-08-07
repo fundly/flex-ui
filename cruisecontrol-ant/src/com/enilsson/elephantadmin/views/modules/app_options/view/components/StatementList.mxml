@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:List 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	width="100%"
+	rollOverColor="#ffffff" 
+	selectionColor="#ffffff"
+	borderStyle="solid" 
+	verticalScrollPolicy="off"
+	paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5"
+	rowCount="{dataProvider.length}"
+	variableRowHeight="true"
+	editable="true"
+	rendererIsEditor="true"
+	itemsChangeEffect="{listEffect}"
+	itemRenderer="com.enilsson.elephantadmin.views.modules.app_options.view.renderers.StatementRenderer">
+	
+	<mx:DefaultListEffect id="listEffect" />
+	
+</mx:List>

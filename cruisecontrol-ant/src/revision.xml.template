@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 
+	If you need to change the version number, please change it in revision.xml.template,
+	not in revision.xml. The revision number is based on the current SVN revision and
+	will be filled in automatically.
+-->
+
+<release>
+	<version>0</version>
+	<revision>#REVISION#</revision>
+</release>

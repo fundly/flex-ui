@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	verticalGap="12" paddingLeft="10" paddingRight="10"
+	paddingTop="10" color="#333333"
+	>
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.utils.ObjectUtil;
+			import org.osflash.thunderbolt.Logger;
+			import mx.collections.ArrayCollection;
+			import com.enilsson.elephantadmin.models.EAModelLocator;
+			
+			[Bindable] private var _model:EAModelLocator = EAModelLocator.getInstance();
+			[Bindable] private var _itemID:int = 0;
+			
+			public function set dataProvider(value:Object):void
+			{
+				if(value.length == 0) return;
+
+				_itemID = value.id;
+				
+				var groupID:int = value.mod_group_id;
+				
+				showAll.selected = groupID == 0;
+				
+				for( var i:Number=0; i < listItemGroup.dataProvider.length; i++)
+				{
+					if(groupID == listItemGroup.dataProvider[i].value)
+						listItemGroup.selectedIndex = i;
+				}
+			}
+			
+			[Bindable] private var _cbGroups:Array;
+			public function set setGroups(value:Object):void
+			{
+ 				_cbGroups = new Array({ value : '', label : '[-- Select group --]' });
+				
+				for each( var i:Object in value)
+				{
+					_cbGroups.push(i);
+				}
+			}
+
+			public function get visibilityType():String
+			{
+				return showAll.selected ? 'all' : 'group';
+			}
+			
+			public function get groupID():int
+			{
+				return listItemGroup.selectedItem.value;
+			}
+		]]>
+	</mx:Script>
+
+	<mx:Style>
+		.textHeading {
+			fontSize:14;	
+		}
+		.textDesc {
+			fontSize:10;	
+		}
+	</mx:Style>
+	
+	<mx:VBox width="100%" paddingLeft="10" paddingRight="10">
+		<mx:Text styleName="textHeading"
+			text="Resource Item visibility"
+			/>
+		<mx:Text styleName="textDesc" width="100%"
+			text="You can either set the attachment item to be available to all users with the checkbox below. Or chose to restrict it to members of one of the state groups listed below"
+			/>
+	</mx:VBox>
+	
+	<mx:HRule width="100%" strokeWidth="2" strokeColor="#E4E4E4" shadowColor="#B3B3B3"/>
+	
+	<mx:HBox width="100%" paddingLeft="10" paddingRight="10">
+		<mx:CheckBox label="Show to all users:" id="showAll" selected="true" />
+	</mx:HBox>	
+		
+	<mx:HRule width="100%" strokeWidth="2" strokeColor="#E4E4E4" shadowColor="#B3B3B3"/>
+	
+	<mx:VBox width="100%"
+		enabled="{!showAll.selected}" 
+		paddingLeft="10" paddingRight="10" paddingBottom="10">
+		<mx:Text text="Show only to one group" />
+		<mx:ComboBox id="listItemGroup" styleName="formInput" width="100%" dataProvider="{_cbGroups}"/>
+	</mx:VBox>		
+	
+</mx:VBox>

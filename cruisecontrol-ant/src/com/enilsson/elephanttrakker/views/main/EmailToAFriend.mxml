@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:common="com.enilsson.elephanttrakker.views.common.*"
+	xmlns:graphics="com.enilsson.graphics.*" 
+	creationComplete="init()"	 
+	width="400" height="410">
+	
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.utils.struktorForm.ConvertRTEText;
+			import com.enilsson.elephanttrakker.events.main.GetRSSEvent;
+			import com.enilsson.utils.eNilssonUtils;
+			import com.enilsson.elephanttrakker.events.main.SupportEvent;
+			import com.enilsson.elephanttrakker.models.ETModelLocator;
+			import mx.managers.PopUpManager;
+
+			import mx.events.ValidationResultEvent;
+
+			[Bindable] private var _model:ETModelLocator = ETModelLocator.getInstance();
+			[Bindable] private var isFormValid:Boolean = false;
+			
+			private var _formValidate:Array = new Array();
+			
+			private function init():void
+			{
+				errorBox.visible = false;
+
+				eNilssonUtils.setFieldValidator('required', to_email, _formValidate);
+				eNilssonUtils.setFieldValidator('email', to_email, _formValidate);
+				eNilssonUtils.setFieldValidator('required', subject, _formValidate);
+				eNilssonUtils.setFieldValidator('required', message, _formValidate);
+				
+				to_email.addEventListener(FocusEvent.FOCUS_OUT, validateFields);	
+				to_email.addEventListener(KeyboardEvent.KEY_UP, validateFields);	
+
+				subject.addEventListener(FocusEvent.FOCUS_OUT, validateFields);	
+				subject.addEventListener(KeyboardEvent.KEY_UP, validateFields);
+				
+				message.addEventListener(FocusEvent.FOCUS_OUT, validateFields);	
+				message.addEventListener(KeyboardEvent.KEY_UP, validateFields);
+				
+				_model.isSubmitting = false;
+			}
+			
+			private function sendRSSEmail():void
+			{
+				if(to_email.text == '') return;
+				
+				new GetRSSEvent(
+					'send_rss_email',
+					{ emails:{'to':to_email.text}, message:ConvertRTEText.toXHtml(message.htmlText), subject:subject.text }
+				).dispatch();	
+			}
+			
+			private function validateFields(e:Event=null):void
+			{
+				var flag:Boolean = true;
+				for(var i:String in _formValidate)
+				{
+					var vResult:ValidationResultEvent = _formValidate[i].validator.validate(null, true);
+					if (vResult.type==ValidationResultEvent.INVALID) 
+					{
+						flag = false;
+						if(_formValidate[i].source == e.currentTarget)
+						{
+							e.currentTarget.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_OVER));
+						}
+					}
+					if(vResult.type == ValidationResultEvent.VALID)
+					{
+						_formValidate[i].source.errorString = null;
+					}
+				}
+				isFormValid = flag;
+			}
+			
+			private function closeComponent():void
+			{
+				PopUpManager.removePopUp(this);
+				_model.errorVO = null;
+				_model.onClose = null;
+			}
+		]]>
+	</mx:Script>
+
+	<mx:Fade id="fadeIn" alphaTo="1" duration="300" />
+	<mx:Fade id="fadeOut" alphaTo="0" duration="300" />	
+	<mx:EmailValidator source="{to_email}" property="text" required="true" />		
+	
+	<mx:Canvas left="0" top="10" styleName="popupContent" 
+		verticalScrollPolicy="off" horizontalScrollPolicy="off"
+		filters="{[com.enilsson.graphics.enDropShadows.standardDS()]}" 
+		width="{this.width-10}" height="{this.height-10}">
+		
+		<mx:VBox verticalGap="0" 
+			width="{width-40}" height="{height-40}"
+			backgroundColor="#FFFFFF" 
+			top="15" left="15" 
+			fontSize="11">
+			<mx:Canvas backgroundColor="#999999"
+				width="100%" height="37" 
+				paddingLeft="30">
+				<mx:Image source="{_model.icons.email}" verticalCenter="-2" left="5" />
+				<mx:Text id="supportDesc" 
+					fontSize="18" 
+					width="100%"
+					filters="{[com.enilsson.graphics.enDropShadows.textDS(0x333333)]}"
+					text="Email this news to a friend" 
+					verticalCenter="0" left="50" />
+			</mx:Canvas>
+			<mx:Form width="100%" height="100%" styleName="rssEmailForm" color="#333333">
+				<mx:FormItem label="To" width="100%" required="true">
+					<mx:TextInput id="to_email" width="100%" color="#333333" />
+				</mx:FormItem>
+				<mx:FormItem label="Subject" width="100%" required="true">
+					<mx:TextInput id="subject" width="100%" text="{_model.rss_subject}" color="#333333" />
+				</mx:FormItem>		
+				<mx:FormItem label="Message" width="100%" height="200" required="true">
+					<mx:TextArea id="message" width="100%" height="100%" text="{_model.rss_message}" color="#333333" />
+				</mx:FormItem>						
+			</mx:Form>
+			<mx:HBox id="buttons" 
+				width="100%"
+				left="0" bottom="0" paddingBottom="10" 
+				horizontalAlign="center">
+				<common:ValidFormIndicator status="{isFormValid}" />
+				<mx:Button id="sendEmail" styleName="submitBtn"
+					useHandCursor="true" buttonMode="true" 
+					label="Send Email" 
+					click="sendRSSEmail()" 
+					enabled="{isFormValid &amp;&amp; !_model.isSubmitting}" />
+			</mx:HBox>		
+		</mx:VBox>
+
+	</mx:Canvas>
+	
+	<graphics:enCloseBtn top="0" right="0" size="20" click="closeComponent()" />
+
+	<common:ErrorMsgBox id="errorBox" 
+		verticalCenter="0" horizontalCenter="0" 
+		params="{_model.errorVO}" 
+		onClose="{_model.onClose}" />
+	
+</mx:Canvas>

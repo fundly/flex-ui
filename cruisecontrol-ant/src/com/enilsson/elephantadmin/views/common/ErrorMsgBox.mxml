@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:graphics="com.enilsson.graphics.*" 
+	width="270" visible="false"
+	showEffect="fadeIn" hideEffect="fadeIn">
+
+	<mx:Canvas id="messageBox" 
+		filters="{[shadow]}" 
+		top="10" left="0" 
+		width="{this.width-10}">
+		<mx:Text id="errorMsg" 
+			styleName="errorMsg" 
+			horizontalCenter="0" top="10" 
+			width="{this.width - 40}" 
+			paddingBottom="10" />
+	</mx:Canvas>
+	<graphics:enCloseBtn id="closeBtn"
+		top="0" right="0"
+		useHandCursor="true" buttonMode="true" 
+		click="onCloseBT()" />
+
+	<mx:Fade id="fadeIn" alphaFrom="0" alphaTo="1" duration="300" />
+	<mx:Fade id="fadeOut" alphaTo="0" duration="300" />		
+	<mx:Parallel id="hideSuccess">
+		<mx:children>
+			<mx:Move yTo="-300" duration="500" />
+			<mx:Fade alphaTo="0" duration="500" />
+		</mx:children>
+	</mx:Parallel>
+	<mx:DropShadowFilter id="shadow" blurX="30" blurY="30" angle="90" distance="4" alpha="0.75"/>
+
+	<mx:Script>
+		<![CDATA[
+			import org.osflash.thunderbolt.Logger;
+			import com.enilsson.elephantadmin.vo.ErrorVO;
+			
+			public function set params(value:ErrorVO):void
+			{
+				messageBox.styleName = value.style;
+				errorMsg.htmlText = value.message;
+				visible = value.visible;
+				
+				switch ( value.style )
+				{
+					case 'successBox' :
+						closeBtn.visible = false;
+						setStyle( 'verticalCenter', null );
+						setStyle( 'top', -15 );
+						setStyle( 'horizontalCenter', 0 );	
+						setStyle( 'hideEffect', hideSuccess );
+						
+						timerSet();				
+					break;
+					case 'errorBox' :
+						closeBtn.visible = true;
+						setStyle( 'top', null );
+						setStyle( 'verticalCenter', 0 );
+						setStyle( 'horizontalCenter', 0 );
+						setStyle( 'hideEffect', fadeOut );
+					break;					
+				}
+			}
+			
+			private var onCloseAction:Function = null;
+  			public function set onClose(cf:Function):void 
+			{
+				onCloseAction = cf;
+			}
+			
+	
+			public function onCloseBT():void 
+			{
+				this.visible = false;
+				
+				if ( onCloseAction != null )
+					onCloseAction();
+			}
+			
+			private var _successShowTime:Number = 5;
+			public function set successShowTime(value:Number):void
+			{
+				_successShowTime = value;
+			}
+			
+			private function timerSet():void
+			{
+				var timer:Timer = new Timer( 1000 * _successShowTime, 1 );
+				timer.addEventListener( TimerEvent.TIMER, timerComplete );
+				timer.start();
+			}
+			
+			private function timerComplete ( e:TimerEvent ):void
+			{
+				onCloseBT();
+			}
+		]]>
+	</mx:Script>
+		
+</mx:Canvas>

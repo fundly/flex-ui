@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox 
+	verticalGap="0" 
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:common="com.enilsson.elephanttrakker.views.common.*" 
+	xmlns:controls="com.enilsson.controls.*">
+	
+	
+	<mx:Canvas id="listHeader" 
+		styleName="listHeader" 
+		width="100%" height="26">
+		<mx:Text id="listDesc" 
+			styleName="listDesc" 
+			verticalCenter="0" left="5"
+			visible="{_model.my_contacts.numContacts > 0}" />
+		<common:SearchBox id="listSearch"
+			verticalCenter="0" right="5" 
+			width="120" height="20" 
+			clearSearch="clearSearchAction()" 
+			searchStart="doSearch()" />
+	</mx:Canvas>
+	
+	<mx:List id="contactsList" 
+		styleName="contactsSearchList"
+		width="100%" height="{this.height - listHeader.height - listFooter.height}" 
+		dataChange="setText()" 
+		itemClick="checkChanges()"
+		variableRowHeight="true"
+		dataProvider="{_model.my_contacts.contacts}" 
+		itemRenderer="com.enilsson.elephanttrakker.views.modules.my_contacts.renderers.MyContacts_ListRenderer"
+		/>
+	
+	<mx:Canvas id="listFooter" 
+		styleName="listFooter" 
+		width="100%" height="0"
+		visible="{_itemsTotal &gt; _itemsPerPage}"
+		showEffect="slideUp" hideEffect="slideDown">
+		<controls:Paginator id="paginator" styleName="paginator" 
+			debugMode="{_model.debug}" 
+			verticalCenter="0" horizontalCenter="0" 
+			rangeCount="3" buttonHeight="18" 
+			selectedIndexChanged="setText()"
+			itemsPerPage="{_itemsPerPage}" 
+			itemsTotal="{_itemsTotal}"
+			newPage="new GetMyContactsEvent(GetMyContactsEvent.EVENT_GET_MYCONTACTS,event.index * event.itemsPerPage, event.itemsPerPage, 'P').dispatch()"
+			/>	
+	</mx:Canvas>
+
+
+	<mx:Resize id="slideUp" heightTo="36" duration="1000" />
+	<mx:Resize id="slideDown" heightTo="0" duration="1000" />	
+
+
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephanttrakker.vo.ErrorVO;
+			import mx.events.FlexEvent;
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import com.enilsson.graphics.ChangesDetector;
+			import mx.binding.utils.BindingUtils;
+			import mx.events.ListEvent;
+			import mx.events.ItemClickEvent;
+			import mx.utils.ObjectUtil;
+			import org.osflash.thunderbolt.Logger;
+			import com.enilsson.elephanttrakker.events.modules.my_contacts.GetMyContactsEvent;
+			import com.enilsson.elephanttrakker.events.modules.my_contacts.SearchMyContactsEvent;
+			import com.enilsson.elephanttrakker.models.ETModelLocator;
+			
+			[Bindable] private var _model:ETModelLocator = ETModelLocator.getInstance();
+			[Bindable] private var _itemsPerPage:int = 0;
+			[Bindable] private var _itemsTotal:int = 0;			
+
+			public function set itemsPerPage(value:int):void
+			{
+				_itemsPerPage = value;
+				setText()				
+			}
+			public function get itemsPerPage():int
+			{
+				return _itemsPerPage;
+			}	
+						
+			public function set itemsTotal(value:int):void
+			{
+				_itemsTotal = value;
+				setText()				
+			}
+			public function get itemsTotal():int
+			{
+				return _itemsTotal;
+			}	
+
+			private function setText():void
+			{				
+				var plural:String = _itemsTotal > 1 ? 's' : '';	
+				
+				if(_model.debug)
+					Logger.info('set text', _itemsTotal, _itemsPerPage, contactsList.dataProvider.length);
+				
+				if(contactsList.dataProvider.length == 0) return;
+				
+				if(_itemsTotal < _itemsPerPage)
+				{
+					listDesc.htmlText = '<b>' + _itemsTotal + '</b> record' + plural;
+					paginator.visible = false;
+				}
+				else
+				{
+					paginator.visible = true;
+					
+					var startIndex:String = (paginator.selectedIndex*_itemsPerPage+1).toString();
+					var toIndex:int =  paginator.selectedIndex * _itemsPerPage + _itemsPerPage;
+					var toIndexString:String = toIndex < _itemsTotal ? toIndex.toString() : _itemsTotal.toString();
+					
+					listDesc.htmlText = '<b>' + startIndex + '</b>';
+					listDesc.htmlText += '- <b>' + toIndexString + '</b>';
+					listDesc.htmlText += ' of <b>' + _itemsTotal + '</b> record' + plural;				
+				}
+				
+				contactsList.selectedIndex = _model.my_contacts.currSelectedItem < 0 ? 0 : _model.my_contacts.currSelectedItem;
+				listClickAction();
+			}
+			
+			/**
+			 * Handle the clearing of the search
+			 */
+			private function clearSearchAction():void
+			{			
+				new GetMyContactsEvent(GetMyContactsEvent.EVENT_GET_MYCONTACTS,0, _model.itemsPerPage, 'P').dispatch(); 
+				paginator.selectedIndex = 0;
+				
+				_model.my_contacts.contactElementsViewState = 0;
+				_model.my_contacts.currSelectedItem = 0;
+			}
+			
+			/**
+			 * Handle the list item clicks
+			 */
+			 private function checkChanges():void
+			 {
+				listClickAction();
+				return;
+				
+				if (_model.recordChanged) 
+				{
+					ChangesDetector.confirm(
+						'Are you sure you want to leave without saving?',
+						function(eventObj:CloseEvent):void 
+						{
+							if (eventObj.detail==Alert.NO) return;
+							if (eventObj.detail==Alert.YES) listClickAction();
+						});
+				}
+				else
+					listClickAction();
+			}
+			
+			
+			private function listClickAction():void
+			{
+				_model.recordChanged = false;
+				
+				_model.my_contacts.contactData = contactsList.selectedItem; 
+				_model.my_contacts.isShared = _model.my_contacts.contactData.shared;
+				
+				_model.my_contacts.currSelectedItem = contactsList.selectedIndex;
+				_model.my_contacts.currCreatedID = contactsList.selectedItem ? contactsList.selectedItem.created_by_id : 0;
+				
+				_model.my_contacts.contactPledges = null;
+				_model.my_contacts.contactTransactions = null;
+				_model.my_contacts.contactSavedCalls = null;
+				
+				_model.my_contacts.contactElementsViewState = 0;
+			}
+			
+			private function doSearch():void
+			{
+				if (listSearch.searchTerm.length < 3) 
+				{
+					_model.my_contacts.errorVO = new ErrorVO( 
+						'At least three (3) letters are necessary for a successful search', 
+						'errorBox', 
+						true 
+					);
+					
+					return;
+				}
+				new SearchMyContactsEvent( listSearch.searchTerm, 0, _model.itemsPerPage ).dispatch()				
+			}
+
+		]]>
+	</mx:Script>
+	
+</mx:VBox>

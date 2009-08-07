@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<common:LabeledContainer
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:common="com.enilsson.elephantadmin.views.common.*"
+	xmlns:view="com.enilsson.elephantadmin.views.modules.app_options.view.*" 
+	xmlns:pm="com.enilsson.elephantadmin.views.modules.app_options.views.pm.*">
+		
+	<mx:HBox width="100%" height="100%">
+		<view:OptionsListPanel id="optionsList" height="100%" width="280"
+			selectedItem="{_pm.selectedSiteOption}"
+			itemClick="_pm.selectedSiteOption = SiteOption(event.itemRenderer.data)"
+			dataProvider="{_pm.siteOptions}" />
+			
+		<view:OptionEditorPanel id="optionsEditor" height="100%" width="100%"
+			pm="{_pm.optionsEditorPM}"
+			siteOption="{_pm.selectedSiteOption}" />
+	</mx:HBox>
+	
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephantadmin.views.modules.app_options.model.pm.AppOptionsPM;
+			import com.enilsson.elephantadmin.views.modules.app_options.model.SiteOption;
+			
+			public function set presentationModel( value : AppOptionsPM ) : void { _pm = value; }
+			[Bindable] private var _pm : AppOptionsPM;
+			
+			override protected function init():void {
+				super.init();
+				_pm.loadSiteOptions();
+			}
+		]]>
+	</mx:Script>
+	
+</common:LabeledContainer>

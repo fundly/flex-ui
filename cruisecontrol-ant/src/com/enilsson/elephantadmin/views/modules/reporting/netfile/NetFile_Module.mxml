@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<module:ReportModule xmlns:module="com.enilsson.elephantadmin.views.modules.reporting.base.*"
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	layout="absolute"
+	width="100%" height="100%"
+	xmlns:reporting="com.enilsson.elephantadmin.views.modules.reporting.netfile.*" 
+	xmlns:components="modules.components.*" 	
+	clipContent="true"
+	verticalGap="0"
+	paddingTop="0" paddingBottom="0" 
+	horizontalScrollPolicy="off"
+	verticalScrollPolicy="off"
+	creationComplete="init()" xmlns:controls="com.enilsson.controls.*">
+
+	<mx:VBox width="100%" height="100%" verticalGap="5">
+		<mx:Canvas width="100%" styleName="controlBar">
+			<mx:HBox paddingTop="3" paddingBottom="3" paddingLeft="5" horizontalGap="5" verticalAlign="middle">
+				<mx:Label text="Export Pledges"/>
+				<mx:Box horizontalGap="2" verticalGap="2" horizontalAlign="right"
+					direction="{this.width &gt; 700 ? 'horizontal' : 'vertical'}">
+					<mx:FormItem label="from:">
+						<mx:DateField id="range_start" width="100" color="#000000" formatString="MM/DD/YYYY" selectedDate="{EDateUtil.dateFromTimestamp(_presentationModel.startDate)}" change="_presentationModel.startDate = EDateUtil.dateToTimestamp(event.target.selectedDate)" textAlign="center" enabled="{!dataLoading &amp;&amp; !_presentationModel.searching}" />
+					</mx:FormItem>
+					<mx:FormItem label="to:">
+						<mx:DateField id="range_end" width="100" color="#000000" formatString="MM/DD/YYYY" selectedDate="{EDateUtil.dateFromTimestamp(_presentationModel.endDate)}" change="_presentationModel.endDate = EDateUtil.dateToTimestamp(event.target.selectedDate)" textAlign="center" enabled="{!dataLoading &amp;&amp; !_presentationModel.searching}" />
+					</mx:FormItem>
+				</mx:Box>
+				<mx:Box direction="{this.width &gt; 900 ? 'horizontal' : 'vertical'}" horizontalGap="10" verticalGap="2" horizontalAlign="right">
+					<mx:FormItem label="type:">
+						<mx:ComboBox width="150" color="#000000" dataProvider="{_presentationModel.typeFilter}" id="contribType" enabled="{!dataLoading}" change="_presentationModel.typeChangeHandler(event)"/>
+					</mx:FormItem>
+					<mx:FormItem label="report:">
+						<mx:ComboBox width="150" color="#000000" dataProvider="{_presentationModel.netfileFilter}" id="report" enabled="{!dataLoading}" change="_presentationModel.reportChangeHandler(event)"/>
+					</mx:FormItem>
+				</mx:Box>
+			</mx:HBox>
+			<mx:Button width="80" label="Export" color="#000000"
+					click="presentationModel.export()"
+					right="5" verticalCenter="0"
+					enabled="{!dataLoading}" />
+		</mx:Canvas>
+		<mx:VBox width="100%" height="100%" horizontalAlign="center">
+			<mx:Canvas width="100%" height="50" backgroundColor="#000000">
+				<mx:Image horizontalCenter="0" verticalCenter="0" source="@Embed('/assets/images/logos/netfilelogo.gif')" />
+			</mx:Canvas>
+			<mx:Image source="@Embed('/assets/images/logos/netfilelogo.jpg')" />
+		</mx:VBox>
+	</mx:VBox>
+
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.utils.EDateUtil;
+			import mx.events.DataGridEvent;
+			import com.enilsson.elephantadmin.views.modules.reporting.netfile.model.NetFileModel;
+		
+			[Bindable] public var _presentationModel:NetFileModel;
+			
+			private function init():void
+			{
+				presentationModel = new NetFileModel();
+				_presentationModel = presentationModel as NetFileModel;
+				_presentationModel.init();
+			}
+		]]>
+	</mx:Script>
+
+</module:ReportModule>

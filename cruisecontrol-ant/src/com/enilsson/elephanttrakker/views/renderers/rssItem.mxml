@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas 
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	width="100%" height="100%">
+
+<mx:Script>
+<![CDATA[
+	import com.enilsson.elephanttrakker.views.main.EmailToAFriend;
+	import com.enilsson.elephanttrakker.models.ETModelLocator;
+	import mx.events.CloseEvent;
+	import mx.managers.PopUpManager;
+	import com.enilsson.elephanttrakker.views.main.RSSEmailForm;
+	import com.enilsson.utils.eNilssonUtils;
+
+	[Bindable] private var _model:ETModelLocator = ETModelLocator.getInstance();
+	public function openEmailForm(d:Object):void 
+	{
+		if (d.description) 
+			_model.rss_message = d.description + '\n\n' + d.link;						
+		else 
+			_model.rss_message = '';
+		
+		_model.rss_subject = d.title;
+				
+	 	var pClass:Class = EmailToAFriend as Class;	 	
+	 	var p:* = PopUpManager.createPopUp( _model.mainScreen, pClass, true );
+	    PopUpManager.centerPopUp(p);
+	}
+]]>
+</mx:Script>
+
+<mx:DateFormatter id="rssDateFormat" formatString="MMM D, YYYY" />
+
+<mx:VBox width="{explicitWidth}" verticalGap="1" top="0" left="0">
+	<mx:LinkButton styleName="rssTitle"
+		buttonMode="true" useHandCursor="true" 
+		label="{eNilssonUtils.charLimiter(data.title, 70)}" 
+		width="{explicitWidth}" 
+		toolTip="Read the full story!"
+		click="navigateToURL(new URLRequest(data.link), '_blank');"
+		/>
+	<mx:Text styleName="rssDate" text="{rssDateFormat.format(data.pubDate)}" />
+	<mx:Text styleName="rssDesc" width="{explicitWidth}" 
+		htmlText="{eNilssonUtils.wordLimiter(data.description, 50)}"
+		/>
+</mx:VBox>	
+
+<mx:Button styleName="bnMailTo" toolTip="Email this story to a friend" 
+	useHandCursor="true" buttonMode="true"
+	top="0" right="5" click="openEmailForm(data)" />
+	
+</mx:Canvas>

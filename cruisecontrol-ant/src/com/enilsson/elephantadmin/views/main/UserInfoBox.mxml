@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:common="com.enilsson.elephantadmin.views.common.*" 
+	creationComplete="init()" 
+	horizontalScrollPolicy="off" verticalScrollPolicy="off" 
+	clipContent="true" >
+	
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephantadmin.models.Icons;
+			import mx.utils.Base64Encoder;
+			import mx.controls.Alert;
+			import mx.binding.utils.BindingUtils;
+			import mx.binding.utils.ChangeWatcher;
+			import mx.events.CloseEvent;
+			import mx.managers.PopUpManager;
+			import org.osflash.thunderbolt.Logger;
+			import mx.events.ListEvent;
+			import mx.events.ItemClickEvent;
+			import com.enilsson.elephantadmin.models.EAModelLocator;
+			import caurina.transitions.Tweener;
+			import com.enilsson.elephantadmin.events.session.SessionEvent;
+			
+			[Bindable] private var _model:EAModelLocator = EAModelLocator.getInstance();
+
+			
+			private function init():void
+			{
+				addEventListener(MouseEvent.ROLL_OVER, function(event:MouseEvent):void {
+					event.target.filters = [shadow];
+					Tweener.addTween(event.target, { 
+						height: bnUserLinks.height + 46, 
+						time: 0.4, 
+						transition: 'easeOutExpo' 
+					});
+				});
+				addEventListener(MouseEvent.ROLL_OUT, function(event:MouseEvent):void {
+					event.target.filters = [];
+					Tweener.addTween(event.target, { 
+						height: 26, 
+						time: 0.4, 
+						transition: 'easeInExpo' 
+					});
+				});
+			}
+			
+			private function userLinksClickHandler(e:ListEvent):void
+			{
+				var action:Object = e.currentTarget.selectedItem.action;
+				switch(action)
+				{
+					case 'help' :
+						var tw:SupportForm = SupportForm(PopUpManager.createPopUp(_model.mainScreen, SupportForm, true));
+/* 					    tw.title = 'Support Form';
+					    tw.showCloseButton = true; */
+					    tw.width = 600;
+					    tw.height = 575;
+					    tw.addEventListener(CloseEvent.CLOSE, function(e:Object):void{
+					    	PopUpManager.removePopUp(tw);
+					    });
+					    PopUpManager.centerPopUp(tw);
+					break;
+					case 'return' :
+						// encode the gateway url
+						var base64encode:Base64Encoder = new Base64Encoder();
+						base64encode.encode(_model.gatewayURL);
+						// build the admin link from the model reference and the encoded url and redirect
+						navigateToURL( new URLRequest(_model.clientUI + '#redirect/' + base64encode.toString()), '_parent');
+					break;
+					case 'logout' :
+						new SessionEvent( 'end_session' ).dispatch();
+					break;
+				}
+			}
+		]]>
+	</mx:Script>
+
+	<mx:Array id="userLinks">
+		<mx:Object icon="{Icons.RETURN_ICON}" name="Return to {_model.appName}" action="return" />
+		<mx:Object icon="{Icons.HELP}" name="Help / Support" action="help" />
+		<mx:Object icon="{Icons.LOGOUT}" name="Logout" action="logout" />
+	</mx:Array>
+	
+	<mx:Fade id="fadeIn" alphaFrom="0" alphaTo="1" duration="300" />
+	<mx:Fade id="fadeOut" alphaFrom="1" alphaTo="0" duration="300" />
+	<mx:DropShadowFilter id="shadow" blurX="30" blurY="30" distance="0" alpha="0.5"/>
+
+	<mx:HBox top="5" horizontalCenter="10" 
+		horizontalGap="0"
+		visible="{_model.session != null}">
+		<mx:Text color="#FFFFFF" selectable="false" text="Welcome"/>
+		<mx:Text color="#BDD952" selectable="false" text="{_model.session.fullname}"/>
+	</mx:HBox>
+	
+	<mx:List id="bnUserLinks" 
+		styleName="bnUserLinks"
+		top="32" width="100%"
+		dataProvider="{userLinks}" 
+		rowCount="{userLinks.length}"
+		itemClick="userLinksClickHandler(event)" 
+		useHandCursor="true" buttonMode="true">
+		<mx:itemRenderer>
+			<mx:Component>
+				<mx:HBox verticalAlign="middle" 
+					height="20" 
+					paddingLeft="8" 
+					horizontalGap="0" 
+					mouseChildren="false">
+					<mx:Image source="{data.icon}" width="20" horizontalAlign="center"/>
+					<mx:Label text="{data.name}" styleName="bnUserLinks" />
+				</mx:HBox>
+			</mx:Component>
+		</mx:itemRenderer>
+	</mx:List>
+
+</mx:Canvas>

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:graphics="com.enilsson.graphics.*"
+	width="140"
+	height="20"
+	creationComplete="onCreationComplete()">
+
+	<mx:Metadata>
+		[Event(name="searchStart", type="flash.events.Event")]
+		[Event(name="clearSearch", type="flash.events.Event")]		
+	</mx:Metadata>
+
+	<mx:Script>
+		<![CDATA[
+			[Bindable] private var _txtFilterStyleName:String = 'txtFilter';
+			[Bindable] private var _clearBtnBorderColor:uint = 0xFFFFFF;
+			[Bindable] private var _clearBtnBackgroundColor:uint = 0x000000;
+			
+			public function set txtFilterStyleName(value:String):void
+			{
+				_txtFilterStyleName = value;
+			}
+			public function get txtFilterStyleName():String
+			{
+				return _txtFilterStyleName;
+			}
+			
+			public function set clearBtnBorderColor(value:uint):void
+			{
+				_clearBtnBorderColor = value;
+			}
+			public function get clearBtnBorderColor():uint
+			{
+				return _clearBtnBorderColor;
+			}
+			
+			public function set clearBtnBackgroundColor(value:uint):void
+			{
+				_clearBtnBackgroundColor = value;
+			}
+			public function get clearBtnBackgroundColor():uint
+			{
+				return _clearBtnBackgroundColor;
+			}			
+			
+			[Bindable]
+			public function get searchTerm():String
+			{
+				return txtFilter.text;	
+			}
+			public function set searchTerm( value : String ) : void
+			{
+				txtFilter.text = value;
+			}
+			
+			private function handleSearch(event:KeyboardEvent):void
+			{
+				if(event.keyCode == Keyboard.ENTER)	
+					dispatchEvent( new Event( 'searchStart' ) );
+				else if(event.keyCode == Keyboard.ESCAPE)
+					dispatchEvent( new Event( 'clearSearch' ) );
+			}
+			
+			private function clearSearchAction():void
+			{
+				dispatchEvent( new Event( 'clearSearch', true ) );
+			}
+			
+			private function onCreationComplete() : void
+			{
+				addEventListener("clearSearch", handleClearSearch);
+			}
+			
+			private function handleClearSearch( event : Event ) : void
+			{
+				txtFilter.text = "";
+			}		
+			
+			[Bindable] private var innerShadow:DropShadowFilter = new DropShadowFilter(3, 40, 0, 0.35, 2, 2, 1, 1, true, false);
+			
+		]]>
+	</mx:Script>
+	
+	<mx:Style>
+		.txtFilter {
+			paddingLeft:20;
+			paddingBottom:3;
+			cornerRadius:5;
+			color: #333333;
+			borderColor:#ffffff;
+			borderStyle:'solid';
+			backgroundColor:#ffffff;
+			focusAlpha: 0;
+		}
+		
+	</mx:Style>
+
+	<mx:TextInput id="txtFilter" 
+		styleName="{this._txtFilterStyleName}" 
+		fontSize="{this.getStyle('fontSize')}"
+		keyUp="handleSearch(event)"
+		width="{this.width - clearSearch.width}" height="{this.height}"
+		top="0" left="0" 
+		/>
+		
+	<mx:Image toolTip="Search records" 
+		source="@Embed('/assets/images/magnifier.png')" 
+		left="3" top="2" />
+	
+	<graphics:enCloseBtn id="clearSearch" 
+		visible="{txtFilter.text.length > 0}" 
+		toolTip="Clear Search" click="clearSearchAction()" 
+		top="0" right="4"
+		size="{this.height-2}" dropShadow="false" 
+		backgroundColor="{this._clearBtnBackgroundColor}" borderColor="{this._clearBtnBorderColor}" />
+		
+</mx:Canvas>

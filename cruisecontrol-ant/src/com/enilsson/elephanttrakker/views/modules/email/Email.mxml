@@ -1,0 +1,458 @@
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
+	show="init(event)" 
+	clipContent="true" 
+	verticalScrollPolicy="off" horizontalScrollPolicy="off"
+	xmlns:view="com.enilsson.elephanttrakker.views.modules.email.*"
+	xmlns:common="com.enilsson.elephanttrakker.views.common.*"
+	xmlns:graphics="com.enilsson.graphics.*">
+
+	<mx:Image source="{_model.icons.email}" top="-2" right="-3" />
+	<mx:Text id="contentTitle" 
+		styleName="contentTitle" 
+		text="EMAIL FAMILY &amp; FRIENDS" 
+		top="40" right="-220" rotation="90" />
+	
+	<mx:Canvas id="myDG" 
+		width="630" height="380" left="12" 
+		horizontalScrollPolicy="off" verticalScrollPolicy="off">
+		<mx:VBox id="email_form" width="572" 
+			top="10" left="40" horizontalGap="-1" 
+			verticalScrollPolicy="off" horizontalScrollPolicy="off">
+				<mx:Form paddingTop="0" paddingBottom="0" verticalGap="4" width="100%">
+					<mx:FormItem label="Subject" labelWidth="70" width="100%" required="true" styleName="formLabel">
+						<mx:TextInput id="subject" styleName="formInput"
+							width="100%" 
+							keyUp="validateForm()"  
+							mouseFocusChange="validateForm()" 
+							mouseFocusEnabled="true" />
+					</mx:FormItem>		
+					<mx:FormItem label="Template" labelWidth="70" width="100%" styleName="formLabel">
+						<mx:ComboBox id="template" 
+							styleName="formInput" 
+							dataProvider="{_model.email.templates}" 
+							width="100%" selectedIndex="0" 
+							mouseFocusEnabled="true" mouseFocusChange="validateForm()" 
+							change="applyTemplate();validateForm();" 
+							useHandCursor="true" buttonMode="true" 
+							valueCommit="_model.email.templateID = template.selectedIndex;" />
+					</mx:FormItem>
+					<mx:FormItem label="Attachment" labelWidth="70" width="100%" styleName="formLabel">
+						<mx:ComboBox id="attachment" 
+							styleName="formInput" 
+							dataProvider="{_model.email.email_attachments}" 
+							change="_model.email.attachment = attachment.selectedItem.data;"
+							width="100%" selectedIndex="0"
+							useHandCursor="true" buttonMode="true" 
+							mouseFocusEnabled="true" mouseFocusChange="validateForm()" />
+					</mx:FormItem>		
+					<mx:FormItem label="Message" labelWidth="70" 
+						width="100%" height="190" 
+						required="true" styleName="formLabel">
+						<mx:RichTextEditor id="message" 
+							styleName="emailRTE" 
+							width="100%" height="100%" 
+							headerHeight="5" 
+							showControlBar="true" 
+							showToolTips="true" 
+							initialize="init_rte()" 
+							keyUp="validateForm()" 
+							mouseFocusEnabled="true" 
+							mouseFocusChange="validateForm()" />
+					</mx:FormItem>	
+				</mx:Form>
+				<mx:HBox width="100%" horizontalAlign="right" paddingRight="15">
+					<common:ValidFormIndicator id="formStatus" status="{isValid}" />
+					<mx:Button id="sendEmail" styleName="submitBtn" 
+						click="sendEmails()" 
+						useHandCursor="true" buttonMode="true" 
+						label="Send Emails" 
+						enabled="{isValid &amp;&amp; !_model.email.sendingEmails}" />
+				</mx:HBox>	
+		</mx:VBox>			
+		<view:Email_ContactsBox id="contactList" 
+			styleName="contactsList" 
+			dataProvider="{_model.email.contacts}"
+			width="600" height="300" 
+			x="-562" y="10" 
+			dropShadowEnabled="true" />
+	</mx:Canvas>
+
+	<mx:Canvas id="formProcessingIndicator" 
+		visible="{_model.email.sendingEmails}"
+		top="0" left="0"
+		width="100%" height="100%" 
+		backgroundColor="#CCCCCC" backgroundAlpha="0.75"
+		showEffect="fadeIn" hideEffect="fadeOut">
+		<graphics:ActivityIndicator id="formActivity"
+			width="85" height="85" visible="{_model.email.isSubmitting}" 
+			verticalCenter="0" horizontalCenter="0"
+			boxFillColors="[0x12288c, 0x0b1850]" 
+			textStyleName="processingText" 
+			textMessage="Sending Emails" />
+	</mx:Canvas>
+		
+	<common:ErrorMsgBox verticalCenter="0" horizontalCenter="0" params="{_model.email.errorVO}" onClose="{_model.email.onClose}" />
+
+
+	<mx:Fade id="fadeIn" alphaTo="1" duration="300" />
+	<mx:Fade id="fadeOut" alphaTo="0" duration="300" />
+	<mx:Move id="moveIn" xTo="-244" easingFunction="{Exponential.easeInOut}" />
+	<mx:Move id="moveOut" xTo="-562" easingFunction="{Exponential.easeInOut}" />
+	<mx:StringValidator id="validate_subject" source="{subject}" property="text" required="true" />
+	<mx:CurrencyFormatter id="currencyFormatter" precision="0" currencySymbol="$" useNegativeSign="false" />
+
+
+	<mx:Style>
+		.toolBar {
+			backgroundcolor:#F3F3F3;
+		}
+		.formInput {
+			fontSize:10;
+			paddingTop:1;
+			paddingBottom:1;
+			color:#333333;	
+		}	
+		.formLabel {
+			fontSize:10;
+			color:#333333;
+		}
+		.titleStyle {
+			color:#FFFFFF;
+			fontSize:14;
+			fontWeight:"bold";
+		}
+		.contactsList {
+			borderStyle:"solid";
+			borderThickness:5;
+			borderColor:#f0f0f0;
+			backgroundColor:#CCCCCC;
+			/*
+			backgroundImage: Embed("/assets/images/qcm2_content_bgrounded.png", 
+				scaleGridTop="40", scaleGridBottom="300",
+				scaleGridLeft="40", scaleGridRight="649");
+			backgroundSize:"100%";
+			*/
+			cornerRadius:13;
+		}
+		.processingText {
+			fontFamily:"Silkscreen";
+			color:#000000;
+			fontSize:8;
+			fontWeight:'normal';	
+		}
+		.emailRTE {
+			borderAlpha:0;
+			dropShadowEnabled:false;
+			borderThicknessLeft:0;
+			borderThicknessRight:2;
+			borderThicknessBottom:0;	
+			color:#333333;	
+			fontFamily:Verdana;
+			
+		}
+		.controlBarStyleName {
+			fontSize:9;
+			color:#333333;	
+		}
+		
+	</mx:Style>
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			import com.enilsson.utils.struktorForm.ConvertRTEText;
+			import com.adobe.cairngorm.control.CairngormEventDispatcher;
+			import com.enilsson.elephanttrakker.views.renderers.LinkPop;
+			import mx.controls.VRule;
+			import mx.containers.ControlBar;
+			import com.enilsson.elephanttrakker.vo.ErrorVO;
+			import com.enilsson.utils.eNilssonUtils;
+			import com.enilsson.elephanttrakker.events.modules.email.EmailEvent;
+			import com.enilsson.elephanttrakker.events.session.PingEvent;
+			import com.enilsson.elephanttrakker.models.ETModelLocator;
+			import mx.effects.Rotate;
+			import mx.validators.Validator;
+			import mx.rpc.xml.SimpleXMLDecoder;
+			import mx.collections.Sort;
+			import mx.collections.SortField;
+			import mx.rpc.events.ResultEvent;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.http.HTTPService;
+			import caurina.transitions.Tweener;
+			import mx.managers.CursorManager;
+			import mx.collections.ArrayCollection;
+			import mx.utils.ObjectUtil;
+			import mx.utils.StringUtil;
+			import mx.controls.Alert;
+			import org.osflash.thunderbolt.Logger;
+			import mx.effects.easing.Exponential;
+			import mx.managers.PopUpManager;
+			import mx.core.IFlexDisplayObject;
+
+			use namespace mx_internal;
+
+			[Embed(source='/assets/images/linkButton.png')] [Bindable] public var linkIcon:Class;
+			[Embed(source='/assets/images/breakLinkButton.png')] [Bindable] public var breakLinkIcon:Class;
+						
+			[Bindable] private var _model:ETModelLocator = ETModelLocator.getInstance();
+			[Bindable] private var isValid:Boolean = false;
+				
+			public var fontArray:Array = ['Arial','Courier','Courier New','Geneva','Georgia','Helvetica','Times New Roman','Times','Verdana']	
+			
+			private var _runInit : Boolean = true;
+			public function set runInit(value:Boolean):void
+			{				
+				if(value && _model.mainViewState == ETModelLocator.EMAIL_VIEW)
+					init();
+
+				if (_runInit)
+					_runInit = false;
+			}
+			
+		
+			private function init(e:FlexEvent = null):void
+			{
+				if ((!_runInit && (e != null)) || _runInit) 
+				{
+					// ping the server to see all is well
+					new PingEvent().dispatch();			
+	
+					// fetch the contacts
+					new EmailEvent(EmailEvent.EMAIL_CONTACTS).dispatch();
+					
+					// fetch the attachments
+					if(_model.email.email_attachments.length == 0)
+						new EmailEvent(EmailEvent.EMAIL_ATTACHMENTS).dispatch();
+					
+					// fetch the templates
+					if(_model.email.templates.length == 0)
+						new EmailEvent(EmailEvent.EMAIL_TEMPLATES).dispatch();
+					
+					validateForm();
+				} 
+				
+			}
+			private function applyTemplate():void
+			{
+				message.htmlText = ConvertRTEText.fromXHtml(template.selectedItem.data);
+				subject.text = template.selectedItem.subject;
+			}
+
+			public function resetForm(evt:EmailEvent = null):void 
+			{
+				CairngormEventDispatcher.getInstance().removeEventListener(EmailEvent.EMAIL_SENT, resetForm);
+
+				message.text = '';
+				subject.text = '';
+				template.selectedIndex = 0;
+				attachment.selectedIndex = 0;
+				
+				_model.email.templateID = 0;
+				_model.email.attachment = '';
+				_model.email.subject = '';
+				_model.email.message = ' ';
+				_model.email.emails = '';
+				subject.errorString = '';
+				message.text = '';
+
+				for(var i:* in _model.email.contacts)
+					_model.email.contacts.getItemAt(i).selected = false;
+
+				_model.email.contacts.refresh();
+				
+				if (_model.email.effectContactList == "moveIn")
+					contactList.showContactsList(null);
+				
+				_model.email.isSubmitting = false;
+				_model.email.sendingEmails = false;
+				
+				validateForm();
+			}
+			
+			private function sendEmails():void
+			{
+				_model.email.subject = subject.text;
+				_model.email.message = ConvertRTEText.toXHtml(message.htmlText);
+				
+				if(_model.debug) Logger.info('converting to xhtml',_model.email.message);
+				
+				var arrAux:Array = new Array();
+				for(var i:* in _model.email.contacts)
+					if ((_model.email.contacts.getItemAt(i).email != "") && (_model.email.contacts.getItemAt(i).selected))
+						arrAux.push(_model.email.contacts.getItemAt(i).email);
+
+				_model.email.emails = arrAux.join(',');
+				
+				_model.email.bccEmail = true; // Sets the addresses to BCC instead of TO
+				
+				if (_model.email.emails == '') 
+				{
+					_model.email.errorVO = new ErrorVO( 
+						'Please select the senders you want to email', 
+						'errorBox', 
+						true 
+					);
+					contactList.showContactsList(null);
+				} 
+				else 
+				{
+					new EmailEvent(EmailEvent.EMAIL_SEND_EMAILS).dispatch();
+					CairngormEventDispatcher.getInstance().addEventListener(EmailEvent.EMAIL_SENT, resetForm);
+				}
+			}
+			
+	
+			public function init_rte():void 
+			{
+				var displayObj:DisplayObject = message.toolbar;
+				message.toolbar.parent.removeChild(displayObj);
+				message.addChildAt(displayObj, 0);
+				message.showControlBar = true;
+				message.fontFamilyArray = fontArray;
+				message.fontFamilyCombo.width = 110;
+				message.fontFamilyCombo.selectedIndex = fontArray.length-1;
+				message.fontSizeCombo.selectedIndex = 2;
+
+				var i:int = message.toolbar.getChildIndex(message.linkTextInput);
+				//now drop that one twice (one for the linkText, one for the VRule)
+				message.toolbar.removeChildAt(i-1);
+				message.toolbar.removeChildAt(i-1);
+								
+				addLinkButtons();
+			
+			}
+			
+			// The variable for the pop-up dialog box.
+			public var w:IFlexDisplayObject;
+			
+			// The two link buttons
+			public var linkButton:Button;
+			public var deleteLinkButton:Button;
+	
+			/**
+			 * Add the link buttons to the Rich Text Editor control's tool bar container.
+			 */
+			public function addLinkButtons():void 
+			{	
+				var linkBox:HBox = new HBox();
+				linkBox.id = "linkButtons";
+				linkBox.setStyle("horizontalGap",0); //horizontalGap="0";
+				
+				linkButton = new Button();
+				linkButton.width=25;
+				linkButton.setStyle("icon",linkIcon);
+				linkButton.addEventListener("click",linkPop);
+				linkButton.toolTip = "Add Link";
+				linkBox.addChild(linkButton);
+				    
+				deleteLinkButton = new Button();
+				deleteLinkButton.width=25;
+				deleteLinkButton.height=23;
+				deleteLinkButton.setStyle("icon",breakLinkIcon);
+				deleteLinkButton.addEventListener("click",killLink);
+				deleteLinkButton.toolTip = "Remove Link";
+				linkBox.addChild(deleteLinkButton);
+				
+				var spacer:VRule = new VRule();
+				spacer.height = 23;
+				message.toolbar.addChild(spacer);
+				message.toolbar.addChild(linkBox);
+	
+				// add a function to test whether or not
+				// the link button should be enabled
+				message.addEventListener("change",testLink);
+				message.addEventListener("click",testLink);
+				message.addEventListener("keyUp",testLink);
+			}
+
+			public function testLink(event:Event):void
+			{
+				var beginIndex:int = message.textArea.getTextField().selectionBeginIndex;
+				var endIndex:int   = message.textArea.getTextField().selectionEndIndex;
+				
+				if (beginIndex == endIndex) 
+				{
+					linkButton.enabled = false;
+				}else{
+					linkButton.enabled = true;
+				}
+			}
+
+			/**
+			 * The event listener for the insert-link button's click event creates a pop-up with a LinkPop custom control.
+			 */			
+			public function linkPop(event:Event):void 
+			{
+				var w:LinkPop = LinkPop(PopUpManager.createPopUp(this, LinkPop, true));
+			    w.height = 150;
+			    w.width=228;
+			    
+			    // Pass the a reference to the textArea subcontrol
+			    // so that the custom control can replace the text.
+			    w.RTETextArea = message.textArea;
+			    PopUpManager.centerPopUp(w);
+			}
+			
+			/**
+			 * The killLink function needs to do two things:
+			 *	1) Remove link formatting from highlighted text 
+			 *	-OR-
+			 *	2) If no text is highlighted, but the current cursor position is at a link, remove the whole link.
+			 */
+			public function killLink(event:Event):void 
+			{
+				var tf:TextFormat  = new TextFormat();
+				tf["url"] = "";
+				tf["target"] = "";
+
+				var beginIndex:int = message.textArea.getTextField().selectionBeginIndex;
+				var endIndex:int   = message.textArea.getTextField().selectionEndIndex;
+
+				if (beginIndex == endIndex) 
+				{
+					var up:int = endIndex;
+					var down:int = beginIndex;
+					while (up < message.textArea.getTextField().length - 1)
+					{
+						var tfNext:TextFormat=message.textArea.getTextField().getTextFormat(up, up + 1);
+						if (!tfNext.url || tfNext.url == "")
+						{		
+							break;
+						}else{
+							up++;
+						}
+					}
+					
+					while(down > 0)
+					{
+						var tfPre:TextFormat=message.textArea.getTextField().getTextFormat(down-1, down);
+						if (!tfPre.url || tfPre.url == "")
+						{		
+							break;
+						}else{
+							down--;
+						}
+					}
+					beginIndex = down;
+					endIndex = up;
+				}
+		
+				//if we have a link...kill it
+				if(beginIndex != endIndex) message.textArea.getTextField().setTextFormat(tf,beginIndex,endIndex);
+			}
+			
+			public function validateForm():void 
+			{
+				if ((subject.text == "") || (message.text == "")) 
+				{
+					isValid = false;
+				} else {
+					isValid = true;
+				}
+				
+			}
+
+		]]>
+	</mx:Script>
+
+</mx:Canvas>

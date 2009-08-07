@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Button 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	styleName="{LIST}"
+	toolTip="Show this information in grid format"
+	click="toggleState( event )"
+	useHandCursor="true" buttonMode="true"
+	filters="{[dropShadow]}">
+	
+	<mx:DropShadowFilter id="dropShadow"
+		alpha="0.75"
+		angle="90"
+		color="0x000000"
+		blurX="6" blurY="6"
+		distance="1"
+		/>	
+	
+	<mx:Style>
+		.btnList {
+			skin: Embed(source="/assets/skins/admin_panel_skin.swf", symbol="GridListBtn_ListSelected");
+		}
+		.btnGrid {
+			skin: Embed(source="/assets/skins/admin_panel_skin.swf", symbol="GridListBtn_GridSelected");
+		}		
+	</mx:Style>	
+	
+	<mx:Metadata>
+		[Event(name="stateChange", type="flash.events.Event")]
+	</mx:Metadata>
+	
+	<mx:Script>
+		<![CDATA[
+			
+			public static const LIST : String = "btnList";
+			public static const GRID : String = "btnGrid";
+			
+			private function toggleState( event:MouseEvent ):void
+			{
+				styleName = showState == LIST ? GRID : LIST;
+				toolTip = showState == LIST ? 
+					'Show this information in grid format' : 
+					'Show this information in list format';
+				
+				dispatchEvent( new Event( 'stateChange' ) );
+			}
+		
+			public function set showState( value:String ):void
+			{
+				styleName = value;
+			}
+			
+			[Bindable] public function get showState():String
+			{
+				return String(styleName);
+			}
+		]]>
+	</mx:Script>
+	
+</mx:Button>

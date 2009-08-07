@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:struktorForm="com.enilsson.utils.struktorForm.*" 
+	xmlns:common="com.enilsson.elephanttrakker.views.common.*" 
+	xmlns:controls="com.enilsson.controls.*">
+
+	<mx:Script>
+		<![CDATA[
+			import mx.binding.utils.BindingUtils;
+			import mx.utils.ObjectUtil;
+			import com.enilsson.controls.AutoCompleteSearch;
+			import com.enilsson.elephanttrakker.events.modules.calls_reminders.CallsReminders_Event;
+			import com.enilsson.elephanttrakker.models.ETModelLocator;
+			
+			import org.osflash.thunderbolt.Logger;
+			
+			[Bindable] private var _model:ETModelLocator = ETModelLocator.getInstance();
+			
+			/**
+			 * Make some corrections to the form fields once they are added to the stage
+			 */
+			private function formComplete():void
+			{
+				var fField:*;
+				
+				fField = cr_callsForm.getField('call_desc');
+				fField.height = 140;	
+
+				
+				var formField:AutoCompleteSearch = cr_callsForm.getField('contact_id') as AutoCompleteSearch;
+				formField.debugMode = _model.debug;
+				formField.itemRenderer = new ClassFactory(CallsReminders_AC_itemrenderer);
+				formField.setStyle('alternatingItemColors', [0xFFFFFF, 0xf0f0f0]);
+				formField.addEventListener('searchStart', function(event:Event):void {
+					Logger.info('Search Start');
+					new CallsReminders_Event(
+					 	CallsReminders_Event.EVENT_CR_CALLS_SEARCHCONTACTS, 
+					 	{ 'searchTerm' : formField.typedText, 'searchCount' : 200 } 
+					).dispatch();
+				});	
+				
+				BindingUtils.bindProperty(formField, 'dataProvider', _model.calls_reminders, 'callsContactsSearch');
+			}
+			
+			private function upsertCall(event:MouseEvent):void
+			{
+				
+				
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:HBox verticalAlign="middle">
+		<mx:Image source="{_model.icons.calls}" />
+		<mx:Text text="Record a Call" styleName="formTitle" />
+	</mx:HBox>
+	
+	<struktorForm:StruktorForm id="cr_callsForm" styleName="callsForm"
+		top="55" left="5" 
+		layoutProvider="{_model.calls_reminders.callsLayout}"
+		width="{this.width-10}" maxHeight="{this.height-50}" 
+		formBuildComplete="formComplete()" 
+		defaultButton="{submitForm}"
+		debugMode="{_model.debug}"
+		selectedFields="{['contact_id','call_date','call_desc']}"
+		/>
+	
+	<mx:HBox width="100%" horizontalAlign="right" bottom="5" paddingRight="27">
+		<common:ValidFormIndicator id="formStatus" status="{cr_callsForm.isValid}" />
+		<mx:Button id="submitForm" styleName="submitBtn" 
+			useHandCursor="true" buttonMode="true" enabled="{cr_callsForm.isValid}"  
+			click="upsertCall(event)"			
+			label="Save Call" />
+	</mx:HBox>
+	
+	<common:ErrorMsgBox verticalCenter="0" horizontalCenter="0" params="{_model.calls_reminders.callsErrorVO}" />
+	
+</mx:Canvas>

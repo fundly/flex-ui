@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<common:FluidApplication 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:common="com.enilsson.elephantadmin.views.common.*"
+	xmlns:views="com.enilsson.elephantadmin.views.*"
+	xmlns:main="com.enilsson.elephantadmin.views.main.*" 
+	xmlns:page="com.enilsson.elephantadmin.views.template.*" 
+	xmlns:details="com.enilsson.elephantadmin.views.modules.my_details.*"
+	preinitialize="init()"
+	preloader="assets.preloader.BlueSwarmPreloader"
+	layout="absolute">
+		
+	<control:EAController xmlns:control="com.enilsson.elephantadmin.controllers.*" />
+	<business:Services id="services" xmlns:business="com.enilsson.elephantadmin.business.*" />
+	
+	<mx:VBox id="appContainer"
+		width="100%" height="100%"
+		paddingLeft="0" paddingTop="0" 
+		paddingRight="0" paddingBottom="0"
+		verticalGap="0">
+		<page:Masthead id="masthead" width="100%" height="90"  />	
+		<mx:Canvas id="screenContainer"
+			width="100%" height="100%"
+			minWidth="600" minHeight="450"
+		 	visible="{_model.mainScreenVisible}">
+		 	<views:LoginScreen id="loginScreen"
+				width="100%" height="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off"
+				addedEffect="fadeIn" removedEffect="fadeOut" />
+		</mx:Canvas>
+		<page:Footer id="footer" styleName="footer" width="100%" height="26" />
+	</mx:VBox>
+
+	<common:states>
+		<mx:State name="main">
+			<mx:RemoveChild target="{loginScreen}" />
+			<mx:SetProperty target="{screenContainer}" name="minWidth" value="990" />
+			<mx:SetProperty target="{screenContainer}" name="minHeight" value="600" />
+			<mx:AddChild relativeTo="{screenContainer}">
+				<views:MainScreen id="mainScreen" 
+					styleName="mainContainer"
+					width="100%" height="100%"
+					creationComplete="creationCompleteHandler(event)"
+					addedEffect="fadeIn" removedEffect="fadeOut" />	
+			</mx:AddChild>
+		</mx:State>
+		<mx:State name="collapsed" basedOn="main">
+			<mx:SetProperty target="{masthead}" name="height" value="0"/>
+		</mx:State>
+		<mx:State name="expanded" basedOn="main">
+			<mx:SetProperty target="{masthead}" name="height" value="90"/>
+		</mx:State>
+	</common:states>
+	
+	<common:transitions>
+		<mx:Transition fromState="collapsed" toState="expanded" effect="{collapseFX}" />
+		<mx:Transition fromState="expanded" toState="collapsed" effect="{collapseFX}" />
+	</common:transitions>
+
+
+	<mx:Parallel id="collapseFX" target="{masthead}" children="{[resizeFX,soundFX]}" duration="1000"/>
+	<mx:Fade id="fadeOut" alphaFrom="1" alphaTo="0" duration="500" />
+	<mx:Fade id="fadeIn" alphaFrom="0" alphaTo="1" duration="500" />
+	<mx:Resize id="resizeFX" duration="600"/>
+	<mx:SoundEffect id="soundFX" source="@Embed(source='/assets/sounds/door.mp3')" />
+
+
+	<mx:Style source="assets/css/ea_styles.css"/>
+	<mx:Style source="assets/css/admin/baseRecordModule.css"/>
+	<mx:Style source="/assets/css/modules/pledge_workspace.css" />
+	<mx:Style source="/assets/skins/flex_skins.css" />
+
+	<mx:Binding source="_model.screenState" destination="screenState" />
+
+
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephantadmin.views.common.ModuleControlBar;
+			import mx.events.ResizeEvent;
+			import com.enilsson.utils.eNilssonUtils;
+			import mx.core.Application;
+			import com.enilsson.elephantadmin.events.InitAppEvent;
+			import com.enilsson.elephantadmin.events.GetVersionEvent;
+			import com.enilsson.elephantadmin.views.main.TopNav;
+			import org.osflash.thunderbolt.Logger;
+			import com.enilsson.elephantadmin.models.EAModelLocator;
+
+			import mx.controls.Alert;
+			
+			public var al:Alert;
+			public var mcb:ModuleControlBar;
+
+			[Embed (source="/assets/sounds/door.mp3")]
+			private static var DOOR_SOUND:Class;
+
+			[Bindable] public var _model:EAModelLocator = EAModelLocator.getInstance();
+
+			/**
+			 * Initialisation routine
+			 */
+			private function init():void
+			{
+				// some debugging
+				if(_model.debug) Logger.info('Pre Init - Admin App');
+				
+				// fire the first event
+				new InitAppEvent().dispatch();
+						
+				// set this screen as a model variable
+				_model.mainScreen = this;
+			}
+
+			/**
+			 * Add some handlers for when the app creation is done
+			 */
+			private function creationCompleteHandler(event:Event):void
+			{				
+				mainScreen.addEventListener(TopNav.EXPAND_MASTHEAD, expandMasthead);
+				mainScreen.addEventListener(TopNav.COLLAPSE_MASTHEAD, collapseMasthead);
+			}
+			
+			/**
+			 * Setter for when the screen state is changed in the model
+			 */
+			private function set screenState( value : uint ) : void
+			{
+				switch(value)
+				{
+					case EAModelLocator.LOGIN_SCREEN:
+						currentState = '';
+					break;
+					case EAModelLocator.MAIN_SCREEN:
+						var cookie:String = eNilssonUtils.readCookie('admin_masthead');					
+						currentState = cookie == 'collapsed' ? 'collapsed' : 'expanded';
+						_model.mastheadOpen = currentState == 'expanded';
+					break;
+				}
+			}
+
+			/**
+			 * Handler for expanding the masthead
+			 */
+			private function expandMasthead(event:Event):void 
+			{
+				this.currentState = 'expanded';
+				
+				_model.mastheadOpen = true;
+				
+			 	eNilssonUtils.clearCookie('admin_masthead');
+			 	eNilssonUtils.writeCookie('admin_masthead', 'expanded');				
+			}
+
+			/**
+			 * Handler for collpasing the masthead
+			 */
+			private function collapseMasthead(event:Event):void 
+			{
+				this.currentState = 'collapsed';
+				
+				_model.mastheadOpen = false;
+
+			 	eNilssonUtils.clearCookie('admin_masthead');
+			 	eNilssonUtils.writeCookie('admin_masthead', 'collapsed');				
+			}
+		]]>
+	</mx:Script>
+
+</common:FluidApplication>

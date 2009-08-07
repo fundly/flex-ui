@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox 
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	verticalAlign="middle" horizontalScrollPolicy="off" 
+	width="{explicitWidth}">
+	
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephanttrakker.models.ETModelLocator;
+		
+			[Bindable] private var _model:ETModelLocator = ETModelLocator.getInstance();
+		]]>
+	</mx:Script>
+	
+	<mx:Button styleName="btnRecordDonation" 
+		toolTip="Record Donation for {data.fullName}"
+		click="_model.mainViewState = ETModelLocator.CALL_LOGGING_VIEW"
+		useHandCursor="true" buttonMode="true"
+		 />
+	<mx:Button styleName="btnEdit" 
+		toolTip="Edit details for {data.fullName}"
+		click="_model.my_contacts.contactData = data; _model.my_contacts.showContactForm = true;"
+		useHandCursor="true" buttonMode="true"
+		/>
+	<!--mx:Button styleName="btnRSVP" 
+		toolTip="RSVP {data.fullName} to an Event" 
+		click="_model.mainViewState = ETModelLocator.EVENTS_VIEW; "
+		useHandCursor="true" buttonMode="true"
+		/-->
+	<mx:Button styleName="btnEmail" 
+		toolTip="Send {data.fullName} an Email" 
+		click="_model.mainViewState = ETModelLocator.EMAIL_VIEW"
+		useHandCursor="true" buttonMode="true"
+		/>
+	<mx:Button styleName="btnDelete" 
+		toolTip="Delete {data.fullName} as a Contact"
+		visible="{data.pledge_total == 0}"
+		useHandCursor="true" buttonMode="true"
+		/>
+</mx:HBox>

@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:main="com.enilsson.elephantadmin.views.main.*"
+	xmlns:common="com.enilsson.elephantadmin.views.common.*"
+	styleName="topNav" 
+	creationComplete="init();"
+	horizontalScrollPolicy="off" verticalScrollPolicy="off" 
+	height="36">
+
+	<main:TopNavList id="navList"
+		styleName="topNav"
+		height="0" width="150"
+		visible="false"
+		includeInLayout="false"
+		itemClick="navLinkClickHandler(event)" 
+		resizeEffect="resizeFX" />
+	<common:TextShadowButton id="fullScreenButton" 
+		styleName="fullScreenButton"
+		width="36" height = "36"
+		right="0" toggle="true" 
+		change="fullScreenButtonChangeHandler(event)" />
+		
+		
+	<mx:Rotate id="rotateFX" angleFrom="0" angleTo="180" duration="1000" />
+	<mx:Resize id="resizeFX" duration="300" />
+	<mx:Fade id="fadeInFX" alphaFrom="0" alphaTo="1" duration="1000" />
+	<mx:DropShadowFilter id="shadow" blurX="30" blurY="30" distance="0" alpha="0.5"/>		
+
+
+	<mx:Metadata>
+		[Event(name="expandMasthead", type="flash.events.Event")]
+		[Event(name="collapseMasthead", type="flash.events.Event")]
+	</mx:Metadata>
+
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephantadmin.views.common.TextShadowButton;
+			import mx.events.EffectEvent;
+			import mx.containers.HBox;
+			import mx.controls.Button;
+			import mx.events.MenuEvent;
+			import mx.events.ListEvent;
+			import com.enilsson.elephantadmin.events.main.ViewStateEvent;
+		
+			import mx.controls.LinkButton;
+			import mx.events.CloseEvent;
+			import com.enilsson.graphics.ChangesDetector;
+			import mx.controls.VRule;
+			import mx.controls.Alert;
+			import mx.collections.ArrayCollection;
+			import com.enilsson.elephantadmin.models.EAModelLocator;
+			
+			[Bindable] private var _model:EAModelLocator = EAModelLocator.getInstance();
+			[Bindable] private var _data:ArrayCollection;
+			public var navBar:HBox = new HBox();
+
+			static public const EXPAND_MASTHEAD:String = "expandMasthead";
+			static public const COLLAPSE_MASTHEAD:String = "collapseMasthead";
+
+			private function init():void
+			{
+				this.addChild(navBar)
+				navBar.setStyle('horizontalGap', 0);
+				this.addEventListener(MouseEvent.ROLL_OUT, navRollOutHandler);
+			}	
+			
+			public function set slideButton ( value:Boolean ):void
+			{
+				fullScreenButton.selected = false;
+			}	
+
+			public function set dataProvider(value:ArrayCollection):void
+			{
+				_data = value;
+				navBar.removeAllChildren();
+ 				for ( var i:int = 0; i < _data.length; i++)
+				{
+					var button:TextShadowButton = new TextShadowButton();
+					button.styleName = 'topNavButton';
+					button.label = String(_data[i].name).toUpperCase();
+					button.useHandCursor = true;
+					button.buttonMode = true;
+					button.data =_data[i];
+					button.height = this.height;
+					button.labelPlacement = "left";
+					button.addEventListener(MouseEvent.CLICK, navClickHandler);
+					button.toggle = true;
+					if(!_data[i].hasOwnProperty("links"))
+					{
+						button.setStyle("icon", null);
+					}
+					navBar.addChild(button);
+
+					button.addEventListener(MouseEvent.ROLL_OVER, navRollOverHandler);
+				}
+			}
+ 
+			/**
+			 * Handle the navigation clicks, prompting the user if the form data has changed
+			 */
+			private function navClickHandler(event:MouseEvent):void
+			{
+				// capture the clicked link
+				var _newModule:String = event.currentTarget.data.module;
+				
+				// if the form data has changed
+				if(_model.dataChanged)
+				{				
+					// launch a popup telling the user that data has changed
+					ChangesDetector.confirm(
+						'You have unsaved changes on this page, do you want to save before continuing? They will be lost if you dont!',
+						function(e:CloseEvent):void {
+							// if the user clicks NO then proceed, otherwise do nothing
+							if(e.detail == Alert.NO) {
+								_model.dataChanged = false;
+								_model.mainViewState = _model.viewStateList.indexOf(_newModule);
+							}
+						},
+						'Unsaved Changes!'
+					);
+				}
+				// if it hasnt
+				else
+					_model.mainViewState = _model.viewStateList.indexOf(_newModule);
+			}
+
+			/**
+			 * Handle the navigation clicks, prompting the user if the form data has changed
+			 */
+			private function navRollOverHandler(event:MouseEvent):void
+			{
+				navList.endEffectsStarted();
+				for (var i:Number=0;i<navBar.getChildren().length;i++) {
+					Button(navBar.getChildAt(i)).selected = false;
+				}
+				Button(event.currentTarget).selected = true;
+				if(event.currentTarget.data.hasOwnProperty("links"))
+				{
+	 				navList.dataProvider = ArrayCollection(event.target.data.links.link)
+					navList.rowCount = event.target.data.links.link.length;
+					navList.rowHeight = 25;
+					navList.height = navList.rowHeight * navList.rowCount;
+					navList.x = event.currentTarget.x;
+					navList.y = event.currentTarget.y + event.currentTarget.height;
+					navList.filters = [shadow];
+					navList.visible = true;
+				} else {
+					navList.height = 0;
+				}
+			}
+
+			private function navRollOutHandler(event:MouseEvent):void
+			{
+				navList.endEffectsStarted();
+				for (var i:Number=0;i<navBar.getChildren().length;i++) {
+					Button(navBar.getChildAt(i)).selected = false;
+				}
+				navList.height = 0;
+			}
+
+			private function navLinkClickHandler(event:ListEvent):void
+			{
+				_model.mainViewState = _model.viewStateList.indexOf(event.itemRenderer.data.module);
+			}
+
+			private function fullScreenButtonChangeHandler(event:Event):void
+			{
+				//if not already in full screen mode
+				if(!Button(event.currentTarget).selected)
+					this.dispatchEvent(new Event(EXPAND_MASTHEAD, true));
+				else
+					this.dispatchEvent(new Event(COLLAPSE_MASTHEAD, true));
+			}
+		]]>
+	</mx:Script>
+	
+</mx:Canvas>

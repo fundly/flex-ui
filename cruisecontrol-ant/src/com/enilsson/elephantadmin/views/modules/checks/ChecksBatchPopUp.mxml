@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	clipContent="true"
+	verticalScrollPolicy="off" horizontalScrollPolicy="off"
+	xmlns:graphics="com.enilsson.graphics.*" 
+	xmlns:common="com.enilsson.elephantadmin.views.common.*"
+	width="670" 
+	height="400">
+
+	<mx:Canvas left="0" top="10" 
+		styleName="popupContent" 
+		verticalScrollPolicy="off" horizontalScrollPolicy="off"
+		filters="{[com.enilsson.graphics.enDropShadows.standardDS()]}" 
+		width="{this.width-10}" height="{this.height-10}">
+		<mx:VBox verticalGap="0" 
+			width="{width-40}" height="{height-40}"
+			backgroundColor="#FFFFFF" 
+			top="15" left="15" 
+			fontSize="11">
+			<mx:Canvas backgroundColor="#999999"
+				width="100%" height="37">
+				<mx:Text id="supportDesc" 
+					fontSize="18" 
+					width="100%"
+					filters="{[com.enilsson.graphics.enDropShadows.textDS(0x333333)]}"
+					text="Fulfill multiple Checks"
+					verticalCenter="0" left="5" />
+			</mx:Canvas>
+			<mx:HBox width="100%" styleName="controlBar" paddingLeft="3" paddingTop="3" paddingRight="3" paddingBottom="3" horizontalGap="5" verticalAlign="middle">
+				<mx:FormItem label="Entry Date">
+					<mx:DateField id="entryDateField" width="100" color="#000000" formatString="MM/DD/YYYY" selectedDate="{entryDate}" change="entryDate = entryDateField.selectedDate" textAlign="center" />
+				</mx:FormItem>
+				<mx:Spacer width="100%" />
+				<mx:Button width="80" label="Fulfill" click="fulfill()" color="#000000" />
+			</mx:HBox>
+			<mx:DataGrid id="checksGrid" width="100%" height="100%" editable="true" dataProvider="{checksList}">
+				<mx:columns>
+					<mx:DataGridColumn width="40" dataField="selected" editorDataField="selected" rendererIsEditor="true" headerText="Select" sortable="false" editable="true" itemRenderer="mx.controls.CheckBox" textAlign="center"/>
+					<mx:DataGridColumn width="40" editable="false" dataField="batch_id" headerText="Batch" sortCompareFunction="batchSortCompare"/>
+					<mx:DataGridColumn width="70" editable="true" dataField="amount" headerText="Amount" labelFunction="amountLabel" sortCompareFunction="amountSortCompare">
+						<mx:itemEditor>
+							<mx:Component>
+								<mx:TextInput width="100%" text="{data.amount}"/>
+							</mx:Component>
+						</mx:itemEditor>
+					</mx:DataGridColumn>
+					
+					<mx:DataGridColumn editable="true" dataField="full_name" headerText="Name on Account"/>
+					<mx:DataGridColumn width="100" editable="true" dataField="check_num" headerText="Check Number"/>
+					<mx:DataGridColumn width="100" editable="false" dataField="lname" headerText="Contact" labelFunction="contactLabel" sortCompareFunction="contactSortCompare"/>
+					<mx:DataGridColumn width="60" editable="false" dataField="pledge_date" headerText="Date" labelFunction="pledgeDateLabel"/>
+				</mx:columns>
+			</mx:DataGrid>
+			
+		</mx:VBox>
+		
+	</mx:Canvas>
+	
+	<graphics:enCloseBtn top="0" right="0" size="20" click="closeComponent()" />
+
+	<mx:Fade id="fadeIn" alphaTo="1" duration="300" />
+	<mx:Fade id="fadeOut" alphaTo="0" duration="300" />
+
+	<mx:CurrencyValidator id="cv" currencySymbol="$" thousandsSeparator="," decimalSeparator="." />
+	<mx:CurrencyFormatter id="currencyFormatter" precision="0" currencySymbol="$" useNegativeSign="false" />
+	<mx:DateFormatter id="dateFormatter" />
+
+	<mx:Metadata>
+		[Event(name="fulfill", type="flash.events.Event")]
+	</mx:Metadata>
+
+	<mx:Script>
+		<![CDATA[
+			import mx.utils.ObjectUtil;
+			import mx.controls.TextInput;
+			import mx.events.DataGridEventReason;
+			import mx.events.DataGridEvent;
+			import com.enilsson.elephantadmin.events.modules.ChecksEvent;
+			import com.enilsson.elephantadmin.vo.BatchRecordVO;
+			import com.enilsson.elephantadmin.vo.RecordVO;
+			import com.enilsson.elephantadmin.views.modules.batch.CheckList;
+			import mx.controls.Alert;
+			import mx.controls.CheckBox;
+			import mx.collections.Sort;
+			import mx.collections.SortField;
+			import com.enilsson.utils.EDateUtil;
+			import mx.collections.ArrayCollection;
+			import mx.managers.PopUpManager;
+
+			[Bindable] public var checksList:ArrayCollection = new ArrayCollection();
+
+			public function set dataProvider(value:ArrayCollection):void
+			{
+				var list:ArrayCollection = new ArrayCollection();
+
+				for each(var item:Object in value)
+				{
+					if(item.entry_date == 0)
+					{
+						item.selected = true;
+						list.addItem(item);
+					}
+				}
+				checksList = list;
+			}
+
+			[Bindable] public function get entryDate():Date
+			{
+				return _entryDate;
+			}
+			public function set entryDate(value:Date):void
+			{
+				_entryDate = value;
+			}
+			private var _entryDate:Date = new Date(new Date().getFullYear(),new Date().getMonth(),new Date().getDate());
+
+			private function pledgeDateLabel(item:Object, column:DataGridColumn):String 
+			{
+				dateFormatter.formatString = "MM/DD/YY"
+				return dateFormatter.format(EDateUtil.dateFromTimestamp(item.pledge_id.pledge_date));
+			}
+
+			private function contactLabel(item:Object, column:DataGridColumn):String 
+			{
+				return item.pledge_id.fname + " " + item.pledge_id.lname;
+			}
+			private function contactSortCompare( itemA : Object, itemB:Object) : int
+			{
+				return ObjectUtil.stringCompare(itemA.pledge_id.lname, itemB.pledge_id.lname );
+			}
+
+			private function batchSortCompare( itemA : Object, itemB : Object ) : int
+			{
+				return ObjectUtil.numericCompare(itemA.batch_id, itemB.batch_id);
+			}
+
+			private function amountLabel(item:Object, column:DataGridColumn):String {
+				return currencyFormatter.format(item.amount);
+			}
+			private function amountSortCompare( itemA : Object, itemB : Object ) : int
+			{
+				return ObjectUtil.numericCompare(itemA.amount, itemB.amount);
+			}
+			private function fulfill():void
+			{
+				var selectedItems:Array = [];
+				for each(var item:Object in checksList)
+				{
+					if(item.selected == true)
+						selectedItems.push(item);
+				}
+				if(selectedItems.length > 0)
+				{
+					fulfillMultiple( selectedItems, EDateUtil.dateToTimestamp(entryDate) );
+					dispatchEvent(new Event(Event.CLOSE));
+				}
+				else
+					Alert.show("There are no checks to fulfill!","Error");
+			}
+
+			private function fulfillMultiple(checks:Array, timestamp:int):void
+			{
+				var list:Array = [];
+				var record:RecordVO;
+
+				for each(var check:Object in checks)
+				{
+					cv.validate(check.amount);
+
+					record = new RecordVO(
+						  'checks'
+						, 0
+						, {
+							  id		: check.id
+							, full_name	: check.full_name
+							, amount	: check.amount
+							, entry_date: timestamp
+							, check_num	: check.check_num
+						  }
+					);
+					list.push(record);
+				}
+				var vo:BatchRecordVO = new BatchRecordVO(list);
+				new ChecksEvent(ChecksEvent.UPSERT_MULTIPLE, vo).dispatch();
+			}
+
+			private function closeComponent():void
+			{
+				dispatchEvent(new Event(Event.CLOSE));
+			}
+
+		]]>
+	</mx:Script>
+
+</mx:Canvas>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas horizontalScrollPolicy="off" 
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:struktorForm="com.enilsson.utils.struktorForm.*" 
+	xmlns:common="com.enilsson.elephanttrakker.views.common.*">
+
+	<mx:Text styleName="detailsTitle" text="PERSONAL DETAILS" left="30" top="20" rotation="90" />
+	
+	<struktorForm:StruktorForm id="myDetailsForm" styleName="processingForm"
+		width="50%" maxHeight="280" left="0" top="20" 
+		layoutProvider="{_model.struktorLayout.tr_users}" 
+		dataProvider="{_model.session.data}"
+		numColumns="1" 
+		excludedFields="{['_fundraising_goal', '_itemsperpage']}" 
+		debugMode="{_model.debug}" 
+		/>
+	
+	<mx:Text styleName="detailsTitle" text="APPLICATION PREFERENCES" left="340" top="20" rotation="90" />
+		
+	<struktorForm:StruktorForm id="prefsForm" styleName="processingForm"
+		width="50%" maxHeight="280" left="335" top="20" 
+		layoutProvider="{_model.struktorLayout.tr_users}" 
+		dataProvider="{_model.session.data}"
+		numColumns="1" 
+		selectedFields="{['_fundraising_goal', '_itemsperpage']}" 
+		debugMode="{_model.debug}"
+		/>		
+
+	<mx:HBox bottom="0" right="10" horizontalAlign="right">
+		<common:ValidFormIndicator id="formStatus" 
+			status="{myDetailsForm.isValid &amp;&amp; prefsForm.isValid}" />
+		<mx:Button id="submitForm" styleName="submitBtn" 
+			useHandCursor="true" buttonMode="true" 
+			enabled="{myDetailsForm.isValid &amp;&amp; prefsForm.isValid &amp;&amp; !_model.my_details.isSubmitting}"  
+			click="upsertDetails(event)" 
+			label="Edit Details &amp; Preferences" />
+	</mx:HBox>
+	
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephanttrakker.events.modules.my_details.MyDetailsEvent;
+			import com.enilsson.elephanttrakker.models.ETModelLocator;
+			import org.osflash.thunderbolt.Logger;
+			
+			[Bindable] private var _model:ETModelLocator = ETModelLocator.getInstance();
+		
+			/**
+			 * Upsert the form information
+			 */
+			private function upsertDetails(event:MouseEvent):void
+			{
+				if(_model.debug) Logger.info('upsert MyDetails', myDetailsForm.formVariables);
+					
+				var fv:Object = new Object();
+				
+				for ( var item:String in myDetailsForm.formVariables)
+					fv[item] = myDetailsForm.formVariables[item];	
+				
+				for ( item in prefsForm.formVariables)
+					fv[item] = prefsForm.formVariables[item];	
+					
+				var contact_details:Object = new Object();
+				
+				contact_details['lname'] = fv['lname'];	
+				contact_details['fname'] =fv['fname'];	
+				contact_details['zip'] = fv['_zip'];	
+				contact_details['city'] = fv['_city'];	
+				contact_details['address1'] = fv['_address1'];	
+				contact_details['address2'] = fv['_address2'];	
+				contact_details['state'] = fv['_state'];
+				contact_details['home_phone'] = fv['_phone'];
+				contact_details['email'] = _model.session.email;	
+				contact_details['id'] = _model.session.data._contact_id;	
+					
+				_model.my_details.contact_details = contact_details;
+									
+				new MyDetailsEvent( MyDetailsEvent.MYDETAILS_UPSERT, fv ).dispatch()
+			}
+		]]>
+	</mx:Script>
+	
+</mx:Canvas>

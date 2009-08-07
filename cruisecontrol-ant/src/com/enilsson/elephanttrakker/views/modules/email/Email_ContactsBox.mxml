@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="453" height="300"  
+	verticalScrollPolicy="off" horizontalScrollPolicy="off"
+	xmlns:graphics="com.enilsson.graphics.*"
+	
+	>
+	<mx:Script>
+		<![CDATA[
+			import mx.utils.ObjectUtil;
+			import mx.effects.easing.Exponential;
+			import mx.effects.Move;
+			import mx.collections.SortField;
+			import mx.collections.Sort;
+			import mx.collections.ArrayCollection;
+
+			import mx.events.EffectEvent;
+			import org.osflash.thunderbolt.Logger;
+			import mx.effects.Rotate;
+			import com.enilsson.elephanttrakker.models.ETModelLocator;
+			
+			[Bindable]
+			public var dataProvider:ArrayCollection;
+			
+			[Bindable] 
+			private var _model:ETModelLocator = ETModelLocator.getInstance();
+
+			public function showContactsList(e:MouseEvent):void
+			{
+				var sortOrder:Sort = new Sort();
+				var sortByFname:SortField = new SortField("fname", true, false);
+	            var sortByLname:SortField = new SortField("lname", true, false);
+	            sortOrder.fields=[sortByLname, sortByFname];
+	            _model.email.contacts.sort=sortOrder;
+	            _model.email.contacts.refresh();
+
+				var rotater:Rotate = new Rotate(bnExpand);
+				if (_model.email.effectContactList == "moveIn") 
+				{
+					var mv1:Move = new Move();
+					mv1.xTo = -562;
+					mv1.target = this;
+					mv1.easingFunction = Exponential.easeInOut;
+					mv1.play();
+					
+					_model.email.effectContactList = "moveOut";
+					rotater.angleTo = 90;
+				} 
+				else 
+				{
+					var mv2:Move = new Move();
+					mv2.xTo = -244;
+					mv2.target = this;
+					mv2.easingFunction = Exponential.easeInOut;
+					mv2.play();
+
+					_model.email.effectContactList = "moveIn";
+					rotater.angleTo = 270;
+				}
+				rotater.play();
+
+				myContactsDG.dataProvider.filterFunction = processFilter;
+			}	
+
+			public function processFilter(item:Object):Boolean
+			{
+				var result:Boolean=false;
+				if (!item.fullName.length || item.fullName.toUpperCase().indexOf(txtFilter.text.toUpperCase()) >= 0) {
+					result=true;
+				}
+						            
+				return result;
+			}
+
+	
+			public function saveArray(checkAll:Boolean = false, contactEmail:String = "", selected:Boolean = false):void 
+			{
+				var i:*;
+				
+				if (checkAll) 
+				{
+					for(i in _model.email.contacts)
+					{
+						if (_model.email.contacts.getItemAt(i).email != "") {
+							_model.email.contacts.getItemAt(i).selected = cbSelectAll.selected;
+						}	
+					}
+					
+					_model.email.contacts.refresh();
+				}
+				
+				if (contactEmail != "") 
+				{
+					for(i in _model.email.contacts)
+					{
+						if (_model.email.contacts.getItemAt(i).email == contactEmail) {
+							_model.email.contacts.getItemAt(i).selected = selected;
+							break;
+						}	
+					}
+				}
+			}
+			
+			public function clearSearchAction():void {
+				txtFilter.text = '';
+				_model.email.contacts.refresh();
+			}	
+		
+		]]>
+	</mx:Script>
+	<mx:Style>
+		.contactsTitle {
+			fontSize:14;
+			top:40;
+			color:#666666;
+		}		
+	</mx:Style>
+	<mx:Canvas 
+		width="32" height="100%" horizontalScrollPolicy="off"
+		useHandCursor="true" buttonMode="true"
+		top="0" right="0">
+		<mx:Image source="{_model.icons.contacts}" 
+			top="0" right="-3" id="contactsIcon" 
+			toolTip="Click to expand" />
+		<mx:Text id="contactsTitle" styleName="contactsTitle" 
+			rotation="-90" left="5" top="180" selectable="false"
+			text="ADD MY CONTACTS" />
+		<mx:VBox bottom="20" right="-2">
+			<mx:Image id="bnExpand" source="@Embed('/assets/images/qcm2_uparrow.png')" 
+				rotation="90"  click="showContactsList(event)"/>
+		</mx:VBox>
+	</mx:Canvas>
+	
+	<mx:Label text="Filter by Name:" top="12" right="270" styleName="formLabel" />
+	<mx:Canvas width="120" top="10" right="150" horizontalScrollPolicy="off">
+		<mx:TextInput id="txtFilter" styleName="txtFilter" paddingLeft="20" paddingRight="15" 
+			 change="_model.email.contacts.refresh()"
+			cornerRadius="3" borderColor="#666666" borderStyle="solid" backgroundColor="#FFFFFF"  
+			width="120" top="2" left="0" fontSize="9" height="20"  />
+		<mx:Image source="@Embed('/assets/images/magnifier.png')" left="4" top="4" />
+		<graphics:enCloseBtn id="clearSearch" visible="{txtFilter.text.length > 0}" 
+			toolTip="Clear Search" borderColor="#ededed" click="clearSearchAction()"
+			top="3" right="0" size="18" dropShadow="false" backgroundColor="#666666" />
+	</mx:Canvas>		
+	
+	<mx:CheckBox id="cbSelectAll"  visible="true" buttonMode="true" useHandCursor="true" top="11" right="100" click="saveArray(true)"  />
+	<mx:Label id="lblFollowUp" text="Select All"  fontWeight="bold"  top="12" right="45" toolTip="Select All" styleName="formLabel" />
+
+	<mx:DataGrid id="myContactsDG" dataProvider="{dataProvider}" 
+		width="300" height="240" 
+		selectable="false" right="40" top="40"
+		verticalGridLines="false" horizontalScrollPolicy="off">
+		<mx:columns>
+            <mx:DataGridColumn textAlign="left" dataField="fullName" headerText="Name" width="130" />
+            <mx:DataGridColumn textAlign="left" dataField="email" headerText="Email" width="155" />
+            <mx:DataGridColumn textAlign="left" width="20" sortable="false">
+            	<mx:itemRenderer>
+		        	<mx:Component>
+		        		<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml">
+				        	<mx:CheckBox id="ckContact" 
+				        		selectedField="{data.email}" 
+				        		useHandCursor="true" buttonMode="true" 
+				        		click="{parentDocument.saveArray(false,data.email,ckContact.selected)}" 
+				        		enabled="{(data.email != '')}"  
+				        		selected="{data.selected}"/>
+			        	</mx:Canvas>
+		            </mx:Component>
+				</mx:itemRenderer>
+            </mx:DataGridColumn>
+        </mx:columns>
+	</mx:DataGrid>			
+	<mx:Box width="35" height="310" backgroundColor="#CCCCCC" top="0" right="0" click="showContactsList(event)" alpha="0" />
+			
+</mx:Canvas>

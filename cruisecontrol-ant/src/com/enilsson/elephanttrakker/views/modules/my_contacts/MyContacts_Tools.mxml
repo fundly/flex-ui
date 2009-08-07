@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:common="com.enilsson.elephanttrakker.views.common.*"
+	xmlns:importer="com.enilsson.elephanttrakker.views.modules.my_contacts.importer.*"	
+	width="600" height="280" 
+	horizontalScrollPolicy="off" verticalScrollPolicy="off"
+	show="init()">
+		
+	<mx:Canvas styleName="popupHeader"
+		top="0" left="0" verticalScrollPolicy="off" 
+		width="100%" height="40">
+		<mx:Image source="{_model.my_contacts.popupIcon}" top="3" left="10" />
+		<mx:Text verticalCenter="0" left="50" 
+			text="{_model.my_contacts.popupTitle}" 
+			filters="{[com.enilsson.graphics.enDropShadows.textDS(0x333333)]}"
+			fontSize="18" />
+	</mx:Canvas>
+	
+	<mx:ViewStack id="vstack" 
+		width="100%" height="{height - 60}"
+		change="_model.my_contacts.popupIcon = event.currentTarget.selectedChild.icon" 
+		top="45">
+			
+		<mx:Canvas id="mainScreen" 
+			icon="{_model.icons.tools}"
+			width="100%" height="100%">
+			
+			<mx:VBox width="90%" horizontalCenter="0">
+				<mx:Spacer height="10" />
+				<mx:HBox width="100%" horizontalAlign="center">
+					<mx:LinkButton fontSize="13" fontWeight="normal" width="50%"
+						label="Download My Contacts" 
+						click="downloadContacts()"
+						icon="{_model.icons.excel}" />
+					<mx:LinkButton fontSize="13" fontWeight="normal" width="50%"
+						label="How to Upload Contacts" 
+						click="downloadHowTo()"
+						icon="{_model.icons.pdf}" />
+				</mx:HBox>
+				<mx:Spacer height="10" />
+				<mx:VBox styleName="uploadBox" width="100%">
+					<mx:HBox width="90%" horizontalAlign="left" verticalAlign="middle">
+						<mx:Image source="{_model.icons.uploadContacts}" />
+						<mx:Text styleName="uploadBoxTitle"
+							text="Contacts Upload" />
+					</mx:HBox>				
+					<mx:HBox verticalAlign="middle">
+						<mx:TextInput id="filePath" width="300" click="browseFiles()" />
+						<mx:Button label="Browse" fontSize="9" click="browseFiles()" />
+						<mx:Spacer width="10" />
+						<mx:Button id="submitBtn"
+							label="Upload" 
+							click="uploadContacts()" 
+							styleName="submitBtn" 
+							enabled="{btEnabled &amp;&amp; filePath.text != ''}" />
+					</mx:HBox>
+					<mx:Form width="500" fontSize="10" paddingTop="5" paddingBottom="0" horizontalScrollPolicy="off">
+						<mx:FormItem label="Please Note:" fontWeight="bold">
+							<mx:Text width="400" fontWeight="normal">
+								<mx:htmlText><![CDATA[The upload file <b>must</b> be in <a href="http://en.wikipedia.org/wiki/Comma-separated_values" target="_blank"><font color="#5ea7e0">CSV</font></a> format, and at a minimum have columns for <b>First Name</b> and <b>Last Name</b>.]]></mx:htmlText>
+							</mx:Text>
+						</mx:FormItem>
+					</mx:Form>
+				</mx:VBox>	
+				
+			</mx:VBox>
+			
+			<mx:Button label="Close" bottom="0" right="4" click="closeTools()" styleName="cancelBtn" />
+		</mx:Canvas>
+		
+		<importer:MyContacts_Tools_Import 
+			icon="{_model.icons.uploadContacts}"
+			width="100%" height="100%" />
+		
+	</mx:ViewStack>
+	
+	<mx:VBox id="fileProgressBox" 
+		styleName="fileProgressBox"
+		filters="{[dropShadow]}" 
+		visible="false">
+		<mx:Text text="Uploading file...." />
+		<mx:ProgressBar id="fileProgress"
+			direction="right" 
+			mode="manual"
+			minimum="0" maximum="100" />
+	</mx:VBox>	
+	
+	
+	<mx:DropShadowFilter id="dropShadow"
+		alpha="0.75"
+		angle="90"
+		blurX="6" blurY="6"
+		distance="2" />
+
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephanttrakker.events.modules.my_contacts.ExportContactEvent;
+			import com.enilsson.elephanttrakker.events.modules.my_contacts.ImportContactEvent;
+			import com.enilsson.elephanttrakker.vo.ErrorVO;
+			import com.enilsson.elephanttrakker.events.session.SessionEvent;
+			import org.osflash.thunderbolt.Logger;
+			import mx.utils.ObjectUtil;
+			import mx.rpc.xml.SimpleXMLDecoder;
+			import mx.managers.CursorManager;
+			import com.enilsson.elephanttrakker.models.ETModelLocator;
+			import com.enilsson.graphics.enDropShadows;
+			
+			[Bindable] private var _model:ETModelLocator = ETModelLocator.getInstance();
+			private var fileRef:FileReference = new FileReference();
+			[Bindable] private var btEnabled:Boolean = true;
+			
+			
+			private function init():void
+			{
+				_model.my_contacts.popupTitle = 'My Contacts Tools';
+				vstack.selectedIndex = 0;
+				_model.my_contacts.popupIcon = _model.icons.tools;
+			}
+			
+			/**
+			 * Launch the file browser window
+			 */
+			private function browseFiles():void
+			{
+				new SessionEvent('get_session_info').dispatch();
+				
+				resetForm();
+				var textTypes:FileFilter = new FileFilter("CSV File (.csv)", "*.csv;");
+				var allTypes:Array = new Array(textTypes);
+				fileRef.addEventListener(Event.SELECT, function(e:Event):void{
+					filePath.text = fileRef.name;
+				});
+				fileRef.browse(allTypes);
+				
+			}
+			
+			private function downloadContacts():void
+			{
+				new ExportContactEvent(ExportContactEvent.EXPORT_CONTACTS).dispatch();
+			}
+			
+			private function downloadHowTo():void
+			{
+				var request:URLRequest = new URLRequest( 'https://assets.blue-swarm.com/pdfs/blueswarm-contact-uploading.pdf' );
+				navigateToURL ( request, "_parent" );
+ 			}		
+						
+			private function resetForm():void
+			{
+				btEnabled = true;
+				filePath.text = '';
+				fileRef = new FileReference();
+			}
+			
+			private function uploadContacts():void
+			{
+				btEnabled = false;
+				// send some variables with the data
+				var sendVars:URLVariables = new URLVariables();
+				// create the request instance to send
+			    var request:URLRequest = new URLRequest();
+				
+				// debugging
+				if(_model.debug) Logger.info('hre',_model.gatewayBaseURL + 'csv_import_gateway.php?key=' + _model.gatewayURL.match(/key=(.*)/)[0].toString().replace("key=","") + '&PHPSESSID='+_model.sess_id);
+			   	
+			   	request.url = _model.gatewayBaseURL + 'csv_import_gateway.php?key=' + _model.gatewayURL.match(/key=(.*)/)[0].toString().replace("key=","") + '&PHPSESSID='+_model.sess_id;
+				
+				// debugging
+				if(_model.debug) Logger.info('Uploading URL', request.url);
+			    
+			    request.data = sendVars;
+			    request.method = URLRequestMethod.POST;
+			    
+			    // initialise a series of event handlers
+			    fileRef.addEventListener(Event.OPEN, function(e:Event):void {
+			    	CursorManager.setBusyCursor();
+			    	fileProgressBox.visible = true;
+			    });
+			    
+			    fileRef.addEventListener(DataEvent.UPLOAD_COMPLETE_DATA, function(e:DataEvent):void 
+			    {
+			    	CursorManager.removeBusyCursor();
+			    	fileProgress.setProgress(100, 100);
+			    	
+			    	if(_model.debug) Logger.info('DataEvent', ObjectUtil.toString(e.data)); 
+			    	
+			    	if (e.data == "success") 
+			    	{
+			    		_model.my_contacts.importFields = new Array();
+			    		vstack.selectedIndex = 1;
+			    	} 
+			    	else 
+			    	{
+						_model.my_contacts.errorVO = new ErrorVO( 
+							'There was a problem processing this record:<br><br>' + e.data, 
+							'errorBox', 
+							true 
+						);
+						
+						_model.my_contacts.onClose = function():void {
+							resetForm();
+						};
+						
+			    	}
+			    });
+			    
+			    fileRef.addEventListener(IOErrorEvent.IO_ERROR, function(e:IOErrorEvent):void {
+			    	if(_model.debug) Logger.info('IOError', ObjectUtil.toString(e));
+			    });	
+			    
+			    fileRef.addEventListener(ProgressEvent.PROGRESS, function(e:ProgressEvent):void {
+			    	var numPerc:Number = Math.round((Number(e.bytesLoaded) / Number(e.bytesTotal)) * 100);
+			    	fileProgress.setProgress( numPerc, 100 );
+			    	fileProgress.label = 'LOADING ' + numPerc.toString() + '%';
+			    });
+
+			    fileRef.addEventListener(Event.COMPLETE, function(e:Event):void {
+			    	CursorManager.removeBusyCursor();
+			    	fileProgress.setProgress(100, 100);
+			    	fileProgressBox.visible = false;
+			    });
+			    
+			    fileRef.upload(request);
+			}
+			
+			public function closeTools():void
+			{
+				vstack.selectedIndex = 0; 
+				filePath.text = '';  
+				_model.my_contacts.showContactsTools = false;				
+				new ImportContactEvent(ImportContactEvent.DELETE_IMPORTED).dispatch();
+			}
+			
+		]]>
+	</mx:Script>
+	
+</mx:Canvas>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas 
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	clipContent="true" 
+	horizontalScrollPolicy="off" verticalScrollPolicy="off" 
+	>
+
+	<mx:Script>
+		<![CDATA[
+			import org.osflash.thunderbolt.Logger;
+			import caurina.transitions.Tweener;
+			import mx.controls.Image;
+			import mx.controls.Button;
+			import mx.collections.ArrayCollection;
+			import com.enilsson.elephanttrakker.models.ETModelLocator;
+			
+			[Bindable] private var _model:ETModelLocator = ETModelLocator.getInstance();
+			private var _data:ArrayCollection;
+			
+			public function set dataProvider(value:ArrayCollection):void
+			{
+				// clear any children...
+				this.removeAllChildren();
+				
+				_data = value;
+				
+				var linkCount:int = value.length;
+				
+				for ( var i:int=0; i<value.length; i++)
+				{
+					var item:Object = value[i];
+					
+					var imgBtn:Button = new Button();
+					imgBtn.setStyle('skin', _model.icons[item.icon]);
+					imgBtn.toolTip = item.name;
+					imgBtn.useHandCursor = true;
+					imgBtn.buttonMode = true;
+					imgBtn.x = i * Math.round(615/(linkCount-1)) + 25;
+					imgBtn.y = -50;
+					imgBtn.height = 40;
+					imgBtn.width = 40;
+					imgBtn.alpha = 0;
+					
+					imgBtn.addEventListener(MouseEvent.CLICK, linkClick);
+					
+					this.addChild(imgBtn);				
+					
+					Tweener.addTween(imgBtn, { y : -2, alpha : 1, time : 0.3, delay : i * 0.3, transition : 'easeOutExpo' });
+				}			
+			}
+			
+			private function linkClick(event:MouseEvent):void
+			{
+				for(var i:int=0; i<numChildren; i++)
+				{
+					var child:* = getChildAt(i);
+					if(child == event.currentTarget)
+					{
+						_model.mainViewState = _model.viewStateList.indexOf(_data[i].module);
+					}
+				}
+			}																			
+			
+		]]>
+	</mx:Script>		
+		
+</mx:Canvas>

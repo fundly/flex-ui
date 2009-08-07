@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	width="100%"
+	horizontalScrollPolicy="off" verticalScrollPolicy="off" 
+	creationComplete="init()"
+	currentState="{_model.screenState == ETModelLocator.MAIN_SCREEN ? 'main' : 'login'}">
+
+	<mx:LinkBar id="siteLinks" 
+		styleName="siteLinks" 
+		itemClick="siteLinksNav(event)"
+		show="setListLinks()" 
+		visible="{_model.screenState == ETModelLocator.MAIN_SCREEN &amp;&amp; _model.siteLayoutLoaded}" />
+	<mx:Label id="versionLabel" styleName="versionLabel"
+		visible="{_model.revision != ''}" text="{versionText()}" />
+   	<mx:Text text="©" styleName="copyRightSymbol" />
+   	<mx:Text id="copyRight" styleName="copyRight" />
+	<mx:Image styleName="blueSwarmIcon" 
+		source="{_model.icons.BlueSwarmSmall}" 
+		toolTip="Visit Blue Swarm!"
+		click="navigateToURL(new URLRequest('http://www.blue-swarm.com/'),'blank')" 
+		useHandCursor="true" buttonMode="true" />
+   	<mx:Text id="adminLogin" 
+   		styleName="adminLogin"
+   		link="linkHandler(event)"
+   		visible="{adminLogin.text != '' &amp;&amp; _model.screenState == ETModelLocator.MAIN_SCREEN}" />
+   	<mx:VBox id="siteLegalBoxes"
+   		styleName="siteLegalBoxes" width="100%"
+   		horizontalAlign="center" verticalGap="10"
+   		visible="{_model.screenState == ETModelLocator.MAIN_SCREEN}"
+   		includeInLayout="{_model.screenState == ETModelLocator.MAIN_SCREEN}">
+   		<mx:Text id="siteLegalese" 
+   			styleName="siteLegalese" 
+   			width="70%"
+   			updateComplete="centreLegalese( event )"
+   			visible="{_model.options.legalese != null}" 
+   			includeInLayout="{_model.options.legalese != null}"
+   			htmlText="{_model.options.legalese}" />
+   		<mx:HBox id="paidForBox" 
+   			styleName="sitePaidFor" 
+   			visible="{_model.options.paid_for != null &amp;&amp; _model.siteLayoutLoaded}">
+   			<mx:Text id="sitePaidFor" 
+   				horizontalCenter="0"
+   				htmlText="{_model.options.paid_for}" />
+   		</mx:HBox>
+   		<mx:Spacer height="5" />
+   	</mx:VBox>
+
+
+	<mx:states>
+		<mx:State name="login">
+			<mx:RemoveChild target="{versionLabel}" />
+			<mx:AddChild target="{versionLabel}" />
+		</mx:State>
+		<mx:State name="main">
+			<mx:RemoveChild target="{versionLabel}" />
+			<mx:AddChild target="{versionLabel}" relativeTo="{paidForBox}" position="after" />
+		</mx:State>
+	</mx:states>
+	
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.utils.StringUtil;
+			import com.enilsson.utils.eNilssonUtils;
+			import mx.controls.Image;
+			import mx.utils.Base64Encoder;
+			import mx.collections.ArrayCollection;
+			import mx.events.CloseEvent;
+			import mx.managers.PopUpManager;
+			import com.enilsson.elephanttrakker.views.main.SupportForm;
+			import mx.utils.ObjectUtil;
+			import org.osflash.thunderbolt.Logger;
+			import com.enilsson.elephanttrakker.events.session.EndSessionEvent;
+			import com.enilsson.elephanttrakker.models.ETModelLocator;
+			import com.enilsson.elephanttrakker.views.main.*;
+			
+			[Bindable] public var _model:ETModelLocator = ETModelLocator.getInstance();
+			[Bindable] public var currDate:Date = new Date();
+			
+			/**
+			 * Initialisation
+			 */
+			private function init():void
+			{
+				copyRight.htmlText = currDate.getFullYear().toString() + ' ';
+				//copyRight.htmlText += '  <a href="http://www.blue-swarm.com/" target="_blank"><b><font color="#52bdec">BlueSwarm</font></b>';
+			}
+			
+			/**
+			 * Set the version text, removing any alpha characters that creep in
+			 */
+			private function versionText():String
+			{
+				var regX:RegExp = /[a-zA-Z]/gi;
+				var rev:String = _model.revision;
+				
+				return 'version '  + _model.version + '.' + rev.replace(regX, '');
+			}
+			
+			/**
+			 * Listen to changes in the legalese box so that the text can be centered when it is too short
+			 */
+			private function centreLegalese ( e:Event ):void
+			{
+				if ( e.currentTarget.htmlText == '' ) return;
+				
+				// get the legalese element
+				var l:Text = e.currentTarget as Text;
+				var legalese:String = _model.options.legalese;
+				
+				// set some regex to capture images
+				var regex:RegExp = /<img\b[^>]*\/>/gi;				
+				var matches:Array = legalese.match(regex);
+				
+				// check to see if there are any images in the text
+				if ( matches.length > 0 )
+				{
+					// loop through each image and create a new element for each
+					for ( var i:int=0; i < matches.length; i++ )
+					{
+						var tag:XML = new XML( matches[i] );
+						
+						_model.options.legalese = StringUtil.trim( legalese.replace(matches[i],'') );
+						
+						var img:Image = new Image();
+						img.source = tag.@src;
+						
+						var flag:Boolean = true;
+						
+						for ( var t:int = 0; t < siteLegalBoxes.numChildren; t++ )
+						{
+							var child:* = siteLegalBoxes.getChildAt(t);
+							if ( child is Image )
+							{
+								if ( img.source == child.source ) flag = false;
+							}
+						}
+						
+						// only add the image if it is unique
+						if ( flag ) siteLegalBoxes.addChildAt(img, i);
+					}
+					
+				}
+				
+				var tMetrics:TextLineMetrics = l.measureHTMLText( l.htmlText );
+				
+				if ( tMetrics.width < l.width )
+					l.setStyle('textAlign', 'center');
+				else
+					l.setStyle('textAlign', 'left');
+			}
+			
+			/**
+			 * Set the list of links based on the users session
+			 */
+			private function setListLinks():void
+			{
+				var site_links:ArrayCollection = new ArrayCollection(['Support']);
+					
+				if(_model.options.privacy_statement != null)
+					site_links.addItem('Privacy Policy');
+					
+				if(_model.session.data.hasOwnProperty('admin_acl'))
+					site_links.addItem('Admin');					
+					
+				site_links.addItem('Logout');
+					
+				siteLinks.dataProvider = site_links;
+				
+				if(_model.session.data.wheel)
+				{
+					adminLogin.htmlText = _model.session.data.wheel.fname + ' ' + _model.session.data.wheel.lname;
+					adminLogin.htmlText += ' (admin) logged in as: <b>' + _model.session.fullname + '</b> ';
+					adminLogin.htmlText += ' |  <a href="event:http://www.enilsson.com"><font color="#FF0000"><b>logout</b></font></a>';					
+					
+					adminLogin.visible = true;
+				}
+				else
+					adminLogin.visible = false;			
+			}
+			
+			
+			/**
+			 * Various site links
+			 */
+			private function siteLinksNav(e:Object):void
+			{				
+				switch(e.label)
+				{
+					case 'Support' :
+					 	var sClass:Class = SupportForm as Class;	 	
+					 	var sp:* = PopUpManager.createPopUp( _model.mainScreen, sClass, true );
+					    PopUpManager.centerPopUp(sp);
+					break;
+					case 'Logout' :
+						adminLogin.visible = false;
+						new EndSessionEvent().dispatch();
+					break
+					case 'Admin' :
+						// encode the gateway url
+						var base64encode:Base64Encoder = new Base64Encoder();
+						base64encode.encode(_model.gatewayURL);
+						// build the admin link from the model reference and the encoded url and redirect
+						navigateToURL( new URLRequest(_model.adminUI + '#redirect/' + base64encode.toString()), '_parent');
+					break;	
+					case 'Privacy Policy' :
+					 	var pClass:Class = PrivacyPolicy as Class;	 	
+					 	var p:* = PopUpManager.createPopUp( _model.mainScreen, pClass, true );
+					    PopUpManager.centerPopUp(p);
+					break;	
+				}
+			}
+			
+			/**			
+			 * Handle the proxy login logout procedure
+			 */
+			private function linkHandler(event:TextEvent):void
+			{
+				if(_model.debug) Logger.info('Logout link clicked', event.text);
+				
+				event.preventDefault();
+				
+				new EndSessionEvent( EndSessionEvent.EVENT_END_PROXYSESSION ).dispatch();
+			}
+			
+		]]>
+	</mx:Script>
+   	
+</mx:Canvas>

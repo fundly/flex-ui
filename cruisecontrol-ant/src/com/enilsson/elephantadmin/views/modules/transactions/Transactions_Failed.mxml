@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?>
+<common:LabeledContainer
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:common="com.enilsson.elephantadmin.views.common.*" 
+	xmlns:transactions="com.enilsson.elephantadmin.views.modules.transactions.*"
+	xmlns:popups="com.enilsson.elephantadmin.views.modules.transactions.popups.*"
+	verticalScrollPolicy="off" horizontalScrollPolicy="off"
+	label="{_model.viewStateNames.getItemAt(moduleID)}">
+
+	<mx:HBox horizontalGap="10" width="100%" height="100%">
+		<common:ModuleGrid id="moduleGrid"
+			height="100%" width="100%"
+			dataProvider="{_model.transactions_failed.records}"
+			searchComboList="{_model.transactions_failed.searchBoxCombo}"
+			listItemClick="listClickHandler()" 
+			searchStart="searchStart(event)"
+			indexSearch="indexSearchStart(event)"
+			clearSearch="resetSearch()" 
+			newPage="newPageAction(event)"
+			showDateFields="true"
+			columns="{columns}"
+			fromDateChange="fromDateChange(event)"
+			toDateChange="toDateChange(event)"
+			selectedIndex="{_model.transactions_failed.selectedIndex}" 
+			selectedPage="{_model.transactions_failed.currPage / _model.itemsPerPage}" 
+			itemsPerPage="{_model.itemsPerPage}" 
+			itemsTotal="{_model.transactions_failed.totalRecords}"
+			/>
+		<transactions:Transactions_Detail id="transactionDetail"
+			dataProvider="{_model.transactions_failed.details}"
+			width="350" 
+			height="100%"
+			showDetails="showSuccessDetails.message = event.currentTarget.response" />
+	</mx:HBox>
+
+	<popups:ShowTransactionDetails 
+		id="showSuccessDetails" 
+		title="Transaction Details"
+		type="failPanel" />
+
+	<mx:CurrencyFormatter id="currencyFormat"
+		currencySymbol="$"
+		decimalSeparatorFrom="."
+		decimalSeparatorTo="."
+		precision="0"
+		rounding="nearest"
+		thousandsSeparatorFrom=","
+		thousandsSeparatorTo=","
+		useThousandsSeparator="true"
+		/>
+
+	<mx:DateFormatter id="dateFormat" formatString="MM/DD/YYYY LL:NNA" />
+	<mx:DateFormatter id="timeFormat" formatString="LL:NNA" />
+	
+	<mx:Array id="columns">
+		<mx:DataGridColumn headerText="Amount" labelFunction="amountLabel" sortCompareFunction="numberSort" width="60"/>
+		<mx:DataGridColumn headerText="Name on Card" dataField="full_name" />
+		<mx:DataGridColumn headerText="Card Type" dataField="card_number_type" />
+		<mx:DataGridColumn headerText="Card Number" dataField="card_number" />
+		<mx:DataGridColumn headerText="Date" dataField="created_on" labelFunction="date_labelFunc" sortCompareFunction="timeSort" />
+		<mx:DataGridColumn headerText="Fundraiser" labelFunction="fundraiserLabel" />		
+	</mx:Array>
+
+	<mx:Script>
+		<![CDATA[
+			import mx.formatters.DateFormatter;
+			import mx.utils.ObjectUtil;
+			import mx.collections.ArrayCollection;
+
+			import com.enilsson.elephantadmin.models.EAModelLocator;
+			import com.enilsson.elephantadmin.events.modules.TransactionsEvent;
+			import com.enilsson.elephantadmin.vo.RecordsVO;
+			import com.enilsson.elephantadmin.vo.RecordVO;
+			
+			import org.osflash.thunderbolt.Logger;
+			
+			[Bindable] private var _model:EAModelLocator = EAModelLocator.getInstance();
+
+			override protected function init():void
+			{
+				super.init();
+
+				// get default list
+				resetSearch();
+				
+				// reset the data changed flag
+				_model.dataChanged = false;
+			}
+						
+			private function searchStart(event:Event):void 
+			{
+
+				if(moduleGrid.searchTerm != ""){
+					moduleGrid.clearSearch.visible = true;
+
+					var searchField:String = moduleGrid.searchOption.data;
+
+					var whereObj:Object;
+					if(RecordsVO(_model.transactions_failed.lastQuery.params.recordsVO).where)
+					{
+						whereObj = RecordsVO(_model.transactions_failed.lastQuery.params.recordsVO).where;
+						var whereArray:Array = String(whereObj.statement).split(" AND ");
+						if( whereArray.indexOf("(1)") == -1)	// if condition (1) not exist add to the where statement
+							whereArray.push("(1)");
+						whereObj['statement'] = whereArray.join(" AND ");
+					} 
+					else 
+					{
+						whereObj = new Object();
+						whereObj['statement'] = '(1)';
+					}
+
+					whereObj[1] = { 
+						'what' : searchField,
+						'val' : "%"+moduleGrid.searchTerm+"%",
+						'op' : 'LIKE'
+					};
+	
+					new TransactionsEvent( 
+						TransactionsEvent.TRANSACTIONS_FAILED_RECORDS, { 
+							'recordsVO' : new RecordsVO( 
+								'transactions_failed(created_by_id<fname:lname:_fid>)',
+								whereObj, 
+								'transactions_failed.created_on DESC', 
+								_model.transactions_failed.currPage, 
+								_model.itemsPerPage, 
+								'P' 
+							) 
+						} 
+					).dispatch();
+				}
+			}
+			
+			private function indexSearchStart(event:Event):void 
+			{
+				moduleGrid.clearSearch.visible = true;
+				var whereObj:Object;
+				if(RecordsVO(_model.transactions_failed.lastQuery.params.recordsVO).where)
+				{
+					whereObj = RecordsVO(_model.transactions_failed.lastQuery.params.recordsVO).where;
+					var whereArray:Array = String(whereObj.statement).split(" AND ");
+					if( whereArray.indexOf("(1)") == -1)	// if condition (1) not exist add to the where statement
+						whereArray.push("(1)");
+					whereObj['statement'] = whereArray.join(" AND ");
+				} else {
+					whereObj = new Object();
+					whereObj['statement'] = '(1)';
+				}
+
+				whereObj[1] = { 
+					'what' : 'transactions_failed.full_name',
+					'val' : moduleGrid.indexBar.searchLetter+"%",
+					'op' : 'LIKE'
+					};
+				new TransactionsEvent( 
+					TransactionsEvent.TRANSACTIONS_FAILED_RECORDS, { 
+						'recordsVO' : new RecordsVO( 
+							'transactions_failed(created_by_id<fname:lname:_fid>)', 
+							whereObj, 
+							'transactions_failed.created_on DESC', 
+							_model.transactions_failed.currPage, 
+							_model.itemsPerPage, 
+							'P' 
+						) 
+					} 
+				).dispatch();
+			}
+			
+			private function resetSearch():void 
+			{
+				moduleGrid.clearSearch.visible = false;
+				moduleGrid.clearDateRange();
+				_model.transactions_failed.currPage = 0;
+				
+				new TransactionsEvent( 
+					TransactionsEvent.TRANSACTIONS_FAILED_RECORDS, { 
+						'recordsVO' : new RecordsVO( 
+							'transactions_failed(created_by_id<fname:lname:_fid>)', 
+							null, 
+							'transactions_failed.created_on DESC', 
+							_model.transactions_failed.currPage, 
+							_model.itemsPerPage, 
+							'P' 
+						) 
+					} 
+				).dispatch();
+			}
+			
+			private function newPageAction(event:Event):void 
+			{
+				_model.transactions_failed.currPage = moduleGrid.selectedPage * _model.itemsPerPage;
+				switch(_model.transactions_failed.lastQuery.type)
+				{
+					case TransactionsEvent.TRANSACTIONS_FAILED_RECORDS:
+						RecordsVO(_model.transactions_failed.lastQuery.params.recordsVO).iFrom = _model.transactions_failed.currPage;
+						_model.transactions_failed.lastQuery.dispatch();
+ 					break;
+				}
+			}
+
+			private function fromDateChange(event:Event):void 
+			{
+				moduleGrid.clearSearch.visible = true;
+
+				switch(_model.transactions_failed.lastQuery.type){
+					case TransactionsEvent.TRANSACTIONS_FAILED_RECORDS:
+						var whereObj:Object
+						// if where object exits, keep (1) which is the "LIKE" statement 
+						if(RecordsVO(_model.transactions_failed.lastQuery.params.recordsVO).where)
+						{
+							whereObj = RecordsVO(_model.transactions_failed.lastQuery.params.recordsVO).where
+							var whereArray:Array = String(whereObj.statement).split(" AND ");
+								if( whereArray.indexOf("(2)") == -1)	// if condition (1) not exist add to the where statement
+							whereArray.push("(2)");
+							whereObj['statement'] = whereArray.join(" AND ");
+						}
+						else
+						{
+							whereObj = new Object();
+							whereObj['statement'] = '(2)';
+						}
+
+						whereObj[2] = { 
+							'what' : 'transactions_failed.created_on',
+							'op' : '>',
+							'val' : moduleGrid.fromDate.time / 1000 //start of the date range
+						};
+						RecordsVO(_model.transactions_failed.lastQuery.params.recordsVO).where = whereObj;
+						_model.transactions_failed.lastQuery.dispatch();
+ 						break;
+				}
+			}
+
+			private function toDateChange(event:Event):void 
+			{
+				moduleGrid.clearSearch.visible = true;
+
+				switch(_model.transactions_failed.lastQuery.type){
+					case TransactionsEvent.TRANSACTIONS_FAILED_RECORDS:
+						var whereObj:Object
+						// if where object exits, keep (1) which is the "LIKE" statement 
+						if(RecordsVO(_model.transactions_failed.lastQuery.params.recordsVO).where)
+						{
+							whereObj = RecordsVO(_model.transactions_failed.lastQuery.params.recordsVO).where
+							var whereArray:Array = String(whereObj.statement).split(" AND ");
+								if( whereArray.indexOf("(3)") == -1)	// if condition (3) not exist add to the where statement
+							whereArray.push("(3)");
+							whereObj['statement'] = whereArray.join(" AND ");
+						}
+						else
+						{
+							whereObj = new Object();
+							whereObj['statement'] = '(3)';
+						}
+
+						whereObj[3] = { 
+							'what' : 'transactions_failed.created_on',
+							'op' : '<',
+							'val' : moduleGrid.toDate.time / 1000 + 24*60*60 // end of the date range
+						};
+						RecordsVO(_model.transactions_failed.lastQuery.params.recordsVO).where = whereObj;
+						_model.transactions_failed.lastQuery.dispatch();
+ 						break;
+				}
+			}
+
+			private function listClickHandler():void 
+			{
+				_model.transactions_failed.details = moduleGrid.clickedItem;
+			}
+
+			private function date_labelFunc(item:Object, column:DataGridColumn):String 
+			{
+				return dateFormat.format( new Date( item[column.dataField] * 1000 ) );
+			}
+
+			private function amountLabel(item:Object, column:DataGridColumn):String
+			{
+				return currencyFormat.format(item.amount);
+			}
+			
+			private function fundraiserLabel(item:Object, column:DataGridColumn):String
+			{
+				return item.created_by_id.fname + ' ' + item.created_by_id.lname + ' (' + item.created_by_id._fid + ')';
+			}			
+
+			private function numberSort(itemA:Object, itemB:Object):int
+			{
+				return ObjectUtil.numericCompare(itemA.amount, itemB.amount);
+			}
+
+			private function timeSort(itemA:Object, itemB:Object):int
+			{
+				return ObjectUtil.numericCompare(itemA.created_on, itemB.created_on);
+			}
+
+		]]>
+	</mx:Script>
+			
+</common:LabeledContainer>

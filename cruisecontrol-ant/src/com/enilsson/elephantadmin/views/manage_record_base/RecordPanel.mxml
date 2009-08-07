@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:struktorForm="com.enilsson.utils.struktorForm.*" 
+	xmlns:common="com.enilsson.elephantadmin.views.common.*" 
+	xmlns:ns="com.enilsson.elephantadmin.views.manage_record_base.*">
+	
+	<mx:ViewStack width="{width}" height="{height}">
+		<mx:Canvas width="100%" height="100%">
+			<mx:TabNavigator id="recordPanelTabs"
+				styleName="optionsTabNav"
+				height="{height-38}" width="{width}" top="5"
+				tabOffset="-15" horizontalAlign="right"
+				paddingTop="0"
+				visible="false"
+				showEffect="fadeIn" hideEffect="fadeOut">
+				<mx:VBox
+					label="CURRENT" 
+					horizontalAlign="center"
+					horizontalScrollPolicy="off"
+					paddingTop="10">
+					<struktorForm:StruktorForm id="form"
+						styleName="recordPanelForm" 
+						formInputWidth="{width/2}"
+						layoutProvider="{presentationModel.layout}"
+						dataProvider="{presentationModel.selectedRecord}" 
+						formBuildComplete="presentationModel.formBuildComplete(event)"
+						isValidChanged="presentationModel.validChanged( event )"
+						excludedFields="{presentationModel.excludedFields}" />
+				</mx:VBox>
+			</mx:TabNavigator>
+			<mx:Canvas height="32" width="{width}" bottom="0">
+				<common:CMSSubmitBtn 
+					top="6" right="20"
+					enabled="{presentationModel.formValid}"
+					label="{presentationModel.addingNewRecord ? 'ADD' : 'UPDATE'}"
+					click="presentationModel.upsertRecord(form.formVariables)" />
+				<mx:LinkButton 
+					label="DETAILS" 
+					styleName="linkBtn"
+					click="presentationModel.showRecordDetails = true" 
+					verticalCenter="0" left="10" />
+				<mx:LinkButton 
+					label="DELETE" 
+					visible="{presentationModel.showDeleteBtn}"
+					enabled="{presentationModel.enableDeleteBtn}"
+					toolTip="{presentationModel.enableDeleteBtn ? 
+						'This record can be deleted' : 
+						'This record can not be deleted as it has dependant records, please contact support if you require its removal'}"
+					styleName="deleteBtn"	
+					click="deleteAction( event )"			
+					verticalCenter="0" right="125" />
+			</mx:Canvas>
+			<mx:Text text="{presentationModel.selectedRecord.sid != null ? 'SID: ' + presentationModel.selectedRecord.sid : ''}"
+				top="6" left="15" color="#cce260" fontWeight="bold"	/>
+		</mx:Canvas>
+	</mx:ViewStack>
+	
+	<ns:RecordDetails id="recordDetails" 
+		presentationModel="{presentationModel}"
+		visible="{presentationModel.showRecordDetails}" />
+	
+	<mx:Fade id="fadeIn" alphaFrom="0" alphaTo="1" duration="300" />
+	<mx:Fade id="fadeOut" alphaFrom="1" alphaTo="0" duration="300" />
+	
+	<mx:Binding source="presentationModel.selectedRecord" destination="this.updateData" />
+	
+	
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephantadmin.models.Icons;
+			import com.enilsson.elephantadmin.events.modules.RecordModuleEvent;
+			import mx.events.CloseEvent;
+			import mx.controls.Alert;
+			import org.osflash.thunderbolt.Logger;
+			import com.enilsson.elephantadmin.views.manage_record_base.model.RecordModel;
+			
+			[Bindable] public var presentationModel:RecordModel;
+			
+			public function set updateData ( value:Object ):void
+			{
+				this.recordPanelTabs.visible = true;
+			}
+			
+			private function deleteAction ( event:MouseEvent ):void
+			{
+				Alert.show(
+					'Are you sure you want to delete this record?',
+					'Delete record',
+					(Alert.YES | Alert.NO),
+					null,
+					doDelete,
+					Icons.ALERT
+				);
+			}	
+			
+			private function doDelete ( event:CloseEvent ):void
+			{
+				if( event.detail != Alert.YES ) return;
+				
+				presentationModel.deleteRecord();
+			}
+		]]>
+	</mx:Script>
+		
+</mx:Canvas>

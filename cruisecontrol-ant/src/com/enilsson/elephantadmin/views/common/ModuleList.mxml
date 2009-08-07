@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:effects="com.enilsson.effects.*"
+	xmlns:common="com.enilsson.elephantadmin.views.common.*"
+	xmlns:controls="com.enilsson.controls.*" 
+	xmlns:graphics="com.enilsson.graphics.*"
+	width="250"
+	verticalGap="0"
+	backgroundColor="#CCCCCC">
+	
+	<mx:Metadata>
+		[Event(name="listItemClick", type="flash.events.Event")]
+		[Event(name="searchStart", type="flash.events.Event")]
+		[Event(name="clearSearch", type="flash.events.Event")]
+		[Event(name="newPage", type="flash.events.Event")]
+		[Event(name="indexSearch", type="flash.events.Event")]
+	</mx:Metadata>
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import org.osflash.thunderbolt.Logger;
+			import mx.events.ListEvent;
+			import mx.collections.ArrayCollection;
+			import com.enilsson.elephantadmin.models.EAModelLocator;
+			
+			[Bindable] private var _model:EAModelLocator = EAModelLocator.getInstance();
+			
+			[Bindable] private var _dataProvider:ArrayCollection;
+			[Bindable] private var _searchComboList:ArrayCollection;
+			
+			
+			public function get dataProvider():ArrayCollection
+			{
+				return _dataProvider;
+			}
+			public function set dataProvider(value:ArrayCollection):void
+			{
+				_dataProvider = value;
+				
+				setText();
+			}
+
+			public function set searchComboList(value:ArrayCollection):void
+			{
+				_searchComboList = value;
+			}			
+
+			[Bindable] private var _totalRecords:Number = 0;
+			public function set totalRecords(value:Number):void
+			{
+				_totalRecords = value;
+			}
+			
+			[Bindable] public function get selectedIndex():int
+			{
+				return moduleList.selectedIndex;
+			}
+			
+			public function set selectedIndex(value:int):void
+			{
+				moduleList.selectedIndex = value;
+			}
+			
+			[Bindable] private var _itemRenderer:IFactory;
+		    public function get itemRenderer():IFactory
+		    {
+		        return _itemRenderer;
+		    }			
+			public function set itemRenderer(value:IFactory):void
+			{
+				_itemRenderer = value;
+			}
+			
+			[Bindable] private var _itemsPerPage:int = 0;
+			public function set itemsPerPage(value:int):void
+			{
+				_itemsPerPage = value;
+				setText();	
+			}
+			public function get itemsPerPage():int
+			{
+				return _itemsPerPage;
+			}	
+			
+			[Bindable] private var _itemsTotal:int = 0;			
+			public function set itemsTotal(value:int):void
+			{
+				_itemsTotal = value;
+				setText();
+			}
+			public function get itemsTotal():int
+			{
+				return _itemsTotal;
+			}	
+			
+			public function get clickedItem():Object
+			{
+				return moduleList.selectedItem;
+			}
+			
+			public function get searchTerm():String
+			{
+				return searchBox.searchBox.searchTerm;
+			}			
+
+			public function get searchOption():Object
+			{
+				return searchBox.searchOption;
+			}			
+
+			public function get selectedPage():int
+			{
+				return paginator.selectedIndex;
+			}	
+			public function set selectedPage(value:int):void
+			{
+				paginator.selectedIndex = value;
+			}
+			
+			private function listClickHandler(event:ListEvent):void
+			{
+				dispatchEvent( new Event('listItemClick') );
+			}
+			
+			private function setText():void
+			{
+				var plural:String = _itemsTotal > 1 ? 's' : '';				
+				
+				if(_itemsTotal < _itemsPerPage)
+				{
+					recordsDesc.htmlText = '<b>' + _itemsTotal + '</b> record' + plural;
+				}
+				else
+				{
+					var startIndex:String = (paginator.selectedIndex*_itemsPerPage+1).toString();
+					var toIndex:int =  paginator.selectedIndex * _itemsPerPage + _itemsPerPage;
+					var toIndexString:String = toIndex < _itemsTotal ? toIndex.toString() : _itemsTotal.toString();
+					
+					recordsDesc.htmlText = '<b>' + startIndex + '</b>';
+					recordsDesc.htmlText += '-<b>' + toIndexString + '</b>';
+					recordsDesc.htmlText += ' of <b>' + _itemsTotal + '</b> record' + plural;				
+				}
+			}			
+		]]>
+	</mx:Script>
+
+	<mx:Resize id="slideUp" heightTo="35" duration="1000" />
+	<mx:Resize id="slideDown" heightTo="0" duration="1000" />	
+
+	<mx:Canvas id="header" width="100%" height="28"
+		styleName="controlBar">
+		<mx:Text id="recordsDesc"
+			verticalCenter="0" left="5" 
+			fontSize="10"
+			color="#FFFFFF"
+			/>
+		<graphics:enCloseBtn id="clearSearch" 
+			visible="false" 
+			toolTip="Clear Browse" 
+			click="this.dispatchEvent( new Event('clearSearch', true ) )" 
+			top="4" right="4"
+			size="20" dropShadow="false" />
+	</mx:Canvas>
+	<mx:HBox id="indexList" width="100%" height="100%" horizontalGap="0">
+		<mx:List id="moduleList"
+			width="100%" height="100%" 
+			dataProvider="{_dataProvider}"
+			itemRenderer="{_itemRenderer}"
+			variableRowHeight="true" 
+			alternatingItemColors="[#e0e0e0, #e7e7e7]"
+			rowCount="{_dataProvider.length}"
+			borderStyle="none" 
+			itemClick="listClickHandler(event)"
+			/>
+		<common:IndexBar id="indexBar" height="100%" />
+	</mx:HBox>
+		
+	<mx:Canvas id="paginationBox" 
+		visible="{_itemsTotal &gt; _itemsPerPage}"
+		showEffect="slideUp" hideEffect="slideDown"
+		backgroundColor="#CCCCCC"
+		height="0"
+		width="100%">
+		
+		<controls:Paginator id="paginator" 
+			styleName="paginator" 
+			debugMode="{_model.debug}" 
+			rangeCount="4" 
+			verticalCenter="0" horizontalCenter="0" 
+			buttonHeight="18" 
+			newPage="dispatchEvent( new Event( 'newPage', true ) );" 
+			itemsPerPage="{_itemsPerPage}" 
+			itemsTotal="{_itemsTotal}" 
+			/>
+		
+	</mx:Canvas>
+	
+	<mx:Canvas id="footer" width="100%" height="28"
+		styleName="controlBar">
+		<common:ListSearchBox id="searchBox" 
+			top="4" left="5"
+			width="230" 
+			height="20" color="#333333" 
+			dataProvider="{_searchComboList}"
+			searchStart="this.dispatchEvent( new Event('searchStart', true ) )" 
+			clearSearch="this.dispatchEvent( new Event('clearSearch', true ) )" 
+			/>
+	</mx:Canvas>
+	
+</mx:VBox>

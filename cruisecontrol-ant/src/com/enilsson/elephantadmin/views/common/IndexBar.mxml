@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" width="12"
+	creationComplete="init();" verticalGap="0"
+	horizontalAlign="center" verticalAlign="middle">
+
+	<mx:Metadata>
+		[Event(name="indexSearch", type="flash.events.Event")]
+	</mx:Metadata>
+
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			import mx.controls.Button;
+			import mx.controls.LinkButton;
+	
+			[Bindable] private var alphabet:Array = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N',
+														'O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+
+			[Bindable] public var searchLetter:String = "";
+	
+			private function init():void
+			{
+				this.removeAllChildren();
+				for (var i:int; i < alphabet.length; i++)
+				{
+					var link:LinkButton = new LinkButton();
+					link.label = alphabet[i];
+					link.styleName = "indexBar"
+					link.percentHeight = 100;
+					link.percentWidth = 100;
+					link.addEventListener(MouseEvent.CLICK, clickHandler);
+					this.addChild(link);
+				}
+			}
+			
+			private function clickHandler(event:MouseEvent):void{
+				searchLetter = event.target.label;
+				this.dispatchEvent(new Event("indexSearch", true));
+			}
+		]]>
+	</mx:Script>
+
+	<mx:LinkButton  width="100%" label="A" styleName="indexBar"/>
+	<mx:LinkButton  width="100%" label="B" styleName="indexBar"/>
+	<mx:LinkButton  width="100%" label="C" styleName="indexBar"/>
+	<mx:LinkButton  width="100%" label="." styleName="indexBar"/>
+	<mx:LinkButton  width="100%" label="." styleName="indexBar"/>
+</mx:VBox>

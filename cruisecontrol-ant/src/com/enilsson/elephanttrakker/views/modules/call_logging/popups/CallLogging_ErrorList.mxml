@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrowPopup 
+	xmlns="com.enilsson.containers.*" 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	width="300"
+	styleName="errorFieldsPopup" 
+	arrowYLength="15" 
+	show="init()"
+	>
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.utils.ObjectUtil;
+			import mx.controls.Spacer;
+			import mx.controls.HRule;
+			import com.enilsson.graphics.enDropShadows;
+			import org.osflash.thunderbolt.Logger;
+			import mx.controls.Text;
+			import com.enilsson.elephanttrakker.models.ETModelLocator;
+			
+			[Bindable] private var _model:ETModelLocator = ETModelLocator.getInstance();			
+			
+			private function init():void
+			{
+				this.removeAllChildren();
+				
+				var c:Array = _model.call_logging.contactsErrors;
+				var p:Array = _model.call_logging.pledgeErrors;
+				var cc:Array = _model.call_logging.ccErrors;
+				var ch:Array = _model.call_logging.checkErrors;
+				var b:Array = _model.call_logging.billingErrors;
+				
+/* 				Logger.info('Pledge Errors', ObjectUtil.toString(p));
+				Logger.info('CC Errors', ObjectUtil.toString(cc));
+				Logger.info('Check Errors', ObjectUtil.toString(ch));
+				Logger.info('Billing Errors', ObjectUtil.toString(b));
+ */				
+				var title:Text;
+				var errorDesc:Text;
+				var otherTabs:Text;
+				var hr:HRule;
+				var spacer:Spacer;
+				
+				var f:Object;
+				var num:Number = 0;
+				switch ( _model.call_logging.transVStack )
+				{
+					case 0 :
+						num = p.length + cc.length + (_model.call_logging.vo.billing == null ? 0 : b.length)
+					break;
+					case 1 :
+						num = p.length + ch.length
+					break;
+					case 2 :
+						num = p.length;
+					break;
+				}
+				
+				if(_model.call_logging.workspaceValid)
+				{
+					this.styleName = 'successFieldsPopup';
+					title = new Text();
+					title.styleName = 'epHeading';
+					title.percentWidth = 100;
+					title.filters = [com.enilsson.graphics.enDropShadows.textDS(0x000000)];
+					title.htmlText = 'This form is ready to submit!';
+					this.addChild(title);
+					return;
+				}
+				else
+					this.styleName = 'errorFieldsPopup';
+				
+				title = new Text();
+				title.styleName = 'epHeading';
+				title.percentWidth = 100;
+				title.filters = [com.enilsson.graphics.enDropShadows.textDS(0x000000)];
+				title.htmlText = 'Please fill in all required fields!';
+				this.addChild(title);
+				
+				switch(_model.call_logging.vindex)
+				{
+					case 0 :
+						title = new Text();
+						title.styleName = 'epTitle';
+						title.percentWidth = 100;
+						title.htmlText = 'This page: <b>' + c.length.toString() + '</b> error' + (c.length == 1 ? '' : 's');
+						this.addChild(title);
+						
+						for each ( f in c )
+						{
+							errorDesc = new Text();
+							errorDesc.styleName = 'epDesc';
+							errorDesc.text = ' - ' + f.message;
+							errorDesc.percentWidth = 100;
+							this.addChild(errorDesc);
+						}
+						
+						spacer = new Spacer();
+						spacer.height = 5;
+						this.addChild(spacer);
+						
+						hr = new HRule();
+						hr.height = 1;
+						hr.percentWidth = 100;
+						hr.setStyle('strokeColor', 0xFFFFFF);
+						this.addChild(hr);
+						
+						spacer = new Spacer();
+						spacer.height = 5;
+						this.addChild(spacer);
+						
+						otherTabs = new Text();
+						otherTabs.styleName = 'epTitle';
+						otherTabs.percentWidth = 100;
+						otherTabs.htmlText = 'Pledge & Payment details - <b>' + num.toString() + '</b> error' +  (num == 1 ? '' : 's') + '<br>'; 
+						if( _model.call_logging.agreement != null )
+						{
+							otherTabs.htmlText += _model.call_logging.agreementValid ? 
+								'Agreement - no errors' : 
+								'Agreement - not all initials boxes complete';
+						}
+						this.addChild(otherTabs);
+					break;
+					
+					case 1 :
+						title = new Text();
+						title.styleName = 'epTitle';
+						title.percentWidth = 100;
+						title.htmlText = 'This page: <b>' + num.toString() + '</b> error' + (num == 1 ? '' : 's');
+						this.addChild(title);
+						
+						var iter:int = 0
+						
+						for each ( f in p )
+						{
+							errorDesc = new Text();
+							errorDesc.styleName = 'epDesc';
+							errorDesc.text = ' - ' + f.message;
+							errorDesc.percentWidth = 100;
+							this.addChild(errorDesc);
+							
+							iter++;
+						}
+						
+						if(_model.call_logging.transVStack == 0)
+						{
+							// list the credit card form errors
+							for each ( f in cc )
+							{
+								if(iter > 6) continue;
+								
+								errorDesc = new Text();
+								errorDesc.styleName = 'epDesc';
+								errorDesc.text = ' - ' + f.message;
+								errorDesc.percentWidth = 100;
+								this.addChild(errorDesc);
+							
+								iter++;
+							}
+							
+							// list the billing form errors
+							if ( _model.call_logging.vo.billing != null)
+							{
+								for each ( f in b )
+								{
+									if(iter > 6) continue;
+									
+									errorDesc = new Text();
+									errorDesc.styleName = 'epDesc';
+									errorDesc.text = ' - ' + f.message;
+									errorDesc.percentWidth = 100;
+									this.addChild(errorDesc);
+								
+									iter++;
+								}
+							}
+						}
+						
+						if(_model.call_logging.transVStack == 1)
+						{
+							for each ( f in ch )
+							{
+								if(iter > 6) continue;
+
+								errorDesc = new Text();
+								errorDesc.styleName = 'epDesc';
+								errorDesc.text = ' - ' + f.message;
+								errorDesc.percentWidth = 100;
+								this.addChild(errorDesc);
+							}
+						}
+
+						if(iter > 6)
+						{
+							errorDesc = new Text();
+							errorDesc.styleName = 'epDesc';
+							errorDesc.htmlText = ' ... and <b>' + (num - iter).toString() + '</b> other' + ((num - iter) == 1 ? '' : 's') + '.';
+							errorDesc.percentWidth = 100;
+							this.addChild(errorDesc);
+						}
+						
+						spacer = new Spacer();
+						spacer.height = 5;
+						this.addChild(spacer);
+						
+						hr = new HRule();
+						hr.height = 1;
+						hr.percentWidth = 100;
+						hr.setStyle('strokeColor', 0xFFFFFF);
+						this.addChild(hr);
+						
+						spacer = new Spacer();
+						spacer.height = 5;
+						this.addChild(spacer);
+						
+						otherTabs = new Text();
+						otherTabs.styleName = 'epTitle';
+						otherTabs.percentWidth = 100;
+						otherTabs.htmlText = 'Contact details - <b>' + c.length.toString() + '</b> errors<br>'; 
+						if ( _model.call_logging.agreement != null )
+						{
+							otherTabs.htmlText += _model.call_logging.agreementValid ? 
+								'Agreement - no errors' : 
+								'Agreement - not all initials boxes complete';							
+						}
+						this.addChild(otherTabs);
+					break;
+					
+					case 2 :
+						title = new Text();
+						title.styleName = 'epTitle';
+						title.percentWidth = 100;
+						title.htmlText = 'This page:';
+						this.addChild(title);
+						
+						if(_model.call_logging.agreementValid)
+						{
+							errorDesc = new Text();
+							errorDesc.styleName = 'epDesc';
+							errorDesc.htmlText = ' - All initials boxes are <b>correct</b>';
+							errorDesc.percentWidth = 100;
+							this.addChild(errorDesc);
+						}
+						else
+						{
+							errorDesc = new Text();
+							errorDesc.styleName = 'epDesc';
+							errorDesc.htmlText = ' - please enter all initials correctly as <b>' + _model.session.fname.substr(0,1) + _model.session.lname.substr(0,1) + '</b>';
+							errorDesc.percentWidth = 100;
+							this.addChild(errorDesc);
+						}
+						
+						spacer = new Spacer();
+						spacer.height = 5;
+						this.addChild(spacer);
+						
+						hr = new HRule();
+						hr.height = 1;
+						hr.percentWidth = 100;
+						hr.setStyle('strokeColor', 0xFFFFFF);
+						this.addChild(hr);
+						
+						spacer = new Spacer();
+						spacer.height = 5;
+						this.addChild(spacer);
+						
+						otherTabs = new Text();
+						otherTabs.styleName = 'epTitle';
+						otherTabs.percentWidth = 100;
+						otherTabs.htmlText = 'Contact details - <b>' + c.length.toString() + '</b> error' +  (c.length == 1 ? '' : 's') + '<br>';
+						otherTabs.htmlText += 'Pledge & Payment details - <b>' + num.toString() + '</b> error' +  (num == 1 ? '' : 's'); 
+						this.addChild(otherTabs);
+					break;
+				}
+			}			
+		]]>
+	</mx:Script>
+	
+</ArrowPopup>

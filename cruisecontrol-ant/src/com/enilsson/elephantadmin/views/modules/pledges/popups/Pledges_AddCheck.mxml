@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas 
+ creationComplete="init()"
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:graphics="com.enilsson.graphics.*" 
+	xmlns:common="com.enilsson.elephantadmin.views.common.*"
+	xmlns:ns="com.enilsson.elephantadmin.views.modules.users.*">
+	
+	<mx:Canvas left="0" top="10" 
+		styleName="popupContent" 
+		verticalScrollPolicy="off" horizontalScrollPolicy="off"
+		filters="{[com.enilsson.graphics.enDropShadows.standardDS()]}" 
+		width="{this.width-10}" height="{this.height-10}">
+
+	</mx:Canvas>
+	<graphics:enCloseBtn top="0" right="0" size="20" click="closeComponent()" />
+
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephantadmin.views.modules.pledges.model.PledgesModel;
+			import com.enilsson.elephantadmin.views.modules.users.model.UsersModel;
+			import mx.utils.ObjectUtil;
+			import mx.managers.PopUpManager;
+			import mx.controls.CheckBox;
+			import mx.containers.HBox;
+			import mx.controls.Text;
+			import mx.collections.ArrayCollection;
+			import org.osflash.thunderbolt.Logger;
+			import com.enilsson.elephantadmin.models.EAModelLocator;
+
+			private function init():void
+			{
+				
+			}
+
+			private function closeComponent():void
+			{
+				PopUpManager.removePopUp(this);
+			}
+				
+		]]>
+	</mx:Script>
+
+</mx:Canvas>	

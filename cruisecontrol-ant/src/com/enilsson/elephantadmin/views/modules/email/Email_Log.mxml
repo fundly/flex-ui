@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="utf-8"?>
+<common:LabeledContainer
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:common="com.enilsson.elephantadmin.views.common.*" 
+	xmlns:email="com.enilsson.elephantadmin.views.modules.email.*" 
+	verticalScrollPolicy="off" horizontalScrollPolicy="off"
+	label="{_model.viewStateNames.getItemAt(moduleID)}"
+	>
+
+	<mx:Script>
+		<![CDATA[
+			import mx.formatters.DateFormatter;
+			import com.enilsson.elephantadmin.vo.EmailVO;
+			import mx.utils.ObjectUtil;
+			import mx.collections.ArrayCollection;
+			import com.enilsson.graphics.enDropShadows;
+
+			import com.enilsson.elephantadmin.events.session.PingEvent;
+			import com.enilsson.elephantadmin.models.EAModelLocator;
+			import com.enilsson.elephantadmin.events.modules.EmailEvent;
+			import com.enilsson.elephantadmin.vo.RecordsVO;
+			import com.enilsson.elephantadmin.vo.RecordVO;
+			import com.enilsson.elephantadmin.vo.SearchVO;
+			
+			import org.osflash.thunderbolt.Logger;			
+			
+			[Bindable] private var _model:EAModelLocator = EAModelLocator.getInstance();
+
+			override protected function init():void
+			{
+				super.init();
+
+				// get default list
+				clearSearch();
+				// reset the data changed flag
+				_model.dataChanged = false;
+			}
+						
+			private function searchStart(event:Event):void {
+
+				if(emailList.searchTerm != ""){
+					emailList.clearSearch.visible = true;
+
+					var searchField:String = emailList.searchOption.data;
+
+					var whereObj:Object;
+					if(RecordsVO(_model.email_log.lastQuery.params.recordsVO).where)
+					{
+						whereObj = RecordsVO(_model.email_log.lastQuery.params.recordsVO).where;
+						var whereArray:Array = String(whereObj.statement).split(" AND ");
+						if( whereArray.indexOf("(1)") == -1)	// if condition (1) not exist add to the where statement
+							whereArray.push("(1)");
+						whereObj['statement'] = whereArray.join(" AND ");
+					} else {
+						whereObj = new Object();
+						whereObj['statement'] = '(1)';
+					}
+
+					whereObj[1] = { 
+						'what' : searchField,
+						'val' : "%"+emailList.searchTerm+"%",
+						'op' : 'LIKE'
+					};
+	
+					new EmailEvent( 
+						EmailEvent.EMAIL_LOG_RECORDS, { 
+							'recordsVO' : new RecordsVO( 
+								'email_log(user_id<fname:lname:_fid>)', 
+								whereObj, 
+								'email_log.created_on DESC', 
+								_model.email_log.currPage, 
+								_model.itemsPerPage, 
+								'P' 
+							) 
+						} 
+					).dispatch();
+				}
+			}
+			
+			private function indexSearchStart(event:Event):void {
+				emailList.clearSearch.visible = true;
+				var whereObj:Object;
+				if(RecordsVO(_model.email_log.lastQuery.params.recordsVO).where)
+				{
+					whereObj = RecordsVO(_model.email_log.lastQuery.params.recordsVO).where;
+					var whereArray:Array = String(whereObj.statement).split(" AND ");
+					if( whereArray.indexOf("(1)") == -1)	// if condition (1) not exist add to the where statement
+						whereArray.push("(1)");
+					whereObj['statement'] = whereArray.join(" AND ");
+				} else {
+					whereObj = new Object();
+					whereObj['statement'] = '(1)';
+				}
+
+				whereObj[1] = { 
+					'what' : 'email_log.to',
+					'val' : emailList.indexBar.searchLetter+"%",
+					'op' : 'LIKE'
+					};
+				new EmailEvent( 
+					EmailEvent.EMAIL_LOG_RECORDS, { 
+						'recordsVO' : new RecordsVO( 
+							'email_log(user_id<fname:lname:_fid>)', 
+							whereObj, 
+							'email_log.cc ASC email_log.bcc ASC email_log.created_on DESC', 
+							_model.email_log.currPage, 
+							_model.itemsPerPage, 
+							'P' 
+						) 
+					} 
+				).dispatch();
+			}
+			
+			private function clearSearch():void {
+				emailList.clearSearch.visible = false;
+				emailList.clearDateRange();
+				_model.email_log.currPage = 0;
+				new EmailEvent( 
+					EmailEvent.EMAIL_LOG_RECORDS, { 
+						'recordsVO' : new RecordsVO( 
+							'email_log(user_id<fname:lname:_fid>)', 
+							null, 
+							'email_log.created_on DESC', 
+							_model.email_log.currPage, 
+							_model.itemsPerPage, 
+							'P' 
+						) 
+					} 
+				).dispatch();
+			}
+			
+			private function newPageAction(event:Event):void {
+				_model.email_log.currPage = emailList.selectedPage * _model.itemsPerPage;
+				switch(_model.email_log.lastQuery.type){
+					case EmailEvent.EMAIL_LOG_RECORDS:
+						RecordsVO(_model.email_log.lastQuery.params.recordsVO).iFrom = _model.email_log.currPage;
+						_model.email_log.lastQuery.dispatch();
+ 						break;
+				}
+			}
+
+			private function fromDateChange(event:Event):void {
+				emailList.clearSearch.visible = true;
+
+				switch(_model.email_log.lastQuery.type){
+					case EmailEvent.EMAIL_LOG_RECORDS:
+						var whereObj:Object
+						// if where object exits, keep (1) which is the "LIKE" statement 
+						if(RecordsVO(_model.email_log.lastQuery.params.recordsVO).where)
+						{
+							whereObj = RecordsVO(_model.email_log.lastQuery.params.recordsVO).where
+							var whereArray:Array = String(whereObj.statement).split(" AND ");
+								if( whereArray.indexOf("(2)") == -1)	// if condition (1) not exist add to the where statement
+							whereArray.push("(2)");
+							whereObj['statement'] = whereArray.join(" AND ");
+						}
+						else
+						{
+							whereObj = new Object();
+							whereObj['statement'] = '(2)';
+						}
+
+						whereObj[2] = { 
+							'what' : 'email_log.created_on',
+							'op' : '>',
+							'val' : emailList.fromDate.time / 1000 //start of the date range
+						};
+						RecordsVO(_model.email_log.lastQuery.params.recordsVO).where = whereObj;
+						_model.email_log.lastQuery.dispatch();
+ 						break;
+					
+					case EmailEvent.EMAIL_LOG_SEARCH:
+						SearchVO(_model.email_log.lastQuery.params.searchVO).iFrom = _model.email_log.currPage;
+						_model.email_log.lastQuery.dispatch();
+						break;
+				}
+			}
+
+			private function toDateChange(event:Event):void {
+				emailList.clearSearch.visible = true;
+
+				switch(_model.email_log.lastQuery.type){
+					case EmailEvent.EMAIL_LOG_RECORDS:
+						var whereObj:Object
+						// if where object exits, keep (1) which is the "LIKE" statement 
+						if(RecordsVO(_model.email_log.lastQuery.params.recordsVO).where)
+						{
+							whereObj = RecordsVO(_model.email_log.lastQuery.params.recordsVO).where
+							var whereArray:Array = String(whereObj.statement).split(" AND ");
+								if( whereArray.indexOf("(3)") == -1)	// if condition (1) not exist add to the where statement
+							whereArray.push("(3)");
+							whereObj['statement'] = whereArray.join(" AND ");
+						}
+						else
+						{
+							whereObj = new Object();
+							whereObj['statement'] = '(3)';
+						}
+
+						whereObj[3] = { 
+							'what' : 'email_log.created_on',
+							'op' : '<',
+							'val' : emailList.toDate.time / 1000 + 24*60*60 // end of the date range
+						};
+						RecordsVO(_model.email_log.lastQuery.params.recordsVO).where = whereObj;
+						_model.email_log.lastQuery.dispatch();
+ 						break;
+					
+					case EmailEvent.EMAIL_LOG_SEARCH:
+						SearchVO(_model.email_log.lastQuery.params.searchVO).iFrom = _model.email_log.currPage;
+						_model.email_log.lastQuery.dispatch();
+						break;
+				}
+			}
+
+			private function listClickHandler():void {
+				_model.email_log.details = emailList.clickedItem;
+			}
+
+			private function date_labelFunc(item:Object, column:DataGridColumn):String 
+			{
+				var today:Date = new Date();
+		  		return dateFormatter.format( new Date( item[column.dataField] * 1000 ) );
+			}
+
+			private function name_labelFunc(item:Object, column:DataGridColumn):String 
+			{
+		  		return item.user_id.fname + " " + item.user_id.lname;
+			}
+
+			private function to_labelFunc(item:Object, column:DataGridColumn):String 
+			{
+				if(item.to)
+				{
+					var emailList:Array = String(item.to).split(",",2);
+					if(emailList.length == 1)
+						return emailList[0];
+					else
+						return emailList[0] + "...";
+				}
+				else
+					return "-";
+			}
+
+			private function cc_labelFunc(item:Object, column:DataGridColumn):String 
+			{
+				if(item.cc)
+				{
+					var emailList:Array = String(item.cc).split(",",2);
+					if(emailList.length == 1)
+						return emailList[0];
+					else
+						return emailList[0] + "...";
+				}
+				else
+					return "-";
+			}
+
+			private function bcc_labelFunc(item:Object, column:DataGridColumn):String 
+			{
+				if(item.bcc)
+				{
+					var emailList:Array = String(item.bcc).split(",",2);
+					if(emailList.length == 1)
+						return emailList[0];
+					else
+						return emailList[0] + "...";
+				}
+				else
+					return "-";
+			}
+
+			private function fid_labelFunc(item:Object, column:DataGridColumn):String 
+			{
+		  		return item.user_id._fid;
+			}
+
+		]]>
+	</mx:Script>
+
+	<mx:DateFormatter id="dateFormatter" formatString="MM/DD/YY L:NN A" />
+
+	<mx:Array id="columns">
+		<mx:DataGridColumn headerText="To" labelFunction="to_labelFunc" width="80" />
+		<mx:DataGridColumn headerText="Cc" labelFunction="cc_labelFunc" width="80" />
+		<mx:DataGridColumn headerText="Bcc" labelFunction="bcc_labelFunc" width="80" />
+		<mx:DataGridColumn headerText="Sender" labelFunction="name_labelFunc" width="100" />
+		<mx:DataGridColumn headerText="FID" labelFunction="fid_labelFunc" width="60" />
+		<mx:DataGridColumn headerText="Subject" dataField="subject" />
+		<mx:DataGridColumn headerText="Date" dataField="created_on" labelFunction="date_labelFunc" width="100"/>
+	</mx:Array>
+			
+	<mx:HDividedBox horizontalGap="10" width="100%" height="100%">
+		<common:ModuleGrid id="emailList"
+			height="100%" width="100%" minWidth="400"
+			dataProvider="{_model.email_log.records}"
+			searchComboList="{_model.email_log.searchBoxCombo}"
+			listItemClick="listClickHandler()" 
+			searchStart="searchStart(event)"
+			indexSearch="indexSearchStart(event)"
+			clearSearch="clearSearch()" 
+			newPage="newPageAction(event)"
+			showDateFields="true"
+			columns="{columns}"
+			fromDateChange="fromDateChange(event)"
+			toDateChange="toDateChange(event)"
+			selectedIndex="{_model.email_log.selectedIndex}" 
+			selectedPage="{_model.email_log.currPage / _model.itemsPerPage}" 
+			itemsPerPage="{_model.itemsPerPage}" 
+			itemsTotal="{_model.email_log.totalRecords}"
+			/>
+		<email:Email_Log_Detail id="emailDetail"
+			minWidth="350" 
+			height="100%"/>
+	</mx:HDividedBox>
+</common:LabeledContainer>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	horizontalScrollPolicy="off" verticalScrollPolicy="off">
+
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephanttrakker.models.ETModelLocator;
+		
+			[Bindable] private var _model:ETModelLocator = ETModelLocator.getInstance();		
+		]]>
+	</mx:Script>		
+	
+	<mx:CurrencyFormatter id="cF" precision="0" currencySymbol="$" useNegativeSign="false" />	
+	<mx:Fade id="fadeIn" alphaTo="1" alphaFrom="0" duration="600" />
+	
+	<mx:ApplicationControlBar styleName="overviewAppBar" width="{this.width}" height="25">
+		<mx:Text styleName="controlBarTitle" text="QUICK STATS" />
+	</mx:ApplicationControlBar>
+	<mx:Button id="donorMore" 
+		styleName="controlMore" 	
+		click="_model.mainViewState = ETModelLocator.MY_HISTORY_VIEW" />
+	
+	<mx:Text text="Loading quick stats..." top="40" horizontalCenter="0" />	
+	<mx:VBox id="quickStats"
+		styleName="quickStatsList"
+		visible="{_model.session != null}"
+		showEffect="fadeIn"
+		top="28" width="380">
+		<mx:HBox width="100%" height="100%" styleName="lightLine">
+			<mx:Image source="{_model.icons.pledge}" height="18" width="90" />
+			<mx:Text text="Number of Pledges" width="200" styleName="qsText" />
+			<mx:Text id="QSdonors" styleName="qsAmt" text="{_model.session.data._p}" />
+		</mx:HBox>
+		<mx:HBox width="100%" height="100%" styleName="darkLine">
+			<mx:Image source="{_model.icons.pledgeCollect}" width="90" />
+			<mx:Text text="Total Pledged" width="200" styleName="qsText" />
+			<mx:Text id="QSpledged" styleName="qsAmt" text="{cF.format(_model.session.data._pledge_total)}" />
+		</mx:HBox>			
+		<mx:HBox width="100%" height="100%" styleName="lightLine">
+			<mx:Image source="{_model.icons.pledgeCollect}" width="90" />
+			<mx:Text text="Total Contributed" width="200" styleName="qsText" />
+			<mx:Text id="QSoutstanding" styleName="qsAmt" text="{cF.format(_model.session.data._contrib_total)}" />
+		</mx:HBox>			
+		<mx:HBox width="100%" height="100%" styleName="darkLine">
+			<mx:Image source="{_model.icons.singleUserSmall}" width="90" />
+			<mx:Text text="Average per Donor" width="200" styleName="qsText" />
+			<mx:Text id="QSav" styleName="qsAmt" 
+				text="{cF.format(_model.session.data._pledge_total == 0 ? 0 : _model.session.data._pledge_total/_model.session.data._p)}"
+				/>
+		</mx:HBox>			
+	</mx:VBox>
+	
+</mx:Canvas>

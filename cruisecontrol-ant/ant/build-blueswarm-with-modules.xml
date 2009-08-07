@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<project name="build.blueswarm.with.modules" default="compile">
+
+	<import file="build-blueswarm.xml" />
+	
+	<property name="report.modules.src.dir" value="${flex.src.dir}/com/enilsson/elephantadmin/views/modules/reporting" />
+	<property name="report.modules.build.dir" value="${admin.build.dir}/report_modules/core" />
+			
+	
+	<!-- Enabled modules -->
+	<property name="all_contributions.dir" value="${report.modules.src.dir}/all_contributions" />
+	<property name="module.all_contributions" value="AllContributions_Module" />
+	
+	<property name="all_pledges.dir" value="${report.modules.src.dir}/all_pledges" />
+	<property name="module.all_pledges" value="AllPledges_Module" />
+	
+	<property name="dailyincome.dir" value="${report.modules.src.dir}/dailyincome" />
+	<property name="module.dailyincome" value="DailyIncome_Module" />
+	
+	<property name="donationwidget.dir" value="${report.modules.src.dir}/donationwidget" />
+	<property name="module.donationwidget" value="DonationWidget_Module" />
+	
+	<property name="fundraisers.dir" value="${report.modules.src.dir}/fundraisers" />
+	<property name="module.fundraisers" value="Fundraisers_Module" />
+	
+	<property name="host_committee.dir" value="${report.modules.src.dir}/host_committee" />
+	<property name="module.host_committee" value="HostCommittee_Module" />
+	
+	<property name="netfile.dir" value="${report.modules.src.dir}/netfile" />
+	<property name="module.netfile" value="NetFile_Module" />
+	
+	
+	<target name="init" depends="build.blueswarm.init">
+		<mkdir dir="${report.modules.build.dir}" />
+	</target>
+		
+	<target name="compile.report.modules" depends="init, export.revision, check.report.modules.uptodate" unless="report.modules.uptodate">
+		
+		<antcall target="compile.module">
+			<param name="param.mxml" value="${all_contributions.dir}/${module.all_contributions}.mxml" />
+			<param name="param.swf" value="${report.modules.build.dir}/${module.all_contributions}.swf" />
+		</antcall>
+	
+		<antcall target="compile.module">
+			<param name="param.mxml" value="${all_pledges.dir}/${module.all_pledges}.mxml" />
+			<param name="param.swf" value="${report.modules.build.dir}/${module.all_pledges}.swf" />
+		</antcall>
+		
+		<antcall target="compile.module">
+			<param name="param.mxml" value="${host_committee.dir}/${module.host_committee}.mxml" />
+			<param name="param.swf" value="${report.modules.build.dir}/${module.host_committee}.swf" />
+		</antcall>
+	
+		<antcall target="compile.module">
+			<param name="param.mxml" value="${donationwidget.dir}/${module.donationwidget}.mxml" />
+			<param name="param.swf" value="${report.modules.build.dir}/${module.donationwidget}.swf" />
+		</antcall>
+		
+		<antcall target="compile.module">
+			<param name="param.mxml" value="${netfile.dir}/${module.netfile}.mxml" />
+			<param name="param.swf" value="${report.modules.build.dir}/${module.netfile}.swf" />
+		</antcall>
+				
+		<antcall target="compile.module">
+			<param name="param.mxml" value="${fundraisers.dir}/${module.fundraisers}.mxml" />
+			<param name="param.swf" value="${report.modules.build.dir}/${module.fundraisers}.swf" />
+		</antcall>
+		
+		<antcall target="compile.module">
+			<param name="param.mxml" value="${dailyincome.dir}/${module.dailyincome}.mxml" />
+			<param name="param.swf" value="${report.modules.build.dir}/${module.dailyincome}.swf" />
+		</antcall>
+				
+		<!-- copy the revision as a marker so that ANT knows when to rebuild -->
+		<copy file="${revision.file}" todir="${report.modules.build.dir}" overwrite="true" />
+	</target>
+	
+	<target name="check.report.modules.uptodate">
+		<condition property="report.modules.uptodate">
+			<filesmatch file1="${revision.file}" file2="${report.modules.build.dir}/${revision.filename}" />
+		</condition>
+	</target>
+	
+	<target name="compile" depends="build.blueswarm.compile, compile.report.modules" />
+
+</project>
