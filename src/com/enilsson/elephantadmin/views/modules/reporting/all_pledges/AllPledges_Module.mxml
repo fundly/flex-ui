@@ -16,19 +16,19 @@
 		<mx:Canvas width="100%" styleName="controlBar">
 			<mx:HBox paddingTop="3" paddingBottom="3" paddingLeft="5" horizontalGap="5" verticalAlign="middle">
 				<mx:Box direction="{this.width &gt; 1200 ? 'horizontal' : 'vertical'}" horizontalGap="2" verticalGap="2" horizontalAlign="right">
-					<mx:FormItem label="from:">
+					<mx:FormItem label="From:">
 						<mx:DateField id="range_start" width="100" color="#000000" formatString="MM/DD/YYYY" selectedDate="{_presentationModel.startDate}" change="_presentationModel.startDate = event.target.selectedDate" textAlign="center" enabled="{!dataLoading &amp;&amp; !_presentationModel.searching}" />
 					</mx:FormItem>
-					<mx:FormItem label="to:">
+					<mx:FormItem label="To:">
 						<mx:DateField id="range_end" width="100" color="#000000" formatString="MM/DD/YYYY" selectedDate="{_presentationModel.endDate}" change="_presentationModel.endDate = event.target.selectedDate" textAlign="center" enabled="{!dataLoading &amp;&amp; !_presentationModel.searching}" />
 					</mx:FormItem>
 				</mx:Box>
 
 				<mx:Box direction="{this.width &gt; 1100 ? 'horizontal' : 'vertical'}" horizontalGap="2" verticalGap="2" horizontalAlign="right">
-					<mx:FormItem label="region:">
+					<mx:FormItem label="Region:">
 						<mx:ComboBox width="150" color="#000000" dataProvider="{_presentationModel.regionFilter}" id="region" enabled="{!dataLoading &amp;&amp; !_presentationModel.searching}" change="_presentationModel.regionChangeHandler(event)"/>
 					</mx:FormItem>
-					<mx:FormItem label="status:">
+					<mx:FormItem label="Status:">
 						<mx:ComboBox width="150" color="#000000" dataProvider="{_presentationModel.pledgesFilter}" id="status" enabled="{!dataLoading &amp;&amp; !_presentationModel.searching}" change="_presentationModel.statusChangeHandler(event)"/>
 					</mx:FormItem>
 				</mx:Box>
@@ -59,7 +59,7 @@
 						click="_presentationModel.generate()"
 						enabled="{!dataLoading}" />
 					<mx:Button width="80" label="Export" color="#000000"
-						click="presentationModel.exportGrid(grid.columns)"
+						click="presentationModel.exportGrid(grid.dG.columns)"
 						enabled="{!dataLoading}" />
 				</mx:HBox>
 			</mx:Box>

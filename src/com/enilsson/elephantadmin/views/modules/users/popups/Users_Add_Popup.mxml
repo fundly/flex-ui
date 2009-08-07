@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	clipContent="true"
+	verticalScrollPolicy="off" horizontalScrollPolicy="off"
+	xmlns:graphics="com.enilsson.graphics.*" 
+	xmlns:common="com.enilsson.elephantadmin.views.common.*"
+	width="670" 
+	height="500" xmlns:popups="com.enilsson.elephantadmin.views.modules.users.popups.*">
+
+	<mx:Canvas left="0" top="10" 
+		styleName="popupContent" 
+		verticalScrollPolicy="off" horizontalScrollPolicy="off"
+		filters="{[com.enilsson.graphics.enDropShadows.standardDS()]}" 
+		width="{this.width-10}" height="{this.height-10}">
+		<mx:Canvas width="{width-40}" height="{height-40}"
+			backgroundColor="#999999"
+			top="15" left="15" 
+			fontSize="11">
+			<mx:Canvas backgroundColor="#999999"
+				width="100%" height="37">
+				<mx:Image source="{Icons.EMAIL}" verticalCenter="-2" left="5" />
+				<mx:Text id="supportDesc" 
+					fontSize="18" 
+					width="100%"
+					filters="{[com.enilsson.graphics.enDropShadows.textDS(0x333333)]}"
+					text="Add New User" 
+					verticalCenter="0" left="50" />
+			</mx:Canvas>
+			<mx:TabNavigator id="tabNav" width="100%" height="100%" top="12" tabOffset="-10" horizontalAlign="right"
+				creationComplete="tabNavCreated();">
+				<popups:Users_Invite width="100%" height="100%"
+					label="Invite User"
+					presentationModel="{_usersModel}"
+					currentState="{_usersModel.formState}"/>
+				<popups:Users_Add width="100%" height="100%"
+					label="Create User" enabled="false"
+					presentationModel="{_usersModel}" />
+			</mx:TabNavigator>
+		</mx:Canvas>
+	</mx:Canvas>
+	
+	<graphics:enCloseBtn top="0" right="0" size="20" click="closeComponent()" />
+
+	<common:ErrorMsgBox id="errorBox"
+		verticalCenter="0" horizontalCenter="0" 
+		params="{_usersModel.errorVO}" 
+		onClose="{_usersModel.onClose}" />
+
+
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.TabBar;
+			import mx.core.UIComponent;
+			import com.enilsson.elephantadmin.models.Icons;
+			import com.enilsson.elephantadmin.views.modules.users.model.UsersModel;
+			import com.enilsson.elephantadmin.vo.RecordVO;
+			import mx.formatters.DateFormatter;
+			import com.enilsson.elephantadmin.vo.EmailVO;
+			import mx.managers.PopUpManager;
+			import mx.events.CloseEvent;
+
+			[Bindable] private var _usersModel:UsersModel;
+
+			public function set presentationModel(model:UsersModel):void
+			{
+				_usersModel = model;
+			}
+
+			private function tabNavCreated():void
+			{
+				(tabNav.getTabAt(0) as UIComponent).invalidateSize( ); 
+			}
+
+			private function closeComponent():void
+			{
+				_usersModel.errorVO = null;
+				PopUpManager.removePopUp(this);
+			}
+
+		]]>
+	</mx:Script>
+
+</mx:Canvas>	

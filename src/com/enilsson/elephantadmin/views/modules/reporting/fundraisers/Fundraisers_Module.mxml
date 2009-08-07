@@ -32,7 +32,7 @@
 						click="_presentationModel.generate()"
 						enabled="{!dataLoading}" />
 					<mx:Button width="80" label="Export" color="#000000"
-						click="presentationModel.exportGrid(grid.columns)"
+						click="presentationModel.exportGrid(grid.dG.columns)"
 						enabled="{!dataLoading}" />
 				</mx:HBox>
 			</mx:Box>
@@ -68,7 +68,7 @@
 		<mx:DataGridColumn width="90" dataField="downline_pledge" headerText="Downline Pledged" labelFunction="money_labelFunc" sortCompareFunction="downline_pledgeCompare"/>
 		<mx:DataGridColumn width="90" dataField="downline_contrib" headerText="Downline Contribution" labelFunction="money_labelFunc" sortCompareFunction="downline_contribCompare"/>
 		<mx:DataGridColumn width="90" dataField="user_contrib" headerText="Personal Contribution" labelFunction="money_labelFunc" sortCompareFunction="user_contribCompare"/>
-		<mx:DataGridColumn width="80" dataField="_fid" headerText="FID" sortCompareFunction="fidCompare"/>
+		<mx:DataGridColumn width="80" dataField="_fid" headerText="Fundraiser ID" sortCompareFunction="fidCompare"/>
 		<mx:DataGridColumn width="100" dataField="_city" headerText="City" />
 		<mx:DataGridColumn width="35" dataField="_state" headerText="State" />
 		<mx:DataGridColumn width="45" dataField="_zip" headerText="Zip" />

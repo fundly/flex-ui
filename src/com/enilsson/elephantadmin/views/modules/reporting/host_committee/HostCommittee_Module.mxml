@@ -116,10 +116,13 @@
 						width="100%" height="100%"
 						itemClick="hostCommitteeGridClick( event )"
 						dataProvider="{presentationModel.gridRecords}" 
+						columnStretch="resizeCol(event)"
+						draggableColumns="false"
 						columns="{hostsColumns}" />
 					<mx:DataGrid id="hostsTotalGrid" 
 						height="22" width="100%"
 						fontWeight="bold" color="#FFFFFF"
+						draggableColumns="false"
 						alternatingItemColors="{['#666666','#666666']}"
 						rowCount="1" showHeaders="false" columns="{hostsColumns}"
 						dataProvider="{_presentationModel.gridTotal}"/>
@@ -262,7 +265,7 @@
 						presentationModel.exportGrid(hostsGrid.columns);
 						break;
 					case 1:
-						presentationModel.exportGrid(pledgesGrid.columns);
+						presentationModel.exportGrid(pledgesGrid.dG.columns);
 						break;
 				}
 			}

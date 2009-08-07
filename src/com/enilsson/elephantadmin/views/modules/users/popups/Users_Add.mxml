@@ -1,223 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas 
-	xmlns:mx="http://www.adobe.com/2006/mxml"
-	creationComplete="init()"
-	clipContent="true"
+<mx:Canvas color="#333333"
 	verticalScrollPolicy="off" horizontalScrollPolicy="off"
-	xmlns:graphics="com.enilsson.graphics.*" 
-	xmlns:common="com.enilsson.elephantadmin.views.common.*"
-	currentState="{_usersModel.formState}" 
-	currentStateChange="currentState_handler(event)"
-	width="670" 
-	height="400">
-
-	<mx:Canvas left="0" top="10" 
-		styleName="popupContent" 
-		verticalScrollPolicy="off" horizontalScrollPolicy="off"
-		filters="{[com.enilsson.graphics.enDropShadows.standardDS()]}" 
-		width="{this.width-10}" height="{this.height-10}">
-		<mx:VBox verticalGap="0" 
-			width="{width-40}" height="{height-40}"
-			backgroundColor="#FFFFFF" 
-			top="15" left="15" 
-			fontSize="11">
-			<mx:Canvas backgroundColor="#999999"
-				width="100%" height="37">
-				<mx:Image source="{Icons.EMAIL}" verticalCenter="-2" left="5" />
-				<mx:Text id="supportDesc" 
-					fontSize="18" 
-					width="100%"
-					filters="{[com.enilsson.graphics.enDropShadows.textDS(0x333333)]}"
-					text="Send an Invitation Email to a person to be a user" 
-					verticalCenter="0" left="50" />
+ 	initialize="init()"
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:struktorForm="com.enilsson.utils.struktorForm.*" 
+	xmlns:common="com.enilsson.elephantadmin.views.common.*" 
+	xmlns:graphics="com.enilsson.graphics.*"
+	>
+	<mx:HBox width="100%" height="100%" horizontalGap="0">
+		<mx:VBox width="100%" height="100%" verticalGap="0" horizontalAlign="right">
+			<mx:Form paddingTop="0" paddingBottom="5" paddingRight="21" verticalGap="4" width="400" id="form1">
+				<mx:FormItem labelWidth="94" label="User Email:" width="100%" required="true" styleName="formLabel">
+						<mx:TextInput id="userEmailInput" width="100%"/>
+				</mx:FormItem>
+			</mx:Form>
+			<struktorForm:StruktorForm id="myDetailsForm" 
+				styleName="processingForm"
+				width="400" maxHeight="255" 
+				formInputWidth="255"
+				layoutProvider="{_model.struktorLayout.tr_users}" 
+				formBuildComplete="this.enabled = true" 
+				excludedFields="{['_itemsperpage']}"
+				numColumns="1" 
+				debugMode="{_model.debug}" />
+			<mx:FormItem horizontalAlign="right" width="100%" paddingRight="15">
+				<mx:HBox horizontalAlign="right">
+					<mx:CheckBox id="includeDownlineCheck" selected="true"/>
+					<mx:Label text="Include this person in your Downline" styleName="formLabel"/>
+				</mx:HBox>
+			</mx:FormItem>
+			<mx:Canvas width="100%" height="36" verticalScrollPolicy="off">
+				<common:ValidFormIndicator id="formStatus" top="3" right="180" 
+					status="{myDetailsForm.isValid}" />
+				<mx:Button id="submitForm" styleName="submitBtn" 
+					useHandCursor="true" buttonMode="true" 
+					enabled="{!_usersModel.formProcessing &amp;&amp; 
+								myDetailsForm.isValid}"  
+					click="upsertDetails(event)" 
+					verticalCenter="0" right="20"		
+					label="Save My Details" />
 			</mx:Canvas>
-			<mx:HBox width="{width - 40}" height="{height - 77}">
-				<mx:VBox id="vbox1" 
-					styleName="emailForm" 
-					width="100%" height="100%" 
-					horizontalScrollPolicy="off" verticalScrollPolicy="off">
-					<mx:Form paddingTop="0" paddingBottom="0" verticalGap="4" width="400" height="100%" id="form1">
-						<mx:FormItem label="Sender First Name" labelWidth="120" width="100%" required="true" styleName="formLabel">
-							<mx:TextInput id="senderFname" styleName="formInput"
-								text="{_usersModel.senderFname}"
-								width="100%" valueCommit="updateSubject()" change="_usersModel.senderFname = event.currentTarget.text; updateSubject()"
-								keyUp="validateFields()" 
-								mouseFocusChange="validateFields()" 
-								mouseFocusEnabled="true" />
-						</mx:FormItem>		
-						<mx:FormItem label="Sender Last Name" labelWidth="120" width="100%" required="true" styleName="formLabel">
-							<mx:TextInput id="senderLname" styleName="formInput"
-								text="{_usersModel.senderLname}"
-								width="100%" valueCommit="updateSubject()" change="_usersModel.senderLname = event.currentTarget.text; updateSubject()"
-								keyUp="validateFields()"
-								mouseFocusChange="validateFields()" 
-								mouseFocusEnabled="true" />
-						</mx:FormItem>		
-						<mx:FormItem label="Sender Email:" labelWidth="120" width="100%" required="true" styleName="formLabel">
-							<mx:TextInput id="senderEmail" styleName="formInput"
-								text="{_usersModel.senderEmail}"
-								width="100%" change="_usersModel.senderEmail = event.currentTarget.text;"
-								keyUp="validateFields()"
-								mouseFocusChange="validateFields()" 
-								mouseFocusEnabled="true" />
-						</mx:FormItem>
-						<mx:FormItem label="Receiver First Name" labelWidth="120" width="100%" required="true" styleName="formLabel">
-							<mx:TextInput id="fname" styleName="formInput"
-								text="{_usersModel.fname}"
-								width="100%" 
-								keyUp="validateFields()"  
-								mouseFocusChange="validateFields()" 
-								mouseFocusEnabled="true" />
-						</mx:FormItem>
-						<mx:FormItem label="Receiver Last Name" labelWidth="120" width="100%" required="true" styleName="formLabel">
-							<mx:TextInput id="lname" styleName="formInput"
-								text="{_usersModel.lname}"
-								width="100%" 
-								keyUp="validateFields()"
-								mouseFocusChange="validateFields()" 
-								mouseFocusEnabled="true" />
-						</mx:FormItem>
-						<mx:FormItem label="Receiver Email:" labelWidth="120" width="100%" required="true" styleName="formLabel">
-							<mx:TextInput id="email" styleName="formInput"
-								text="{_usersModel.email}"
-								width="100%" 
-								keyUp="validateFields()"  
-								mouseFocusChange="validateFields()" 
-								mouseFocusEnabled="true" />
-						</mx:FormItem>
-						<mx:FormItem label="Subject" labelWidth="70" width="100%" required="true" styleName="formLabel">
-							<mx:TextArea id="subject" styleName="formInput" 
-								text="{_usersModel.subject}"
-								enabled="{template}"
-								width="100%" 
-								keyUp="validateFields()"
-								mouseFocusChange="validateFields()"
-								mouseFocusEnabled="true" />
-						</mx:FormItem>		
-						<mx:FormItem width="100%" horizontalAlign="right">
-							<mx:LinkButton label="add personal message" styleName="formLabel" 
-								click="_usersModel.formState = _usersModel.formState != 'ShowPersonalMessage' ? 'ShowPersonalMessage' : 'hideMsg'" id="linkbutton1"/>
-						</mx:FormItem>
-						<mx:FormItem id="personalMessage" styleName="formLabel"
-							visible="false" includeInLayout="false" height="0"
-							label="Message" labelWidth="70" width="365">
-							<mx:TextArea id="message" width="100%" height="100%" />
-						</mx:FormItem>
-						<mx:FormItem horizontalAlign="right" width="100%">
-							<mx:HBox horizontalAlign="right">
-								<mx:CheckBox id="includeDownlineCheck" selected="true"/>
-								<mx:Label text="Include this person in your Downline" styleName="formLabel"/>
-							</mx:HBox>
-						</mx:FormItem>
-						<mx:FormItem width="100%">
-							<mx:HBox width="100%" height="100%" horizontalAlign="right" paddingTop="10" id="hbox1">
-								<mx:Button id="sendEmail" styleName="submitBtn" 
-									click="sendInvitation()" 
-									useHandCursor="true" buttonMode="true" 
-									label="Send Invitation" 
-									enabled="{isValid &amp;&amp; !_usersModel.isSubmitting}" />
-							</mx:HBox>
-						</mx:FormItem>
-					</mx:Form>
-				</mx:VBox>
-				<mx:VBox width="100%" height="100%" paddingTop="10">
-					<mx:Text color="#333333" width="100%" fontSize="11"
-						htmlText="This form allows you to send an invitation to join {_usersModel.appName} to anyone via email.&lt;br&gt;&lt;br&gt;You can add a personal message to accompany the login details the new fundraiser will receive.&lt;br&gt;&lt;br&gt;If the invitation is accepted that fundraiser will automatically be added to your downline if checkbox is selected."
-						 />
-				</mx:VBox>
-			</mx:HBox>
 		</mx:VBox>
-		
-		<mx:Canvas id="formProcessingIndicator" 
-			visible="{_usersModel.sendingInvitation}"
-			top="0" left="0"
-			width="100%" height="100%" 
-			backgroundColor="#CCCCCC" backgroundAlpha="0.75"
-			showEffect="fadeIn" hideEffect="fadeOut">
-			<graphics:ActivityIndicator id="formActivity"
-				visible="{formProcessingIndicator.visible}"
-				width="85" height="85" 
-				verticalCenter="0" horizontalCenter="0"
-				boxFillColors="[0x12288c, 0x0b1850]" 
-				textStyleName="processingText" 
-				textMessage="Sending Emails" />
-		</mx:Canvas>
+		<mx:VBox width="100%" height="100%" paddingTop="10" paddingLeft="10" paddingRight="10" backgroundColor="#ffffff">
+			<mx:Text color="#333333" width="100%" fontSize="11"
+				htmlText="This form allows you to create a user {_usersModel.appName} without inviting them.&lt;br&gt;&lt;br&gt;The fundraiser will automatically be added to your downline if the checkbox is selected."
+				 />
+		</mx:VBox>
+	</mx:HBox>
+
+	<mx:Canvas id="formProcessingIndicator" 
+		visible="{_usersModel.formProcessing}"
+		top="0" left="0"
+		width="100%" height="100%" 
+		backgroundColor="#CCCCCC" backgroundAlpha="0.75"
+		showEffect="fadeIn" hideEffect="fadeOut">
+		<graphics:ActivityIndicator id="formActivity"
+			visible="{formProcessingIndicator.visible}"
+			width="85" height="85" 
+			verticalCenter="0" horizontalCenter="0"
+			boxFillColors="[0x12288c, 0x0b1850]" 
+			textStyleName="processingText" 
+			textMessage="Processing" />
 	</mx:Canvas>
 	
-	<graphics:enCloseBtn top="0" right="0" size="20" click="closeComponent()" />
-
-	<common:ErrorMsgBox id="errorBox"
-		verticalCenter="0" horizontalCenter="0" 
-		params="{_usersModel.errorVO}" 
-		onClose="{_usersModel.onClose}" />
+	<common:ErrorMsgBox id="callLoggingErrorBox"
+		verticalCenter="0" horizontalCenter="0"
+		params="{_usersModel.errorVO}" />
 
 
-	<mx:Binding source="_usersModel.invitationTemplate" destination="this.template" />
-
-    <mx:transitions>
-       <mx:Transition>
-            <mx:Parallel targets="{[personalMessage]}">
-                <mx:Resize duration="500" easingFunction="Bounce.easeOut"/>
-            </mx:Parallel>
-        </mx:Transition>
-    </mx:transitions>
-
-    <mx:states>
-        <mx:State name="hideMsg">
-            <mx:SetProperty target="{personalMessage}" name="includeInLayout" value="false" />
-            <mx:SetProperty target="{personalMessage}" name="visible" value="false" />
-            <mx:SetProperty target="{personalMessage}" name="height" value="0" />
-            <mx:SetProperty target="{message}" name="text" value="" />
-        </mx:State>
-        <mx:State name="ShowPersonalMessage">
-            <mx:SetProperty target="{personalMessage}" name="includeInLayout" value="true" />
-            <mx:SetProperty target="{personalMessage}" name="visible" value="true" />
-            <mx:SetProperty target="{personalMessage}" name="height" value="80" />
-            <mx:SetProperty target="{linkbutton1}" name="label" value="hide personal message"/>
-        </mx:State>
-    </mx:states>
-	
-	  
-	<mx:Fade id="fadeIn" alphaTo="1" duration="300" />
-	<mx:Fade id="fadeOut" alphaTo="0" duration="300" />
-
-	
 	<mx:Script>
 		<![CDATA[
-			import com.enilsson.elephantadmin.models.Icons;
-			import com.enilsson.elephantadmin.views.modules.users.model.UsersModel;
-			import com.enilsson.elephantadmin.vo.RecordVO;
-			import mx.formatters.DateFormatter;
-			import com.enilsson.elephantadmin.vo.EmailVO;
-			import mx.managers.PopUpManager;
-			import mx.events.CloseEvent;
-			import com.enilsson.elephantadmin.events.modules.UsersEvent;
 			import com.enilsson.elephantadmin.events.session.PingEvent;
 			import com.enilsson.elephantadmin.models.EAModelLocator;
-			import mx.events.StateChangeEvent;
-			import mx.events.ValidationResultEvent;
-			import com.enilsson.utils.eNilssonUtils;
 			import mx.utils.ObjectUtil;
-			import org.osflash.thunderbolt.Logger;	
+			import org.osflash.thunderbolt.Logger;
 			import mx.effects.easing.Bounce;
 
+			[Bindable] private var _model:EAModelLocator = EAModelLocator.getInstance();
+
+			import com.enilsson.elephantadmin.views.modules.users.model.UsersModel;
+
 			[Bindable] private var _usersModel:UsersModel;
-			[Bindable] private var isValid:Boolean = false;
-
-			[Bindable]
-			private function get template():Object
-			{
-				return _template;
-			}
-			private var _template:Object;
-			private function set template(temp:Object):void
-			{
-				_template = temp;
-				updateSubject();
-			}
 			
-			private var _formVariables:Array = new Array();
-
 			public function set presentationModel(model:UsersModel):void
 			{
 				_usersModel = model;
@@ -225,167 +89,31 @@
 
 			private function init():void
 			{
+				if(_model.debug) Logger.info('Init add New user popup');
+				
 				// ping the server to see all is well
 				new PingEvent().dispatch();
-				resetForm();
-				setFieldValidation();
-				new UsersEvent( 
-					UsersEvent.INVITATION_GET_TEMPLATE,
-						_usersModel,
-						new RecordVO (
-							'email_system_templates',
-							_usersModel.serverVariables['invitation_template_id']
-						)
-				).dispatch();
-			}
-
-			private function resetForm():void
-			{
-				_usersModel.fname = '';
-				_usersModel.lname = ''	
-				_usersModel.email = '';
-				_usersModel.message = '';
-				_usersModel.senderEmail = _usersModel.session.email;
-				_usersModel.senderFname = _usersModel.session.fname;
-				_usersModel.senderLname = _usersModel.session.lname;
-				updateSubject();
-
-				fname.errorString = '';	
-				lname.errorString = '';	
-				email.errorString = '';	
-				subject.errorString = '';
-				senderEmail.errorString = '';
-				senderFname.errorString = '';
-				senderLname.errorString = '';
-				validateFields();
-			}
-
-			private function setFieldValidation():void
-			{	
-				_formVariables = new Array();
-				isValid = false;
-
-				// set the validators 
-				eNilssonUtils.setFieldValidator('email', email, _formVariables);
-				eNilssonUtils.setFieldValidator('required', fname, _formVariables);
-				eNilssonUtils.setFieldValidator('required', lname, _formVariables);
-				eNilssonUtils.setFieldValidator('required', subject, _formVariables);
-				eNilssonUtils.setFieldValidator('email', senderEmail, _formVariables);
-				eNilssonUtils.setFieldValidator('required', senderFname, _formVariables);
-				eNilssonUtils.setFieldValidator('required', senderLname, _formVariables);
-				
-				// set the event listeners
-				senderEmail.addEventListener(FocusEvent.FOCUS_OUT, validateFields);
-				senderFname.addEventListener(FocusEvent.FOCUS_OUT, validateFields);
-				senderLname.addEventListener(FocusEvent.FOCUS_OUT, validateFields);
-				email.addEventListener(FocusEvent.FOCUS_OUT, validateFields);
-				fname.addEventListener(FocusEvent.FOCUS_OUT, validateFields);
-				lname.addEventListener(FocusEvent.FOCUS_OUT, validateFields);
-				subject.addEventListener(FocusEvent.FOCUS_OUT, validateFields);
-				
-				validateFields();
+				myDetailsForm.formVariables = {};
 			}
 			
-			private function currentState_handler(event:StateChangeEvent):void
-			{
-				if(_usersModel.debug) Logger.info('Current State', event.oldState, event.newState);
-				
-				if(event.newState != '') return;
-				
-				_usersModel.fname = '';
-				_usersModel.lname = ''	
-				_usersModel.email = '';
-				_usersModel.message = '';
-
-				fname.errorString = '';	
-				lname.errorString = '';	
-				email.errorString = '';	
-				subject.errorString = '';
-				
-				setFieldValidation();
-			}
-
-			private function updateSubject():void
-			{
-				if(template)
-				{
-					var newSubject:String = template.subject;
-					newSubject = newSubject.replace("{recruiter_fname}",_usersModel.senderFname);
-					newSubject = newSubject.replace("{recruiter_lname}",_usersModel.senderLname);
-					_usersModel.subject = newSubject;
-				}
-				//_model.users.subject = _model.users.senderFname + " " +_model.users.senderLname +" has asked you to become a fundraiser with " + _model.appName;
-			}
-
-			private function sendInvitation():void
-			{
-				var df:DateFormatter = new DateFormatter();
-				df.formatString = 'MM/DD/YYYY';
-
-				// Update the model
-				_usersModel.senderEmail = senderEmail.text;
-				_usersModel.senderFname = senderFname.text;
-				_usersModel.senderLname = senderLname.text;
-				_usersModel.email = email.text;
-				_usersModel.fname = fname.text;
-				_usersModel.lname = lname.text;
-				_usersModel.subject = subject.text;
-				_usersModel.message = currentState == 'ShowPersonalMessage' ? message.text : '';
-
-				var emailVO:EmailVO = new EmailVO(email.text,"", "");
-				emailVO.fname = _usersModel.fname;
-				emailVO.lname = _usersModel.lname;
-				emailVO.senderEmail = _usersModel.senderEmail;
-				emailVO.senderName = _usersModel.senderFname + " " + _usersModel.senderLname;
-				emailVO.addDownline = includeDownlineCheck.selected ? 1 : 0;
-				emailVO.subject = _usersModel.subject;
-
-				// Get the template ID from the serverVariables object loaded at init
-				emailVO.templateID = _usersModel.serverVariables['invitation_template_id'];
-
-				// Key-value pairs of template variables that will be replaced by PHP
-				emailVO.templateVars = new Array();
-				emailVO.templateVars['fname'] = _usersModel.fname;
-				emailVO.templateVars['lname'] = _usersModel.lname;
-				emailVO.templateVars['recruiter_fname'] = _usersModel.senderFname;
-				emailVO.templateVars['recruiter_lname'] = _usersModel.senderLname;
-				emailVO.templateVars['email'] = _usersModel.email;
-				emailVO.templateVars['personal_message'] = _usersModel.message;
-				emailVO.templateVars['url'] = _usersModel.clientUI;
-				emailVO.templateVars['date'] = df.format(new Date());
-
-				new UsersEvent( 
-					UsersEvent.INVITATION_SEND,
-					_usersModel,
-					{ 'emailVO' : emailVO }
-				).dispatch();
-			}
-
 			/**
-			 * Run a validation routine on the fields
+			 * Upsert the necessary details to complete the first login
 			 */
-			private function validateFields(e:Event=null):void
+			private function upsertDetails(event:MouseEvent):void
 			{
-				var flag:Boolean = true;
-				for(var i:String in _formVariables)
-				{
-					var vResult:ValidationResultEvent = _formVariables[i].validator.validate(null, true);
-					if (vResult.type==ValidationResultEvent.INVALID) 
-						flag = false;
-					if(vResult.type == ValidationResultEvent.VALID)
-						_formVariables[i].validator.source.errorString = null;
-				}
-				isValid = flag;
-			}			
+				if(_model.debug) Logger.info('upsert new user Details', myDetailsForm.formVariables);
+				var fv:Object = myDetailsForm.formVariables;
+				fv['mod_g_read'] = 1;
+				fv['mod_g_write'] = 1;
+				fv['enabled'] = 1;
 
-			private function closeComponent():void
-			{
-				_usersModel.errorVO = null;
-				resetForm();
-				PopUpManager.removePopUp(this);
-			}
+				// TODO: needs to be creating an authentikator entry in addition to tr_users record
+				_usersModel.upsertRecord(myDetailsForm.formVariables);
+
+ 			}
+
 
 		]]>
 	</mx:Script>
-
-</mx:Canvas>	
+	
+</mx:Canvas>
