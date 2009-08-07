@@ -799,7 +799,6 @@ DataGrid.dashboardGrid {
 	horizontalGap: 0;
 }	
 .fundraisingChart {
-	fontFamily:Arial;
 	fontSize:8;
 	fontWeight:normal; 
 	color:#333333;
