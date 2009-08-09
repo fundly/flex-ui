@@ -5,11 +5,6 @@
 <libraryPath defaultLinkType="3">
 <libraryPathEntry kind="4" path=""/>
 <libraryPathEntry kind="1" linkType="1" path="libs"/>
-<libraryPathEntry kind="3" linkType="1" path="${DOCUMENTS}/eNilssonFlexLibrary/libs/Cairngorm.swc" useDefaultLinkType="false"/>
-<libraryPathEntry kind="3" linkType="1" path="${DOCUMENTS}/eNilssonFlexLibrary/libs/CoverFlow_lib.swc" useDefaultLinkType="false"/>
-<libraryPathEntry kind="3" linkType="1" path="/eNilssonFlexLibrary/bin/eNilssonFlexLibrary.swc" useDefaultLinkType="false"/>
-<libraryPathEntry kind="3" linkType="1" path="${DOCUMENTS}/eNilssonFlexLibrary/libs/libRaVis-20080620.swc" useDefaultLinkType="false"/>
-<libraryPathEntry kind="3" linkType="1" path="${DOCUMENTS}/eNilssonFlexLibrary/libs/as3crypto.swc" useDefaultLinkType="false"/>
 </libraryPath>
 <sourceAttachmentPath/>
 </compiler>

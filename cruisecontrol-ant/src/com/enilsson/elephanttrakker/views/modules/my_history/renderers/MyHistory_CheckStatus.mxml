@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml">
-
-	<mx:HBox height="16" styleName="{data.entry_date > 0 ? 'checkFulfilled' : 'checkUnfulfilled'}">
-		<mx:Text text="{data.entry_date > 0 ? 'Fulfilled' : 'Unfulfilled'}" />		
-	</mx:HBox>
-
-</mx:Canvas>
