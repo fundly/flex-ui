@@ -6,27 +6,39 @@
 	xmlns:pm="com.enilsson.elephantadmin.views.modules.app_options.views.pm.*">
 		
 	<mx:HBox width="100%" height="100%">
-		<view:OptionsListPanel id="optionsList" height="100%" width="280"
+		<view:OptionsListPanel id="optionsList" 
+			height="100%" width="280"
+			selectedIndex="{_pm.selectedIndex}"
 			selectedItem="{_pm.selectedSiteOption}"
-			itemClick="_pm.selectedSiteOption = SiteOption(event.itemRenderer.data)"
+			itemClick="itemClickHandler(event)"
 			dataProvider="{_pm.siteOptions}" />
-			
-		<view:OptionEditorPanel id="optionsEditor" height="100%" width="100%"
+		<view:OptionEditorPanel id="optionsEditor" 
+			height="100%" width="100%"
 			pm="{_pm.optionsEditorPM}"
+			selectedIndex="{optionsList.selectedIndex}"
 			siteOption="{_pm.selectedSiteOption}" />
 	</mx:HBox>
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.events.ListEvent;
 			import com.enilsson.elephantadmin.views.modules.app_options.model.pm.AppOptionsPM;
 			import com.enilsson.elephantadmin.views.modules.app_options.model.SiteOption;
 			
 			public function set presentationModel( value : AppOptionsPM ) : void { _pm = value; }
 			[Bindable] private var _pm : AppOptionsPM;
 			
-			override protected function init():void {
+			override protected function init():void 
+			{
 				super.init();
+
 				_pm.loadSiteOptions();
+			}
+			
+			private function itemClickHandler ( event:ListEvent ):void
+			{
+				_pm.selectedSiteOption = SiteOption(event.itemRenderer.data)
+				optionsEditor.selectedIndex = event.rowIndex;
 			}
 		]]>
 	</mx:Script>

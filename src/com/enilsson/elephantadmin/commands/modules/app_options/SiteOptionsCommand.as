@@ -25,8 +25,8 @@ package com.enilsson.elephantadmin.commands.modules.app_options
 	{
 		private static const SITE_OPTIONS : String = "site_options";
 		
-		private var _model 		: EAModelLocator = EAModelLocator.getInstance();
-		private var _event		: Event;
+		private var _model : EAModelLocator = EAModelLocator.getInstance();
+		private var _event : Event;
 		
 		public function execute( event : CairngormEvent ) : void
 		{

@@ -5,6 +5,7 @@ package com.enilsson.elephantadmin.views.modules.app_options.model
 	import flash.net.registerClassAlias;
 	
 	import mx.collections.ArrayCollection;
+	import mx.formatters.DateFormatter;
 	import mx.utils.StringUtil;
 
 	[Bindable]
@@ -26,11 +27,11 @@ package com.enilsson.elephantadmin.views.modules.app_options.model
 		public var optional			: Boolean;
 		public var display			: Boolean;
 		
-		public var createdOn		: Date;
+		public var createdOn		: String;
 		public var createdBy		: String;
 		public var createdById		: int;
 		
-		public var modifiedOn		: Date;
+		public var modifiedOn		: String;
 		public var modifiedById		: int;
 		public var modifiedBy		: String;
 		
@@ -46,6 +47,9 @@ package com.enilsson.elephantadmin.views.modules.app_options.model
 		[Transient]
 		public function set data( value : Object ) : void
 		{
+			var df:DateFormatter = new DateFormatter();
+			df.formatString = 'MM/DD/YYYY';
+			
 			if(value)
 			{
 				id 				= value.id;
@@ -61,10 +65,10 @@ package com.enilsson.elephantadmin.views.modules.app_options.model
 				type 			= value.option_type;
 				optional 		= value.option_optional;
 				display			= value.option_display != 0;
-				createdOn		= EDateUtil.timeFromTimestamp( value.created_on );
+				createdOn		= df.format(EDateUtil.dateFromTimestamp( value.created_on ));
 				createdById		= value.created_by_id;
 				createdBy		= value.created_by;
-				modifiedOn		= EDateUtil.timeFromTimestamp(value.modified_on);
+				modifiedOn		= df.format(EDateUtil.dateFromTimestamp(value.modified_on));
 				modifiedById	= value.modified_by_id;
 				modifiedBy		= value.modified_by;				
 				eRead			= value.mod_e_read;
@@ -76,6 +80,7 @@ package com.enilsson.elephantadmin.views.modules.app_options.model
 				groupId			= value.mod_group_id; 
 			}
 		}		
+		
 		public function get data() : Object
 		{
 			return {
@@ -90,10 +95,10 @@ package com.enilsson.elephantadmin.views.modules.app_options.model
 				option_type:		type,
 				option_optional:	optional,
 				option_display:		display,
-				created_on:			EDateUtil.dateToTimestamp(createdOn),
+				created_on:			createdOn,
 				created_by_id:		createdById,
 				created_by:			createdBy,
-				modified_on:		EDateUtil.dateToTimestamp(modifiedOn),
+				modified_on:		modifiedOn,
 				modified_by_id:		modifiedById,
 				modified_by:		modifiedBy,
 				mod_e_read:			eRead,

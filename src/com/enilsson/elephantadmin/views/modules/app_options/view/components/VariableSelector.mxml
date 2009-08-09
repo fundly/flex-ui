@@ -4,6 +4,7 @@
 	<mx:ComboBox id="variablesCb" minWidth="130" dataProvider="{dataProvider}" />
 	
 	<mx:Button id="addButton" label="Add variable" 
+		toolTip="Add variable to text"
 		click="dispatchEvent(new Event(ADD_VARIABLE))" 
 		enabled="{variablesCb.selectedIndex > -1}" />
 	
