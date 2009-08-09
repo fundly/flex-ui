@@ -11,11 +11,7 @@
 		text="{_pm.editingSiteOption.description}" 
 		selectable="false" />
 				
-	<mx:FormItem label="Show this content in BlueSwarm:">
-		<mx:CheckBox id="displayCb" 
-			selected="{_pm.displayOption}" 
-			change="_pm.changeOption('display', displayCb.selected)"/>	
-	</mx:FormItem>
+	<mx:Spacer height="20" />
 		
 	<components:AppOptionsRTE id="valueText"
 		styleName="formRTE"
