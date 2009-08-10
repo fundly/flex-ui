@@ -9,12 +9,17 @@
 	>
 	<mx:HBox width="100%" height="100%" horizontalGap="0">
 		<mx:VBox width="100%" height="100%" verticalGap="0" horizontalAlign="right">
-			<mx:Form paddingTop="0" paddingBottom="5" paddingRight="21" verticalGap="4" width="400" id="form1">
-				<mx:FormItem labelWidth="94" label="User Email:" width="100%" required="true" styleName="formLabel">
-						<mx:TextInput id="userEmailInput" width="100%"/>
+			<mx:Form paddingTop="0" paddingBottom="5" verticalGap="4" width="400" id="form1">
+				<mx:FormItem labelWidth="120" label="Email:" width="100%" required="true" styleName="formLabel">
+						<mx:TextInput id="emailInput" width="100%"/>
 				</mx:FormItem>
-			</mx:Form>
-			<struktorForm:StruktorForm id="myDetailsForm" 
+				<mx:FormItem labelWidth="120" label="First Name:" width="100%" required="true" styleName="formLabel">
+						<mx:TextInput id="fnameInput" width="100%"/>
+				</mx:FormItem>
+				<mx:FormItem labelWidth="120" label="Last Name:" width="100%" required="true" styleName="formLabel">
+						<mx:TextInput id="lnameInput" width="100%"/>
+				</mx:FormItem>
+<!--			<struktorForm:StruktorForm id="myDetailsForm" 
 				styleName="processingForm"
 				width="400" maxHeight="255" 
 				formInputWidth="255"
@@ -23,19 +28,17 @@
 				excludedFields="{['_itemsperpage']}"
 				numColumns="1" 
 				debugMode="{_model.debug}" />
-			<mx:FormItem horizontalAlign="right" width="100%" paddingRight="15">
-				<mx:HBox horizontalAlign="right">
-					<mx:CheckBox id="includeDownlineCheck" selected="true"/>
-					<mx:Label text="Include this person in your Downline" styleName="formLabel"/>
-				</mx:HBox>
-			</mx:FormItem>
+-->				<mx:FormItem horizontalAlign="right" width="100%" paddingRight="15">
+					<mx:HBox horizontalAlign="right">
+						<mx:CheckBox id="includeDownlineCheck" selected="true"/>
+						<mx:Label text="Include this person in your Downline" styleName="formLabel"/>
+					</mx:HBox>
+				</mx:FormItem>
+			</mx:Form>
 			<mx:Canvas width="100%" height="36" verticalScrollPolicy="off">
-				<common:ValidFormIndicator id="formStatus" top="3" right="180" 
-					status="{myDetailsForm.isValid}" />
 				<mx:Button id="submitForm" styleName="submitBtn" 
 					useHandCursor="true" buttonMode="true" 
-					enabled="{!_usersModel.formProcessing &amp;&amp; 
-								myDetailsForm.isValid}"  
+					enabled="{isValid &amp;&amp; !_usersModel.formProcessing}"  
 					click="upsertDetails(event)" 
 					verticalCenter="0" right="20"		
 					label="Save My Details" />
@@ -47,6 +50,8 @@
 				 />
 		</mx:VBox>
 	</mx:HBox>
+
+	<mx:EmailValidator id="emailVal" />
 
 	<mx:Canvas id="formProcessingIndicator" 
 		visible="{_usersModel.formProcessing}"
@@ -70,6 +75,8 @@
 
 	<mx:Script>
 		<![CDATA[
+			import mx.events.ValidationResultEvent;
+			import com.enilsson.utils.eNilssonUtils;
 			import com.enilsson.elephantadmin.events.session.PingEvent;
 			import com.enilsson.elephantadmin.models.EAModelLocator;
 			import mx.utils.ObjectUtil;
@@ -79,6 +86,9 @@
 			[Bindable] private var _model:EAModelLocator = EAModelLocator.getInstance();
 
 			import com.enilsson.elephantadmin.views.modules.users.model.UsersModel;
+
+			private var _formVariables:Array = new Array();
+			[Bindable] private var isValid:Boolean = false;
 
 			[Bindable] private var _usersModel:UsersModel;
 			
@@ -93,15 +103,49 @@
 				
 				// ping the server to see all is well
 				new PingEvent().dispatch();
-				myDetailsForm.formVariables = {};
+//				myDetailsForm.formVariables = {};
+				setFieldValidation();
 			}
-			
+
+			private function setFieldValidation():void
+			{	
+				_formVariables = new Array();
+				isValid = false;
+
+				// set the validators 
+				eNilssonUtils.setFieldValidator('email', emailInput, _formVariables);
+				eNilssonUtils.setFieldValidator('required', fnameInput, _formVariables);
+				eNilssonUtils.setFieldValidator('required', lnameInput, _formVariables);
+				
+				// set the event listeners
+				emailInput.addEventListener(Event.CHANGE, validateFields);
+				fnameInput.addEventListener(Event.CHANGE, validateFields);
+				lnameInput.addEventListener(Event.CHANGE, validateFields);
+				
+				validateFields();
+			}
+
+			private function validateFields(e:Event=null):void
+			{
+				var flag:Boolean = true;
+				for(var i:String in _formVariables)
+				{
+					var vResult:ValidationResultEvent = _formVariables[i].validator.validate(null, true);
+					if (vResult.type==ValidationResultEvent.INVALID) 
+						flag = false;
+					if(vResult.type == ValidationResultEvent.VALID)
+						_formVariables[i].validator.source.errorString = null;
+				}
+				isValid = flag;
+			}			
+
+
 			/**
 			 * Upsert the necessary details to complete the first login
 			 */
 			private function upsertDetails(event:MouseEvent):void
 			{
-				if(_model.debug) Logger.info('upsert new user Details', myDetailsForm.formVariables);
+/*				if(_model.debug) Logger.info('upsert new user Details', myDetailsForm.formVariables);
 				var fv:Object = myDetailsForm.formVariables;
 				fv['mod_g_read'] = 1;
 				fv['mod_g_write'] = 1;
@@ -109,7 +153,7 @@
 
 				// TODO: needs to be creating an authentikator entry in addition to tr_users record
 				_usersModel.upsertRecord(myDetailsForm.formVariables);
-
+*/
  			}
 
 

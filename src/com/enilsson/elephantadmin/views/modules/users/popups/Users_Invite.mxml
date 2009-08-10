@@ -11,7 +11,7 @@
 	>
 	<mx:HBox width="100%" height="100%" horizontalGap="0">
 		<mx:VBox id="vbox1" backgroundColor="#cccccc" borderStyle="none"
-			styleName="emailForm" verticalGap="0"
+			styleName="emailForm" verticalGap="0" paddingTop="0"
 			width="100%" height="100%" 
 			horizontalScrollPolicy="off" verticalScrollPolicy="off">
 			<mx:Form paddingTop="0" paddingBottom="0" verticalGap="4" width="400" height="100%" id="form1">
