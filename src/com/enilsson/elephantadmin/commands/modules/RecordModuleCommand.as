@@ -290,6 +290,7 @@ package com.enilsson.elephantadmin.commands.modules
 					// set addingNewRecord flag as false if adding new record
 					if( _presentationModel.addingNewRecord )
 					{
+						_presentationModel.viewState = 'showSearch';
 						_presentationModel.addingNewRecord = false;
 						_presentationModel.lastQuery.dispatch();
 						_presentationModel.searchListSelectedIndex = _presentationModel.searchListLastIndex;
