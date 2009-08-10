@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml"
-	xmlns:controls="com.enilsson.controls.*"
+<TogglePanel
+	xmlns="com.enilsson.elephantadmin.views.modules.batch.*"
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:transitions="caurina.transitions.*"
 	xmlns:common="com.enilsson.elephantadmin.views.common.*"
 	title="{_presentationModel.title}"
 	currentState="{_presentationModel.currentState}"
 	enabled="{!_presentationModel.newBatchSaving &amp;&amp; !_presentationModel.isLoading }"
-	styleName="panel" xmlns:transitions="caurina.transitions.*">
+	stateChange="handlePanelStateChange(event)"
+	styleName="batchPanel">
 	
 	<mx:ControlBar id="cBar" height="32" horizontalAlign="center" verticalAlign="middle" paddingTop="0" paddingBottom="0" />
 
-	<mx:states>
+	<states>
 		<mx:State name="{BatchState.VIEW_BATCH}">
 			<mx:AddChild relativeTo="{this}" position="0">
 				<mx:List id="batchCheckList"
-					styleName="list" selectable="false"
+					styleName="batchList" selectable="false"
 					dataProvider="{_presentationModel.batchCheckList}"
 					height="100%" width="100%"
 					itemRenderer="com.enilsson.elephantadmin.views.modules.batch.renderers.CheckRenderer"
@@ -53,7 +56,7 @@
 					click="handleSaveBatch();" />
 			</mx:AddChild>
 		</mx:State>
-	</mx:states>
+	</states>
 
 	<mx:Fade id="fade" />
 
@@ -67,7 +70,6 @@
 			import com.enilsson.elephantadmin.views.modules.batch.events.BatchViewEvent;
 			import mx.events.CloseEvent;
 			import mx.controls.Alert;
-			import mx.utils.ObjectProxy;
 			import com.enilsson.elephantadmin.views.modules.batch.model.BatchState;
 			import com.enilsson.elephantadmin.views.modules.batch.model.BatchDetailModel;
 
@@ -101,6 +103,12 @@
 				if(event.detail == Alert.YES)
 					_presentationModel.saveNewBatch();
 			}
+			
+			private function handlePanelStateChange( event : Event ) : void
+			{
+				
+			}
+ 
 		]]>
 	</mx:Script>
-</mx:Panel>
+</TogglePanel>

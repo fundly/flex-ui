@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml"
+<TogglePanel 
+	xmlns="com.enilsson.elephantadmin.views.modules.batch.*"
+	xmlns:mx="http://www.adobe.com/2006/mxml"
 	title="My batches" xmlns:controls="com.enilsson.controls.*"
 	styleName="panel" enabled="{!_presentationModel.batchListLoading}"
-	width="50%" height="100%" xmlns:common="com.enilsson.elephantadmin.views.common.*"
-	>
+	width="50%" height="100%" xmlns:common="com.enilsson.elephantadmin.views.common.*">
 	<mx:VBox width="100%" height="100%">
 		<mx:List id="batchList"
 			styleName="list"
@@ -24,7 +25,7 @@
 				rangeCount="4" 
 				verticalCenter="0" horizontalCenter="0" 
 				buttonHeight="18" 
-				newPage="_presentationModel.getBatchList(event)"
+				newPage="_presentationModel.getBatchList()"
 				itemsPerPage="{_presentationModel.itemsPerPage}" 
 				itemsTotal="{_presentationModel.batchListTotal}" 
 				/>
@@ -37,6 +38,20 @@
 			click="_presentationModel.createNewBatchList()"
 			/>
 	</mx:ControlBar>
+	
+	<states>
+		<mx:State name="grid">
+			<mx:RemoveChild target="{batchList}" />
+			<mx:AddChild relativeTo="{paginationBox}" position="before">
+				<BatchGrid id="batchGrid" 
+					width="100%" height="100%"
+					dataProvider="{_presentationModel.batchList}"
+					change="_presentationModel.batchListChangeHandler(event)"
+					selectedIndex="{_presentationModel.batchListSelectedIndex}"
+					headerRelease="handleHeaderRelease(event)" />
+			</mx:AddChild>
+		</mx:State>
+	</states>
 
 	<mx:Fade id="fade" />
 	<mx:Resize id="slideUp" heightTo="35" duration="1000" />
@@ -46,11 +61,26 @@
 
 	<mx:Script>
 		<![CDATA[
+			import mx.events.DataGridEvent;
+			import com.enilsson.elephantadmin.views.common.ListGridToggle;
 			import com.enilsson.elephantadmin.views.modules.batch.model.BatchListModel;
 
 			public function set presentationModel( value : BatchListModel ) : void
 			{
 				_presentationModel = value;
+			}
+			
+			override public function set toggleState(value:String):void {
+				super.toggleState = value;
+				currentState = toggleState == ListGridToggle.LIST ? '' : 'grid';
+			}
+			
+			private function handleHeaderRelease( event : DataGridEvent ) : void {
+//				if(paginator.pages > 1) 
+				{
+					event.preventDefault();
+					_presentationModel.getOrderedBatches(  );
+				}	
 			}
 
 			[Bindable] public var selectedBatch:Object;
@@ -61,4 +91,4 @@
 		]]>
 	</mx:Script>
 
-</mx:Panel>
+</TogglePanel>
