@@ -79,7 +79,7 @@
 //				if(paginator.pages > 1) 
 				{
 					event.preventDefault();
-					_presentationModel.getOrderedBatches(  );
+					_presentationModel.getOrderedBatches( event.dataField );
 				}	
 			}
 
