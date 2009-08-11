@@ -576,12 +576,16 @@ package com.enilsson.elephanttrakker.views.modules.pledge_workspace.model
 						vo.transaction.data 	= billingData;
 						vo.transaction.fname 	= vo.pledge.fname;
 						vo.transaction.lname 	= vo.pledge.lname;
-					}	
+					}
+					
+					vo.paymentType = 'credit card';	
 				break;
 				case 1 :
 					vo.check = {};
 					vo.check = checkData;
 					delete vo.check['id'];
+					
+					vo.paymentType = 'check';
 				break;				
 			}
 			

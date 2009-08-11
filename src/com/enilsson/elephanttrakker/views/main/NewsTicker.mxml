@@ -81,11 +81,17 @@
 						tickerCurr = tickerCurr == rssList.dataProvider.length ? 0 : tickerCurr;
 						newsItem.text = eNilssonUtils.charLimiter(rssList.dataProvider[tickerCurr].title, 70);
 						Tweener.addTween(newsItem, { alpha: 1, time: 1, transition: 'linear' });
-						 
+						
+						if ( rssList.dataProvider[tickerCurr].error === true ) tickerTimer.stop();
 					}});
 				}
 				
 				bnExpand.addEventListener(MouseEvent.CLICK, function(event:MouseEvent):void {
+					
+					var rssItem:RssVO = rssList.dataProvider[0] as RssVO;
+					
+					if ( rssItem.error === true ) return;					
+					
 					if (!bSpinning) 
 					{ 
 						bSpinning = true;
@@ -115,7 +121,9 @@
 			
 			private function launchEmailPopUp(e:MouseEvent):void
 			{
-				var rssObj:Object = rssList.dataProvider[tickerCurr];
+				var rssObj:RssVO = rssList.dataProvider[tickerCurr] as RssVO;
+				
+				if ( rssObj.error === true ) return; 
 				
 				_model.rss_message = rssObj.description + '\n\n' + rssObj.link;						
 				_model.rss_subject = rssObj.title;		

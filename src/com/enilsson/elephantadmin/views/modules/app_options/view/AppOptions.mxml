@@ -11,7 +11,8 @@
 			selectedIndex="{_pm.selectedIndex}"
 			selectedItem="{_pm.selectedSiteOption}"
 			itemClick="itemClickHandler(event)"
-			dataProvider="{_pm.siteOptions}" />
+			dataProvider="{_pm.siteOptions}"
+			dataAdded="dataAddedHandler(event)" />
 		<view:OptionEditorPanel id="optionsEditor" 
 			height="100%" width="100%"
 			pm="{_pm.optionsEditorPM}"
@@ -21,6 +22,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import org.osflash.thunderbolt.Logger;
 			import mx.events.ListEvent;
 			import com.enilsson.elephantadmin.views.modules.app_options.model.pm.AppOptionsPM;
 			import com.enilsson.elephantadmin.views.modules.app_options.model.SiteOption;
@@ -39,6 +41,12 @@
 			{
 				_pm.selectedSiteOption = SiteOption(event.itemRenderer.data)
 				optionsEditor.selectedIndex = event.rowIndex;
+			}
+			
+			private function dataAddedHandler ( event:Event ):void
+			{
+				if ( !_pm.selectedSiteOption )
+					_pm.selectedSiteOption = _pm.siteOptions[0];
 			}
 		]]>
 	</mx:Script>

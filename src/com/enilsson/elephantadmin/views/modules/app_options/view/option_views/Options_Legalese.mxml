@@ -21,7 +21,7 @@
 		styleName="formRTE"
 		width="100%" textAreaHeight="150"
 		htmlText="{_pm.editingSiteOption.value}"
-		buttons="bold|underline|color|link|bullet"
+		buttons="bold|underline|link"
 		alignBtns="left|center|right|justify"
 		textAreaStyleName="legaleseTextArea"
 		change="_pm.changeOption('value', valueText.htmlText)"
@@ -39,7 +39,9 @@
 	<mx:Style>
 		.legaleseTextArea {
 			fontSize: 9;
-			fontColor: #FFFFFF;
+			selectable: "true";
+			condenseWhite: "true";
+			color: #FFFFFF;
 			inputWidth: 250;
 			paddingTop: 3;
 			paddingBottom: 1;

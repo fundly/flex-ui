@@ -21,7 +21,7 @@
 		styleName="formRTE"
 		width="100%" height="100%"
 		htmlText="{_pm.editingSiteOption.value}"
-		buttons="variables|fontSize|bold|underline|color|link|bullet"
+		buttons="fontSize|bold|underline|color|link|bullet"
 		alignBtns="left|right|justify"
 		change="_pm.changeOption('value', valueText.htmlText)"
 		variables="{_pm.editingSiteOption.variables}" />

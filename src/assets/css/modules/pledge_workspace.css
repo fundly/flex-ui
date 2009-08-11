@@ -216,7 +216,7 @@ ExpirationDate {
 	borderStyle:solid;
 	backgroundColor:#CCCCCC;
 	backgroundAlpha:0.9;  
-	verticalAlign:middle; 
+	paddingTop: 20;
 	horizontalAlign:center;	
 }
 .completeBoxTitle {

@@ -16,7 +16,8 @@
 		dataProvider="{dataProvider}"
 		selectedItem="{selectedItem}"
 		selectedIndex="{selectedIndex}"
-		itemClick="dispatchEvent(event)" />
+		itemClick="dispatchEvent(event)"
+		valueCommit="dispatchEvent( new Event('dataAdded') )" />
 	
 	<!-- decoration -->
 	<common:ModuleControlBar/>
@@ -24,7 +25,8 @@
 	<mx:Binding source="list.selectedItem" destination="selectedItem" />
 	
 	<mx:Metadata>
-		 [Event(name="itemClick", type="mx.events.ListEvent")] 
+		 [Event(name="itemClick", type="mx.events.ListEvent")]
+		 [Event(name="dataAdded", type="flash.events.Event")] 
 	</mx:Metadata>
 		
 	<mx:Script>

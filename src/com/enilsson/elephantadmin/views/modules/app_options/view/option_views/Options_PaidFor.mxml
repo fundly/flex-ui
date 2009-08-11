@@ -39,7 +39,7 @@
 	<mx:Style>
 		.paidForTextArea {
 			fontSize: 11;
-			fontColor: #FFFFFF;
+			color: #FFFFFF;
 			inputWidth: 250;
 			paddingTop: 3;
 			paddingBottom: 1;

@@ -92,7 +92,8 @@
 		params="{presentationModel.errorVO}" />
 	<popups:PledgeComplete id="pledgeComplete"
 		presentationModel="{presentationModel}"
-		top="0" left="0" 
+		top="0" left="0"
+		width="{width}" height="{height}" 
 		showEffect="fadeIn" hideEffect="fadeOut" />
 
 
