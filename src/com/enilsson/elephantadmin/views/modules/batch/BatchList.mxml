@@ -76,7 +76,7 @@
 			}
 			
 			private function handleHeaderRelease( event : DataGridEvent ) : void {
-//				if(paginator.pages > 1) 
+				if(paginator.pages > 1) 
 				{
 					event.preventDefault();
 					_presentationModel.getOrderedBatches( event.dataField );

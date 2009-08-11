@@ -8,7 +8,7 @@
 	currentState="{_presentationModel.currentState}"
 	enabled="{!_presentationModel.newBatchSaving &amp;&amp; !_presentationModel.isLoading }"
 	stateChange="handlePanelStateChange(event)"
-	styleName="batchPanel">
+	styleName="panel">
 	
 	<mx:ControlBar id="cBar" height="32" horizontalAlign="center" verticalAlign="middle" paddingTop="0" paddingBottom="0" />
 

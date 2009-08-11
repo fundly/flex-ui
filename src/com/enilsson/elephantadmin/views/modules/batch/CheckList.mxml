@@ -3,6 +3,7 @@
 	xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns="com.enilsson.elephantadmin.views.modules.batch.*"
 	xmlns:common="com.enilsson.elephantadmin.views.common.*"
+	currentState="{toggleState}"
 	sortFieldsPrompt="SORT BY"
 	sortOptionsPrompt="ORDER"
 	sortFields="{CheckListModel.ORDER_FIELDS}"
@@ -11,10 +12,7 @@
 	enabled="{!_presentationModel.checkListLoading}"
 	styleName="panel"
 	width="50%" height="100%">
-	<mx:VBox height="100%" width="100%">
-		<CheckWrapperList id="checkList"
-			height="100%" width="100%"
-			dataProvider="{_presentationModel.checkList}" />
+	<mx:VBox id="listContainer" height="100%" width="100%" verticalGap="0">
 		<mx:Canvas id="paginationBox" 
 			visible="{_presentationModel.checkListTotal &gt; _presentationModel.itemsPerPage}"
 			showEffect="slideUp" hideEffect="slideDown"
@@ -59,6 +57,24 @@
 			/>
 	</mx:ControlBar>
 
+	<states>
+		<mx:State name="{LIST_STATE}">
+			<mx:AddChild relativeTo="{listContainer}" position="firstChild">
+				<CheckWrapperList id="checkList"
+					height="100%" width="100%"
+					dataProvider="{_presentationModel.checkList}" />
+			</mx:AddChild>
+		</mx:State>
+		<mx:State name="{GRID_STATE}">
+			<mx:AddChild relativeTo="{listContainer}" position="firstChild">
+				<CheckGrid id="checkGrid"
+					height="100%" width="100%"
+					headerRelease="handleHeaderRelease(event)"
+					dataProvider="{_presentationModel.checkList}" />
+			</mx:AddChild>
+		</mx:State>
+	</states>
+
 	<mx:Resize id="slideUp" heightTo="35" duration="1000" />
 	<mx:Resize id="slideDown" heightTo="0" duration="1000" />
 
@@ -71,12 +87,19 @@
 
 	<mx:Script>
 		<![CDATA[
+			import mx.events.DataGridEvent;
+			import com.enilsson.elephantadmin.views.common.ListGridToggle;
 			import mx.core.Application;
 			import com.enilsson.elephantadmin.views.modules.pledge_workspace.PWPopupContainer;
 			import com.enilsson.elephantadmin.views.modules.pledge_workspace.PledgeWorkspace;
 			import mx.managers.PopUpManager;
 			import mx.collections.ArrayCollection;
 			import com.enilsson.elephantadmin.views.modules.batch.model.CheckListModel;
+
+			private static const LIST_STATE:String = ListGridToggle.LIST;
+			private static const GRID_STATE:String = ListGridToggle.GRID;
+			private static const DESC:String = "DESC";
+			private static const ASC:String = "ASC";
 
 			public function set presentationModel( value : CheckListModel ) : void {
 				_presentationModel = value;
@@ -93,6 +116,28 @@
 					_presentationModel.getCheckList();
 				});
 				PopUpManager.centerPopUp(popup);
+			}
+
+			private function handleHeaderRelease(event:DataGridEvent):void
+			{
+				if(paginator.pages > 1) 
+				{
+					event.preventDefault();
+					_presentationModel.sortChecks( event.currentTarget.columns[event.columnIndex].remoteSortField);
+				}	
+			}
+
+			private function handleStateChange():void
+			{
+				switch(toggleState)
+				{
+					case LIST_STATE:
+						toggleState = GRID_STATE;
+						break;
+					case GRID_STATE:
+						toggleState = LIST_STATE;
+						break;
+				}
 			}
 
 			[Bindable] protected var _presentationModel:CheckListModel;

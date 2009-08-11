@@ -1,11 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:DataGrid 
-	xmlns:mx="http://www.adobe.com/2006/mxml">
+<mx:DataGrid width="100%" height="100%" dragEnabled="true" dropEnabled="true" itemRenderer="com.enilsson.elephantadmin.views.modules.batch.renderers.CheckGridRenderer"
+	xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:common="com.enilsson.elephantadmin.views.common.*" 
+	allowMultipleSelection="true">
 	
 	<mx:columns>
-		<mx:DataGridColumn id="" />
-		<mx:DataGridColumn id="" />
-		<mx:DataGridColumn id="" />
+		<common:SortColumn id="nameCol"
+			labelFunction="{fullNameLabelFunction}"
+			headerText="Name on Account"
+			remoteSortField="checks.full_name"/>
+		<common:SortColumn id="amountCol"
+			labelFunction="{amountLabelFunction}"
+			headerText="Check amount"
+			remoteSortField="checks.amount"/>
+		<common:SortColumn id="contactCol"
+			labelFunction="{contactNameLabelFunction}"
+			headerText="Name of contact"
+			remoteSortField="checks__pledge_id.lname"/>
+		<common:SortColumn id="pledgeAmountCol"
+			labelFunction="{pledgeAmountLabelFunction}"
+			headerText="Pledge amount"
+			remoteSortField="checks__pledge_id.pledge_amount"/>
+		<common:SortColumn id="addressCol"
+			labelFunction="{addressLabelFunction}"
+			headerText="Address"
+			remoteSortField="checks__pledge_id.address1"/>
+		<common:SortColumn id="cityCol"
+			labelFunction="{cityLabelFunction}"
+			headerText="City"
+			remoteSortField="checks__pledge_id.city"/>
+		<common:SortColumn id="stateCol"
+			labelFunction="{stateLabelFunction}"
+			headerText="State"
+			remoteSortField="checks__pledge_id.state"/>
+		<common:SortColumn id="zipCol"
+			labelFunction="{zipLabelFunction}"
+			headerText="Zip"
+			remoteSortField="checks__pledge_id.zip"/>
+		<common:SortColumn id="pledgeDateCol"
+			labelFunction="{pledgeDateLabelFunction}"
+			headerText="Pledge Date"
+			remoteSortField="checks__pledge_id.pledge_date"/>
 	</mx:columns>
-	
+
+	<mx:DateFormatter id="df" formatString="MM/DD/YYYY" />
+	<mx:CurrencyFormatter id="cf" currencySymbol="$" precision="0" />
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephantadmin.events.modules.batch.BatchListEvent;
+			import mx.managers.DragManager;
+			import mx.core.DragSource;
+			import com.enilsson.elephantadmin.views.modules.batch.renderers.CheckWrapper;
+			import mx.events.DragEvent;
+			import mx.controls.dataGridClasses.DataGridColumn;
+			import com.enilsson.utils.EDateUtil;
+			import mx.utils.ObjectUtil;
+
+			override protected function dragStartHandler(event:DragEvent):void
+			{
+				var dragSource:DragSource = new DragSource();
+				addDragData(dragSource);
+
+				var items:Array = dragSource.dataForFormat("items") as Array;
+				for each(var item:CheckWrapper in items)
+				{
+					if(item.inBatch)
+						items.splice(items.indexOf(item),1);
+				}
+				if(items.length == 0)
+				{
+					return;
+				}
+				else
+				{
+					DragManager.doDrag(this, dragSource, event, dragImage,
+						0, 0, 0.5, dragMoveEnabled);
+				}
+			}
+
+			override protected function dragDropHandler(event:DragEvent):void
+			{
+				// extract the dragged items from the dragSource and dispatch as an event
+				var items:Array = event.dragSource.dataForFormat("items") as Array;
+				new BatchListEvent(BatchListEvent.REMOVE_CHECKS_FROM_NEW_BATCH, items).dispatch();
+				
+				// replace the event with empty dragSource so dragging will end normally but do nothing
+				event.dragSource = new DragSource();
+				super.dragDropHandler(event);
+			}
+
+			private function amountLabelFunction( item : Object, column : DataGridColumn ) : String {
+				return cf.format(item.check.amount);
+			}
+			
+			private function pledgeAmountLabelFunction( item : Object, column : DataGridColumn ) : String {
+				return cf.format(item.check.pledge_id.pledge_amount);
+			}
+			
+			private function fullNameLabelFunction( item : Object, column : DataGridColumn ) : String {
+				return item.check.full_name;
+			}
+			private function fullNameSortCompare( a : Object, b : Object ) : int {
+				return ObjectUtil.stringCompare( a.check.full_name, b.check.full_name);
+			}
+
+			private function contactNameLabelFunction( item : Object, column : DataGridColumn ) : String {
+				return item.check.pledge_id.fname + " " + item.check.pledge_id.lname;
+			}
+			private function contactNameSortCompare( a : Object, b : Object ) : int {
+				return ObjectUtil.stringCompare( a.check.pledge_id.lname, b.check.pledge_id.lname);
+			}
+
+			private function addressLabelFunction( item : Object, column : DataGridColumn ) : String {
+				return item.check.pledge_id.address1;
+			}
+
+			private function stateLabelFunction( item : Object, column : DataGridColumn ) : String {
+				return item.check.pledge_id.state;
+			}
+
+			private function zipLabelFunction( item : Object, column : DataGridColumn ) : String {
+				return item.check.pledge_id.zip;
+			}
+
+			private function cityLabelFunction( item : Object, column : DataGridColumn ) : String {
+				return item.check.pledge_id.city;
+			}
+
+			private function pledgeDateLabelFunction( item : Object, column : DataGridColumn ) : String {
+				return df.format(EDateUtil.dateFromTimestamp(item.check.pledge_id.pledge_date));
+			}
+		]]>
+	</mx:Script>
 </mx:DataGrid>
