@@ -9,9 +9,9 @@
 				<mx:Component>
 					<mx:HBox horizontalAlign="center">
 						<mx:Button useHandCursor="true" buttonMode="true"
-							styleName="addRecord"
-							click="new BatchListEvent(BatchListEvent.ADD_CHECKS_TO_NEW_BATCH, [ data ]).dispatch()"
-							toolTip="Add this check" />
+							styleName="deleteRecord"
+							click="new BatchListEvent(BatchListEvent.REMOVE_CHECKS_FROM_NEW_BATCH, [ data ]).dispatch()"
+							toolTip="Remove this check" />
 						<mx:Script>
 							<![CDATA[
 								import com.enilsson.elephantadmin.events.modules.batch.BatchListEvent;
@@ -23,8 +23,8 @@
 		</mx:DataGridColumn>
 		<common:SortColumn id="nameCol"
 			labelFunction="{fullNameLabelFunction}"
-			sortCompareFunction="{fullNameSortCompare}"
 			headerText="Name on Account"
+			sortCompareFunction="{fullNameSortCompare}"
 			remoteSortField="checks.full_name"/>
 		<common:SortColumn id="amountCol"
 			labelFunction="{amountLabelFunction}"
@@ -81,33 +81,11 @@
 			import com.enilsson.utils.EDateUtil;
 			import mx.utils.ObjectUtil;
 
-			override protected function dragStartHandler(event:DragEvent):void
-			{
-				var dragSource:DragSource = new DragSource();
-				addDragData(dragSource);
-
-				var items:Array = dragSource.dataForFormat("items") as Array;
-				for each(var item:CheckWrapper in items)
-				{
-					if(item.inBatch)
-						items.splice(items.indexOf(item),1);
-				}
-				if(items.length == 0)
-				{
-					return;
-				}
-				else
-				{
-					DragManager.doDrag(this, dragSource, event, dragImage,
-						0, 0, 0.5, dragMoveEnabled);
-				}
-			}
-
 			override protected function dragDropHandler(event:DragEvent):void
 			{
 				// extract the dragged items from the dragSource and dispatch as an event
 				var items:Array = event.dragSource.dataForFormat("items") as Array;
-				new BatchListEvent(BatchListEvent.REMOVE_CHECKS_FROM_NEW_BATCH, items).dispatch();
+				new BatchListEvent(BatchListEvent.ADD_CHECKS_TO_NEW_BATCH, items).dispatch();
 				
 				// replace the event with empty dragSource so dragging will end normally but do nothing
 				event.dragSource = new DragSource();
@@ -115,66 +93,66 @@
 			}
 
 			private function amountLabelFunction( item : Object, column : DataGridColumn ) : String {
-				return cf.format(item.check.amount);
+				return cf.format(item.amount);
 			}
 			private function amountSortCompare( a : Object, b : Object ) : int {
-				return ObjectUtil.numericCompare( a.check.amount, b.check.amount);
+				return ObjectUtil.numericCompare( a.amount, b.amount);
 			}
-			
+
 			private function pledgeAmountLabelFunction( item : Object, column : DataGridColumn ) : String {
-				return cf.format(item.check.pledge_id.pledge_amount);
+				return cf.format(item.pledge_id.pledge_amount);
 			}
 			private function pledgeAmountSortCompare( a : Object, b : Object ) : int {
-				return ObjectUtil.numericCompare( a.check.pledge_id.pledge_amount, b.check.pledge_id.pledge_amount);
+				return ObjectUtil.numericCompare( a.pledge_id.pledge_amount, b.pledge_id.pledge_amount);
 			}
 
 			private function fullNameLabelFunction( item : Object, column : DataGridColumn ) : String {
-				return item.check.full_name;
+				return item.full_name;
 			}
 			private function fullNameSortCompare( a : Object, b : Object ) : int {
-				return ObjectUtil.stringCompare( a.check.full_name, b.check.full_name);
+				return ObjectUtil.stringCompare( a.full_name, b.full_name);
 			}
 
 			private function contactNameLabelFunction( item : Object, column : DataGridColumn ) : String {
-				return item.check.pledge_id.fname + " " + item.check.pledge_id.lname;
+				return item.pledge_id.fname + " " + item.pledge_id.lname;
 			}
 			private function contactNameSortCompare( a : Object, b : Object ) : int {
-				return ObjectUtil.stringCompare( a.check.pledge_id.lname, b.check.pledge_id.lname);
+				return ObjectUtil.stringCompare( a.pledge_id.lname, b.pledge_id.lname);
 			}
 
 			private function addressLabelFunction( item : Object, column : DataGridColumn ) : String {
-				return item.check.pledge_id.address1;
+				return item.pledge_id.address1;
 			}
 			private function addressSortCompare( a : Object, b : Object ) : int {
-				return ObjectUtil.stringCompare( a.check.pledge_id.address1, b.check.pledge_id.address1);
+				return ObjectUtil.stringCompare( a.pledge_id.address1, b.pledge_id.address1);
 			}
 
 			private function stateLabelFunction( item : Object, column : DataGridColumn ) : String {
-				return item.check.pledge_id.state;
+				return item.pledge_id.state;
 			}
 			private function stateSortCompare( a : Object, b : Object ) : int {
-				return ObjectUtil.stringCompare( a.check.pledge_id.state, b.check.pledge_id.state);
+				return ObjectUtil.stringCompare( a.pledge_id.state, b.pledge_id.state);
 			}
 
 			private function zipLabelFunction( item : Object, column : DataGridColumn ) : String {
-				return item.check.pledge_id.zip;
+				return item.pledge_id.zip;
 			}
 			private function zipSortCompare( a : Object, b : Object ) : int {
-				return ObjectUtil.stringCompare( a.check.pledge_id.zip, b.check.pledge_id.zip);
+				return ObjectUtil.numericCompare( a.pledge_id.zip, b.pledge_id.zip);
 			}
 
 			private function cityLabelFunction( item : Object, column : DataGridColumn ) : String {
-				return item.check.pledge_id.city;
+				return item.pledge_id.city;
 			}
 			private function citySortCompare( a : Object, b : Object ) : int {
-				return ObjectUtil.stringCompare( a.check.pledge_id.city, b.check.pledge_id.city);
+				return ObjectUtil.stringCompare( a.pledge_id.city, b.pledge_id.city);
 			}
 
 			private function pledgeDateLabelFunction( item : Object, column : DataGridColumn ) : String {
-				return df.format(EDateUtil.dateFromTimestamp(item.check.pledge_id.pledge_date));
+				return df.format(EDateUtil.dateFromTimestamp(item.pledge_id.pledge_date));
 			}
 			private function pledgeDateSortCompare( a : Object, b : Object ) : int {
-				return ObjectUtil.numericCompare( a.check.pledge_id.pledge_date, b.check.pledge_id.pledge_date);
+				return ObjectUtil.numericCompare( a.pledge_id.pledge_date, b.pledge_id.pledge_date);
 			}
 		]]>
 	</mx:Script>

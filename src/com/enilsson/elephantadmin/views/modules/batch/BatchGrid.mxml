@@ -2,9 +2,7 @@
 <mx:DataGrid
 	xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:common="com.enilsson.elephantadmin.views.common.*" 
-	styleName="greyGrid"
 	variableRowHeight="true"
-	alternatingItemColors="[#e0e0e0, #e7e7e7]"
 	borderStyle="none" xmlns:views="com.enilsson.elephantadmin.views.*">
 	
 	<mx:columns>

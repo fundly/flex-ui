@@ -6,7 +6,6 @@
 	dragEnabled="true" dropEnabled="true" dragMoveEnabled="false" allowMultipleSelection="true"
 	dropIndicatorSkin="{ProgrammaticSkin}"
 	enabledFunction="{isCheckEnabled}"
-	styleName="list"
 	dragDrop="handleDragDrop(event)"
 	dragEnter="handleDragEnter(event)"
 	dragComplete="handleDragComplete(event)"

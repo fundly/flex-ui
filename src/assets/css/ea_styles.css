@@ -658,6 +658,11 @@ ModuleControlBar {
 	overSkin: Embed("../images/icons/small/delete.png");
 	downSkin: Embed("../images/icons/small/delete.png");	
 }
+.addRecord {
+	upSkin: Embed("../images/icons/small/add.png");
+	overSkin: Embed("../images/icons/small/add.png");
+	downSkin: Embed("../images/icons/small/add.png");	
+}
 .viewContact {
 	upSkin: Embed("../images/new_icons/nav/contacts.png");
 	overSkin: Embed("../images/new_icons/nav/contacts.png");

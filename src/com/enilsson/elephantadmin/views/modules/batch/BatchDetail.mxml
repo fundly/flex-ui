@@ -14,13 +14,8 @@
 
 	<states>
 		<mx:State name="{BatchState.VIEW_BATCH}">
-			<mx:AddChild relativeTo="{this}" position="0">
-				<mx:List id="batchCheckList"
-					styleName="batchList" selectable="false"
-					dataProvider="{_presentationModel.batchCheckList}"
-					height="100%" width="100%"
-					itemRenderer="com.enilsson.elephantadmin.views.modules.batch.renderers.CheckRenderer"
-				/>
+			<mx:AddChild relativeTo="{this}" position="firstChild">
+				<BatchCheckListGrid presentationModel="{_presentationModel}" currentState="{toggleState}" />
 			</mx:AddChild>
 			<mx:AddChild relativeTo="{cBar}">
 				<common:CMSSubmitBtn
@@ -31,11 +26,8 @@
 			</mx:AddChild>
 		</mx:State>
 		<mx:State name="{BatchState.ADD_BATCH}">
-			<mx:AddChild relativeTo="{this}" position="0">
-				<batch:NewBatchCheckList id="newBatchCheckList"
-					xmlns:batch="com.enilsson.elephantadmin.views.modules.batch.*"
-					dataProvider="{_presentationModel.newBatchCheckList}"
-					height="100%" width="100%" />
+			<mx:AddChild relativeTo="{this}" position="firstChild">
+				<NewBatchCheckListGrid presentationModel="{_presentationModel}" currentState="{toggleState}" />
 			</mx:AddChild>
 			<mx:AddChild relativeTo="{cBar}">
 				<mx:LinkButton id="cancelButton"

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Canvas xmlns="http://www.adobe.com/2006/mxml" width="100%" height="100%"
+	xmlns:common="com.enilsson.elephantadmin.views.common.*" 
+	currentState="{TogglePanel.LIST_VIEW}">
+
+	<states>
+		<State name="{TogglePanel.LIST_VIEW}">
+			<AddChild>
+				<List id="batchCheckList"
+					styleName="list"
+					dataProvider="{_presentationModel.batchCheckList}"
+					height="100%" width="100%"
+					itemRenderer="com.enilsson.elephantadmin.views.modules.batch.renderers.CheckRenderer"
+				/>
+			</AddChild>
+		</State>
+		<State name="{TogglePanel.GRID_VIEW}">
+			<AddChild>
+				<DataGrid id="batchCheckGrid"
+					styleName="greyGrid"
+					dataProvider="{_presentationModel.batchCheckList}"
+					height="100%" width="100%"
+				>
+					<columns>
+						<common:SortColumn id="nameCol"
+							labelFunction="{fullNameLabelFunction}"
+							sortCompareFunction="{fullNameSortCompare}"
+							headerText="Name on Account"
+							remoteSortField="checks.full_name"/>
+						<common:SortColumn id="amountCol"
+							labelFunction="{amountLabelFunction}"
+							sortCompareFunction="{amountSortCompare}"
+							headerText="Check amount"
+							remoteSortField="checks.amount"/>
+						<common:SortColumn id="contactCol"
+							labelFunction="{contactNameLabelFunction}"
+							sortCompareFunction="{contactNameSortCompare}"
+							headerText="Name of contact"
+							remoteSortField="checks__pledge_id.lname"/>
+						<common:SortColumn id="pledgeAmountCol"
+							labelFunction="{pledgeAmountLabelFunction}"
+							sortCompareFunction="{pledgeAmountSortCompare}"
+							headerText="Pledge amount"
+							remoteSortField="checks__pledge_id.pledge_amount"/>
+						<common:SortColumn id="addressCol"
+							labelFunction="{addressLabelFunction}"
+							sortCompareFunction="{addressSortCompare}"
+							headerText="Address"
+							remoteSortField="checks__pledge_id.address1"/>
+						<common:SortColumn id="cityCol"
+							labelFunction="{cityLabelFunction}"
+							sortCompareFunction="{citySortCompare}"
+							headerText="City"
+							remoteSortField="checks__pledge_id.city"/>
+						<common:SortColumn id="stateCol"
+							labelFunction="{stateLabelFunction}"
+							sortCompareFunction="{stateSortCompare}"
+							headerText="State"
+							remoteSortField="checks__pledge_id.state"/>
+						<common:SortColumn id="zipCol"
+							labelFunction="{zipLabelFunction}"
+							sortCompareFunction="{zipSortCompare}"
+							headerText="Zip"
+							remoteSortField="checks__pledge_id.zip"/>
+						<common:SortColumn id="pledgeDateCol"
+							labelFunction="{pledgeDateLabelFunction}"
+							sortCompareFunction="{pledgeDateSortCompare}"
+							headerText="Pledge Date"
+							remoteSortField="checks__pledge_id.pledge_date"/>
+					</columns>
+				</DataGrid>
+			</AddChild>
+		</State>
+	</states>
+
+	<DateFormatter id="df" formatString="MM/DD/YYYY" />
+	<CurrencyFormatter id="cf" currencySymbol="$" precision="0" />
+
+	<Script>
+		<![CDATA[
+			import com.enilsson.utils.EDateUtil;
+			import mx.utils.ObjectUtil;
+			import mx.controls.dataGridClasses.DataGridColumn;
+			import com.enilsson.elephantadmin.views.modules.batch.model.BatchDetailModel;
+			public function set presentationModel(value:BatchDetailModel):void
+			{
+				_presentationModel = value;
+			}
+			[Bindable] public var _presentationModel:BatchDetailModel;
+			
+			private function amountLabelFunction( item : Object, column : DataGridColumn ) : String {
+				return cf.format(item.amount);
+			}
+			private function amountSortCompare( a : Object, b : Object ) : int {
+				return ObjectUtil.numericCompare( a.amount, b.amount);
+			}
+
+			private function pledgeAmountLabelFunction( item : Object, column : DataGridColumn ) : String {
+				return cf.format(item.pledge_id.pledge_amount);
+			}
+			private function pledgeAmountSortCompare( a : Object, b : Object ) : int {
+				return ObjectUtil.numericCompare( a.pledge_id.pledge_amount, b.pledge_id.pledge_amount);
+			}
+
+			private function fullNameLabelFunction( item : Object, column : DataGridColumn ) : String {
+				return item.full_name;
+			}
+			private function fullNameSortCompare( a : Object, b : Object ) : int {
+				return ObjectUtil.stringCompare( a.full_name, b.full_name);
+			}
+
+			private function contactNameLabelFunction( item : Object, column : DataGridColumn ) : String {
+				return item.pledge_id.fname + " " + item.pledge_id.lname;
+			}
+			private function contactNameSortCompare( a : Object, b : Object ) : int {
+				return ObjectUtil.stringCompare( a.pledge_id.lname, b.pledge_id.lname);
+			}
+
+			private function addressLabelFunction( item : Object, column : DataGridColumn ) : String {
+				return item.pledge_id.address1;
+			}
+			private function addressSortCompare( a : Object, b : Object ) : int {
+				return ObjectUtil.stringCompare( a.pledge_id.address1, b.pledge_id.address1);
+			}
+
+			private function stateLabelFunction( item : Object, column : DataGridColumn ) : String {
+				return item.pledge_id.state;
+			}
+			private function stateSortCompare( a : Object, b : Object ) : int {
+				return ObjectUtil.stringCompare( a.pledge_id.state, b.pledge_id.state);
+			}
+
+			private function zipLabelFunction( item : Object, column : DataGridColumn ) : String {
+				return item.pledge_id.zip;
+			}
+			private function zipSortCompare( a : Object, b : Object ) : int {
+				return ObjectUtil.numericCompare( a.pledge_id.zip, b.pledge_id.zip);
+			}
+
+			private function cityLabelFunction( item : Object, column : DataGridColumn ) : String {
+				return item.pledge_id.city;
+			}
+			private function citySortCompare( a : Object, b : Object ) : int {
+				return ObjectUtil.stringCompare( a.pledge_id.city, b.pledge_id.city);
+			}
+
+			private function pledgeDateLabelFunction( item : Object, column : DataGridColumn ) : String {
+				return df.format(EDateUtil.dateFromTimestamp(item.pledge_id.pledge_date));
+			}
+			private function pledgeDateSortCompare( a : Object, b : Object ) : int {
+				return ObjectUtil.numericCompare( a.pledge_id.pledge_date, b.pledge_id.pledge_date);
+			}
+
+		]]>
+	</Script>
+</Canvas>

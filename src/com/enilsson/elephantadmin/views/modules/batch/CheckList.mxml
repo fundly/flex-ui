@@ -58,16 +58,18 @@
 	</mx:ControlBar>
 
 	<states>
-		<mx:State name="{LIST_STATE}">
+		<mx:State name="{LIST_VIEW}">
 			<mx:AddChild relativeTo="{listContainer}" position="firstChild">
 				<CheckWrapperList id="checkList"
 					height="100%" width="100%"
+					styleName="list"
 					dataProvider="{_presentationModel.checkList}" />
 			</mx:AddChild>
 		</mx:State>
-		<mx:State name="{GRID_STATE}">
+		<mx:State name="{GRID_VIEW}">
 			<mx:AddChild relativeTo="{listContainer}" position="firstChild">
 				<CheckGrid id="checkGrid"
+					styleName="greyGrid"
 					height="100%" width="100%"
 					headerRelease="handleHeaderRelease(event)"
 					dataProvider="{_presentationModel.checkList}" />
@@ -96,8 +98,6 @@
 			import mx.collections.ArrayCollection;
 			import com.enilsson.elephantadmin.views.modules.batch.model.CheckListModel;
 
-			private static const LIST_STATE:String = ListGridToggle.LIST;
-			private static const GRID_STATE:String = ListGridToggle.GRID;
 			private static const DESC:String = "DESC";
 			private static const ASC:String = "ASC";
 
@@ -125,19 +125,6 @@
 					event.preventDefault();
 					_presentationModel.sortChecks( event.currentTarget.columns[event.columnIndex].remoteSortField);
 				}	
-			}
-
-			private function handleStateChange():void
-			{
-				switch(toggleState)
-				{
-					case LIST_STATE:
-						toggleState = GRID_STATE;
-						break;
-					case GRID_STATE:
-						toggleState = LIST_STATE;
-						break;
-				}
 			}
 
 			[Bindable] protected var _presentationModel:CheckListModel;

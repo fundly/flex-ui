@@ -4,16 +4,9 @@
 	xmlns:mx="http://www.adobe.com/2006/mxml"
 	title="My batches" xmlns:controls="com.enilsson.controls.*"
 	styleName="panel" enabled="{!_presentationModel.batchListLoading}"
+	currentState="{toggleState}"
 	width="50%" height="100%" xmlns:common="com.enilsson.elephantadmin.views.common.*">
-	<mx:VBox width="100%" height="100%">
-		<mx:List id="batchList"
-			styleName="list"
-			height="100%" width="100%"
-			itemRenderer="com.enilsson.elephantadmin.views.modules.batch.renderers.BatchRenderer"
-			dataProvider="{_presentationModel.batchList}"
-			change="_presentationModel.batchListChangeHandler(event)"
-			selectedIndex="{_presentationModel.batchListSelectedIndex}"
-			/>
+	<mx:VBox id="listContainer" width="100%" height="100%">
 		<mx:Canvas id="paginationBox" 
 			visible="{_presentationModel.batchListTotal &gt; _presentationModel.itemsPerPage}"
 			showEffect="slideUp" hideEffect="slideDown"
@@ -40,10 +33,22 @@
 	</mx:ControlBar>
 	
 	<states>
-		<mx:State name="grid">
-			<mx:RemoveChild target="{batchList}" />
-			<mx:AddChild relativeTo="{paginationBox}" position="before">
+		<mx:State name="{LIST_VIEW}">
+			<mx:AddChild relativeTo="{listContainer}" position="firstChild">
+				<mx:List id="batchList"
+					styleName="list"
+					height="100%" width="100%"
+					itemRenderer="com.enilsson.elephantadmin.views.modules.batch.renderers.BatchRenderer"
+					dataProvider="{_presentationModel.batchList}"
+					change="_presentationModel.batchListChangeHandler(event)"
+					selectedIndex="{_presentationModel.batchListSelectedIndex}"
+					/>
+			</mx:AddChild>
+		</mx:State>
+		<mx:State name="{GRID_VIEW}">
+			<mx:AddChild relativeTo="{listContainer}" position="firstChild">
 				<BatchGrid id="batchGrid" 
+					styleName="greyGrid"
 					width="100%" height="100%"
 					dataProvider="{_presentationModel.batchList}"
 					change="_presentationModel.batchListChangeHandler(event)"
@@ -62,17 +67,11 @@
 	<mx:Script>
 		<![CDATA[
 			import mx.events.DataGridEvent;
-			import com.enilsson.elephantadmin.views.common.ListGridToggle;
 			import com.enilsson.elephantadmin.views.modules.batch.model.BatchListModel;
 
 			public function set presentationModel( value : BatchListModel ) : void
 			{
 				_presentationModel = value;
-			}
-			
-			override public function set toggleState(value:String):void {
-				super.toggleState = value;
-				currentState = toggleState == ListGridToggle.LIST ? '' : 'grid';
 			}
 			
 			private function handleHeaderRelease( event : DataGridEvent ) : void {
@@ -86,7 +85,6 @@
 			[Bindable] public var selectedBatch:Object;
 
 			[Bindable] protected var _presentationModel:BatchListModel;
-
 
 		]]>
 	</mx:Script>
