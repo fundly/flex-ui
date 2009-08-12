@@ -15,6 +15,7 @@ package com.enilsson.elephantadmin.views.modules.app_options.model.pm
 	{
 		// collection of all site options
 		public var siteOptions			: ArrayCollection;
+		public var selectedIndex 		: int;
 		public var selectedSiteOption	: SiteOption;
 		
 		// trigger the event to load the site options and store them in the domain model

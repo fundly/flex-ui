@@ -14,6 +14,7 @@ package com.enilsson.elephantadmin.commands.modules.app_options
 	import flash.events.Event;
 	
 	import mx.collections.ArrayCollection;
+	import mx.formatters.DateFormatter;
 	import mx.rpc.Responder;
 	import mx.rpc.events.FaultEvent;
 	import mx.rpc.events.ResultEvent;
@@ -25,8 +26,8 @@ package com.enilsson.elephantadmin.commands.modules.app_options
 	{
 		private static const SITE_OPTIONS : String = "site_options";
 		
-		private var _model 		: EAModelLocator = EAModelLocator.getInstance();
-		private var _event		: Event;
+		private var _model : EAModelLocator = EAModelLocator.getInstance();
+		private var _event : Event;
 		
 		public function execute( event : CairngormEvent ) : void
 		{
@@ -43,6 +44,9 @@ package com.enilsson.elephantadmin.commands.modules.app_options
 			}
 		}
 		
+		/**
+		 * Get the site options and apply them to the module
+		 */
 		private function getSiteOptions() : void
 		{
 			var responder	: Responder = new Responder(handleGetSiteOptionsResult, handleGetSiteOptionsFault);
@@ -53,7 +57,8 @@ package com.enilsson.elephantadmin.commands.modules.app_options
 			delegate.getRecords(recordsVO);
 			
 			_model.dataLoading = true;
-		}		
+		}	
+			
 		private function handleGetSiteOptionsResult( event : ResultEvent ) : void
 		{
 			_model.dataLoading = false;
@@ -70,7 +75,8 @@ package com.enilsson.elephantadmin.commands.modules.app_options
 			}
 			
 			_model.appOptions.siteOptions = siteOptions;
-		}		
+		}
+				
 		private function handleGetSiteOptionsFault( event : FaultEvent ) : void
 		{
 			_model.dataLoading = false;
@@ -78,6 +84,9 @@ package com.enilsson.elephantadmin.commands.modules.app_options
 		}
 		
 		
+		/**
+		 * Save the selected option
+		 */
 		private function saveSiteOption() : void
 		{
 			var e : SaveSiteOptionEvent = _event as SaveSiteOptionEvent;
@@ -89,10 +98,15 @@ package com.enilsson.elephantadmin.commands.modules.app_options
 			delegate.upsertRecord(recordVO);
 			_model.dataLoading = true;
 		}
+		
 		private function handleSaveSiteOptionResult( event : ResultEvent ) : void
 		{
 			var e : SaveSiteOptionEvent = _event as SaveSiteOptionEvent;
 			
+			if ( _model.debug ) Logger.info('Save SiteOption', ObjectUtil.toString( event.result ), ObjectUtil.toString( e.option ));
+			
+			var df:DateFormatter = new DateFormatter();
+			df.formatString = 'MM/DD/YYYY';
 			_model.dataLoading = false;
 			
 			var options : ArrayCollection = _model.appOptions.siteOptions;
@@ -100,7 +114,12 @@ package com.enilsson.elephantadmin.commands.modules.app_options
 			{
 				if( SiteOption(options[i]).id == e.option.id )
 				{
-					options.setItemAt( e.option, i );
+					var opt:SiteOption = e.option;
+					opt.modifiedBy = _model.session.fullname;
+					opt.modifiedById = _model.session.user_id;
+					opt.modifiedOn = df.format( new Date() );
+					
+					options.setItemAt( opt, i );
 					break;
 				}
 			}
@@ -108,10 +127,11 @@ package com.enilsson.elephantadmin.commands.modules.app_options
 			if( e.callback != null )
 				e.callback();
 		}
+		
 		private function handleSaveSiteOptionFault( event : FaultEvent ) : void
 		{
 			_model.dataLoading = false;
-			if(_model.debug) Logger.warn( ObjectUtil.toString( event.fault ) );
+			if(_model.debug) Logger.warn( 'SaveSiteOptionsFail', ObjectUtil.toString( event.fault ) );
 		}
 	}
 }

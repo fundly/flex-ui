@@ -68,6 +68,8 @@ package com.enilsson.elephanttrakker.commands.modules
 			
 			_model.firstlogin.formProcessing = true;
 			
+			if ( _model.debug ) Logger.info('Upsert First Contact', ObjectUtil.toString(event.params));
+			
 			delegate.upsertContact( event.params );
 		}
 		
@@ -110,7 +112,7 @@ package com.enilsson.elephanttrakker.commands.modules
 		{
 			if(_model.debug) Logger.info('upsert First Contact Fault', ObjectUtil.toString(data.fault));
 
-			_model.firstlogin.errorVO = new ErrorVO( 'There was an error processing your details!' + data.fault, 'errorBox', true );						
+			_model.firstlogin.errorVO = new ErrorVO( 'There was an error processing your details!<br><br>' + data.fault, 'errorBox', true );						
 			_model.firstlogin.formProcessing = false;			
 		}	
 

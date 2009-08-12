@@ -6,17 +6,6 @@
 	show="init()"
 	horizontalScrollPolicy="off" verticalScrollPolicy="off">
 
-	<mx:LinkButton id="saveBT"
-		styleName="saveBT"
-		label="save" 
-		enabled="{presentationModel.action != PledgeWorkspaceModel.EDIT}"
-		verticalCenter="0" left="95"
-		toolTip="{presentationModel.action != PledgeWorkspaceModel.EDIT ? 
-			'Save this pledge to finish at a later date' : 
-			'You can not save an existing pledge!'}" 
-		tabIndex="2"
-		click="presentationModel.save()" />
-	
 	<mx:HBox id="buttons" horizontalCenter="0" top="6">
 		<common:ValidFormIndicator 
 			status="{presentationModel.workspaceValid}" 
@@ -26,7 +15,7 @@
 			/>
 		<mx:Button id="submit" 
 			name="submit" 
-			styleName="submitBtn"
+			styleName="loginSubmitBtn"
 			label="{presentationModel.action != PledgeWorkspaceModel.EDIT ? 'complete':'update'} this pledge"
 			click="presentationModel.process()" 
 			keyUp="submitBtnKeyHandler(event)"

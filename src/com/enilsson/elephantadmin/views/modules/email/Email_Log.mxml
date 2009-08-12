@@ -308,7 +308,7 @@
 			selectedPage="{_model.email_log.currPage / _model.itemsPerPage}" 
 			itemsPerPage="{_model.itemsPerPage}" 
 			itemsTotal="{_model.email_log.totalRecords}"
-			/>
+			rangeCount="10" />
 		<email:Email_Log_Detail id="emailDetail"
 			minWidth="350" 
 			height="100%"/>

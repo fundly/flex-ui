@@ -9,7 +9,7 @@
 	
 	
 	<mn:TopNav id="topNav" styleName="topNav" 
-		width="703" height="45" 
+		width="703" height="45"
 		dataProvider="{_model.navLayout}" />
 
 	<mx:Canvas id="contentBox" 

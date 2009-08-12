@@ -111,8 +111,8 @@
 	<graphics:enCloseBtn id="clearSearch" 
 		visible="{txtFilter.text.length > 0}" 
 		toolTip="Clear Search" click="clearSearchAction()" 
-		top="0" right="4"
-		size="{this.height-2}" dropShadow="false" 
+		top="1" right="4" crossSize="{this.height / 2 - 4}"
+		size="{this.height}" dropShadow="false" 
 		backgroundColor="{this._clearBtnBackgroundColor}" borderColor="{this._clearBtnBorderColor}" />
 		
 </mx:Canvas>

@@ -105,12 +105,12 @@ package com.enilsson.elephanttrakker.commands.modules
 				switch(item.action) 
 				{
 					case 'downline':
-						item['description'] = _model.options.downline_request.replace('{from_name}', item.from_name);
+						item['description'] = _model.options.downline_request.replace(new RegExp(/{from_name}/gi), item.from_name);
 						item['msgType'] = 'Downline request';
 						messages.addItem(item);
 					break;				
 					case 'contacts':
-						item['description'] = _model.options.contacts_request.replace('{from_name}', item.from_name);
+						item['description'] = _model.options.contacts_request.replace(new RegExp(/{from_name}/gi), item.from_name);
 						item['msgType'] = 'Contacts request';
 						messages.addItem(item);				
 					break;

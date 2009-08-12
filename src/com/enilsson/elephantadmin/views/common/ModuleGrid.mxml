@@ -204,6 +204,10 @@
 				_toDate = event.currentTarget.selectedDate;
 				this.dispatchEvent( new Event('toDateChange', true ) )
 			}
+			
+			public function set rangeCount ( value:int ):void { _rangeCount = value; }
+			private var _rangeCount:int = 10;
+			[Bindable] public function get rangeCount ():int { return _rangeCount; }
 
 		]]>
 	</mx:Script>
@@ -251,7 +255,7 @@
 		<controls:Paginator id="paginator" 
 			styleName="paginator" 
 			debugMode="{_model.debug}" 
-			rangeCount="18" 
+			rangeCount="{rangeCount}" 
 			verticalCenter="0" horizontalCenter="0" 
 			buttonHeight="18" 
 			newPage="dispatchEvent( new Event( 'newPage', true ) );" 

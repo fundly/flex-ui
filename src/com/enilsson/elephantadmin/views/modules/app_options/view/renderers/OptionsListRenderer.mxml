@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
-	toolTip="{_option.description}">
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" 
+	toolTip="{_toolTipDesc}"
+	verticalGap="0">
 	
-	<mx:Label
+	<mx:Label styleName="{_option.display == 1 ? 'listTitle' : 'listTitleUnpublished'}"
 		text="{_option.title}"
-		styleName="listTitle" 
 		width="100%" />
+	<mx:Label text="Last Modified: {_option.modifiedBy == '' ? _option.createdBy : _option.modifiedBy} - {_option.modifiedBy == '' ? _option.createdOn : _option.modifiedOn}"
+		styleName="listDesc" />		
 	
-	<mx:Label
+<!--	<mx:Label
 		id="desciptionLabel"
 		y="20"
 		text="{_option.description}"
 		styleName="listDesc"
-		truncateToFit="true" />
+		truncateToFit="true" />-->
 	
 	<mx:Script>
 		<![CDATA[
@@ -22,16 +24,32 @@
 			{
 				super.data = value;
 				_option = data as SiteOption;	
+				
+				if ( !value ) return;
+				
+				if ( _option.display == 1 )
+					_toolTipDesc = 'Published\n\n'  + _option.description;
+				else
+					_toolTipDesc = 'Unpublished\n\n'  + _option.description;
 			}
 			
 			override protected function updateDisplayList(w:Number, h:Number):void
 			{
 				super.updateDisplayList(w,h);
-				desciptionLabel.width = w;
+				//desciptionLabel.width = w;
 			}
 			
 			[Bindable] private var _option : SiteOption;
+			[Bindable] private var _toolTipDesc : String;
 		]]>
-	</mx:Script>	
+	</mx:Script>
 	
-</mx:Canvas>
+	<mx:Style>
+		.listTitleUnpublished {
+			fontSize:14;
+			fontWeight:bold;
+			color:#999999;	
+		}		
+	</mx:Style>	
+	
+</mx:VBox>

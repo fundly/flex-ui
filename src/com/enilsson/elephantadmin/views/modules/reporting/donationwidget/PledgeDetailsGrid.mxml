@@ -6,15 +6,15 @@
 			<mx:HBox paddingTop="3" paddingBottom="3" left="5" horizontalGap="5" verticalAlign="middle">
 				<mx:Box horizontalGap="2" verticalGap="2" horizontalAlign="right"
 					direction="{this.width &gt; 1200 ? 'horizontal' : 'vertical'}">
-				<mx:FormItem label="from:">
+				<mx:FormItem label="From:">
 					<mx:DateField id="range_start" width="100" color="#000000" formatString="MM/DD/YYYY" selectedDate="{EDateUtil.dateFromTimestamp(_presentationModel.startDate)}" change="_presentationModel.startDate = EDateUtil.dateToTimestamp(event.target.selectedDate)" textAlign="center" enabled="{!_presentationModel.dataLoading}" />
 				</mx:FormItem>
-				<mx:FormItem label="to:">
+				<mx:FormItem label="To:">
 					<mx:DateField id="range_end" width="100" color="#000000" formatString="MM/DD/YYYY" selectedDate="{EDateUtil.dateFromTimestamp(_presentationModel.endDate)}" change="_presentationModel.endDate = EDateUtil.dateToTimestamp(event.target.selectedDate)" textAlign="center" enabled="{!_presentationModel.dataLoading}" />
 				</mx:FormItem>
 				</mx:Box>
 
-				<mx:FormItem label="type:">
+				<mx:FormItem label="Type:">
 					<mx:ComboBox width="150" color="#000000" dataProvider="{_presentationModel.typeFilter}" id="contribType" enabled="{!_presentationModel.dataLoading}" change="_presentationModel.typeChangeHandler(event)"/>
 				</mx:FormItem>
 				<mx:Box horizontalGap="2" verticalGap="2" horizontalAlign="right"
@@ -43,7 +43,7 @@
 						click="_presentationModel.generate()"
 						enabled="{!_presentationModel.dataLoading}" />
 					<mx:Button width="80" label="Export" color="#000000"
-						click="_presentationModel.exportGrid(gridColumns)"
+						click="_presentationModel.exportGrid(grid.dG.columns)"
 						enabled="{!_presentationModel.dataLoading}" />
 				</mx:HBox>
 			</mx:Box>
@@ -59,7 +59,7 @@
 		columns="{gridColumns}"/>
 
 	<mx:Array id="gridColumns">
-		<mx:DataGridColumn width="80" dataField="type" headerText="Type" />
+		<mx:DataGridColumn width="80" dataField="type" headerText="Payment Method" />
 		<mx:DataGridColumn width="115" dataField="amount" headerText="Contribution Amount" labelFunction="money_labelFunc" sortCompareFunction="amountCompare"/>
 		<mx:DataGridColumn width="110" dataField="created_on" headerText="Created on" labelFunction="datetime_labelFunc"/>
 		<mx:DataGridColumn width="65" dataField="pledge_date" headerText="Pledge Date" labelFunction="date_labelFunc" />

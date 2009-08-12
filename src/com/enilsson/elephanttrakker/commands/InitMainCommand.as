@@ -306,6 +306,15 @@ package com.enilsson.elephanttrakker.commands
 		private function onFault_getRSS(event:Object):void
 		{
 			if(_model.debug) Logger.info('Fail RSS', ObjectUtil.toString(event));
+			
+			var dp:ArrayCollection = new ArrayCollection();
+			var rssVO:RssVO = new RssVO ();
+			rssVO.title = 'There is an error in with the RSS feed, please inform your admin team!';
+			rssVO.error = true;
+			dp.addItem( rssVO );								
+			
+			_model.rssData = dp;
+			
 		}
 
 

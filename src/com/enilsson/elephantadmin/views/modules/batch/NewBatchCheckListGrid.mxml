@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Canvas xmlns="http://www.adobe.com/2006/mxml" width="100%" height="100%"
+	xmlns:common="com.enilsson.elephantadmin.views.common.*" 
+	xmlns:batch="com.enilsson.elephantadmin.views.modules.batch.*"
+	currentState="{TogglePanel.LIST_VIEW}">
+
+	<states>
+		<State name="{TogglePanel.LIST_VIEW}">
+			<AddChild>
+				<batch:NewBatchCheckList id="newBatchCheckList"
+					dataProvider="{_presentationModel.newBatchCheckList}"
+					styleName="list"
+					height="100%" width="100%" />
+			</AddChild>
+		</State>
+		<State name="{TogglePanel.GRID_VIEW}">
+			<AddChild>
+				<batch:NewBatchCheckGrid id="newBatchCheckGrid"
+					dataProvider="{_presentationModel.newBatchCheckList}"
+					styleName="greyGrid"
+					height="100%" width="100%" />
+			</AddChild>
+		</State>
+	</states>
+
+	<Script>
+		<![CDATA[
+			import com.enilsson.elephantadmin.views.modules.batch.model.BatchDetailModel;
+			public function set presentationModel(value:BatchDetailModel):void
+			{
+				_presentationModel = value;
+			}
+			[Bindable] public var _presentationModel:BatchDetailModel;
+			
+		]]>
+	</Script>
+</Canvas>

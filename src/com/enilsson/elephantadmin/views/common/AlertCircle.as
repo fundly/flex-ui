@@ -35,7 +35,7 @@ package com.enilsson.elephantadmin.views.common
 					this.numberColor = 0xFFFFFF;
 					this.textPadding = 4;
 	            }
-	            StyleManager.setStyleDeclaration("AlertCircle", ComponentStyles, true);
+	            StyleManager.setStyleDeclaration("AlertCircle", ComponentStyles, false);
 	        }
 		}	
 		

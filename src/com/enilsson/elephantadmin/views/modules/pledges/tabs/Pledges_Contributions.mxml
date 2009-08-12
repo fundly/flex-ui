@@ -25,12 +25,8 @@
 			horizontalGap="12" paddingTop="4">
 			<common:CMSSubmitBtn
 				width="150"
-				enabled="false"
-				label="ADD CREDIT CARD"
-				/>
-			<common:CMSSubmitBtn
-				label="ADD CHECK"
-				enabled="false"
+				click="addContribution(_presentationModel.selectedRecord)"
+				label="ADD CONTRIBUTION"
 				/>
 			<common:CMSSubmitBtn
 				label="ADD REFUND"
@@ -46,6 +42,11 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.elephantadmin.views.modules.pledge_workspace.model.PledgeWorkspaceVO;
+			import com.enilsson.elephantadmin.models.EAModelLocator;
+			import mx.core.Application;
+			import mx.managers.PopUpManager;
+			import com.enilsson.elephantadmin.views.modules.pledge_workspace.PWPopupContainer;
 			import com.enilsson.elephantadmin.views.modules.pledges.model.PledgesModel;
 			import com.enilsson.elephantadmin.interfaces.IRecordModel;
 			import com.enilsson.elephantadmin.events.modules.PledgeEvent;
@@ -59,6 +60,28 @@
 			[Bindable] public function get presentationModel():IRecordModel
 			{
 				return _presentationModel;
+			}
+			private function addContribution(selectedRecord:Object):void
+			{
+				var popup:PWPopupContainer = new PWPopupContainer();
+				// set popup variables
+				popup.defaultType = "edit";
+				popup.defaultTab = "pledge";
+				popup.popupTitle = "Add a new Contribution";
+
+				// set workspace variables
+				var vo:PledgeWorkspaceVO = new PledgeWorkspaceVO();
+				vo.action = 'pledgeworkspace_edit';
+				vo.pledgeID = selectedRecord.id;
+				EAModelLocator.getInstance().pledgeWorkspace = vo;
+				
+				PopUpManager.addPopUp(popup, DisplayObject(Application.application), true);
+				popup.addEventListener(Event.CLOSE, function (event:Event):void
+				{
+					PopUpManager.removePopUp(PWPopupContainer(event.currentTarget));
+					_presentationModel.refreshRecordDetails();
+				});
+				PopUpManager.centerPopUp(popup);
 			}
 		]]>
 	</mx:Script>

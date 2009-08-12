@@ -1,9 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas 
-	xmlns:mx="http://www.adobe.com/2006/mxml"
-	xmlns="com.enilsson.elephanttrakker.views.modules.message_center.*" 
-	>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns="com.enilsson.elephanttrakker.views.modules.message_center.*">
 	
+	<mx:VDividedBox width="100%" height="100%">
+		<mx:DataGrid id="inBoxList"
+			width="100%" height="100%"
+			dataProvider="{_model.message_center.messages}" 
+			verticalGridLines="false"
+			valueCommit="selectItem()" 
+			itemClick="timerToRead()">
+			<mx:columns>
+				<mx:DataGridColumn headerText="From" dataField="from_name" />
+				<mx:DataGridColumn headerText="Subject" dataField="title" sortCompareFunction="sort_alphaFunc" />
+				<mx:DataGridColumn headerText="Received" dataField="created_on" labelFunction="date_labelFunc" width="150" />
+				<mx:DataGridColumn headerText="Status" width="60" sortCompareFunction="index_statusFunc">
+					<mx:itemRenderer>
+						<mx:Component>
+							<mx:HBox paddingLeft="5">
+								<mx:Text 
+									fontWeight="{data.viewed == 1 ? 'normal' : 'bold'}"
+									text="{data.viewed == 1 ? 'Read' : 'Unread'}" />
+							</mx:HBox>
+						</mx:Component>
+					</mx:itemRenderer>
+				</mx:DataGridColumn>
+				<mx:DataGridColumn headerText="Type" dataField="msgType" width="100" />
+			</mx:columns>
+		</mx:DataGrid>
+		<mx:HBox width="100%" height="100%"
+			visible="{inBoxList.dataProvider.length > 0}" 
+			includeInLayout="{inBoxList.dataProvider.length > 0}">
+			<mx:VBox id="msgBox" horizontalAlign="center"
+				width="100%" height="100%" 
+				verticalGap="4">
+				<mx:Form id="msgFormDetails" styleName="msgForm" 
+					width="100%" verticalGap="0" 
+					paddingTop="0" paddingBottom="0">
+					<mx:FormItem label="From:" labelStyleName="msgFormLabel" width="100%">
+						<mx:Text text="{inBoxList.selectedItem.from_name}" />
+					</mx:FormItem>
+					<mx:FormItem label="Subject:" labelStyleName="msgFormLabel" width="100%">
+						<mx:Text text="{inBoxList.selectedItem.title}" width="100%" />
+					</mx:FormItem>
+					<mx:FormItem label="Date:" labelStyleName="msgFormLabel" width="100%">
+						<mx:Text text="{formatMsgDate(inBoxList.selectedItem.created_on)}" />
+					</mx:FormItem>
+				</mx:Form>
+				<mx:HRule strokeWidth="1" strokeColor="#e0e0e0" width="94%" />
+				<mx:Text htmlText="{inBoxList.selectedItem.description}" 
+					paddingLeft="18" paddingRight="18"
+					width="100%" 
+					styleName="msgDesc" 
+					fontSize="11" />
+				<mx:Spacer height="100%" />
+				<mx:HBox horizontalAlign="right" width="100%" height="24"
+					visible="{inBoxList.selectedItem.msgType == 'Message'}" 
+					includeInLayout="{inBoxList.selectedItem.msgType == 'Message'}">
+					<mx:Button styleName="submitBtn" fontSize="11" 
+						label="Set as {this._msgStatus}" 
+						click="setAction( this._msgStatus )" 
+						useHandCursor="true" buttonMode="true" 
+						enabled="{!_model.dataLoading}" />
+					<mx:Button styleName="submitBtn" fontSize="11" 
+						label="Reply" 
+						click="sendReply(inBoxList.selectedItem)" 
+						useHandCursor="true" buttonMode="true" 
+						enabled="{!_model.dataLoading}" />
+					<mx:Button styleName="cancelBtn" fontSize="11"
+						label="Delete" 
+						click="deleteMessage()" 
+						useHandCursor="true" buttonMode="true" 
+						enabled="{!_model.dataLoading}" />
+				</mx:HBox>
+				<mx:HBox horizontalAlign="right" width="100%"
+					visible="{inBoxList.selectedItem.msgType != 'Message'}" 
+					includeInLayout="{inBoxList.selectedItem.msgType != 'Message'}">
+					<mx:Button styleName="submitBtn" fontSize="11" 
+						label="Accept" 
+						click="acceptRequest(inBoxList.selectedItem)" 
+						useHandCursor="true" buttonMode="true" 
+						enabled="{!_model.dataLoading}" />
+					<mx:Button styleName="cancelBtn" fontSize="11"
+						label="Reject" 
+						click="rejectRequest(inBoxList.selectedItem)" 
+						useHandCursor="true" buttonMode="true" 
+						enabled="{!_model.dataLoading}" />
+				</mx:HBox>
+			</mx:VBox>
+		</mx:HBox>
+	</mx:VDividedBox>
+
+	<mx:DateFormatter id="df" formatString="EEEE, MMM. D, YYYY" />
+	<mx:DateFormatter id="df2" formatString="EEEE, MMM. D, YYYY at L:NN A" />
+	<mx:DefaultListEffect id="myListEffect" fadeOutDuration="500" fadeInDuration="500" />
+
+
 	<mx:Script>
 		<![CDATA[
 			import org.osflash.thunderbolt.Logger;
@@ -17,10 +108,7 @@
 			[Bindable] private var _model:ETModelLocator = ETModelLocator.getInstance();
 			[Bindable] private var _msgStatus:String;
 			
-			public function set runInit(value:Boolean):void
-			{
-					
-			}
+			public function set runInit(value:Boolean):void { }
 
 			/**
 			 * Action to toggle a message as read or unread
@@ -225,7 +313,8 @@
 
 		]]>
 	</mx:Script>
-	
+
+
 	<mx:Style>
 		.msgForm {
 			fontSize:10;
@@ -235,118 +324,7 @@
 			fontWeight:bold;
 			color:#999999;	
 		}
-		
 	</mx:Style>
 
-	<mx:DateFormatter id="df" formatString="EEEE, MMM. D, YYYY" />
-	<mx:DateFormatter id="df2" formatString="EEEE, MMM. D, YYYY at L:NN A" />
-
-	<mx:DefaultListEffect id="myListEffect" fadeOutDuration="500" fadeInDuration="500" />
-	
-	<mx:VDividedBox width="100%" height="100%">
-		
-		<mx:DataGrid id="inBoxList"
-			width="100%" height="100%"
-			dataProvider="{_model.message_center.messages}" 
-			verticalGridLines="false"
-			valueCommit="selectItem()" 
-			itemClick="timerToRead()" 
-			>
-			<mx:columns>
-				<mx:DataGridColumn headerText="From" dataField="from_name" />
-				<mx:DataGridColumn headerText="Subject" dataField="title" sortCompareFunction="sort_alphaFunc" />
-				<mx:DataGridColumn headerText="Received" dataField="created_on" labelFunction="date_labelFunc" width="150" />
-				<mx:DataGridColumn headerText="Status" width="60" sortCompareFunction="index_statusFunc">
-					<mx:itemRenderer>
-						<mx:Component>
-							<mx:HBox paddingLeft="5">
-								<mx:Text 
-									fontWeight="{data.viewed == 1 ? 'normal' : 'bold'}"
-									text="{data.viewed == 1 ? 'Read' : 'Unread'}" />
-							</mx:HBox>
-						</mx:Component>
-					</mx:itemRenderer>
-				</mx:DataGridColumn>
-				<mx:DataGridColumn headerText="Type" dataField="msgType" width="100" />
-			</mx:columns>
-		</mx:DataGrid>
-		
-		<mx:HBox 
-			width="100%" height="100%"
-			visible="{inBoxList.dataProvider.length > 0}" 
-			includeInLayout="{inBoxList.dataProvider.length > 0}" 
-			>
-			
-			<mx:VBox id="msgBox" horizontalAlign="center"
-				width="100%" height="100%" 
-				verticalGap="4">
-				<mx:Form id="msgFormDetails" styleName="msgForm" 
-					width="100%" verticalGap="0" 
-					paddingTop="0" paddingBottom="0">
-					<mx:FormItem label="From:" labelStyleName="msgFormLabel" width="100%">
-						<mx:Text text="{inBoxList.selectedItem.from_name}" />
-					</mx:FormItem>
-					<mx:FormItem label="Subject:" labelStyleName="msgFormLabel" width="100%">
-						<mx:Text text="{inBoxList.selectedItem.title}" width="100%" />
-					</mx:FormItem>
-					<mx:FormItem label="Date:" labelStyleName="msgFormLabel" width="100%">
-						<mx:Text text="{formatMsgDate(inBoxList.selectedItem.created_on)}" />
-					</mx:FormItem>
-				</mx:Form>
-				
-				<mx:HRule strokeWidth="1" strokeColor="#e0e0e0" width="94%" />
-				
-				<mx:Text text="{inBoxList.selectedItem.description}" 
-					paddingLeft="18" paddingRight="18"
-					width="100%" 
-					styleName="msgDesc" 
-					fontSize="11" />
-				
-				<mx:Spacer height="100%" />
-				
-				<mx:HBox horizontalAlign="right" width="100%" height="24"
-					visible="{inBoxList.selectedItem.msgType == 'Message'}" 
-					includeInLayout="{inBoxList.selectedItem.msgType == 'Message'}" 
-					>
-					<mx:Button styleName="submitBtn" fontSize="11" 
-						label="Set as {this._msgStatus}" 
-						click="setAction( this._msgStatus )" 
-						useHandCursor="true" buttonMode="true" 
-						enabled="{!_model.dataLoading}" />
-					<mx:Button styleName="submitBtn" fontSize="11" 
-						label="Reply" 
-						click="sendReply(inBoxList.selectedItem)" 
-						useHandCursor="true" buttonMode="true" 
-						enabled="{!_model.dataLoading}" />
-					<mx:Button styleName="cancelBtn" fontSize="11"
-						label="Delete" 
-						click="deleteMessage()" 
-						useHandCursor="true" buttonMode="true" 
-						enabled="{!_model.dataLoading}" />
-				</mx:HBox>
-				
-				<mx:HBox horizontalAlign="right" width="100%"
-					visible="{inBoxList.selectedItem.msgType != 'Message'}" 
-					includeInLayout="{inBoxList.selectedItem.msgType != 'Message'}" 
-					>
-					<mx:Button styleName="submitBtn" fontSize="11" 
-						label="Accept" 
-						click="acceptRequest(inBoxList.selectedItem)" 
-						useHandCursor="true" buttonMode="true" 
-						enabled="{!_model.dataLoading}" />
-					<mx:Button styleName="cancelBtn" fontSize="11"
-						label="Reject" 
-						click="rejectRequest(inBoxList.selectedItem)" 
-						useHandCursor="true" buttonMode="true" 
-						enabled="{!_model.dataLoading}" />
-				</mx:HBox>
-				
-			</mx:VBox>
-		
-			
-		</mx:HBox>
-			
-		
-	</mx:VDividedBox>
 	
 </mx:Canvas>

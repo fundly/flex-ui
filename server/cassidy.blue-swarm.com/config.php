@@ -44,7 +44,7 @@ $bgColor = '#000000';
 */
 $donationWidget = array (
 	'css'			=> 'default.css',
-	'height'		=> '1100',
+	'height'		=> '1225',
 	'width'			=> '870',
 	'background'	=> '#FFFFFF',
 	'mastheadImg'	=> 'large_cassidy_logo.jpg'

@@ -2,16 +2,31 @@
 <common:FluidPanel xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:common="com.enilsson.elephantadmin.views.common.*"
 	xmlns:components="com.enilsson.elephantadmin.views.modules.app_options.view.components.*" 
+	xmlns:option_views="com.enilsson.elephantadmin.views.modules.app_options.view.option_views.*"
 	styleName="panel" 
 	layout="absolute"
-	enabled="{_pm.siteOption != null}"
-	title="{_pm.editorTitle}"
-	currentState="{_pm.siteOption.name}">
+	title="{_pm.editorTitle}">
 	
+	<mx:ViewStack width="100%" height="100%"
+		selectedIndex="{selectedIndex}">
+		<option_views:Options_AgentsAgreement pm="{_pm}" />
+		<option_views:Options_PrivacyStatement pm="{_pm}" />
+		<option_views:Options_WorkplaceAgreement pm="{_pm}" />
+		<option_views:Options_PledgeSuccess pm="{_pm}" />
+		<option_views:Options_PledgeSuccessCheck pm="{_pm}" />
+		<option_views:Options_RSSFeed pm="{_pm}" />
+		<option_views:Options_Legalese pm="{_pm}" />
+		<option_views:Options_PaidFor pm="{_pm}" />
+		<option_views:Options_DownlineRequest pm="{_pm}" />
+		<option_views:Options_ContactsRequest pm="{_pm}" />
+	</mx:ViewStack>
+	
+<!--	
 	<mx:VBox id="container" width="100%" height="100%"
 		paddingLeft="15" paddingRight="15" paddingTop="15" paddingBottom="40">
 		
-		<mx:Text id="descriptionText" width="100%" height="40"
+		<mx:Text id="descriptionText" 
+			width="100%"
 			fontSize="14"
 			text="{_pm.editingSiteOption.description}" 
 			selectable="false" />
@@ -28,16 +43,22 @@
 			change="_pm.changeOption('value', valueText.htmlText)"
 			variables="{siteOption.variables}" />		
 	</mx:VBox>
-	
-	
-	<common:ModuleControlBar id="moduleControlBar" width="100%" horizontalAlign="left">
-		<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" >
-			<common:CMSSubmitBtn label="SAVE" click="_pm.save()" enabled="{_pm.changed}" />
-			<common:CMSSubmitBtn label="CANCEL" click="_pm.cancel()" enabled="{_pm.changed}" />
+-->
+
+	<common:ModuleControlBar id="moduleControlBar" 
+		width="100%" horizontalAlign="left">
+		<mx:HBox width="100%" height="100%" 
+			horizontalAlign="center" verticalAlign="middle" >
+			<common:CMSSubmitBtn label="SAVE" 
+				click="_pm.save()" 
+				enabled="{_pm.changed}" />
+			<common:CMSSubmitBtn label="CANCEL" 
+				click="_pm.cancel()" 
+				enabled="{_pm.changed}" />
 		</mx:HBox>		
 	</common:ModuleControlBar>
 
-	
+<!--	
 	<common:states>
 		<mx:State name="{SiteOption.WORKSPACE_AGREEMENT}">
 			<mx:RemoveChild target="{valueText}" />
@@ -52,6 +73,7 @@
 			</mx:AddChild>
 		</mx:State>
 	</common:states>
+-->
 	
 	
 	<mx:Binding source="this.siteOption" destination="siteOption" />
@@ -61,14 +83,17 @@
 			import com.enilsson.elephantadmin.views.modules.app_options.model.SiteOption;
 			import com.enilsson.elephantadmin.views.modules.app_options.model.pm.OptionsEditorPM;
 			
-			[Bindable]
-			public function get siteOption() : SiteOption { return _pm.siteOption; }
+			[Bindable] public function get selectedIndex():int { return _selectedIndex; }
+			private var _selectedIndex:int = 0;
+			public function set selectedIndex( value:int ) : void { _selectedIndex = value; }
+			
+			[Bindable] public function get siteOption() : SiteOption { return _pm.siteOption; }
 			public function set siteOption( value : SiteOption ) : void { _pm.siteOption = value; }
 			
 			public function set pm( value : OptionsEditorPM ) : void { _pm = value; } 
 			[Bindable] private var _pm : OptionsEditorPM;
 			
-			override public function set currentState(value:String):void
+/* 			override public function set currentState(value:String):void
 			{
 				if(!_pm.changed)
 				{
@@ -82,8 +107,36 @@
 						break;
 					}
 				}
-			}
+			} */
 		]]>
 	</mx:Script>
+	
+	<mx:Style>
+		.formRTE {
+			fontSize: 10;
+			verticalGap: 5;
+			borderAlpha:0;
+			dropShadowEnabled:false;
+			borderThicknessLeft:0;
+			borderThicknessRight:2;
+			borderThicknessBottom:0;	
+			color:#333333;	
+			fontFamily: appFont;
+			textAreaStyleName: rteInput;
+		}
+		.rteInput {
+			fontSize: 12;
+			fontColor: #333333;
+			inputWidth: 250;
+			paddingTop: 3;
+			paddingBottom: 1;
+			paddingLeft: 5;
+			paddingRight: 5;
+			borderStyle: solid;
+			borderColor: #999999;
+			backgroundColor: #F4F4F4;
+			dropShadowEnabled: false;	
+		}		
+	</mx:Style>
 			
 </common:FluidPanel>

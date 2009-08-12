@@ -52,12 +52,12 @@ package com.enilsson.elephantadmin.views.modules.events.model
 		 */
 		private function addClickHandler(event:Event):void
 		{
-			this.selectedRecord = new Object();
+			this.selectedRecord = {};
 		}
 
 		private function exportClickHandler(event:Event):void
 		{
-			var params:Object = new Object();
+			var params:Object = {};
 		//	params.limit = eventsList.itemsTotal;
 			
 			new EventsEvent( 
