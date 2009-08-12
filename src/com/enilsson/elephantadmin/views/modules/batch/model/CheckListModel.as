@@ -99,12 +99,19 @@ package com.enilsson.elephantadmin.views.modules.batch.model
 			new BatchListEvent( BatchListEvent.ADD_CHECKS_TO_NEW_BATCH, checkList.toArray() ).dispatch();
 		}
 		
-		public function sortChecks( orderField : String, order : String ) : void 
+		public function sortChecks( orderField : String, order : String = null) : void 
 		{
 			if(orderField)
 				_model.batch.checkListOrderField = orderField;
 			if(order)
 				_model.batch.checkListOrder = order;
+			else
+			{
+				if(_model.batch.checkListOrder == "DESC")
+					_model.batch.checkListOrder = "ASC";
+				else
+					_model.batch.checkListOrder = "DESC";
+			}
 			
 			new BatchEvent(BatchEvent.GET_CHECK_LIST).dispatch();
 		}

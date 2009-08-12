@@ -1,18 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml"
+<TogglePanel 
+	xmlns="com.enilsson.elephantadmin.views.modules.batch.*"
+	xmlns:mx="http://www.adobe.com/2006/mxml"
 	title="My batches" xmlns:controls="com.enilsson.controls.*"
 	styleName="panel" enabled="{!_presentationModel.batchListLoading}"
-	width="50%" height="100%" xmlns:common="com.enilsson.elephantadmin.views.common.*"
-	>
-	<mx:VBox width="100%" height="100%">
-		<mx:List id="batchList"
-			styleName="list"
-			height="100%" width="100%"
-			itemRenderer="com.enilsson.elephantadmin.views.modules.batch.renderers.BatchRenderer"
-			dataProvider="{_presentationModel.batchList}"
-			change="_presentationModel.batchListChangeHandler(event)"
-			selectedIndex="{_presentationModel.batchListSelectedIndex}"
-			/>
+	currentState="{toggleState}"
+	width="50%" height="100%" xmlns:common="com.enilsson.elephantadmin.views.common.*">
+	<mx:VBox id="listContainer" width="100%" height="100%">
 		<mx:Canvas id="paginationBox" 
 			visible="{_presentationModel.batchListTotal &gt; _presentationModel.itemsPerPage}"
 			showEffect="slideUp" hideEffect="slideDown"
@@ -24,7 +18,7 @@
 				rangeCount="4" 
 				verticalCenter="0" horizontalCenter="0" 
 				buttonHeight="18" 
-				newPage="_presentationModel.getBatchList(event)"
+				newPage="_presentationModel.getBatchList()"
 				itemsPerPage="{_presentationModel.itemsPerPage}" 
 				itemsTotal="{_presentationModel.batchListTotal}" 
 				/>
@@ -37,6 +31,32 @@
 			click="_presentationModel.createNewBatchList()"
 			/>
 	</mx:ControlBar>
+	
+	<states>
+		<mx:State name="{LIST_VIEW}">
+			<mx:AddChild relativeTo="{listContainer}" position="firstChild">
+				<mx:List id="batchList"
+					styleName="list"
+					height="100%" width="100%"
+					itemRenderer="com.enilsson.elephantadmin.views.modules.batch.renderers.BatchRenderer"
+					dataProvider="{_presentationModel.batchList}"
+					change="_presentationModel.batchListChangeHandler(event)"
+					selectedIndex="{_presentationModel.batchListSelectedIndex}"
+					/>
+			</mx:AddChild>
+		</mx:State>
+		<mx:State name="{GRID_VIEW}">
+			<mx:AddChild relativeTo="{listContainer}" position="firstChild">
+				<BatchGrid id="batchGrid" 
+					styleName="greyGrid"
+					width="100%" height="100%"
+					dataProvider="{_presentationModel.batchList}"
+					change="_presentationModel.batchListChangeHandler(event)"
+					selectedIndex="{_presentationModel.batchListSelectedIndex}"
+					headerRelease="handleHeaderRelease(event)" />
+			</mx:AddChild>
+		</mx:State>
+	</states>
 
 	<mx:Fade id="fade" />
 	<mx:Resize id="slideUp" heightTo="35" duration="1000" />
@@ -46,19 +66,27 @@
 
 	<mx:Script>
 		<![CDATA[
+			import mx.events.DataGridEvent;
 			import com.enilsson.elephantadmin.views.modules.batch.model.BatchListModel;
 
 			public function set presentationModel( value : BatchListModel ) : void
 			{
 				_presentationModel = value;
 			}
+			
+			private function handleHeaderRelease( event : DataGridEvent ) : void {
+				if(paginator.pages > 1) 
+				{
+					event.preventDefault();
+					_presentationModel.getOrderedBatches( event.dataField );
+				}	
+			}
 
 			[Bindable] public var selectedBatch:Object;
 
 			[Bindable] protected var _presentationModel:BatchListModel;
 
-
 		]]>
 	</mx:Script>
 
-</mx:Panel>
+</TogglePanel>
