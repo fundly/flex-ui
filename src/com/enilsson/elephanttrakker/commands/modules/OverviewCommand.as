@@ -309,8 +309,6 @@ package com.enilsson.elephanttrakker.commands.modules
 			dp.sort = sort;
 			dp.refresh();
 			
-			Logger.info('chartData', ObjectUtil.toString(dp));
-			
 			// set the start and end months
 			if(_model.overview.startMonth == -1)
 			{

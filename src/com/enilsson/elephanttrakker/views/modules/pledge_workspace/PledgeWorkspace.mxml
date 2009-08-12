@@ -11,9 +11,9 @@
 
 	<mx:Image source="{presentationModel.icons.pledge}" top="0" right="0" />
 	<mx:Text id="contentTitle" 
-		styleName="contentTitle" 
-		text="PROCESSING WORKSPACE" 
-		right="-223" top="40" 
+		styleName="contentTitle"
+		text="PLEDGE WORKSPACE" 
+		right="-179" top="40" 
 		rotation="90" />
 
 	<mx:Canvas styleName="tabBarBg" 

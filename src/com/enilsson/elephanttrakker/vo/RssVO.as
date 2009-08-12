@@ -20,7 +20,8 @@ package com.enilsson.elephanttrakker.vo
 			title = eNilssonUtils.convert_entities(data.title);
 			link = data.link;
 			pubDate = data.pubDate;
-			description = eNilssonUtils.stripTags(eNilssonUtils.convert_entities(data.description));			
+			description = eNilssonUtils.stripTags(eNilssonUtils.convert_entities(data.description));
+			error = data.error === true;			
 		}
 
 	}

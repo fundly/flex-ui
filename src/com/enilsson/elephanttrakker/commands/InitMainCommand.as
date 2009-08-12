@@ -309,7 +309,7 @@ package com.enilsson.elephanttrakker.commands
 			
 			var dp:ArrayCollection = new ArrayCollection();
 			var rssVO:RssVO = new RssVO ();
-			rssVO.title = 'There is an error in the listed RSS feed, please contact your admin team!';
+			rssVO.title = 'There is an error in with the RSS feed, please inform your admin team!';
 			rssVO.error = true;
 			dp.addItem( rssVO );								
 			
