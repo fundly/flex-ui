@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
+	styleName="{seriesName == 'Pledges' ? 'pledgeDataTip' : 'contribDataTip'}"
+	filters="{[ds]}">
+	
+	<mx:Text styleName="dataTipTitle" text="{seriesName}" />
+	<mx:Text styleName="dataTipText" htmlText="Month: {data.item.label}&lt;br&gt;Total: {total}&lt;br&gt;Amount: {amount}" />
+	<mx:Spacer height="3" />
+	<mx:Text styleName="dataTipText" fontWeight="bold" text="Click graph for more" />
+	
+	<mx:CurrencyFormatter id="cf" precision="0" />
+	<mx:DropShadowFilter id="ds" alpha="0.75" angle="90" distance="2" color="0x333333" />
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.charts.series.AreaSeries;
+			[Bindable] private var seriesName:String;
+			[Bindable] private var total:String;
+			[Bindable] private var amount:String;
+			
+			override public function set data(value:Object):void
+			{
+				super.data = value;
+				
+				seriesName = AreaSeries(value.element).displayName;
+				amount = seriesName == 'Pledges' ? cf.format(value.item.Pledge) : cf.format(value.item.Received);
+				total = seriesName == 'Pledges' ? value.item.Donors : value.item.Contribs;
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<mx:Style>
+		.pledgeDataTip {
+			paddingLeft: 5;
+			paddingRight: 5;
+			cornerRadius: 3;	
+			backgroundColor: #ff811d;
+			borderStyle: solid;
+			borderColor: #ff811d;
+			verticalGap: 0;	
+		}
+		.contribDataTip {
+			paddingLeft: 5;
+			paddingRight: 5;
+			cornerRadius: 3;	
+			backgroundColor: #82c439;
+			borderStyle: solid;
+			borderColor: #82c439;
+			verticalGap: 0;	
+		}
+
+		.dataTipTitle {
+			fontFamily: appFont;
+			fontSize: 12;
+			fontWeight: bold;
+			color: #FFFFFF;	
+		}		
+		.dataTipText {
+			fontFamily: appFont;
+			fontSize: 10;
+			color: #FFFFFF;	
+		}
+		
+	</mx:Style>
+	
+</mx:VBox>
