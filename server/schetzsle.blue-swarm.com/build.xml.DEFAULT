@@ -3,7 +3,7 @@
 	<property name="user" value="www-data" />
 	<property name="password" value="" />
 	<property name="host" value="client1.blue-swarm.com" />
-	<property name="domain" value="schetzle.blue-swarm.com" />
+	<property name="domain" value="schetzsle.blue-swarm.com" />
 	<property name="path" value="/mnt/s3/www/${domain}" />
 	<property name="port" value="2234" />
 	
