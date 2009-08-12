@@ -45,7 +45,7 @@
 			
 			private function dataAddedHandler ( event:Event ):void
 			{
-				if ( !_pm.selectedSiteOption )
+				if ( !_pm.selectedSiteOption && event.currentTarget.dataProvider )
 					_pm.selectedSiteOption = _pm.siteOptions[0];
 			}
 		]]>

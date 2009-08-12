@@ -103,7 +103,7 @@ package com.enilsson.elephantadmin.commands.modules.app_options
 		{
 			var e : SaveSiteOptionEvent = _event as SaveSiteOptionEvent;
 			
-			Logger.info('Save SiteOption', ObjectUtil.toString( event.result ), ObjectUtil.toString( e.option ));
+			if ( _model.debug ) Logger.info('Save SiteOption', ObjectUtil.toString( event.result ), ObjectUtil.toString( e.option ));
 			
 			var df:DateFormatter = new DateFormatter();
 			df.formatString = 'MM/DD/YYYY';
@@ -131,7 +131,7 @@ package com.enilsson.elephantadmin.commands.modules.app_options
 		private function handleSaveSiteOptionFault( event : FaultEvent ) : void
 		{
 			_model.dataLoading = false;
-			if(_model.debug) Logger.warn( ObjectUtil.toString( event.fault ) );
+			if(_model.debug) Logger.warn( 'SaveSiteOptionsFail', ObjectUtil.toString( event.fault ) );
 		}
 	}
 }
