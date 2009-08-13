@@ -113,5 +113,16 @@ package com.enilsson.elephantadmin.business
 			var token:AsyncToken = service.get_user_email( userID );
 			token.addResponder(this.responder);
 		}
+
+		public function adminChangeEmail( email:String, userID:int ):void
+		{
+			if(_model.debug){ Logger.info('Authentikator admin change user email'); }
+
+			this.service = ServiceLocator.getInstance().getRemoteObject('authentikatorPassword');
+			
+			var token:AsyncToken = service.admin_change_email( email, userID );
+			token.addResponder(this.responder);
+		}
+
 	}
 }

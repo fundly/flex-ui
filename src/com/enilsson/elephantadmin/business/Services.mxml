@@ -242,6 +242,7 @@
 		<mx:method name="change_email" />
 		<mx:method name="change_password" />
 		<mx:method name="wheel" />
+		<mx:method name="admin_change_email" />
 	</mx:RemoteObject>
 
 	<mx:RemoteObject id="struktorPluginsPledges"

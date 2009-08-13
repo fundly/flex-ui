@@ -8,19 +8,41 @@
 	<mx:HBox width="100%" verticalAlign="top" horizontalAlign="center">
 		<mx:HBox width="40%">
 			<ns:CMSToggleBtn offLabel="DISABLE" onLabel="ENABLE"
-				click="toggleDisableUser(event)" 
+				click="toggleDisableUser(event)"  width="110" 
 				isOnState="{_usersModel.selectedRecord.enabled == '0' ? true : false}" />
 		</mx:HBox>
 		<mx:Text styleName="textDesc"
 			width="60%" 
 			text="Disable this users account. This will keep their info intact but stop them from logging in." />
 	</mx:HBox>
-	
+
 	<mx:HRule width="100%" strokeWidth="2" strokeColor="#E4E4E4" shadowColor="#B3B3B3"/>
 	
 	<mx:HBox width="100%" verticalAlign="top" horizontalAlign="center">
 		<mx:HBox width="40%">
-			<ns:CMSSubmitBtn label="RESET" 
+			<ns:CMSSubmitBtn label="CHANGE EMAIL" width="110"
+				enabled="{_model.userLevel != 'power'}" 
+				click="showChangeEmailPopup()"/>
+		</mx:HBox>
+		<mx:VBox width="60%" verticalGap="2">
+			<mx:Text styleName="textDesc"
+				width="100%" 
+				text="This users email address is:" />
+			<mx:Text text="{_usersModel.userEmail}"	
+				styleName="emailLink" filters="{[enDropShadows.textDS(0xFFFFFF)]}" />										
+			<mx:Text styleName="textDesc"
+				width="100%" 
+				visible="{_model.userLevel == 'power'}"
+				includeInLayout="{_model.userLevel == 'power'}"
+				text="This option is only available to SUPER users" />
+		</mx:VBox>
+	</mx:HBox>
+		
+	<mx:HRule width="100%" strokeWidth="2" strokeColor="#E4E4E4" shadowColor="#B3B3B3"/>
+	
+	<mx:HBox width="100%" verticalAlign="top" horizontalAlign="center">
+		<mx:HBox width="40%">
+			<ns:CMSSubmitBtn label="RESET PWD" width="110"
 				click="new UsersEvent(UsersEvent.RESET_PASSWORD, _usersModel, {'loginVO': new LoginVO(_usersModel.userEmail, null,null)} ).dispatch()"/>
 		</mx:HBox>
 		<mx:Text styleName="textDesc"
@@ -33,7 +55,7 @@
 	<mx:HBox width="100%" verticalAlign="top" horizontalAlign="center">
 		<mx:HBox width="40%">
 			<ns:CMSSubmitBtn 
-				label="CONTACT" 
+				label="CONTACT" width="110"
 				enabled="{_usersModel.selectedRecord._contact_id != null}"
 				toolTip="{_usersModel.selectedRecord._contact_id != null ? '' : 'No contact record has been created for this user, please enter address details and update.'}"
 				click="new SidEvent( _usersModel.userContactRecord.sid ).dispatch()" />
@@ -49,7 +71,7 @@
 	<mx:HBox width="100%" verticalAlign="top" horizontalAlign="center">
 		<mx:HBox width="40%">
 			<ns:CMSSubmitBtn 
-				label="DOWNLINE" 
+				label="DOWNLINE" width="110"
 				click="showUserDownline()" />
 		</mx:HBox>
 		<mx:Text styleName="textDesc"
@@ -63,12 +85,9 @@
 	<mx:HBox width="100%" verticalAlign="top" horizontalAlign="center"
 		visible="{_showProxyLogin}" includeInLayout="{_showProxyLogin}">
 		<mx:HBox width="40%">
-			<ns:CMSSubmitBtn 
-				label="LOGIN"
-				click="proxyLogin()" />
+			<ns:CMSSubmitBtn label="LOGIN" width="110" click="proxyLogin()" />
 		</mx:HBox>
-		<mx:Text styleName="textDesc"
-			width="60%" 
+		<mx:Text styleName="textDesc" width="60%" 
 			text="Log in to {_model.appName} as this user. You will have all the rights and priviledges this user has. You can log out back to the admin panel via the link the footer."
 			/>
 	</mx:HBox>
@@ -86,6 +105,8 @@
 
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.elephantadmin.views.modules.users.popups.Users_ChangeEmail;
+			import com.enilsson.graphics.enDropShadows;
 			import com.enilsson.elephantadmin.events.main.SidEvent;
 			import com.enilsson.elephantadmin.vo.LoginVO;
 			import com.enilsson.elephantadmin.events.login.LoginEvent;
@@ -99,6 +120,7 @@
 			import mx.events.CloseEvent;
 			import com.enilsson.elephantadmin.views.popups.downline.MyDownline;
 			import com.enilsson.elephantadmin.models.EAModelLocator;
+			
 			
 			[Bindable] private var _model:EAModelLocator = EAModelLocator.getInstance();
 			[Bindable] private var _showProxyLogin:Boolean = true;
@@ -128,6 +150,22 @@
 				});
 				PopUpManager.centerPopUp(downline);
 			}
+
+			/**
+			 * Show the change email popup
+			 */
+			private function showChangeEmailPopup():void
+			{
+ 				if ( _model.userLevel != 'super' ) return;
+ 				
+ 				var cePopup:Users_ChangeEmail = Users_ChangeEmail(PopUpManager.createPopUp(_model.mainScreen, Users_ChangeEmail, true));
+				cePopup.presentationModel = _usersModel;
+				cePopup.addEventListener(CloseEvent.CLOSE, function(e:CloseEvent):void{
+				   	PopUpManager.removePopUp(cePopup);
+				});
+				PopUpManager.centerPopUp(cePopup);
+			}
+
 			
 			/**
 			 * Proxy login function to access the client app as a specific user
