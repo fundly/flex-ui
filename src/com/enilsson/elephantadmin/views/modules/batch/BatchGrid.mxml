@@ -20,12 +20,12 @@
 			remoteSortField="amount"
 			labelFunction="amountLabelFunction"	/>
 		<common:SortColumn id="createdOnColumn" 
-			headerText="Created On"
+			headerText="Created on"
 			dataField="created_on"
 			remoteSortField="created_on"
 			labelFunction="createdOnLabelFunction" />			
 		<common:SortColumn id="nameColumn" 
-			headerText="Full Name"
+			headerText="Created by"
 			sortCompareFunction="fullNameSortCompare"
 			labelFunction="fullNameLabelFunction"
 			remoteSortField="checks_batches__created_by_id.lname" />
@@ -64,7 +64,7 @@
 			}
 			
 			private function createdOnLabelFunction( item : Object, column : DataGridColumn ) : String {
-				return df.format(EDateUtil.dateFromTimestamp(item.created_on));
+				return df.format(new Date(item.created_on * 1000));
 			}		
 		]]>
 	</mx:Script>
