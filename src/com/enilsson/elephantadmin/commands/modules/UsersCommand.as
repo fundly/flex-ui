@@ -11,6 +11,7 @@ package com.enilsson.elephantadmin.commands.modules
 	import com.enilsson.elephantadmin.events.session.SessionFailEvent;
 	import com.enilsson.elephantadmin.views.modules.users.model.UsersModel;
 	import com.enilsson.elephantadmin.vo.ErrorVO;
+	import com.enilsson.elephantadmin.vo.NewUserVO;
 	import com.enilsson.elephantadmin.vo.RecordVO;
 	import com.enilsson.utils.eNilssonUtils;
 	
@@ -102,6 +103,9 @@ package com.enilsson.elephantadmin.commands.modules
 				break;
 				case UsersEvent.USERS_UPSERT_CONTACT:
 					upsertContact(event as UsersEvent);
+				break;
+				case UsersEvent.CREATE_USER:
+					createUser(event as UsersEvent);
 				break;
 			}
 		}
@@ -572,10 +576,7 @@ package com.enilsson.elephantadmin.commands.modules
 			_model.dataLoading = true;
 
 			// tells that is submitting the form
-			_usersModel.isSubmitting = true;
-
-			// show the message that is sending the emails
-			_usersModel.sendingInvitation = true;
+			_usersModel.formProcessing = true;
 
 			if(_model.debug) Logger.info('sendInvitation',event.params.emailVO);
 
@@ -589,7 +590,7 @@ package com.enilsson.elephantadmin.commands.modules
 			_model.dataLoading = false;
 			
 			// remove the message that is sending the emails
-			_usersModel.sendingInvitation = false;
+			_usersModel.formProcessing = false;
 			
 			if (event.result.state === true)
 				_usersModel.errorVO = new ErrorVO( 'The invitation was successfully sent', 'successBox', true );
@@ -597,7 +598,7 @@ package com.enilsson.elephantadmin.commands.modules
 				_usersModel.errorVO = new ErrorVO( 'There was an error trying to send the invitation<br><br>- ' + event.result.error, 'errorBox', true );
 			
 			_usersModel.onClose = function():void {
-				_usersModel.isSubmitting = false;
+				_usersModel.formProcessing = false;
 			}
 		}
 
@@ -606,12 +607,12 @@ package com.enilsson.elephantadmin.commands.modules
 			if(_model.debug) Logger.info('sendInvitation Fault', ObjectUtil.toString(event.fault));	
 
 			// remove the message that is sending the emails
-			_usersModel.sendingInvitation = false;
+			_usersModel.formProcessing = false;
 
 			_usersModel.errorVO = new ErrorVO( 'There was an error processing this invitation!<br><br>- ' + event.fault.message, 'errorBox', true );
 
 			_usersModel.onClose = function():void {
-				_usersModel.isSubmitting = false;
+				_usersModel.formProcessing = false;
 			}
 			
 			_model.dataLoading = false;
@@ -921,6 +922,54 @@ package com.enilsson.elephantadmin.commands.modules
 			_model.dataLoading = false;
 			_presentationModel.formProcessing = false;
 		}	
+
+		/**
+		 * Create a new user record without sending invitation email
+		 */
+		private function createUser( event:UsersEvent ):void
+		{			
+			var handlers:IResponder = new mx.rpc.Responder(onResults_createUser, onFault_createUser);
+			var delegate:PluginsDelegate = new PluginsDelegate(handlers);
+			
+			_model.dataLoading = true;
+			_usersModel.formProcessing = true;
+
+			delegate.createNewUser( NewUserVO(event.params) );
+		}
 		
+		private function onResults_createUser(event:Object):void 
+		{
+			if(_model.debug) Logger.info('createUser Success', ObjectUtil.toString(event.result));
+
+			_model.dataLoading = false;
+			
+			// remove the message that is sending the emails
+			_usersModel.formProcessing = false;
+			
+			if (event.result.state === true)
+				_usersModel.errorVO = new ErrorVO( 'The user was successfully created', 'successBox', true );
+			else
+				_usersModel.errorVO = new ErrorVO( 'There was an error creating this user<br><br>- ' + event.result.error, 'errorBox', true );
+			
+			_usersModel.onClose = function():void {
+				_usersModel.formProcessing = false;
+			}
+		}
+
+		private function onFault_createUser(event:FaultEvent):void
+		{
+			if(_model.debug) Logger.info('createUser Fault', ObjectUtil.toString(event.fault));	
+
+			// remove the message that is sending the emails
+			_usersModel.formProcessing = false;
+
+			_usersModel.errorVO = new ErrorVO( 'There was an error creating this user!<br><br>- ' + event.fault.message, 'errorBox', true );
+
+			_usersModel.onClose = function():void {
+				_usersModel.formProcessing = false;
+			}
+			
+			_model.dataLoading = false;
+		}
 	}
 }

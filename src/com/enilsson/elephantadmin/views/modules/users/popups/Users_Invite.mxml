@@ -93,7 +93,7 @@
 							click="sendInvitation()" 
 							useHandCursor="true" buttonMode="true" 
 							label="Send Invitation" 
-							enabled="{isValid &amp;&amp; !_usersModel.isSubmitting}" />
+							enabled="{isValid &amp;&amp; !_usersModel.formProcessing}" />
 					</mx:HBox>
 				</mx:FormItem>
 			</mx:Form>
@@ -106,7 +106,7 @@
 	</mx:HBox>
 		
 	<mx:Canvas id="formProcessingIndicator" 
-		visible="{_usersModel.sendingInvitation}"
+		visible="{_usersModel.formProcessing}"
 		top="0" left="0"
 		width="100%" height="100%" 
 		backgroundColor="#CCCCCC" backgroundAlpha="0.75"

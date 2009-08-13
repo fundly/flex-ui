@@ -97,8 +97,6 @@ package com.enilsson.elephantadmin.views.modules.users.model
 
 		public var invitationTemplate:ObjectProxy;
 		public var selectedEmails:Array = new Array();
-		public var isSubmitting:Boolean = false;
-		public var sendingInvitation:Boolean = false;
 		public var onClose:Function;
 
 		/**

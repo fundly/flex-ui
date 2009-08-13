@@ -84,6 +84,7 @@ package com.enilsson.elephantadmin.controllers
 			this.addCommand(UsersEvent.GET_USER_EMAIL, UsersCommand);
 			this.addCommand(UsersEvent.GET_USER_CONTACT, UsersCommand);
 			this.addCommand(UsersEvent.USERS_UPSERT_CONTACT, UsersCommand);
+			this.addCommand(UsersEvent.CREATE_USER, UsersCommand);
 
 			// news modules
 			this.addCommand(NewsEvent.NEWS_LAYOUT, NewsCommand);

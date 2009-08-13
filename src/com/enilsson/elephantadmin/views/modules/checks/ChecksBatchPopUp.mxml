@@ -79,7 +79,6 @@
 			import com.enilsson.elephantadmin.events.modules.ChecksEvent;
 			import com.enilsson.elephantadmin.vo.BatchRecordVO;
 			import com.enilsson.elephantadmin.vo.RecordVO;
-			import com.enilsson.elephantadmin.views.modules.batch.CheckList;
 			import mx.controls.Alert;
 			import mx.controls.CheckBox;
 			import mx.collections.Sort;
