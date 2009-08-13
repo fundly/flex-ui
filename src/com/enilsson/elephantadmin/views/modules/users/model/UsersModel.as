@@ -98,6 +98,9 @@ package com.enilsson.elephantadmin.views.modules.users.model
 		public var invitationTemplate:ObjectProxy;
 		public var selectedEmails:Array = new Array();
 		public var onClose:Function;
+		
+		public var isSubmitting:Boolean;
+		public var sendingInvitation:Boolean;
 
 		/**
 		 * User Options Tab Variables
