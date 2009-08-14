@@ -154,7 +154,7 @@
 				newUserVO.zip = myDetailsForm.formVariables['_zip'];
 				newUserVO.phone = myDetailsForm.formVariables['_phone'];
 				newUserVO.goal = myDetailsForm.formVariables['_fundraising_goal'];
-				newUserVO.addDownline = includeDownlineCheck.selected;
+				newUserVO.addDownline = includeDownlineCheck.selected ? 1 : 0;
 
 				var fv:Object = ObjectUtil.copy(myDetailsForm.formVariables);
 				fv.email = emailInput.text;

@@ -60,15 +60,19 @@ package com.enilsson.elephantadmin.business
 		{
 			this.service = ServiceLocator.getInstance().getRemoteObject('struktorPluginsEmail');
 		
-		
-			var token:AsyncToken = service.create_user( 
-										vo.email,
-										vo.fname,
-										vo.lname,
-										vo.senderName,
-										vo.senderEmail,
-										vo.phone,
-										vo.addDownline
+			var token:AsyncToken = service.add_fundraiser( 
+										{
+											fname:vo.fname
+											,lname:vo.lname
+											,email: vo.email
+											,address1:vo.address1
+											,address2:vo.address2
+											,city:vo.city
+											,state:vo.state
+											,zip:vo.zip
+											,phone:vo.phone
+										}
+										,vo.addDownline
 			);
 			token.addResponder(responder);
 		}

@@ -4,6 +4,6 @@ package com.enilsson.elephantadmin.vo
 	{
 		public var senderEmail:String;
 		public var senderName:String;
-		public var addDownline:Boolean;
+		public var addDownline:int = 1;
 	}
 }

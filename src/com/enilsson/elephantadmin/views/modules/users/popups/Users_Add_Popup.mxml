@@ -34,7 +34,7 @@
 					presentationModel="{_usersModel}"
 					currentState="{_usersModel.formState}"/>
 				<popups:Users_Add width="100%" height="100%"
-					label="Create User" enabled="false"
+					label="Create User" enabled="true"
 					presentationModel="{_usersModel}" />
 			</mx:TabNavigator>
 		</mx:Canvas>
