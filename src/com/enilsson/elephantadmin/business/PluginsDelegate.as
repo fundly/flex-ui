@@ -71,6 +71,7 @@ package com.enilsson.elephantadmin.business
 											,state:vo.state
 											,zip:vo.zip
 											,phone:vo.phone
+											,fundraising_goal:vo.goal
 										}
 										,vo.addDownline
 			);

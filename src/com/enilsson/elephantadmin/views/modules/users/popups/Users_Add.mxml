@@ -161,15 +161,6 @@
 				fv.addDownline = includeDownlineCheck.selected;
 
 				new UsersEvent(UsersEvent.CREATE_USER, _usersModel, newUserVO).dispatch();
-/*				if(_model.debug) Logger.info('upsert new user Details', myDetailsForm.formVariables);
-				var fv:Object = myDetailsForm.formVariables;
-				fv['mod_g_read'] = 1;
-				fv['mod_g_write'] = 1;
-				fv['enabled'] = 1;
-
-				// TODO: needs to be creating an authentikator entry in addition to tr_users record
-				_usersModel.upsertRecord(myDetailsForm.formVariables);
-*/
  			}
 
 
