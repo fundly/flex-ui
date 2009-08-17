@@ -4,6 +4,8 @@
 	horizontalScrollPolicy="off" 
 	verticalScrollPolicy="off"
 	height="65"
+	backgroundAlpha="0"
+	backgroundColor="#ffffff"
 	rollOver="viewContact.visible = true"
 	rollOut="viewContact.visible = false">
 

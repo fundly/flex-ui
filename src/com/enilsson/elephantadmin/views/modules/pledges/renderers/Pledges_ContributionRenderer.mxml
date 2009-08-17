@@ -3,6 +3,8 @@
 	xmlns:common="com.enilsson.elephantadmin.views.common.*" 
 	styleName="hBoxRenderer" 
 	horizontalScrollPolicy="off" verticalScrollPolicy="off"
+	backgroundAlpha="0"
+	backgroundColor="#ffffff"
 	rollOver="this.mouseOverHandler( event )"
 	rollOut="this.mouseOutHandler( event )"
 	>

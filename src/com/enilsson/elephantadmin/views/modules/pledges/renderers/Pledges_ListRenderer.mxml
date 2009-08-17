@@ -3,6 +3,8 @@
 	xmlns:mx="http://www.adobe.com/2006/mxml"	 
 	horizontalScrollPolicy="off" 
 	verticalScrollPolicy="off"
+	backgroundAlpha="0"
+	backgroundColor="#ffffff"
 	rollOver="viewContact.visible = true"
 	rollOut="viewContact.visible = false">
 	
