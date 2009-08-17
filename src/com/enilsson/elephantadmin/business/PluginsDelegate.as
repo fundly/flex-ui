@@ -2,9 +2,9 @@ package com.enilsson.elephantadmin.business
 {
 	import com.adobe.cairngorm.business.ServiceLocator;
 	import com.enilsson.elephantadmin.models.EAModelLocator;
+	import com.enilsson.elephantadmin.vo.AdminPledgeVO;
 	import com.enilsson.elephantadmin.vo.EmailVO;
 	import com.enilsson.elephantadmin.vo.NewUserVO;
-	import com.enilsson.elephanttrakker.vo.PledgeVO;
 	
 	import mx.rpc.AsyncToken;
 	import mx.rpc.IResponder;
@@ -147,11 +147,11 @@ package com.enilsson.elephantadmin.business
 			token.addResponder(responder);
 		}
 
-		public function process_pledge( p:PledgeVO ):void
+		public function process_pledge( p:AdminPledgeVO ):void
 		{
 			this.service = ServiceLocator.getInstance().getRemoteObject('struktorPluginsPledges');
 			
-			var token:AsyncToken = service.process_pledge( p.tr_users_id, p.contact, p.pledge, p.transaction, p.check );			
+			var token:AsyncToken = service.process_pledge( p.tr_users_id, p.contact, p.pledge, p.transaction, p.check, p.inKind );
 			token.addResponder(responder);
 		}
 	}

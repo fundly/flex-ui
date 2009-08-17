@@ -99,6 +99,7 @@
 
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.elephantadmin.views.modules.pledge_workspace.views.PledgeForm;
 			import mx.core.UIComponent;
 			import com.enilsson.elephantadmin.models.Icons;
 			import org.osflash.thunderbolt.Logger;
@@ -109,24 +110,30 @@
 			import mx.events.IndexChangedEvent;
 			import mx.events.ItemClickEvent;
 			
+			public static const CONTACT_TAB:int = 0;
+			public static const PLEDGE_TAB:int = 1;
+
 			[Bindable] public var model:EAModelLocator = EAModelLocator.getInstance();
 			[Bindable] public var presentationModel:PledgeWorkspaceModel;
-			public var transVStack:int = 0;
-			public var tabVStack:int = 0;
+			public var transVStack:int = PledgeForm.CREDIT_VIEW;
+			public var tabVStack:int = CONTACT_TAB;
 
-			[Inspectable(type="String", enumeration="credit,check,edit")]
+			[Inspectable(type="String", enumeration="credit,check,in-kind,edit")]
 			public function set defaultType(value:String):void
 			{
 				switch(value)
 				{
 					case "credit":
-						transVStack = 0;
+						transVStack = PledgeForm.CREDIT_VIEW;
 						break;
 					case "check":
-						transVStack = 1;
+						transVStack = PledgeForm.CHECK_VIEW;
+						break;
+					case "in-kind":
+						transVStack = PledgeForm.INKIND_VIEW;
 						break;
 					case "edit":
-						transVStack = 2;
+						transVStack = PledgeForm.EDIT_VIEW;
 						break;
 				}
 			}
@@ -137,10 +144,10 @@
 				switch(value)
 				{
 					case "contact":
-						tabVStack = 0;
+						tabVStack = CONTACT_TAB;
 						break;
 					case "pledge":
-						tabVStack = 1;
+						tabVStack = PLEDGE_TAB;
 						break;
 				}
 			}

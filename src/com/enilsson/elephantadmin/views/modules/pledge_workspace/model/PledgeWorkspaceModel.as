@@ -2,12 +2,11 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 {
 	import com.adobe.cairngorm.model.ModelLocator;
 	import com.enilsson.elephantadmin.models.EAModelLocator;
-	import com.enilsson.elephantadmin.models.Icons;
 	import com.enilsson.elephantadmin.views.modules.pledge_workspace.events.PWEvent;
+	import com.enilsson.elephantadmin.vo.AdminPledgeVO;
 	import com.enilsson.elephantadmin.vo.ErrorVO;
 	import com.enilsson.elephantadmin.vo.SessionVO;
 	import com.enilsson.elephantadmin.vo.StruktorLayoutVO;
-	import com.enilsson.elephanttrakker.vo.PledgeVO;
 	import com.enilsson.elephanttrakker.vo.TransactionVO;
 	import com.enilsson.utils.eNilssonUtils;
 	
@@ -75,6 +74,10 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 		{
 			return model.struktorLayout.checks as StruktorLayoutVO;
 		}
+		public function get inKindLayout():StruktorLayoutVO
+		{
+			return model.struktorLayout.in_kinds as StruktorLayoutVO;
+		}
 
 		/**
 		 * Get the siteLayoutLoaded flag from the parent model
@@ -96,6 +99,7 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 		 */
 		public function get successTextCC():String { return "The Credit Card pledge was successful" ; }
 		public function get successTextCheck():String { return "The Check pledge was successful"; }
+		public function get successTextInKind():String { return "The In-Kind pledge was successful"; }
 
 		/**
 		 * Some global variables for use during form completion
@@ -159,7 +163,7 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 			completedPledge = false;
 			
 			if ( action == EDIT )
-				transVStack = 2;
+				transVStack = 3;
 		}
 		
 		/**
@@ -383,6 +387,17 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 			return _checkData;
 		}
 
+		private var _inKindData:Object;
+		public function set inKindData ( value:Object ):void
+		{
+			if(value)
+				delete value.id;
+			_inKindData = ObjectUtil.copy( value );
+		}
+		public function get inKindData ():Object
+		{
+			return _inKindData;
+		}
 
 		/**
 		 * Variables for the lookup search input fields
@@ -404,6 +419,7 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 		public var billingFields:Array;
 		public var ccFields:Array;
 		public var checkFields:Array;
+		public var inKindFields:Array;
 
 
 		/**
@@ -437,6 +453,7 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 		public var ccErrors:Array;
 		public var checkErrors:Array;
 		public var billingErrors:Array;
+		public var inKindErrors:Array;
 
 		/**
 		 * Flag to initiate a reset on the agreement initials boxes
@@ -498,10 +515,10 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 		/**
 		 * Process the workspace
 		*/
-		public var vo:PledgeVO;
+		public var vo:AdminPledgeVO;
 		public function process():void
 		{
-			vo = new PledgeVO();
+			vo = new AdminPledgeVO();
 			
 			// loop through the contact data and spread the data to the two objects
 			for( var field:String in contactData )
@@ -571,7 +588,12 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 					vo.check = {};
 					vo.check = checkData;
 					delete vo.check['id'];
-				break;				
+				break;
+				case 2 :
+					vo.inKind = {};
+					vo.inKind = inKindData;
+					delete vo.inKind['id'];
+				break;
 			}
 			
 			// make some action dependant changes to the VO
@@ -640,6 +662,7 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 			clearPaymentForms = false;
 			
 			checkData = {};	
+			inKindData = {};	
 			billingData = {};
 		}
 	}

@@ -22,6 +22,7 @@ package com.enilsson.elephantadmin.models.viewclasses
 		public var email_system_templates:StruktorLayoutVO;
 		public var email_user_templates:StruktorLayoutVO;
 		public var events:StruktorLayoutVO;
+		public var in_kinds:StruktorLayoutVO;
 		public var pledges:StruktorLayoutVO;
 		public var news:StruktorLayoutVO;
 		public var reporting:StruktorLayoutVO;

@@ -13,7 +13,7 @@
 		variableRowHeight="true" 
 		itemRenderer="com.enilsson.elephantadmin.views.modules.pledge_workspace.renderers.Payment_Item" 
 		dataProvider="{presentationModel.contributions}" />
-	<mx:HBox width="{transactions.width}" styleName="paymentsBtnBox">
+	<mx:HBox width="{transactions.width}" styleName="paymentsBtnBox" horizontalGap="0">
 		<mx:Button styleName="addBtn" height="15"
 			label="add credit card" 
 			toolTip="Add another credit card payment to this pledge"
@@ -22,7 +22,11 @@
 			label="add check" 
 			toolTip="Add another check payment to this pledge"
 			click="presentationModel.transVStack = 1" />
-	</mx:HBox>	
+		<mx:Button styleName="addBtn" height="15"
+			label="add in-kind" 
+			toolTip="Add another in-kind payment to this pledge"
+			click="presentationModel.transVStack = 2" />
+	</mx:HBox>
 
 	<mx:Script>
 		<![CDATA[
@@ -32,5 +36,5 @@
 			[Bindable] public var presentationModel:PledgeWorkspaceModel;
 		]]>
 	</mx:Script>
-											
+
 </mx:VBox>
