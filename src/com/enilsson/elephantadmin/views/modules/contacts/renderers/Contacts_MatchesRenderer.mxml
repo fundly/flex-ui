@@ -4,8 +4,8 @@
 	horizontalScrollPolicy="off" 
 	verticalScrollPolicy="off"
 	height="65"
-	mouseOver="viewContact.visible = true"
-	mouseOut="viewContact.visible = false">
+	rollOver="viewContact.visible = true"
+	rollOut="viewContact.visible = false">
 
 	<mx:VBox verticalGap="0" paddingTop="0" paddingBottom="0">
 		<mx:Text text="{data.fname} {data.lname}{data.id == data.match_id ? ' (original record)' : ''}" 

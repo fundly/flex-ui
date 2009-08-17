@@ -4,8 +4,8 @@
 	width="{explicitWidth}" 
 	verticalScrollPolicy="off" 
 	horizontalScrollPolicy="off"
-	mouseOver="pledgeBtn.visible = true"
-	mouseOut="pledgeBtn.visible = false">
+	rollOver="pledgeBtn.visible = true"
+	rollOut="pledgeBtn.visible = false">
 
 	<mx:VBox left="0"
 		verticalGap="-2" 

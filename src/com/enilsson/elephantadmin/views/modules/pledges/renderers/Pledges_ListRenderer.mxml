@@ -3,8 +3,8 @@
 	xmlns:mx="http://www.adobe.com/2006/mxml"	 
 	horizontalScrollPolicy="off" 
 	verticalScrollPolicy="off"
-	mouseOver="viewContact.visible = true"
-	mouseOut="viewContact.visible = false">
+	rollOver="viewContact.visible = true"
+	rollOut="viewContact.visible = false">
 	
 	<mx:VBox verticalGap="0"
 		paddingTop="0" paddingBottom="0">

@@ -3,8 +3,8 @@
 	xmlns:mx="http://www.adobe.com/2006/mxml" 
 	styleName="actionsLinkBox"
 	width="100%"
-	mouseOver="event.currentTarget.setStyle('backgroundColor','#52bdec')"
-	mouseOut="event.currentTarget.setStyle('backgroundColor','#ffffff')"
+	rollOver="event.currentTarget.setStyle('backgroundColor','#52bdec')"
+	rollOut="event.currentTarget.setStyle('backgroundColor','#ffffff')"
 	>
 
 	<mx:HBox styleName="actionsIconContainer"

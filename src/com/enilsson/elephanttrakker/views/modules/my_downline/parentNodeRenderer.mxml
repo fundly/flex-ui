@@ -79,9 +79,9 @@
 	<mx:CurrencyFormatter id="cf" precision="0" currencySymbol="$" useNegativeSign="false" />	
 
 	<mx:Image source="{iconClass(data.data.@nodeClass)}" 
-		mouseOver="createArrowPopup(data.data, event)"
+		rollOver="createArrowPopup(data.data, event)"
 		mouseMove="mouseMoveHandler(event)"
-		mouseOut="mouseOutHandler(event)" />
+		rollOut="mouseOutHandler(event)" />
 	<mx:HBox styleName="nodeLabelBG">
 		<mx:Text styleName="nodeLabel" text="{data.data.@desc}{data.data.@nodeClass == 'root' ? ' (me)' : ''}" />
 	</mx:HBox>
