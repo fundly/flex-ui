@@ -399,12 +399,15 @@
 						var focusfield3:TextArea = event.currentTarget.getField('comments') as TextArea;
 						
 						focusfield3.addEventListener(FocusEvent.KEY_FOCUS_CHANGE, function(evt:FocusEvent):void {
+							presentationModel.inKindData = inKindForm.formVariables;
 							if (!evt.shiftKey && evt.keyCode == 9 && presentationModel.numTabs > 2) 
 							{
 								presentationModel.vindex++;
 								evt.preventDefault();
 							}
 						});
+						
+						
 						field = event.currentTarget.getField('amount') as TextInput;
  						BindingUtils.bindProperty(field, 'text', presentationModel, 'pledgeAmount');
 					break;
