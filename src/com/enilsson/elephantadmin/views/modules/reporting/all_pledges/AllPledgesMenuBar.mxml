@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" currentState="{BASIC_STATE}"
 	width="100%" styleName="controlBar" verticalGap="0" cornerRadius="5"
 	paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5">
 	<mx:HBox id="standardMenu" width="100%" height="25" verticalAlign="middle">
@@ -32,6 +32,10 @@
 			<mx:SetProperty target="{advancedMenu}" name="height" value="25" />
 			<mx:SetProperty target="{advancedButton}" name="label" value="{BASIC_LABEL}" />
 		</mx:State>
+		<mx:State name="{BASIC_STATE}">
+			<mx:SetProperty target="{advancedMenu}" name="height" value="0" />
+			<mx:SetProperty target="{advancedButton}" name="label" value="{ADVANCED_LABEL}" />
+		</mx:State>
 	</mx:states>
 
 	<mx:Metadata>
@@ -44,6 +48,7 @@
 			import mx.effects.Resize;
 
 			private static const ADVANCED_STATE:String = "advanced";
+			private static const BASIC_STATE:String = "basic";
 
 			private static const ADVANCED_LABEL:String = "More filters";
 			private static const BASIC_LABEL:String = "Less filters";
@@ -63,11 +68,11 @@
 			{
 				switch(currentState)
 				{
-					case null:
-						currentState = ADVANCED_STATE;
-						break;
 					case ADVANCED_STATE:
-						currentState = null;
+						currentState = BASIC_STATE;
+						break;
+					case BASIC_STATE:
+						currentState = ADVANCED_STATE;
 						break;
 				}
 			}
