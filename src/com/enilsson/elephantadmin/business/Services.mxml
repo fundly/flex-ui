@@ -277,7 +277,7 @@
 	</mx:RemoteObject>
 	
 	<mx:HTTPService id="versionService"
-		url="{_model.versionInfoUrl}"
+		url="{_model.versionXmlUrl}"
 		contentType="application/xml"
 		resultFormat="e4x"
 		showBusyCursor="true" />	
