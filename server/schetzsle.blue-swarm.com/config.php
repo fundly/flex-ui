@@ -44,7 +44,7 @@ $bgColor = '#000000';
 */
 $donationWidget = array (
 	'css'			=> 'default.css',
-	'height'		=> '1300',
+	'height'		=> '1375',
 	'width'			=> '870',
 	'background'	=> '#FFFFFF',
 	'mastheadImg'	=> 'logo_large.jpg'
