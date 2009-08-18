@@ -19,7 +19,7 @@
 					<mx:ComboBox width="200" rowCount="10" color="#000000" dataProvider="{_presentationModel.regionFilter}" id="region" enabled="{!dataLoading}" change="_presentationModel.regionChangeHandler(event)"/>
 				</mx:FormItem>
 			</mx:HBox>
-			<mx:Box direction="{this.width &gt; 700 ? 'horizontal' : 'vertical'}"
+			<mx:HBox
 				horizontalGap="2" verticalGap="2" horizontalAlign="center"
 				right="5" verticalAlign="middle" verticalCenter="0">
 				<mx:Text id="recordsDesc"
@@ -35,7 +35,7 @@
 						click="presentationModel.exportGrid(grid.dG.columns)"
 						enabled="{!dataLoading}" />
 				</mx:HBox>
-			</mx:Box>
+			</mx:HBox>
 		</mx:Canvas>
 		<module:PaginationGrid id="grid" height="100%"
 			dataProvider="{presentationModel.gridRecords}"

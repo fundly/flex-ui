@@ -78,6 +78,7 @@
 		<mx:DataGridColumn width="90" dataField="contribution_type" headerText="Contribution Type"/>
 		<mx:DataGridColumn width="90" dataField="full_name" headerText="Name on Card or Account"/>
 		<mx:DataGridColumn width="60" dataField="fund_type" headerText="Fund Type"/>
+		<mx:DataGridColumn width="200" dataField="event_name" headerText="Event Name"/>
 		<mx:DataGridColumn width="90" dataField="source_code" headerText="Source Code"/>
 		<mx:DataGridColumn width="80" dataField="fundraiser_id" headerText="Fundraiser ID" />
 		<mx:DataGridColumn width="100" dataField="fundraiser_fname" headerText="Fundraiser First Name" />

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
+	width="100%" styleName="controlBar" verticalGap="2"
+	paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5">
+	<mx:HBox id="standardMenu" width="100%" height="25" verticalAlign="middle">
+		<mx:FormItem label="Date range:" direction="horizontal">
+			<mx:DateField id="range_start" width="90" color="#000000" formatString="MM/DD/YYYY" selectedDate="{_presentationModel.startDate}" change="_presentationModel.startDate = event.currentTarget.selectedDate" textAlign="center" enabled="{!_presentationModel.dataLoading}" />
+			<mx:HRule width="10" height="100%"/>
+			<mx:DateField id="range_end" width="90" color="#000000" formatString="MM/DD/YYYY" selectedDate="{_presentationModel.endDate}" change="_presentationModel.endDate = event.currentTarget.selectedDate" textAlign="center" enabled="{!_presentationModel.dataLoading}" />
+		</mx:FormItem>
+		<mx:LinkButton id="advancedButton" label="{ADVANCED_LABEL}"
+			click="toggleAdvanced()"/>
+		<mx:Spacer width="100%" />
+		<mx:Button width="80" label="Generate" color="#000000"
+			click="_presentationModel.generate()"
+			enabled="{!_presentationModel.dataLoading}" />
+		<mx:Button width="80" label="Export" color="#000000"
+			click="handleExport();"
+			enabled="{!_presentationModel.dataLoading}" />
+	</mx:HBox>
+	<mx:HBox id="advancedMenu" width="100%" height="0" verticalAlign="middle" resizeEffect="{Resize}">
+		<mx:FormItem label="Date type:">
+			<mx:ComboBox width="120" color="#000000" dataProvider="{_presentationModel.dateTypeFilter}" id="dateType" enabled="{!_presentationModel.dataLoading}" change="_presentationModel.dateTypeChangeHandler(event)"/>
+		</mx:FormItem>
+		<mx:FormItem label="Region:">
+			<mx:ComboBox width="150" dropdownWidth="200" color="#000000" dataProvider="{_presentationModel.regionFilter}" id="region" enabled="{!_presentationModel.dataLoading}" change="_presentationModel.regionChangeHandler(event)"/>
+		</mx:FormItem>
+		<mx:FormItem label="Payment method:">
+			<mx:ComboBox width="120" color="#000000" dataProvider="{_presentationModel.contributionFilter}" id="status" enabled="{!_presentationModel.dataLoading}" change="_presentationModel.statusChangeHandler(event)"/>
+		</mx:FormItem>
+	</mx:HBox>
+	<mx:HBox id="textStatus" width="100%" height="15" verticalAlign="middle">
+		<mx:FormItem label="Total Contributed:">
+			<mx:Text
+				text=" {currencyFormatter.format(_presentationModel.totalContribSum)}"
+				fontSize="10"
+				color="#FFFFFF" />
+		</mx:FormItem>
+		<mx:Spacer width="100%" />
+		<mx:Text id="recordsDesc"
+			htmlText="{_presentationModel.recordsHtmlText}"
+			fontSize="10"
+			color="#FFFFFF"	/>
+	</mx:HBox>
+	<mx:CurrencyFormatter id="currencyFormatter" precision="0" currencySymbol="$" useNegativeSign="false" />
+	<mx:DateFormatter id="dateFormatter" />
+
+	<mx:states>
+		<mx:State name="{ADVANCED_STATE}">
+			<mx:SetProperty target="{advancedMenu}" name="height" value="25" />
+			<mx:SetProperty target="{advancedButton}" name="label" value="{BASIC_LABEL}" />
+		</mx:State>
+	</mx:states>
+
+	<mx:Metadata>
+		[Event(name="export", type="flash.events.Event")]
+	</mx:Metadata>
+
+	<mx:Script>
+		<![CDATA[
+			import mx.effects.Resize;
+			import com.enilsson.elephantadmin.views.modules.reporting.all_contributions.model.AllContributionsModel;
+
+			private static const ADVANCED_STATE:String = "advanced";
+
+			private static const ADVANCED_LABEL:String = "More filters";
+			private static const BASIC_LABEL:String = "Less filters";
+
+			[Bindable] private var _presentationModel:AllContributionsModel;
+			public function set presentationModel(value:AllContributionsModel):void
+			{
+				_presentationModel = value;
+			}
+			
+			private function handleExport():void
+			{
+				dispatchEvent(new Event("export"));
+			}
+
+			private function toggleAdvanced():void
+			{
+				switch(currentState)
+				{
+					case null:
+						currentState = ADVANCED_STATE;
+						break;
+					case ADVANCED_STATE:
+						currentState = null;
+						break;
+				}
+			}
+		]]>
+	</mx:Script>
+</mx:VBox>
