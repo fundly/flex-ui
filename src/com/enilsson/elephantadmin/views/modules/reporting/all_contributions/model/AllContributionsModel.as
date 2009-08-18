@@ -45,8 +45,8 @@ package com.enilsson.elephantadmin.views.modules.reporting.all_contributions.mod
 			{'label':'All','data':'0'}
 		]);
 		public var dateTypeFilter:ArrayCollection = new ArrayCollection([
-			{'label':'Pledged','data':'0'}
-			,{'label':'Fulfilled','data':'1'}
+			{'label':'Pledge Date','data':'0'}
+			,{'label':'Fulfilled Date','data':'1'}
 		]);
 
 		public var dateType:int = 0;

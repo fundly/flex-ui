@@ -12,9 +12,19 @@
 	verticalScrollPolicy="off"
 	creationComplete="init()">
 
-	<mx:VBox width="100%" height="100%" verticalGap="5">
+	<mx:VBox width="100%" height="100%" verticalGap="0">
 		<reporting:AllContributionsMenuBar presentationModel="{_presentationModel}"
 			export="presentationModel.exportGrid(grid.dG.columns)"/>
+		<mx:HBox id="textStatus" width="100%" height="15" verticalAlign="middle"
+			fontSize="10" color="#333333">
+			<mx:FormItem label="Total Contributed:">
+				<mx:Text
+					text=" {currencyFormatter.format(_presentationModel.totalContribSum)}" />
+			</mx:FormItem>
+			<mx:Spacer width="100%" />
+			<mx:Text id="recordsDesc"
+				htmlText="{_presentationModel.recordsHtmlText}" />
+		</mx:HBox>
 		<module:PaginationGrid id="grid" height="100%"
 			dataProvider="{presentationModel.gridRecords}"
 			newPage="presentationModel.newPage(event)" 

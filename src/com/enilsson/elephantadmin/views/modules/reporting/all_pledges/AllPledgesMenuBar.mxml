@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
-	width="100%" styleName="controlBar" verticalGap="2"
+	width="100%" styleName="controlBar" verticalGap="0" cornerRadius="5"
 	paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5">
 	<mx:HBox id="standardMenu" width="100%" height="25" verticalAlign="middle">
 		<mx:FormItem label="Date range:" direction="horizontal">
@@ -8,7 +8,7 @@
 			<mx:HRule width="10" height="100%"/>
 			<mx:DateField id="range_end" width="90" color="#000000" formatString="MM/DD/YYYY" selectedDate="{_presentationModel.endDate}" change="_presentationModel.endDate = event.currentTarget.selectedDate" textAlign="center" enabled="{!_presentationModel.dataLoading}" />
 		</mx:FormItem>
-		<mx:LinkButton id="advancedButton" label="{ADVANCED_LABEL}"
+		<mx:LinkButton id="advancedButton" label="{ADVANCED_LABEL}" paddingTop="5"
 			click="toggleAdvanced()"/>
 		<mx:Spacer width="100%" />
 		<mx:Button width="80" label="Generate" color="#000000"
@@ -18,7 +18,7 @@
 			click="handleExport();"
 			enabled="{!_presentationModel.dataLoading}" />
 	</mx:HBox>
-	<mx:HBox id="advancedMenu" width="100%" height="0" verticalAlign="middle" resizeEffect="{Resize}">
+	<mx:HBox id="advancedMenu" width="100%" height="0" verticalAlign="middle" paddingTop="2" resizeEffect="{Resize}">
 		<mx:FormItem label="Region:">
 			<mx:ComboBox width="150" dropdownWidth="200" color="#000000" dataProvider="{_presentationModel.regionFilter}" id="region" enabled="{!_presentationModel.dataLoading}" change="_presentationModel.regionChangeHandler(event)"/>
 		</mx:FormItem>
@@ -26,28 +26,6 @@
 			<mx:ComboBox width="150" color="#000000" dataProvider="{_presentationModel.pledgesFilter}" id="status" enabled="{!_presentationModel.dataLoading &amp;&amp; !_presentationModel.searching}" change="_presentationModel.statusChangeHandler(event)"/>
 		</mx:FormItem>
 	</mx:HBox>
-	<mx:HBox id="textStatus" width="100%" height="15" verticalAlign="middle">
-		<mx:FormItem label="Total Pledged:" width="170">
-			<mx:Text
-				text=" {currencyFormatter.format(_presentationModel.totalPledgeSum)}"
-				fontSize="10"
-				color="#FFFFFF" />
-		</mx:FormItem>
-		<mx:VRule height="100%" />
-		<mx:FormItem label="Total Contributed:" width="180">
-			<mx:Text
-				text=" {currencyFormatter.format(_presentationModel.totalContribSum)}"
-				fontSize="10"
-				color="#FFFFFF" />
-		</mx:FormItem>
-		<mx:Spacer width="100%" />
-		<mx:Text id="recordsDesc"
-			htmlText="{_presentationModel.recordsHtmlText}"
-			fontSize="10"
-			color="#FFFFFF"	/>
-	</mx:HBox>
-	<mx:CurrencyFormatter id="currencyFormatter" precision="0" currencySymbol="$" useNegativeSign="false" />
-	<mx:DateFormatter id="dateFormatter" />
 
 	<mx:states>
 		<mx:State name="{ADVANCED_STATE}">
