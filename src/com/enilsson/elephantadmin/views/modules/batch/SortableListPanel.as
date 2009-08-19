@@ -6,7 +6,7 @@ package com.enilsson.elephantadmin.views.modules.batch
 	
 	[Event(name="sortChange", type="flash.events.Event")]
 
-	public class SortableListPanel extends ListPanel
+	public class SortableListPanel extends TogglePanel
 	{
 		
 		public function get selectedSortField() : String

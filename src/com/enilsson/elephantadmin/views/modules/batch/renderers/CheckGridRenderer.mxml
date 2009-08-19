@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Label xmlns:mx="http://www.adobe.com/2006/mxml">
+
+	<mx:Script>
+		<![CDATA[
+		
+			override public function set data(value:Object):void
+			{
+				super.data = value;
+				if(data is CheckWrapper)
+				{
+					if(CheckWrapper(data).inBatch)
+						enabled = false;
+					else
+						enabled = true;
+				}
+			}
+		]]>
+	</mx:Script>
+</mx:Label>

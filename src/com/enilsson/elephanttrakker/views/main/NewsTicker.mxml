@@ -40,6 +40,7 @@
 
 	<mx:Script>
 		<![CDATA[
+			import mx.utils.ObjectUtil;
 			import com.enilsson.elephanttrakker.vo.RssVO;
 			import mx.events.CloseEvent;
 			import mx.managers.PopUpManager;
@@ -72,7 +73,10 @@
 				tickerTimer.addEventListener("timer", fadeTicker);
 				tickerTimer.start();
 				
-				function fadeTicker(event:TimerEvent):void 
+				bnExpand.addEventListener(MouseEvent.CLICK, clickExpandHandler);
+			}
+			
+			private function fadeTicker(event:TimerEvent):void 
 				{	
 					if(!_model.rssData){ return; }					
 					
@@ -81,41 +85,16 @@
 						tickerCurr = tickerCurr == rssList.dataProvider.length ? 0 : tickerCurr;
 						newsItem.text = eNilssonUtils.charLimiter(rssList.dataProvider[tickerCurr].title, 70);
 						Tweener.addTween(newsItem, { alpha: 1, time: 1, transition: 'linear' });
-						 
+						
+						if ( rssList.dataProvider[tickerCurr].error === true ) tickerTimer.stop();
 					}});
 				}
-				
-				bnExpand.addEventListener(MouseEvent.CLICK, function(event:MouseEvent):void {
-					if (!bSpinning) 
-					{ 
-						bSpinning = true;
-						Tweener.addTween(newsTicker, { height : (newsTicker.height == 29 ? 270 : 29), time: 0.4, transition : 'linear' });	
-						if(newsTicker.height==29)
-						{
-							rssList.visible = true;
-							var rotater:Rotate = new Rotate(bnExpand);
-							rotater.angleTo = 180;
-							rotater.play();
-							rotater.addEventListener(TweenEvent.TWEEN_END,function():void { bSpinning = false;  });
-							bnExpand.toolTip = 'Collapse news ticker';			
-						} 
-						else 
-						{
-							rssList.visible = false;
-							var rotater2:Rotate = new Rotate(bnExpand);
-							rotater2.angleFrom = 180;
-							rotater2.angleTo = 0;
-							rotater2.play();
-							rotater2.addEventListener(TweenEvent.TWEEN_END,function():void { bSpinning = false; });
-							bnExpand.toolTip = 'Expand news ticker';
-						}
-					}
-				});
-			}
 			
 			private function launchEmailPopUp(e:MouseEvent):void
 			{
-				var rssObj:Object = rssList.dataProvider[tickerCurr];
+				var rssObj:RssVO = new RssVO( _model.rssData.getItemAt(0) );
+				
+				if ( rssObj.error === true ) return; 
 				
 				_model.rss_message = rssObj.description + '\n\n' + rssObj.link;						
 				_model.rss_subject = rssObj.title;		
@@ -123,6 +102,40 @@
 			 	var pClass:Class = EmailToAFriend as Class;			 	
 			 	var p:* = PopUpManager.createPopUp( _model.mainScreen, pClass, true );
 			    PopUpManager.centerPopUp(p);
+			}
+			
+			private function clickExpandHandler( event:MouseEvent ):void
+			{
+				var rssItem:RssVO = new RssVO( _model.rssData.getItemAt(0) );
+				
+				Logger.info('RssItem click', ObjectUtil.toString(_model.rssData));
+				
+				if ( rssItem.error === true ) return;					
+				
+				if (!bSpinning) 
+				{ 
+					bSpinning = true;
+					Tweener.addTween(newsTicker, { height : (newsTicker.height == 29 ? 270 : 29), time: 0.4, transition : 'linear' });	
+					if(newsTicker.height==29)
+					{
+						rssList.visible = true;
+						var rotater:Rotate = new Rotate(bnExpand);
+						rotater.angleTo = 180;
+						rotater.play();
+						rotater.addEventListener(TweenEvent.TWEEN_END,function():void { bSpinning = false;  });
+						bnExpand.toolTip = 'Collapse news ticker';			
+					} 
+					else 
+					{
+						rssList.visible = false;
+						var rotater2:Rotate = new Rotate(bnExpand);
+						rotater2.angleFrom = 180;
+						rotater2.angleTo = 0;
+						rotater2.play();
+						rotater2.addEventListener(TweenEvent.TWEEN_END,function():void { bSpinning = false; });
+						bnExpand.toolTip = 'Expand news ticker';
+					}
+				}				
 			}			
 		
 		]]>

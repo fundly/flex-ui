@@ -196,7 +196,8 @@
 				
 				// if there is existing contact data add the id
 				if ( _model.session.data.hasOwnProperty('_contact_id') )
-					cd['id'] = _model.session.data._contact_id;
+					if ( _model.session.data._contact_id != null )
+						cd['id'] = _model.session.data._contact_id;
 				
 				// if this is a resave add the contact id if present
 				if ( _model.firstlogin.contact_id > 0 ) 
@@ -208,11 +209,11 @@
  				if(_model.debug) Logger.info('MyFirstTime contact details', cd);
 
 				// fire an event
-				new FirstLoginEvent( 
+ 				new FirstLoginEvent( 
 					FirstLoginEvent.FIRSTLOGIN_UPSERTCONTACT, 
 					_model.firstlogin.contact_details 
 				).dispatch();
- 			}
+  			}
 
 			/**			
 			 * Handle the proxy login logout procedure

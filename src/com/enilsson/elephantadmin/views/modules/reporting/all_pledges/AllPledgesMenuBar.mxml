@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" currentState="{BASIC_STATE}"
+	width="100%" styleName="controlBar" verticalGap="0" cornerRadius="5"
+	paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5">
+	<mx:HBox id="standardMenu" width="100%" height="25" verticalAlign="middle">
+		<mx:FormItem label="Date range:" direction="horizontal">
+			<mx:DateField id="range_start" width="90" color="#000000" formatString="MM/DD/YYYY" selectedDate="{_presentationModel.startDate}" change="_presentationModel.startDate = event.currentTarget.selectedDate" textAlign="center" enabled="{!_presentationModel.dataLoading}" />
+			<mx:HRule width="10" height="100%"/>
+			<mx:DateField id="range_end" width="90" color="#000000" formatString="MM/DD/YYYY" selectedDate="{_presentationModel.endDate}" change="_presentationModel.endDate = event.currentTarget.selectedDate" textAlign="center" enabled="{!_presentationModel.dataLoading}" />
+		</mx:FormItem>
+		<mx:LinkButton id="advancedButton" label="{ADVANCED_LABEL}" paddingTop="5"
+			click="toggleAdvanced()"/>
+		<mx:Spacer width="100%" />
+		<mx:Button width="80" label="Generate" color="#000000"
+			click="_presentationModel.generate()"
+			enabled="{!_presentationModel.dataLoading}" />
+		<mx:Button width="80" label="Export" color="#000000"
+			click="handleExport();"
+			enabled="{!_presentationModel.dataLoading}" />
+	</mx:HBox>
+	<mx:HBox id="advancedMenu" width="100%" height="0" verticalAlign="middle" paddingTop="2" resizeEffect="{Resize}">
+		<mx:FormItem label="Region:">
+			<mx:ComboBox width="150" dropdownWidth="200" color="#000000" dataProvider="{_presentationModel.regionFilter}" id="region" enabled="{!_presentationModel.dataLoading}" change="_presentationModel.regionChangeHandler(event)"/>
+		</mx:FormItem>
+		<mx:FormItem label="Status:">
+			<mx:ComboBox width="150" color="#000000" dataProvider="{_presentationModel.pledgesFilter}" id="status" enabled="{!_presentationModel.dataLoading &amp;&amp; !_presentationModel.searching}" change="_presentationModel.statusChangeHandler(event)"/>
+		</mx:FormItem>
+	</mx:HBox>
+
+	<mx:states>
+		<mx:State name="{ADVANCED_STATE}">
+			<mx:SetProperty target="{advancedMenu}" name="height" value="25" />
+			<mx:SetProperty target="{advancedButton}" name="label" value="{BASIC_LABEL}" />
+		</mx:State>
+		<mx:State name="{BASIC_STATE}">
+			<mx:SetProperty target="{advancedMenu}" name="height" value="0" />
+			<mx:SetProperty target="{advancedButton}" name="label" value="{ADVANCED_LABEL}" />
+		</mx:State>
+	</mx:states>
+
+	<mx:Metadata>
+		[Event(name="export", type="flash.events.Event")]
+	</mx:Metadata>
+
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephantadmin.views.modules.reporting.all_pledges.model.AllPledgesModel;
+			import mx.effects.Resize;
+
+			private static const ADVANCED_STATE:String = "advanced";
+			private static const BASIC_STATE:String = "basic";
+
+			private static const ADVANCED_LABEL:String = "More filters";
+			private static const BASIC_LABEL:String = "Less filters";
+
+			[Bindable] private var _presentationModel:AllPledgesModel;
+			public function set presentationModel(value:AllPledgesModel):void
+			{
+				_presentationModel = value;
+			}
+			
+			private function handleExport():void
+			{
+				dispatchEvent(new Event("export"));
+			}
+
+			private function toggleAdvanced():void
+			{
+				switch(currentState)
+				{
+					case ADVANCED_STATE:
+						currentState = BASIC_STATE;
+						break;
+					case BASIC_STATE:
+						currentState = ADVANCED_STATE;
+						break;
+				}
+			}
+		]]>
+	</mx:Script>
+</mx:VBox>

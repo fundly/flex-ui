@@ -12,7 +12,7 @@
 		</mx:DataGridColumn>
 		<mx:DataGridColumn headerText="Created On" width="100" labelFunction="createdLabel">
 		</mx:DataGridColumn>
-		<mx:DataGridColumn headerText="FID" width="60" dataField="fid">
+		<mx:DataGridColumn headerText="Fundraiser ID" width="60" dataField="fid">
 		</mx:DataGridColumn>
 		<mx:DataGridColumn headerText="Source Code" width="100" dataField="event_source_code">
 		</mx:DataGridColumn>

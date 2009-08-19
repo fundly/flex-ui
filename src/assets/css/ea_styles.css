@@ -616,6 +616,11 @@ ModuleControlBar {
 	fontWeight:normal;
 	color:#333333;
 }
+.emailLink {
+	color: #333333;
+	fontSize: 12;
+	fontWeight: bold;	
+}
 /*--- End User Module Styles ---*/
 
 /*--- Record Module Styles ---*/
@@ -657,6 +662,11 @@ ModuleControlBar {
 	upSkin: Embed("../images/icons/small/delete.png");
 	overSkin: Embed("../images/icons/small/delete.png");
 	downSkin: Embed("../images/icons/small/delete.png");	
+}
+.addRecord {
+	upSkin: Embed("../images/icons/small/add.png");
+	overSkin: Embed("../images/icons/small/add.png");
+	downSkin: Embed("../images/icons/small/add.png");	
 }
 .viewContact {
 	upSkin: Embed("../images/new_icons/nav/contacts.png");
@@ -799,7 +809,6 @@ DataGrid.dashboardGrid {
 	horizontalGap: 0;
 }	
 .fundraisingChart {
-	fontFamily:Arial;
 	fontSize:8;
 	fontWeight:normal; 
 	color:#333333;

@@ -17,6 +17,7 @@ package com.enilsson.elephanttrakker.vo
 		[Bindable] public var transactionData:Object = {};
 		[Bindable] public var check:Object = {};
 		[Bindable] public var billing:Object = {};
+		[Bindable] public var paymentType:String;		
 
 	}
 }

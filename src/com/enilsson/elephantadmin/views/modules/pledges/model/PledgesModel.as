@@ -6,6 +6,8 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 	import com.enilsson.elephantadmin.events.modules.RecordModuleEvent;
 	import com.enilsson.elephantadmin.models.EAModelLocator;
 	import com.enilsson.elephantadmin.views.manage_record_base.model.RecordModel;
+	import com.enilsson.elephantadmin.views.modules.pledge_workspace.PWPopupContainer;
+	import com.enilsson.elephantadmin.views.modules.pledge_workspace.model.PledgeWorkspaceVO;
 	import com.enilsson.elephantadmin.views.modules.pledges.popups.Pledges_AddRefund;
 	import com.enilsson.elephantadmin.views.modules.pledges.renderers.FID_Item;
 	import com.enilsson.elephantadmin.views.modules.pledges.renderers.SourceCode_Item;
@@ -13,8 +15,11 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 	import com.enilsson.elephantadmin.vo.RecordVO;
 	import com.enilsson.elephantadmin.vo.SearchVO;
 	
+	import flash.display.DisplayObject;
+	
 	import mx.binding.utils.BindingUtils;
 	import mx.collections.ArrayCollection;
+	import mx.core.Application;
 	import mx.core.ClassFactory;
 	import mx.managers.PopUpManager;
 	
@@ -29,8 +34,41 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 		public function PledgesModel(parentModel:ModelLocator=null)
 		{
 			super(parentModel);
+			_allowAddNewRecord = true;
+			_addNewRecordLabel = 'ADD PLEDGE';
 		}
 		
+		// public method to access getRecordDetails() after a new contribution is added by PledgeWorkspace popup
+		public function refreshRecordDetails():void
+		{
+			getRecordDetails();
+		}
+		
+		/**
+		 * Override the add record behaviour
+		 */
+		override public function addNewRecord():void
+		{
+			var popup:PWPopupContainer = new PWPopupContainer();
+			// set popup variables
+			popup.defaultType = "credit";
+			popup.defaultTab = "contact";
+			popup.popupTitle = "Add a new Pledge";
+
+			// set workspace variables
+			var vo:PledgeWorkspaceVO = new PledgeWorkspaceVO();
+			vo.action = 'pledgeworkspace_addnew';
+			EAModelLocator.getInstance().pledgeWorkspace = vo;
+			
+			PopUpManager.addPopUp(popup, DisplayObject(Application.application), true);
+			popup.addEventListener(Event.CLOSE, function (event:Event):void
+			{
+				PopUpManager.removePopUp(PWPopupContainer(event.currentTarget));
+				newPage(searchListCurrPage / itemsPerPage);
+			});
+			PopUpManager.centerPopUp(popup);
+		}
+
 		/**
 		 * Capture the get record event and add the Pledge specific elements to it
 		 */

@@ -1,5 +1,14 @@
-TabBar.qcmTab{
+TabBar.qcmTab {
 	firstTabStyleName: "fbTabStyle";
+	tabStyleName: "tabStyle";
+	lastTabStyleName: "lbTabStyle";
+	horizontalGap:0;
+	textRollOverColor:#FF0000;
+	verticalAlign:"top";
+}
+
+TabBar.qcmTabAdmin {
+	firstTabStyleName: "fbAdminTabStyle";
 	tabStyleName: "tabStyle";
 	lastTabStyleName: "lbTabStyle";
 	horizontalGap:0;
@@ -83,6 +92,24 @@ TabBar.qcmTab{
 
 	color:#FFFFFF;
 
+	paddingLeft:15;
+	paddingRight:15;
+	paddingTop:0;
+	paddingBottom:8;
+}
+
+.fbAdminTabStyle {
+	disabledSkin: Embed("../images/skins/qcm2_buttonbar_firstnormal_arrow_admin.png", scaleGridTop="5", scaleGridBottom="18", scaleGridLeft="12", scaleGridRight="29");
+	downSkin: Embed("../images/skins/qcm2_buttonbar_firstnormal_arrow_admin.png", scaleGridTop="5", scaleGridBottom="18", scaleGridLeft="12", scaleGridRight="29");
+	overSkin: Embed("../images/skins/qcm2_buttonbar_firstnormal_arrow_admin.png", scaleGridTop="5", scaleGridBottom="18", scaleGridLeft="12", scaleGridRight="29");
+	selectedDisabledSkin: Embed("../images/skins/qcm2_buttonbar_firstselected_arrow_admin.png", scaleGridTop="5", scaleGridBottom="18", scaleGridLeft="12", scaleGridRight="29");
+	selectedDownSkin: Embed("../images/skins/qcm2_buttonbar_firstselected_arrow_admin.png", scaleGridTop="5", scaleGridBottom="18", scaleGridLeft="12", scaleGridRight="29");
+	selectedOverSkin: Embed("../images/skins/qcm2_buttonbar_firstselected_arrow_admin.png", scaleGridTop="5", scaleGridBottom="18", scaleGridLeft="12", scaleGridRight="29");
+	selectedUpSkin: Embed("../images/skins/qcm2_buttonbar_firstselected_arrow_admin.png", scaleGridTop="5", scaleGridBottom="18", scaleGridLeft="12", scaleGridRight="29");
+	upSkin: Embed("../images/skins/qcm2_buttonbar_firstnormal_arrow_admin.png", scaleGridTop="5", scaleGridBottom="18", scaleGridLeft="12", scaleGridRight="29");
+	
+	color:#FFFFFF;
+	
 	paddingLeft:15;
 	paddingRight:15;
 	paddingTop:0;

@@ -139,7 +139,6 @@
 		verticalScrollPolicy="auto"
 		width="100%"
 		height="100%"
-		draggableColumns="false"
 		dataProvider="{_dataProvider}"
 		change="changeHandler(event)"
 		selectedIndex="{_selectedIndex}"

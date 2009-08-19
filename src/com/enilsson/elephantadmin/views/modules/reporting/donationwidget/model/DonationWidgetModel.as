@@ -122,6 +122,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.donationwidget.model
 			vo.recordPerPage = itemsPerPage;
 			vo.groupID = group;
 			vo.userID = WIDGET_USER_ID;
+			vo.exportData = { userID_type :"recorded_by_id"}
 
 			if(exporting)
 			{

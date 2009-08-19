@@ -3,6 +3,7 @@ package com.enilsson.elephantadmin.business
 	import com.adobe.cairngorm.business.ServiceLocator;
 	import com.enilsson.elephantadmin.models.EAModelLocator;
 	import com.enilsson.elephantadmin.vo.EmailVO;
+	import com.enilsson.elephantadmin.vo.NewUserVO;
 	import com.enilsson.elephanttrakker.vo.PledgeVO;
 	
 	import mx.rpc.AsyncToken;
@@ -51,6 +52,28 @@ package com.enilsson.elephantadmin.business
 										emailVO.senderEmail,
 										emailVO.subject,
 										emailVO.addDownline
+			);
+			token.addResponder(responder);
+		}
+
+		public function createNewUser(vo:NewUserVO):void
+		{
+			this.service = ServiceLocator.getInstance().getRemoteObject('struktorPluginsEmail');
+		
+			var token:AsyncToken = service.add_fundraiser( 
+										{
+											fname:vo.fname
+											,lname:vo.lname
+											,email: vo.email
+											,address1:vo.address1
+											,address2:vo.address2
+											,city:vo.city
+											,state:vo.state
+											,zip:vo.zip
+											,phone:vo.phone
+											,fundraising_goal:vo.goal
+										}
+										,vo.addDownline
 			);
 			token.addResponder(responder);
 		}

@@ -8,7 +8,7 @@
 $flexApplication = $app == 'admin' ? 'ET_admin' : 'ET_cairngorm';
 
 // set the base url for the app
-$baseURL = 'https://perata.blue-swarm.com/';
+$baseURL = 'https://schetzsle.blue-swarm.com/';
 
 // set the site url for the app
 $siteURL = $baseURL . ($app == '' ? '' : $app . '/');
@@ -19,13 +19,13 @@ $flashvars = array (
 	'authURL' 		=> 'https://client1-auth.blue-swarm.com/amfphp/gateway.php',
 	'siteURL' 		=> $siteURL,
 	'baseURL' 		=> $siteURL,
-	'instanceID' 	=> 16,
+	'instanceID' 	=> 24,
 	'clientUI'		=> $baseURL,
 	'adminUI'		=> $baseURL . 'admin/',
-	'orgLogo' 		=> $baseURL . 'images/perata_logo.png',
-	'orgName'		=> 'Perata for Mayor',
-	'orgURL'		=> 'http://www.perata4mayor.com/',
-	'appLogo' 		=> $baseURL . 'images/BlueSwarm_logo_noicon.png',
+	'orgLogo' 		=> $baseURL . 'images/logo2.jpg',
+	'orgName'		=> 'The Schetzsle Committee',
+	'orgURL'		=> 'http://www.votebrett2010.com',
+	'appLogo'		=> $baseURL . 'images/BlueSwarm_logo_noicon.png',
 	's3URL'			=> 'https://trakker.s3.amazonaws.com/'
 );
 
@@ -44,10 +44,11 @@ $bgColor = '#000000';
 */
 $donationWidget = array (
 	'css'			=> 'default.css',
-	'height'		=> '1180',
+	'height'		=> '1375',
 	'width'			=> '870',
 	'background'	=> '#FFFFFF',
-	'mastheadImg'	=> 'perata_logo_large.png'
+	'mastheadImg'	=> 'logo_large2.png'
 )
+
 
 ?>

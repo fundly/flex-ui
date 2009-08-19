@@ -9,6 +9,12 @@
 		scaleGridLeft="12", scaleGridRight="35");
 	backgroundSize:"100%";	
 }
+.tabBarBgAdmin {
+	backgroundImage:Embed("../../images/skins/qcm2_buttonbar_bg_admin.png", 
+		scaleGridTop="8", scaleGridBottom="26", 
+		scaleGridLeft="12", scaleGridRight="35");
+	backgroundSize:"100%";	
+}
 .titleStyle {
 	color:#FFFFFF;
 	fontSize:14;
@@ -210,7 +216,7 @@ ExpirationDate {
 	borderStyle:solid;
 	backgroundColor:#CCCCCC;
 	backgroundAlpha:0.9;  
-	verticalAlign:middle; 
+	paddingTop: 20;
 	horizontalAlign:center;	
 }
 .completeBoxTitle {

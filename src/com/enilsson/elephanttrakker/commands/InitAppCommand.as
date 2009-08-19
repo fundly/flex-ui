@@ -73,9 +73,10 @@ package com.enilsson.elephanttrakker.commands
 				_model.s3URL			= Application.application.parameters.s3URL;
 				_model.orgLogo			= Application.application.parameters.orgLogo;
 				_model.orgName			= Application.application.parameters.orgName;
-				_model.orgURL			= Application.application.parameters.orgURL;	
+				_model.orgURL			= Application.application.parameters.orgURL;
+				_model.versionXmlUrl	= Application.application.parameters.versionXmlURL;
 				
-				_model.debug			= false;			
+				_model.debug			= true;			
 			}
 			else
 			{

@@ -15,7 +15,9 @@
 		width="100%" height="100%"
 		dataProvider="{dataProvider}"
 		selectedItem="{selectedItem}"
-		itemClick="dispatchEvent(event)" />
+		selectedIndex="{selectedIndex}"
+		itemClick="dispatchEvent(event)"
+		valueCommit="dispatchEvent( new Event('dataAdded') )" />
 	
 	<!-- decoration -->
 	<common:ModuleControlBar/>
@@ -23,7 +25,8 @@
 	<mx:Binding source="list.selectedItem" destination="selectedItem" />
 	
 	<mx:Metadata>
-		 [Event(name="itemClick", type="mx.events.ListEvent")] 
+		 [Event(name="itemClick", type="mx.events.ListEvent")]
+		 [Event(name="dataAdded", type="flash.events.Event")] 
 	</mx:Metadata>
 		
 	<mx:Script>
@@ -33,6 +36,7 @@
 			
 			[Bindable] public var dataProvider 		: ListCollectionView;
 			[Bindable] public var selectedItem		: Object;
+			[Bindable(event="itemClick")] public var selectedIndex:int = 0;
 		]]>
 	</mx:Script>
 	

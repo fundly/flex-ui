@@ -234,9 +234,11 @@ package com.enilsson.elephanttrakker.commands.modules
 						'Pledge' : ((item.pledge_total) ? parseInt(item.pledge_total) : 0),
 						'Received' : ((item.contrib_total) ? parseInt(item.contrib_total) : 0),
 						'Donors' : ((item.p) ? parseInt(item.p) : 0),
+						'Contribs' : ((item.c) ? parseInt(item.c) : 0),
 						'cPledge' : ((item.pledge_total) ? parseInt(item.pledge_total) : 0),
 						'cReceived' : ((item.contrib_total) ? parseInt(item.contrib_total) : 0),
-						'cDonors' : ((item.p) ? parseInt(item.p) : 0)
+						'cDonors' : ((item.p) ? parseInt(item.p) : 0),
+						'cContribs' : ((item.p) ? parseInt(item.c) : 0)
 					}
 				}
 				else
@@ -250,9 +252,11 @@ package com.enilsson.elephanttrakker.commands.modules
 							'Pledge' : dp[iter-1].Pledge,
 							'Received' : dp[iter-1].Received,
 							'Donors' : dp[iter-1].Donors,
+							'Contribs' : dp[iter-1].Contribs,
 							'cPledge' : dp[iter-1].cPledge,
 							'cReceived' : dp[iter-1].cReceived,
-							'cDonors' : dp[iter-1].cDonors
+							'cDonors' : dp[iter-1].cDonors,
+							'cContribs' : dp[iter-1].cContribs
 						}
 					}
 					else
@@ -264,9 +268,11 @@ package com.enilsson.elephanttrakker.commands.modules
 							'Pledge' : parseInt(item.pledge_total),
 							'Received' : parseInt(item.contrib_total),
 							'Donors' : parseInt(item.p),
+							'Contribs' : parseInt(item.c),
 							'cPledge' : (parseInt(dp[iter-1].cPledge) + parseInt(item.pledge_total)),
 							'cReceived' : (parseInt(dp[iter-1].cReceived) + parseInt(item.contrib_total)),
-							'cDonors' : (parseInt(dp[iter-1].cDonors) + parseInt(item.p))
+							'cDonors' : (parseInt(dp[iter-1].cDonors) + parseInt(item.p)),
+							'cContribs' : (parseInt(dp[iter-1].cContribs) + parseInt(item.c))
 						}
 					}
 				}
@@ -289,9 +295,11 @@ package com.enilsson.elephanttrakker.commands.modules
 				'Pledge' : 0,
 				'Received' : 0,
 				'Donors' : 0,
+				'Contribs' : 0,
 				'cPledge' : 0,
 				'cReceived' : 0,
-				'cDonors' : 0
+				'cDonors' : 0,
+				'cContribs' : 0
 			}			
 			dp.addItemAt(bookEndObj, 0);
 			

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:DataGrid
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:common="com.enilsson.elephantadmin.views.common.*" 
+	variableRowHeight="true"
+	borderStyle="none" xmlns:views="com.enilsson.elephantadmin.views.*">
+	
+	<mx:columns>
+		<common:SortColumn id="idColumn"
+			headerText="Batch ID"
+			dataField="id"
+			remoteSortField="id" />		
+		<common:SortColumn id="quantColumn" 
+			headerText="Quantity"
+			dataField="quantity"
+			remoteSortField="quantity" />			
+		<common:SortColumn id="amountColumn" 
+			headerText="Amount"
+			dataField="amount"
+			remoteSortField="amount"
+			labelFunction="amountLabelFunction"	/>
+		<common:SortColumn id="createdOnColumn" 
+			headerText="Created on"
+			dataField="created_on"
+			remoteSortField="created_on"
+			labelFunction="createdOnLabelFunction" />			
+		<common:SortColumn id="nameColumn" 
+			headerText="Created by"
+			sortCompareFunction="fullNameSortCompare"
+			labelFunction="fullNameLabelFunction"
+			remoteSortField="checks_batches__created_by_id.lname" />
+		<common:SortColumn id="fidColumn"
+			headerText="FID"
+			sortCompareFunction="fidSortCompare"
+			labelFunction="fidLabelFunction"
+			remoteSortField="checks_batches__created_by_id._fid" />
+	</mx:columns>
+	
+	<mx:DateFormatter id="df" formatString="MM/DD/YYYY" />
+	<mx:CurrencyFormatter id="cf" currencySymbol="$" precision="2" />
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.dataGridClasses.DataGridColumn;
+			import mx.utils.ObjectUtil;
+			import com.enilsson.utils.EDateUtil;
+			
+			private function amountLabelFunction( item : Object, column : DataGridColumn ) : String {
+				return cf.format(item.amount);
+			}
+			
+			private function fullNameLabelFunction( item : Object, column : DataGridColumn ) : String {
+				return item.created_by_id.fname + " " + item.created_by_id.lname;
+			}
+			private function fullNameSortCompare( a : Object, b : Object ) : int {
+				return ObjectUtil.stringCompare( a.created_by_id.lname, b.created_by_id.lname);
+			}
+			
+			private function fidLabelFunction( item : Object, column : DataGridColumn ) : String {
+				return item.created_by_id._fid;
+			}
+			private function fidSortCompare( a : Object, b : Object ) : int {
+				return ObjectUtil.stringCompare( fidLabelFunction(a,null), fidLabelFunction(b,null));
+			}
+			
+			private function createdOnLabelFunction( item : Object, column : DataGridColumn ) : String {
+				return df.format(new Date(item.created_on * 1000));
+			}		
+		]]>
+	</mx:Script>
+	
+</mx:DataGrid>

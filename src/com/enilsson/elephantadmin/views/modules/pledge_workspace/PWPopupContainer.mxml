@@ -23,10 +23,11 @@
 					fontSize="18" 
 					width="100%"
 					filters="{[com.enilsson.graphics.enDropShadows.textDS(0x333333)]}"
-					text="Add A New Pledge"
+					text="{popupTitle}"
 					verticalCenter="0" left="5" />
 			</mx:Canvas>
-			<ns:PledgeWorkspace id="pws" color="#333333" width="100%" height="100%" defaultType="check"/>
+			<ns:PledgeWorkspace id="pws" color="#333333" width="100%" height="100%"
+				defaultType="{defaultType}" defaultTab="{defaultTab}"/>
 		</mx:VBox>
 	</mx:Canvas>
 
@@ -35,6 +36,9 @@
 	<mx:Script>
 		<![CDATA[
 		
+			[Bindable] public var popupTitle:String = "Add a new Pledge";
+			[Bindable] public var defaultType:String = "check";
+			[Bindable] public var defaultTab:String = "contact";
 		
 			private function closeComponent():void
 			{

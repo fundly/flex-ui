@@ -22,10 +22,10 @@ package com.enilsson.elephantadmin.models
 		 * Versioning
 		 */
 		[Embed(source="/revision.xml", mimeType="application/octet-stream")]
-        private var VersionFile:Class;       
-        [Bindable] public var version : String;
-        [Bindable] public var revision : String;
-        [Bindable] public var versionInfoUrl : String = "revision.xml";
+        private var VersionFile:Class;        
+        [Bindable] public var version 	: String;
+        [Bindable] public var revision 	: String;
+        [Bindable] public var versionXmlUrl : String = "revision.xml";
 		
 		private static var modelLocator : EAModelLocator;
 		

@@ -130,14 +130,17 @@
 				var seriesName:String = AreaSeries(hitData.element).displayName;
 				var dt:String = '';
 				
+				var cf:CurrencyFormatter = new CurrencyFormatter();
+				cf.precision = 0;
+				
 				dt += '<b><font face="Lucida Grande">' + seriesName + '</font></b><br>';
 				dt += '<font face="Lucida Grande">Month</font><font face="Lucida Grande">: ' + hitData.item.label + '</font><br>';
-				dt += '<font face="Lucida Grande">Donors</font><font face="Lucida Grande">: ' + hitData.item.Donors + '</font><br>';
+				dt += '<font face="Lucida Grande">Total</font><font face="Lucida Grande">: ' + hitData.item.Donors + '</font><br>';
 				
 				if(seriesName == 'Pledges')
-					dt += '<font face="Lucida Grande">Pledged</font><font face="Lucida Grande">: $' + hitData.item.Pledge + '</font><br>';
+					dt += '<font face="Lucida Grande">Amount</font><font face="Lucida Grande">: ' + cf.format(hitData.item.Pledge) + '</font><br>';
 				else
-					dt += '<font face="Lucida Grande">Contributed</font><font face="Lucida Grande">: $' + hitData.item.Received + '</font><br>';
+					dt += '<font face="Lucida Grande">Amount</font><font face="Lucida Grande">: ' + cf.format(hitData.item.Received) + '</font><br>';
 				
 				dt += '<br><b><font face="Lucida Grande">Click graph for more</font></b>';
 								
@@ -220,7 +223,8 @@
 		width="{this.width}" top="30"
         itemClick="goToMyHistory(event)"
         showDataTips="true" 
-        dataTipFunction="chartDataTips">          
+        dataTipRenderer="com.enilsson.elephanttrakker.views.renderers.chart.OverviewChartDataTip"
+        >          
         <mx:horizontalAxis>
             <mx:CategoryAxis categoryField="label" />
         </mx:horizontalAxis>
@@ -236,7 +240,7 @@
             		</mx:LinearGradient>
             	</mx:areaFill>
             </mx:AreaSeries>
-            <mx:AreaSeries yField="cReceived" form="segment" displayName="Donations" showDataEffect="slideIn">
+            <mx:AreaSeries yField="cReceived" form="segment" displayName="Contributions" showDataEffect="slideIn">
             	<mx:areaFill>
             		<mx:LinearGradient angle="180">
             		    <mx:GradientEntry color="#77be30" ratio="0" />

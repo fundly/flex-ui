@@ -73,9 +73,14 @@ package com.enilsson.elephantadmin.views.modules.users.model
 		public var permissionsName:Array = ['Read','Write','Modify','Del','Export','Restore','Search','RLAC','Auditing'];
 
 		/**
-		 * Add User Popup Variables
+		 * Invite User Popup Variables
 		 */
 		public var formState:String = 'hideMsg';
+		
+		/**
+		 * Add Power User Popup Variables
+		 */
+//		public var formState:String = 'hideMsg';
 		
 		/**
 		 * Variables used to mask the sender details
@@ -92,8 +97,6 @@ package com.enilsson.elephantadmin.views.modules.users.model
 
 		public var invitationTemplate:ObjectProxy;
 		public var selectedEmails:Array = new Array();
-		public var isSubmitting:Boolean = false;
-		public var sendingInvitation:Boolean = false;
 		public var onClose:Function;
 
 		/**
@@ -107,7 +110,7 @@ package com.enilsson.elephantadmin.views.modules.users.model
 			super(parentModel);
 			_allowAddNewRecord = true;
 			_excludedFields = ['_itemsperpage'];
-			_addNewRecordLabel = 'ADD USER';
+			_addNewRecordLabel = 'NEW USER';
 			whereFilterObject = { 
 				'what' : 'tr_users.user_id',
 				'val' : '-99',
@@ -122,11 +125,13 @@ package com.enilsson.elephantadmin.views.modules.users.model
 		{
 			super.getRecordDetails();
 			
+			userEmail = '';
+			
 			loadOptionsTab();
 			loadPledgesTab();
 			loadAccessTab();
 			
-			Logger.info('Users Information', ObjectUtil.toString( selectedRecord ));
+			if(debug) Logger.info('Users Information', ObjectUtil.toString( selectedRecord ));
 		}
 
 		/**
@@ -134,11 +139,12 @@ package com.enilsson.elephantadmin.views.modules.users.model
 		 */
 		override public function addNewRecord():void
 		{
-			var addUserPopUp:Users_Add = new Users_Add();
+			var addUserPopUp:Users_Add_Popup = new Users_Add_Popup();
 			addUserPopUp.presentationModel = this;
 
 			addUserPopUp.addEventListener(CloseEvent.CLOSE, function(e:CloseEvent):void{
-				PopUpManager.removePopUp(Users_Add(e.currentTarget));
+				PopUpManager.removePopUp(Users_Add_Popup(e.currentTarget));
+				newPage(searchListCurrPage / itemsPerPage);
 			});
 			
 			PopUpManager.addPopUp(addUserPopUp, DisplayObject(Application.application), true);
@@ -212,6 +218,9 @@ package com.enilsson.elephantadmin.views.modules.users.model
 				optionsTabLoading = true;
 				new UsersEvent( UsersEvent.GET_USER_CONTACT, this, { 'contactID' : selectedRecord._contact_id } ).dispatch();	
 			}
+			
+			// get the users email address
+			new UsersEvent ( UsersEvent.GET_USER_EMAIL, this, { 'userID' : selectedRecord.user_id }).dispatch();
 		}
 
 		public function updateAccess(value:Array):void

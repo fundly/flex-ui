@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml">
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:components="com.enilsson.elephantadmin.views.modules.app_options.view.components.*">
 
-	<mx:Form width="100%" verticalGap="30">
+	<mx:Form width="100%" verticalGap="10">
 	
 		<mx:FormItem label="Description:" width="100%">
 			<mx:TextArea id="descriptionInput" 
@@ -13,7 +14,6 @@
 		<mx:FormItem label="Statements:" width="100%">
 		
 			<components:StatementList id="statementList"
-				xmlns:components="com.enilsson.elephantadmin.views.modules.app_options.view.components.*"
 				dataProvider="{_statements}"				
 				itemEditBeginning="handleItemEditBeginning(event)"
 				itemEditEnd="handleItemEditEnd(event)" />
@@ -30,14 +30,18 @@
 			
 		</mx:FormItem>
 		
-		
 		<mx:FormItem label="Confirmation:" width="100%">
 			<mx:TextArea id="confirmationInput" 
 				text="{_xml.confirmation}" 
 				height="100" width="100%"
 				change="setXmlValue('confirmation', descriptionInput.text)"/>
+			<mx:HBox width="100%" horizontalAlign="center">
+				<components:VariableSelector id="variableSelector"
+					dataProvider="{this.variables}"
+					addVariable="addSelectedVar()" />
+			</mx:HBox>		
 		</mx:FormItem>
-		
+
 	</mx:Form>
 	
 	
@@ -48,9 +52,14 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.core.IUITextField;
+			import mx.collections.ICollectionView;
 			import mx.core.UIComponent;
 			import mx.events.ListEvent;
+			import mx.core.mx_internal;
 			import mx.collections.XMLListCollection;
+			
+			use namespace mx_internal;
 			
 			[Bindable]
 			public function get xmlString() : String { 
@@ -146,10 +155,34 @@
 					"</statements>" +
 					"<confirmation />" +
 				"</workspace_agreement>";
+
+			/**
+			 * Set the allowed variables that can be inserted into the text
+			 */
+			public function set variables( value:ICollectionView ) : void
+			{
+				_variables = value;
+				_variablesChanged = true;
+				invalidateProperties();
+			}
+			private var _variables : ICollectionView;
+			[Bindable] public function get variables() : ICollectionView { return _variables; }
+			private var _variablesChanged : Boolean
+
+			private function addSelectedVar() : void
+			{
+				if(variableSelector && variableSelector.variablesCb.selectedItem)
+				{
+					var _textField:IUITextField = confirmationInput.getTextField() as IUITextField;
+					
+					_textField.setFocus();				
+					_textField.replaceSelectedText(variableSelector.variablesCb.selectedItem.toString());
+					dispatchChange();
+				}
+			}
+
 			
 		]]>
 	</mx:Script>
-	
-	
 	
 </mx:VBox>

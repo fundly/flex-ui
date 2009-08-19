@@ -44,7 +44,7 @@ $bgColor = '#000000';
 */
 $donationWidget = array (
 	'css'			=> 'default.css',
-	'height'		=> '1100',
+	'height'		=> '1220',
 	'width'			=> '870',
 	'background'	=> '#FFFFFF',
 	'mastheadImg'	=> 'whitman-masthead.jpg'

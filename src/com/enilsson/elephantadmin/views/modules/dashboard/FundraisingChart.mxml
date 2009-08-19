@@ -13,11 +13,19 @@
 		width="{this.width}" top="5"
         showDataTips="true" 
         dataTipFunction="chartDataTips">
+		<mx:horizontalAxisRenderers>
+			<mx:AxisRenderer labelRenderer="com.enilsson.elephantadmin.views.modules.reporting.base.ModuleAxisLabelRenderer"
+				canDropLabels="true" axis="{horAxis}"/>
+		</mx:horizontalAxisRenderers>
+		<mx:verticalAxisRenderers>
+			<mx:AxisRenderer labelRenderer="com.enilsson.elephantadmin.views.modules.reporting.base.ModuleAxisLabelRenderer"
+				canDropLabels="true" axis="{verAxis}"/>
+		</mx:verticalAxisRenderers>
         <mx:horizontalAxis>
-            <mx:CategoryAxis categoryField="label" />
+            <mx:CategoryAxis id="horAxis" categoryField="label" />
         </mx:horizontalAxis>
 		<mx:verticalAxis>
-        	<mx:LinearAxis labelFunction="linearAxis_labelFunc" />
+        	<mx:LinearAxis id="verAxis" labelFunction="linearAxis_labelFunc" />
     	</mx:verticalAxis>
         <mx:series>
             <mx:AreaSeries yField="cPledge" form="segment" displayName="Pledges" showDataEffect="slideIn">

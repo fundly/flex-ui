@@ -3,8 +3,10 @@
 	xmlns:common="com.enilsson.elephantadmin.views.common.*" 
 	styleName="hBoxRenderer" 
 	horizontalScrollPolicy="off" verticalScrollPolicy="off"
-	mouseOver="this.mouseOverHandler( event )"
-	mouseOut="this.mouseOutHandler( event )"
+	backgroundAlpha="0"
+	backgroundColor="#ffffff"
+	rollOver="this.mouseOverHandler( event )"
+	rollOut="this.mouseOutHandler( event )"
 	>
 	
 	<mx:HBox width="{explicitWidth}"

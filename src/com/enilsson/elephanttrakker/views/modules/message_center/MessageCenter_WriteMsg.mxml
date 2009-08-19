@@ -51,10 +51,10 @@
 				switch(action.selectedItem.data) 
 				{
 					case 'downline':
-						subjectString = "Sharing Downline";
+						subjectString = "Downline Request";
 					break;
 					case 'contacts':
-						subjectString = "Sharing Contacts";
+						subjectString = "Sharing Contacts Request";
 					break;
 					case 'msg':
 						subjectString = subject.text;
