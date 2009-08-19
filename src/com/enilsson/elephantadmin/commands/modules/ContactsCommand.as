@@ -33,6 +33,9 @@ package com.enilsson.elephantadmin.commands.modules
 
 			switch(event.type)
 			{
+				case ContactsEvent.UPSERT_CONTACT :
+					upsertContactRecord(event as ContactsEvent);
+				break;
 				case ContactsEvent.GET_SHARED_USERS :
 					getSharedUsers(event as ContactsEvent);
 				break;
@@ -46,6 +49,77 @@ package com.enilsson.elephantadmin.commands.modules
 					getMaxOut(event as ContactsEvent);
 				break;
 			}
+		}
+
+		/**
+		 * Upsert the Record
+		 */		
+		private function upsertContactRecord(event:ContactsEvent):void
+		{
+			if(_model.debug) Logger.info('Upsert contact Success', ObjectUtil.toString(event.recordVO));
+
+			var handlers:IResponder = new mx.rpc.Responder(onResult_upsertContactRecord, onFault_upsertContactRecord);
+			var delegate:PluginsDelegate = new PluginsDelegate(handlers);
+
+			_model.dataLoading = true;
+			_presentationModel.formProcessing = true;
+
+			// Save the index of the current list to display the same record after reloading the list
+			_presentationModel.searchListLastIndex = _presentationModel.searchListSelectedIndex;
+
+			delegate.upsertContact( event.recordVO.params );
+		}
+				
+		private function onResult_upsertContactRecord(event:ResultEvent):void 
+		{
+			if(_model.debug) Logger.info(_moduleName + ' upsertRecord Success', ObjectUtil.toString(event.result));
+
+			_presentationModel.formProcessing = false;
+
+			switch(event.result.state)
+			{
+				case '99' :
+				case '98' :
+					_model.errorVO = new ErrorVO( _presentationModel.layout.title +' record edited successfully!', 'successBox', true );
+					
+					// refresh the modules search list
+					for( var prop:String in _presentationModel.formVariables )
+					{
+						_presentationModel.selectedRecord[prop] = _presentationModel.formVariables[prop];
+						_presentationModel.records.refresh();
+					}
+
+					// set addingNewRecord flag as false if adding new record
+					if( _presentationModel.addingNewRecord )
+					{
+						_presentationModel.viewState = 'showSearch';
+						_presentationModel.addingNewRecord = false;
+						_presentationModel.lastQuery.dispatch();
+						_presentationModel.searchListSelectedIndex = _presentationModel.searchListLastIndex;
+					}
+					_model.dataLoading = false;
+				break;
+				case '-99' :
+					var eMsg:String = '';
+					for(var j:String in event.result.errors)
+						eMsg += '- ' + event.result.errors[j] + '<br>';
+						
+					_model.errorVO = new ErrorVO( 
+						'There was a problem processing this record:<br><br>' + eMsg, 
+						'errorBox', 
+						true 
+					);
+					_model.dataLoading = false;
+				break;	
+			}
+		}
+		
+		public function onFault_upsertContactRecord(event:FaultEvent):void
+		{
+			if(_model.debug) Logger.info('upsertRecord Fail', ObjectUtil.toString(event.fault));
+			
+			_presentationModel.formProcessing = false;			
+			_model.errorVO = new ErrorVO( 'There was a problem processing this record!<br><br>' + event.fault.faultString, 'errorBox', true );
 		}
 
 
