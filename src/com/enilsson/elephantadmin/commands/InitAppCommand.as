@@ -90,7 +90,7 @@ package com.enilsson.elephantadmin.commands
 				_model.orgURL			= Application.application.parameters.orgURL;
 				_model.versionXmlUrl	= Application.application.parameters.versionXmlURL;
 				
-				_model.debug			= true;
+				_model.debug			= false;
 			} 
 			else
 			{
