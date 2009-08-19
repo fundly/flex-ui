@@ -76,7 +76,7 @@ package com.enilsson.elephanttrakker.commands
 				_model.orgURL			= Application.application.parameters.orgURL;
 				_model.versionXmlUrl	= Application.application.parameters.versionXmlURL;
 				
-				_model.debug			= false;			
+				_model.debug			= true;			
 			}
 			else
 			{
