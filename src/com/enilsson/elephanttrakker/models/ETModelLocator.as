@@ -183,7 +183,7 @@ package com.enilsson.elephanttrakker.models
 		/**
 		 * Set the application debug mode
 		 */
-		[Bindable] public var debug:Boolean = false;
+		[Bindable] public var debug:Boolean = true;
 
 
 		/**
