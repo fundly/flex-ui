@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:VBox 
-	xmlns:mx="http://www.adobe.com/2006/mxml"
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:common="com.enilsson.elephanttrakker.views.common.*"
 	verticalGap="0">	
 	
@@ -12,12 +11,15 @@
 			filters="{[com.enilsson.graphics.enDropShadows.textDS(0x333333)]}" />
 	</mx:Canvas>
 	
-	<mx:VBox width="100%" height="{height - 74}" 
+	<mx:VBox id="agreementBox"
+		width="100%" height="{height - 74}" 
 		backgroundColor="#f7f7f7" 
 		paddingLeft="15" paddingRight="15"
 		paddingTop="15" paddingBottom="15"
 		scroll="observeScroll(event)">
-		<mx:Text htmlText="{_model.options.agents_agreement}" 
+		<mx:Text id="agreementText" 
+			creationComplete="init()"
+			htmlText="{_model.options.agents_agreement}" 
 			width="100%" 
 			color="#333333" fontSize="10" />
 	</mx:VBox>
@@ -44,15 +46,21 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import org.osflash.thunderbolt.Logger;
 			import mx.events.ScrollEvent;
 			import com.enilsson.elephanttrakker.models.ETModelLocator;
 			import com.enilsson.graphics.enDropShadows;
 			
 			[Bindable] private var _model:ETModelLocator = ETModelLocator.getInstance();
 			[Bindable] private var isPageScrolled:Boolean = false;
-			
+				
+			private function init():void
+			{
+				isPageScrolled = agreementBox.verticalScrollBar == null;
+			}	
+						
 			private function observeScroll(event:ScrollEvent):void
-			{				
+			{		
 				isPageScrolled = event.currentTarget.verticalScrollPosition == event.currentTarget.maxVerticalScrollPosition;	
 			}
 		]]>

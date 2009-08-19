@@ -110,7 +110,8 @@
 		<mx:method name="send_system_email" />
 		<mx:method name="send_user_email" />
 		<mx:method name="send_invite" />
-	</mx:RemoteObject>    
+		<mx:method name="add_fundraiser" />
+	</mx:RemoteObject>
 
     <mx:RemoteObject id="struktorPluginsContacts"
     	endpoint="{_model.gatewayURL}" 
@@ -242,6 +243,7 @@
 		<mx:method name="change_email" />
 		<mx:method name="change_password" />
 		<mx:method name="wheel" />
+		<mx:method name="admin_change_email" />
 	</mx:RemoteObject>
 
 	<mx:RemoteObject id="struktorPluginsPledges"

@@ -616,6 +616,11 @@ ModuleControlBar {
 	fontWeight:normal;
 	color:#333333;
 }
+.emailLink {
+	color: #333333;
+	fontSize: 12;
+	fontWeight: bold;	
+}
 /*--- End User Module Styles ---*/
 
 /*--- Record Module Styles ---*/

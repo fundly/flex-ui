@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Canvas 
 	xmlns:mx="http://www.adobe.com/2006/mxml"
-	width="{explicitWidth}" 
+	width="{explicitWidth}"
 	verticalScrollPolicy="off" 
 	horizontalScrollPolicy="off"
-	mouseOver="pledgeBtn.visible = true"
-	mouseOut="pledgeBtn.visible = false">
+	backgroundAlpha="0"
+	backgroundColor="#ffffff"
+	rollOver="pledgeBtn.visible = true"
+	rollOut="pledgeBtn.visible = false">
 
 	<mx:VBox left="0"
 		verticalGap="-2" 

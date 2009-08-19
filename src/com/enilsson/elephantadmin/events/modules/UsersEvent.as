@@ -27,6 +27,8 @@ package com.enilsson.elephantadmin.events.modules
 		static public const GET_USER_EMAIL:String 			= 'usersUserEmail';
 		static public const GET_USER_CONTACT:String 		= 'usersUserContact';
 		static public const USERS_UPSERT_CONTACT:String 	= 'usersUpsertContact';
+		static public const ADMIN_CHANGE_EMAIL:String 		= 'usersAdminChangeEmail';
+		static public const CREATE_USER:String 				= 'usersCreateUser';
 
 		public function UsersEvent( type:String, model:RecordModel, vo:Object = null )
 		{

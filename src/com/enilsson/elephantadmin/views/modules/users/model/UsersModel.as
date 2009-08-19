@@ -97,8 +97,6 @@ package com.enilsson.elephantadmin.views.modules.users.model
 
 		public var invitationTemplate:ObjectProxy;
 		public var selectedEmails:Array = new Array();
-		public var isSubmitting:Boolean = false;
-		public var sendingInvitation:Boolean = false;
 		public var onClose:Function;
 
 		/**
@@ -127,11 +125,13 @@ package com.enilsson.elephantadmin.views.modules.users.model
 		{
 			super.getRecordDetails();
 			
+			userEmail = '';
+			
 			loadOptionsTab();
 			loadPledgesTab();
 			loadAccessTab();
 			
-			Logger.info('Users Information', ObjectUtil.toString( selectedRecord ));
+			if(debug) Logger.info('Users Information', ObjectUtil.toString( selectedRecord ));
 		}
 
 		/**
@@ -218,6 +218,9 @@ package com.enilsson.elephantadmin.views.modules.users.model
 				optionsTabLoading = true;
 				new UsersEvent( UsersEvent.GET_USER_CONTACT, this, { 'contactID' : selectedRecord._contact_id } ).dispatch();	
 			}
+			
+			// get the users email address
+			new UsersEvent ( UsersEvent.GET_USER_EMAIL, this, { 'userID' : selectedRecord.user_id }).dispatch();
 		}
 
 		public function updateAccess(value:Array):void

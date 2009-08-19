@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Canvas xmlns="http://www.adobe.com/2006/mxml" width="100%" height="100%"
-	xmlns:common="com.enilsson.elephantadmin.views.common.*" 
-	currentState="{TogglePanel.LIST_VIEW}">
+	xmlns:common="com.enilsson.elephantadmin.views.common.*" >
 
 	<states>
 		<State name="{TogglePanel.LIST_VIEW}">

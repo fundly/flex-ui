@@ -12,63 +12,19 @@
 	verticalScrollPolicy="off"
 	creationComplete="init()">
 
-	<mx:VBox width="100%" height="100%" verticalGap="5">
-		<mx:Canvas width="100%" styleName="controlBar">
-			<mx:HBox paddingTop="3" paddingBottom="3" left="5" horizontalGap="5" verticalAlign="middle">
-				<mx:Box horizontalGap="2" verticalGap="2" horizontalAlign="right"
-					direction="{this.width &gt; 1200 ? 'horizontal' : 'vertical'}">
-					<mx:FormItem label="Date type:"/>
-					<mx:ComboBox width="82" color="#000000" dataProvider="{_presentationModel.dateTypeFilter}" id="dateType" enabled="{!dataLoading}" change="_presentationModel.dateTypeChangeHandler(event)"/>
-				</mx:Box>
-				<mx:Box horizontalGap="2" verticalGap="2" horizontalAlign="right"
-					direction="{this.width &gt; 1200 ? 'horizontal' : 'vertical'}">
-					<mx:FormItem label="From:">
-						<mx:DateField id="range_start" width="90" color="#000000" formatString="MM/DD/YYYY" selectedDate="{_presentationModel.startDate}" change="_presentationModel.startDate = event.currentTarget.selectedDate" textAlign="center" enabled="{!dataLoading}" />
-					</mx:FormItem>
-					<mx:FormItem label="To:">
-						<mx:DateField id="range_end" width="90" color="#000000" formatString="MM/DD/YYYY" selectedDate="{_presentationModel.endDate}" change="_presentationModel.endDate = event.currentTarget.selectedDate" textAlign="center" enabled="{!dataLoading}" />
-					</mx:FormItem>
-				</mx:Box>
-
-				<mx:Box horizontalGap="2" verticalGap="2" horizontalAlign="right"
-					direction="{this.width &gt; 1100 ? 'horizontal' : 'vertical'}">
-					<mx:FormItem label="Region:">
-						<mx:ComboBox width="150" color="#000000" dataProvider="{_presentationModel.regionFilter}" id="region" enabled="{!dataLoading}" change="_presentationModel.regionChangeHandler(event)"/>
-					</mx:FormItem>
-					<mx:FormItem label="Payment method:">
-						<mx:ComboBox width="150" color="#000000" dataProvider="{_presentationModel.contributionFilter}" id="status" enabled="{!dataLoading}" change="_presentationModel.statusChangeHandler(event)"/>
-					</mx:FormItem>
-				</mx:Box>
-				<mx:Box horizontalGap="2" verticalGap="2" horizontalAlign="right"
-					direction="{this.width &gt; 900 ? 'horizontal' : 'vertical'}">
-					<mx:Label text="Total Contributed:"
-						fontSize="10"
-						color="#FFFFFF"
-						/>
-					<mx:Text
-						text=" {currencyFormatter.format(_presentationModel.totalContribSum)}"
-						fontSize="10"
-						color="#FFFFFF"
-						/>				</mx:Box>
-			</mx:HBox>
-			<mx:Box direction="{this.width &gt; 1000 ? 'horizontal' : 'vertical'}"
-				right="5" 
-				horizontalGap="2" horizontalAlign="center"
-				verticalGap="2" verticalAlign="middle" verticalCenter="0">
-				<mx:Text id="recordsDesc"
-					htmlText="{_presentationModel.recordsHtmlText}"
-					fontSize="10"
-					color="#FFFFFF"	/>
-				<mx:HBox horizontalGap="5" >
-					<mx:Button width="80" label="Generate" color="#000000"
-						click="_presentationModel.generate()"
-						enabled="{!dataLoading}" />
-					<mx:Button width="80" label="Export" color="#000000"
-						click="presentationModel.exportGrid(grid.dG.columns)"
-						enabled="{!dataLoading}" />
-				</mx:HBox>
-			</mx:Box>
-		</mx:Canvas>
+	<mx:VBox width="100%" height="100%" verticalGap="0">
+		<reporting:AllContributionsMenuBar presentationModel="{_presentationModel}"
+			export="presentationModel.exportGrid(grid.dG.columns)"/>
+		<mx:HBox id="textStatus" width="100%" height="15" verticalAlign="middle"
+			fontSize="10" color="#333333">
+			<mx:FormItem label="Total Contributed:">
+				<mx:Text
+					text=" {currencyFormatter.format(_presentationModel.totalContribSum)}" />
+			</mx:FormItem>
+			<mx:Spacer width="100%" />
+			<mx:Text id="recordsDesc"
+				htmlText="{_presentationModel.recordsHtmlText}" />
+		</mx:HBox>
 		<module:PaginationGrid id="grid" height="100%"
 			dataProvider="{presentationModel.gridRecords}"
 			newPage="presentationModel.newPage(event)" 
@@ -100,6 +56,7 @@
 		<mx:DataGridColumn width="90" dataField="contribution_type" headerText="Contribution Type"/>
 		<mx:DataGridColumn width="90" dataField="full_name" headerText="Name on Card or Account"/>
 		<mx:DataGridColumn width="60" dataField="fund_type" headerText="Fund Type"/>
+		<mx:DataGridColumn width="200" dataField="event_name" headerText="Event Name"/>
 		<mx:DataGridColumn width="90" dataField="source_code" headerText="Source Code"/>
 		<mx:DataGridColumn width="80" dataField="fundraiser_id" headerText="Fundraiser ID" />
 		<mx:DataGridColumn width="100" dataField="fundraiser_fname" headerText="Fundraiser First Name" />

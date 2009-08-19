@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:graphics="com.enilsson.graphics.*" 
+	xmlns:common="com.enilsson.elephantadmin.views.common.*"
+	xmlns:popups="com.enilsson.elephantadmin.views.modules.users.popups.*"
+	clipContent="true" creationComplete="init()"
+	verticalScrollPolicy="off" horizontalScrollPolicy="off"
+	width="500" height="180">
+
+	<mx:Canvas left="0" top="10" 
+		styleName="popupContent" 
+		verticalScrollPolicy="off" horizontalScrollPolicy="off"
+		filters="{[com.enilsson.graphics.enDropShadows.standardDS()]}" 
+		width="{this.width-10}" height="{this.height-10}">
+		<mx:Canvas width="{width-40}" height="{height-40}"
+			backgroundColor="#999999"
+			top="15" left="15" 
+			fontSize="11">
+			<mx:Canvas backgroundColor="#999999"
+				width="100%" height="37">
+				<mx:Image source="{Icons.EMAIL}" verticalCenter="-2" left="5" />
+				<mx:Text id="supportDesc" 
+					fontSize="18" 
+					width="100%"
+					filters="{[com.enilsson.graphics.enDropShadows.textDS(0x333333)]}"
+					text="Change User Email" 
+					verticalCenter="0" left="50" />
+			</mx:Canvas>
+			<mx:HBox width="100%" height="{height - 77}" top="37" horizontalGap="0">
+				<mx:VBox width="100%" height="100%" verticalGap="0" color="#333333" 
+					horizontalAlign="right" backgroundColor="#CCCCCC">
+					<mx:Form id="form1"
+						paddingTop="15" paddingBottom="5" 
+						verticalGap="4" width="100%">
+						<mx:FormItem labelWidth="40" label="Email:" width="100%" required="true" styleName="formLabel">
+							<mx:TextInput id="emailInput" width="100%" keyUp="validateEmail(event)" />
+						</mx:FormItem>
+					</mx:Form>
+					<mx:Canvas width="100%" height="36" verticalScrollPolicy="off">
+						<mx:Button id="submitForm" styleName="submitBtn" 
+							useHandCursor="true" buttonMode="true" 
+							enabled="{isValid &amp;&amp; !_usersModel.formProcessing}"  
+							click="changeEmail()" 
+							verticalCenter="0" right="20"		
+							label="Change the Email" />
+					</mx:Canvas>
+				</mx:VBox>
+				<mx:VBox width="200" height="100%" 
+					paddingTop="10" paddingLeft="10" paddingRight="10" 
+					backgroundColor="#ffffff">
+					<mx:Text color="#333333" width="100%" fontSize="11"
+						text="This form allows you to change the email address attached to a users account. This is the email address they use to login into {_usersModel.appName}." />
+				</mx:VBox>				
+			</mx:HBox>
+		</mx:Canvas>
+	</mx:Canvas>
+	
+	<mx:EmailValidator id="emailVal" source="{emailInput}" property="text" />
+	
+	<graphics:enCloseBtn top="0" right="0" size="20" click="closeComponent()" />
+
+	<common:ErrorMsgBox id="errorBox"
+		verticalCenter="0" horizontalCenter="0" 
+		params="{_usersModel.errorVO}" 
+		onClose="{_usersModel.onClose}" />
+		
+	<mx:Script>
+		<![CDATA[
+			import mx.events.ValidationResultEvent;
+			import org.osflash.thunderbolt.Logger;
+			import mx.managers.PopUpManager;
+			import com.enilsson.elephantadmin.events.modules.UsersEvent;
+			import com.enilsson.elephantadmin.events.session.PingEvent;
+			import com.enilsson.elephantadmin.models.EAModelLocator;
+			import com.enilsson.elephantadmin.models.Icons;
+
+			[Bindable] private var _model:EAModelLocator = EAModelLocator.getInstance();
+
+			import com.enilsson.elephantadmin.views.modules.users.model.UsersModel;
+
+			private var _formVariables:Array = new Array();
+			[Bindable] private var isValid:Boolean = false;
+
+			[Bindable] private var _usersModel:UsersModel;
+			
+			public function set presentationModel(model:UsersModel):void
+			{
+				_usersModel = model;
+			}
+
+			private function init():void
+			{
+				if(_model.debug) Logger.info('Init change email popup');
+				
+				new PingEvent().dispatch();
+				isValid = false;
+			}
+			
+			private function validateEmail( event:KeyboardEvent ):void
+			{
+				var vResult:ValidationResultEvent = emailVal.validate(null, true);
+				if (vResult.type==ValidationResultEvent.INVALID) 
+					isValid = false;
+				if(vResult.type == ValidationResultEvent.VALID)
+					isValid = true;			
+			}
+			
+
+			private function changeEmail ():void
+			{
+				new UsersEvent(
+					UsersEvent.ADMIN_CHANGE_EMAIL, 
+					_usersModel, 
+					{ 'email': emailInput.text, 'userID': _usersModel.recordID } 
+				).dispatch()
+			}
+
+			private function closeComponent():void
+			{
+				_usersModel.errorVO = null;
+				PopUpManager.removePopUp(this);
+			}
+
+		]]>
+	</mx:Script>
+	
+</mx:Canvas>
