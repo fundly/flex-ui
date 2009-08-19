@@ -22,7 +22,7 @@ $flashvars = array (
 	'instanceID' 	=> 24,
 	'clientUI'		=> $baseURL,
 	'adminUI'		=> $baseURL . 'admin/',
-	'orgLogo' 		=> $baseURL . 'images/logo.jpg',
+	'orgLogo' 		=> $baseURL . 'images/logo2.jpg',
 	'orgName'		=> 'The Schetzsle Committee',
 	'orgURL'		=> 'http://www.votebrett2010.com',
 	'appLogo'		=> $baseURL . 'images/BlueSwarm_logo_noicon.png',
@@ -47,7 +47,7 @@ $donationWidget = array (
 	'height'		=> '1375',
 	'width'			=> '870',
 	'background'	=> '#FFFFFF',
-	'mastheadImg'	=> 'logo_large.jpg'
+	'mastheadImg'	=> 'logo_large2.png'
 )
 
 
