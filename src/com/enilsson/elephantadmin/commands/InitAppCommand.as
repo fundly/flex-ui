@@ -74,6 +74,9 @@ package com.enilsson.elephantadmin.commands
 		 */		
 		private function setSiteURL():void
 		{
+			// set the application's URL			
+			_model.applicationURL = Application.application.url.split(Application.application.className +".swf")[0];
+			
 			// get the parameters from the flash vars if in production
 			if(Application.application.parameters.siteURL)
 			{

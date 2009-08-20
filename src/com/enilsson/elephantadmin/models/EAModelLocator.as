@@ -63,6 +63,8 @@ package com.enilsson.elephantadmin.models
 		/**
 		* Application level variables
 		*/
+		[Bindable] public var applicationURL : String;
+		
 		// url for the auth gateway, and the instance ID
  		[Bindable] public var authURL:String;
 		[Bindable] public var appInstanceID:int;  	
