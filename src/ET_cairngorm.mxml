@@ -60,7 +60,9 @@
 				new InitAppEvent().dispatch();	
 						
 				// set this screen as a model variable
-				_model.mainScreen = this;							
+				_model.mainScreen = this;
+				
+				Security.allowDomain("*");					
 			}
 		]]>
 	</mx:Script>

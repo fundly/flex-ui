@@ -107,6 +107,8 @@
 						
 				// set this screen as a model variable
 				_model.mainScreen = this;
+				
+				Security.allowDomain("*");
 			}
 
 			/**
