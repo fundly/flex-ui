@@ -98,10 +98,7 @@
 			 * Initialisation routine
 			 */
 			private function init():void
-			{
-				Security.allowDomain('*');
-				Security.allowInsecureDomain('*');
-				
+			{				
 				// some debugging
 				if(_model.debug) Logger.info('Pre Init - Admin App');
 				
@@ -119,6 +116,9 @@
 			{				
 				mainScreen.addEventListener(TopNav.EXPAND_MASTHEAD, expandMasthead);
 				mainScreen.addEventListener(TopNav.COLLAPSE_MASTHEAD, collapseMasthead);
+				
+				Security.allowDomain('*');
+				Security.allowInsecureDomain('*');
 			}
 			
 			/**

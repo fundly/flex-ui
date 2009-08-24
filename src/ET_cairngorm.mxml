@@ -6,6 +6,7 @@
 	preinitialize="init()" 
 	preloader="assets.preloader.BlueSwarmPreloader"
 	layout="absolute" 
+	creationComplete="handleCreationComplete()"
 	horizontalScrollPolicy="off">
 
 	<control:ETcontroller xmlns:control="com.enilsson.elephanttrakker.controllers.*" />
@@ -52,10 +53,7 @@
 			[Bindable] public var _model:ETModelLocator = ETModelLocator.getInstance();
 			
 			private function init():void
-			{
-				Security.allowDomain('*');
-				Security.allowInsecureDomain('*');
-				
+			{				
 				// some debugging
 				if(_model.debug) Logger.info('Pre Init - Main App');
 				
@@ -64,6 +62,12 @@
 						
 				// set this screen as a model variable
 				_model.mainScreen = this;							
+			}
+			
+			private function handleCreationComplete() : void
+			{
+				Security.allowDomain('*');
+				Security.allowInsecureDomain('*');
 			}
 		]]>
 	</mx:Script>
