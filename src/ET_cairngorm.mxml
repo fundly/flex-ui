@@ -54,6 +54,7 @@
 			private function init():void
 			{
 				Security.allowDomain('*');
+				Security.allowInsecureDomain('*');
 				
 				// some debugging
 				if(_model.debug) Logger.info('Pre Init - Main App');
