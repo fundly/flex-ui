@@ -38,8 +38,6 @@ package com.enilsson.elephantadmin.commands
 				var sessionEvent : SessionEvent;
 				var versionEvent : GetVersionEvent = new GetVersionEvent();
 				
-				Security.allowDomain('*');
-				
 				// set the site parameters from the flash vars if there are any
 				setSiteURL();
 				
