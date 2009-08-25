@@ -192,7 +192,7 @@ package com.enilsson.elephantadmin.models
 		/**
 		* Variables for the deeplinking
 		*/
-		public var browserManager : IBrowserManager = BrowserManager.getInstance();
+		public var browserManager : IBrowserManager;
 		public var is_parsing_url : Boolean = false;
 		public var browserFragments : Array;
 		// array holding the fragment portions delimited by a forward slash
