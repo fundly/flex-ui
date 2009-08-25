@@ -26,10 +26,7 @@ package com.enilsson.elephanttrakker.commands
 
 	
 		override public function execute(event:CairngormEvent):void
-		{
-			Security.allowDomain("*");
-			Security.allowInsecureDomain("*");
-				
+		{				
 			// set the site parameters from the flash vars if there are any
 			setSiteURL();
 			

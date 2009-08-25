@@ -3,7 +3,7 @@
 	xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:views="com.enilsson.elephanttrakker.views.*"
 	xmlns:page="com.enilsson.elephanttrakker.views.page.*" 
-	preinitialize="init()" 
+	creationComplete="init()" 
 	preloader="assets.preloader.BlueSwarmPreloader"
 	layout="absolute" 
 	horizontalScrollPolicy="off">
@@ -51,17 +51,13 @@
 			
 			[Bindable] public var _model:ETModelLocator = ETModelLocator.getInstance();
 			
-			{
-				Security.allowDomain("*");
-				Security.allowInsecureDomain("*");
-				Security.loadPolicyFile("https://assets.blue-swarm.com/crossdomain.xml");
-				Security.loadPolicyFile("https://wesley.blue-swarm.com/crossdomain.xml");
-			}
-			
 			private function init():void
 			{				
 				// some debugging
 				if(_model.debug) Logger.info('Pre Init - Main App');
+				
+				Security.allowDomain("*");
+				Security.allowInsecureDomain("*");
 				
 				// fire the first event.... oooh exciting!
 				new InitAppEvent().dispatch();	

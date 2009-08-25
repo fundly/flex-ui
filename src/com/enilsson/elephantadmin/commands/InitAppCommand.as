@@ -34,10 +34,7 @@ package com.enilsson.elephantadmin.commands
 		{
 			// make sure the InitAppCommand is only executed once
 			if( !_executed )
-			{
-				Security.allowDomain("*");
-				Security.allowInsecureDomain("*");
-				
+			{				
 				var sessionEvent : SessionEvent;
 				var versionEvent : GetVersionEvent = new GetVersionEvent();
 				

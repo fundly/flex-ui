@@ -6,7 +6,7 @@
 	xmlns:main="com.enilsson.elephantadmin.views.main.*" 
 	xmlns:page="com.enilsson.elephantadmin.views.template.*" 
 	xmlns:details="com.enilsson.elephantadmin.views.modules.my_details.*"
-	preinitialize="init()"
+	creationComplete="init()"
 	preloader="assets.preloader.BlueSwarmPreloader"
 	layout="absolute">
 		
@@ -93,21 +93,15 @@
 			private static var DOOR_SOUND:Class;
 
 			[Bindable] public var _model:EAModelLocator = EAModelLocator.getInstance();
-			
-			
-			{
-				Security.allowDomain("*");
-				Security.allowInsecureDomain("*");
-				Security.loadPolicyFile("https://assets.blue-swarm.com/crossdomain.xml");
-				Security.loadPolicyFile("https://wesley.blue-swarm.com/crossdomain.xml");
-			}
-			
 
 			/**
 			 * Initialisation routine
 			 */
 			private function init():void
-			{				
+			{		
+				Security.allowDomain("*");
+				Security.allowInsecureDomain("*");
+						
 				// some debugging
 				if(_model.debug) Logger.info('Pre Init - Admin App');
 				
