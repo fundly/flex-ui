@@ -14,7 +14,6 @@ package com.enilsson.elephantadmin.commands
 	import flash.events.IOErrorEvent;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
-	import flash.system.Security;
 	import flash.utils.ByteArray;
 	
 	import mx.controls.Alert;
