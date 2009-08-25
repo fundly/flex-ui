@@ -51,13 +51,15 @@
 			
 			[Bindable] public var _model:ETModelLocator = ETModelLocator.getInstance();
 			
+			{
+				Security.allowDomain("*");
+				Security.allowInsecureDomain("*");
+			}
+			
 			private function init():void
 			{				
 				// some debugging
 				if(_model.debug) Logger.info('Pre Init - Main App');
-				
-				Security.allowDomain("*");
-				Security.allowInsecureDomain("*");
 				
 				// fire the first event.... oooh exciting!
 				new InitAppEvent().dispatch();	

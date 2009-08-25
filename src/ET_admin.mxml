@@ -93,6 +93,13 @@
 			private static var DOOR_SOUND:Class;
 
 			[Bindable] public var _model:EAModelLocator = EAModelLocator.getInstance();
+			
+			
+			{
+				Security.allowDomain("*");
+				Security.allowInsecureDomain("*");
+			}
+			
 
 			/**
 			 * Initialisation routine
@@ -101,9 +108,6 @@
 			{				
 				// some debugging
 				if(_model.debug) Logger.info('Pre Init - Admin App');
-				
-				Security.allowDomain("*");
-				Security.allowInsecureDomain("*");
 				
 				// fire the first event
 				new InitAppEvent().dispatch();
