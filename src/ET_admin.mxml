@@ -98,6 +98,8 @@
 			{
 				Security.allowDomain("*");
 				Security.allowInsecureDomain("*");
+				Security.loadPolicyFile("https://assets.blue-swarm.com/crossdomain.xml");
+				Security.loadPolicyFile("https://wesley.blue-swarm.com/crossdomain.xml");
 			}
 			
 
