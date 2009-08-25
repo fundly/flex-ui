@@ -7,6 +7,7 @@ package com.enilsson.elephantadmin.events.modules
 
 	public class ContactsEvent extends RecordModuleEvent
 	{
+		static public const UPSERT_CONTACT:String 		= 'contactsUpsertRecord';
 		static public const GET_SHARED_USERS:String 	= 'contactsGetSharedUsers';
 		static public const GET_PLEDGES:String 			= 'contactsGetPledges';
 		static public const GET_MATCHES:String 			= 'contactsGetMatches';

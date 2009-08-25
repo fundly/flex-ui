@@ -3,6 +3,7 @@ package com.enilsson.elephantadmin.views.modules.contacts.model
 	import com.adobe.cairngorm.model.ModelLocator;
 	import com.enilsson.elephantadmin.events.modules.ContactsEvent;
 	import com.enilsson.elephantadmin.views.manage_record_base.model.RecordModel;
+	import com.enilsson.elephantadmin.vo.RecordVO;
 	import com.enilsson.elephantadmin.vo.RecordsVO;
 	
 	import mx.collections.ArrayCollection;
@@ -35,6 +36,22 @@ package com.enilsson.elephantadmin.views.modules.contacts.model
 		{
 			showDeleteBtn = true;
 			enableDeleteBtn = value.p == 0;
+		}
+		
+		override public function upsertRecord(formVariables:Object):void
+		{
+			this.formVariables = ObjectUtil.copy( formVariables );
+
+			// Upsert if formVariables was changed
+			if(this.formVariables != selectedRecord)
+			{
+				new ContactsEvent( 
+					ContactsEvent.UPSERT_CONTACT,
+					this,
+					new RecordVO ( 'contacts', 0, this.formVariables )
+				).dispatch();
+			}
+			
 		}
 
 		/**

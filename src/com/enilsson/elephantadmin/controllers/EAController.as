@@ -212,6 +212,7 @@ package com.enilsson.elephantadmin.controllers
 //			this.addCommand(PledgeEvent.VALIDATE_UPSERT_CHECK, PledgesCommand );
 
 			// contacts module
+			this.addCommand(ContactsEvent.UPSERT_CONTACT, ContactsCommand);
 			this.addCommand(ContactsEvent.GET_SHARED_USERS, ContactsCommand);
 			this.addCommand(ContactsEvent.GET_PLEDGES, ContactsCommand);
 			this.addCommand(ContactsEvent.GET_MATCHES, ContactsCommand);
