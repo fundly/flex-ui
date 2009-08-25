@@ -13,7 +13,6 @@ package com.enilsson.elephanttrakker.commands
 	import flash.events.IOErrorEvent;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
-	import flash.system.Security;
 	
 	import mx.controls.Alert;
 	import mx.core.Application;
@@ -26,7 +25,7 @@ package com.enilsson.elephanttrakker.commands
 
 	
 		override public function execute(event:CairngormEvent):void
-		{				
+		{
 			// set the site parameters from the flash vars if there are any
 			setSiteURL();
 			
@@ -77,7 +76,7 @@ package com.enilsson.elephanttrakker.commands
 				_model.orgURL			= Application.application.parameters.orgURL;
 				_model.versionXmlUrl	= Application.application.parameters.versionXmlURL;
 				
-				_model.debug			= true;			
+				_model.debug			= false;			
 			}
 			else
 			{

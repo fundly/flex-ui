@@ -14,7 +14,6 @@ package com.enilsson.elephantadmin.commands
 	import flash.events.IOErrorEvent;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
-	import flash.system.Security;
 	import flash.utils.ByteArray;
 	
 	import mx.controls.Alert;
@@ -34,7 +33,7 @@ package com.enilsson.elephantadmin.commands
 		{
 			// make sure the InitAppCommand is only executed once
 			if( !_executed )
-			{				
+			{
 				var sessionEvent : SessionEvent;
 				var versionEvent : GetVersionEvent = new GetVersionEvent();
 				
@@ -94,7 +93,7 @@ package com.enilsson.elephantadmin.commands
 				_model.orgURL			= Application.application.parameters.orgURL;
 				_model.versionXmlUrl	= Application.application.parameters.versionXmlURL;
 				
-				_model.debug			= true;
+				_model.debug			= false;
 			} 
 			else
 			{

@@ -6,7 +6,7 @@
 	xmlns:main="com.enilsson.elephantadmin.views.main.*" 
 	xmlns:page="com.enilsson.elephantadmin.views.template.*" 
 	xmlns:details="com.enilsson.elephantadmin.views.modules.my_details.*"
-	creationComplete="init()"
+	preinitialize="init()"
 	preloader="assets.preloader.BlueSwarmPreloader"
 	layout="absolute">
 		
@@ -98,10 +98,7 @@
 			 * Initialisation routine
 			 */
 			private function init():void
-			{		
-				Security.allowDomain("*");
-				Security.allowInsecureDomain("*");
-						
+			{
 				// some debugging
 				if(_model.debug) Logger.info('Pre Init - Admin App');
 				
