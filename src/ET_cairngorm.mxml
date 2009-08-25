@@ -6,7 +6,6 @@
 	preinitialize="init()" 
 	preloader="assets.preloader.BlueSwarmPreloader"
 	layout="absolute" 
-	creationComplete="handleCreationComplete()"
 	horizontalScrollPolicy="off">
 
 	<control:ETcontroller xmlns:control="com.enilsson.elephanttrakker.controllers.*" />
@@ -57,17 +56,14 @@
 				// some debugging
 				if(_model.debug) Logger.info('Pre Init - Main App');
 				
+				Security.allowDomain("*");
+				Security.allowInsecureDomain("*");
+				
 				// fire the first event.... oooh exciting!
 				new InitAppEvent().dispatch();	
 						
 				// set this screen as a model variable
 				_model.mainScreen = this;							
-			}
-			
-			private function handleCreationComplete() : void
-			{
-				Security.allowDomain('*');
-				Security.allowInsecureDomain('*');
 			}
 		]]>
 	</mx:Script>

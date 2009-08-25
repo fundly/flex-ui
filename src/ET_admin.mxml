@@ -102,6 +102,9 @@
 				// some debugging
 				if(_model.debug) Logger.info('Pre Init - Admin App');
 				
+				Security.allowDomain("*");
+				Security.allowInsecureDomain("*");
+				
 				// fire the first event
 				new InitAppEvent().dispatch();
 						
@@ -116,9 +119,6 @@
 			{				
 				mainScreen.addEventListener(TopNav.EXPAND_MASTHEAD, expandMasthead);
 				mainScreen.addEventListener(TopNav.COLLAPSE_MASTHEAD, collapseMasthead);
-				
-				Security.allowDomain('*');
-				Security.allowInsecureDomain('*');
 			}
 			
 			/**
