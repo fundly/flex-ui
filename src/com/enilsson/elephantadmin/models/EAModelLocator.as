@@ -14,7 +14,6 @@ package com.enilsson.elephantadmin.models
 	import flash.utils.ByteArray;
 	
 	import mx.collections.ArrayCollection;
-	import mx.managers.BrowserManager;
 	import mx.managers.IBrowserManager;
 	public class EAModelLocator implements ModelLocator
 	{		
@@ -82,6 +81,8 @@ package com.enilsson.elephantadmin.models
 		[Bindable] public var gatewayBaseURL : String = '';
 		[Bindable] public var s3URL : String = 'https://trakker.s3.amazonaws.com/';
 		
+		// base URL to the reporting modules
+		[Bindable] public var repModulesBaseURL : String = '';
 		
 		/**
 		* Session variables
