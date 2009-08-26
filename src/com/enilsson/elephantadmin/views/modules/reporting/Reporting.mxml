@@ -165,7 +165,7 @@
 				var modulePath:String; 
 				if(Application.application.parameters.siteURL)
 				{
-					modulePath = _model.applicationURL + '/report_modules/core/' + moduleURL + '_Module.swf'; 
+					modulePath = _model.repModulesBaseURL + moduleURL + '_Module.swf'; 
 				}
 				else
 				{
