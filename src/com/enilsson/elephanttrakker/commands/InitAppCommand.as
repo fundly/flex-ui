@@ -69,12 +69,9 @@ package com.enilsson.elephanttrakker.commands
 				_model.appLogo 			= Application.application.parameters.appLogo;
 				_model.adminUI 			= Application.application.parameters.adminUI;
 				_model.appInstanceID 	= Application.application.parameters.instanceID;
-				_model.rssFeed			= Application.application.parameters.rssFeed;
-				_model.s3URL			= Application.application.parameters.s3URL;
 				_model.orgLogo			= Application.application.parameters.orgLogo;
 				_model.orgName			= Application.application.parameters.orgName;
 				_model.orgURL			= Application.application.parameters.orgURL;
-				_model.versionXmlUrl	= Application.application.parameters.versionXmlURL;
 				
 				_model.debug			= false;			
 			}
