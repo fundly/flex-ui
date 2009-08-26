@@ -87,7 +87,6 @@ package com.enilsson.elephantadmin.commands
 				_model.appName 			= Application.application.parameters.siteTitle;
 				_model.appLogo			= Application.application.parameters.appLogo;
 				_model.appInstanceID 	= Application.application.parameters.instanceID;
-				_model.s3URL			= Application.application.parameters.s3URL;
 				_model.orgLogo			= Application.application.parameters.orgLogo;
 				_model.orgName			= Application.application.parameters.orgName;
 				_model.orgURL			= Application.application.parameters.orgURL;
