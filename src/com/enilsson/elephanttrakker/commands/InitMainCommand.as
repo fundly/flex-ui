@@ -18,7 +18,6 @@ package com.enilsson.elephanttrakker.commands
 	import flash.xml.XMLDocument;
 	
 	import mx.collections.ArrayCollection;
-	import mx.controls.Alert;
 	import mx.events.CloseEvent;
 	import mx.managers.PopUpManager;
 	import mx.rpc.IResponder;
@@ -292,13 +291,20 @@ package com.enilsson.elephanttrakker.commands
 		{
 			if(_model.debug) Logger.info('Success RSS', ObjectUtil.toString(event.result));
 
-			var rss:XML = new XML( event.result );
+			var rss:XML;
 			var dp:ArrayCollection = new ArrayCollection();
-			for each ( var item:Object in rss.channel.item )
-			{
-				var rssVO:RssVO = new RssVO ( item );
-				dp.addItem( new ObjectProxy( rssVO ) );					
+			
+			try {
+				rss = new XML( event.result );
+				
+				for each ( var item:Object in rss.channel.item ) {
+					var rssVO:RssVO = new RssVO ( item );
+					dp.addItem( new ObjectProxy( rssVO ) );					
+				}
 			}
+			catch( e : Error ) { 
+				dp.addItem( getErrorRssVO() );
+			}		
 			
 			_model.rssData = dp;
 		}
@@ -308,13 +314,17 @@ package com.enilsson.elephanttrakker.commands
 			if(_model.debug) Logger.info('Fail RSS', ObjectUtil.toString(event));
 			
 			var dp:ArrayCollection = new ArrayCollection();
+			dp.addItem( getErrorRssVO() );		
+			_model.rssData = dp;
+		}
+		
+		private function getErrorRssVO() : RssVO
+		{
 			var rssVO:RssVO = new RssVO ();
 			rssVO.title = 'There is an error with the RSS feed, please inform your admin team!';
 			rssVO.error = true;
-			dp.addItem( rssVO );								
 			
-			_model.rssData = dp;
-			
+			return rssVO;			
 		}
 
 
