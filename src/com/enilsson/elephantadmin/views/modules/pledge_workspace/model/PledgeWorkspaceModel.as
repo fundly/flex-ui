@@ -59,12 +59,53 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 			return model.session;			
 		}
 
+		// define an object for the political party dropdown
+		private const POLITICAL_FIELD:Object = {
+			label		: "Political Party"
+			, value		: "Political Party"
+		};
+
+/		// define the variables for validating political party contribution
+		private const POLITICAL_VALIDATOR:Object = {
+			maxValue	: null
+			, minValue	: 1
+		};
+
 		/**
 		 * Get the necessary layout objects
 		 */
 		public function get pledgeLayout():StruktorLayoutVO
 		{
-			return model.struktorLayout.pledges as StruktorLayoutVO;
+			var layoutVO:StruktorLayoutVO = model.struktorLayout.pledges;
+			
+			// Add political party contribution type that will only be available in the admin interface
+			for each(var f:Object in layoutVO.fields)
+			{
+				if(f.fieldname == "contribution_type")
+				{
+					if( (f.source as Array).indexOf(POLITICAL_FIELD) == -1)
+					{
+						f.source.push(POLITICAL_FIELD);
+					}
+					break;
+				}
+			}
+
+			for each(var v:Object in layoutVO.fields)
+			{
+				if(v.fieldname == "pledge_amount")
+				{
+					// get the index of the political party contribution type
+					var i:uint = (f.source as Array).indexOf(POLITICAL_FIELD);
+
+					// set the index of the validator to match the political contribution type
+					if(i != -1)
+						(v.validationSource as Array)[i] = POLITICAL_VALIDATOR;
+					break;
+				}
+			}
+
+			return layoutVO;
 		}
 		public function get transactionLayout():StruktorLayoutVO
 		{

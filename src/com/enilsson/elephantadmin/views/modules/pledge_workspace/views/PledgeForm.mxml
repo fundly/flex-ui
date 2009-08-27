@@ -293,7 +293,7 @@
 				switch(event.currentTarget)
 				{
 					case pledgeInfo :
-										
+						
 						// assign some behaviour to the amount, so it prepopulates the cc & check forms
 						var amnt:TextInput = pledgeInfo.getField('pledge_amount') as TextInput;
 						amnt.addEventListener(FocusEvent.FOCUS_OUT, function(e:FocusEvent):void { 
@@ -369,7 +369,7 @@
 								else if ( presentationModel.workspaceValid )
 									presentationModel.setSubmitFocus = true;
 								else
-									{ }								
+									{ }
 							}
 						});
  
