@@ -23,7 +23,8 @@
 
 	<mx:Canvas id="appLogoBox"
 		bottom="20" right="25">
-		<mx:Image id="appLogo" 
+		<mx:Image id="appLogo"
+			trustContent="true" 
 			source="{_model.appLogo}"
 			click="goToHome()"
 			bottom="0" right="0"
@@ -40,6 +41,7 @@
 		bottom="{23 + appLogo.height}" right="23" />
 
 	<mx:Image id="orgLogo"
+		trustContent="true" 
 		source="{_model.orgLogo}" 
 		bottom="18" left="10"
 		toolTip="Visit {_model.orgName}"
