@@ -14,6 +14,7 @@ package com.enilsson.elephantadmin.commands
 	import flash.events.IOErrorEvent;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
+	import flash.system.Security;
 	import flash.utils.ByteArray;
 	
 	import mx.controls.Alert;
@@ -36,6 +37,9 @@ package com.enilsson.elephantadmin.commands
 			{
 				var sessionEvent : SessionEvent;
 				var versionEvent : GetVersionEvent = new GetVersionEvent();
+				
+				// set security restrictions
+				setSecurity();
 				
 				// set the site parameters from the flash vars if there are any
 				setSiteURL();
@@ -67,7 +71,14 @@ package com.enilsson.elephantadmin.commands
 				_executed = true;
 			}
 		}
-
+		
+		/**
+		 * Set security restrictions for BlueSwarm
+		 */ 
+		private function setSecurity():void
+		{
+			Security.allowDomain("*.blue-swarm.com");
+		}
 
 		/**
 		 * Set the application parameters

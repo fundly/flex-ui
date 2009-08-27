@@ -13,6 +13,7 @@ package com.enilsson.elephanttrakker.commands
 	import flash.events.IOErrorEvent;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
+	import flash.system.Security;
 	
 	import mx.controls.Alert;
 	import mx.core.Application;
@@ -26,6 +27,9 @@ package com.enilsson.elephanttrakker.commands
 	
 		override public function execute(event:CairngormEvent):void
 		{
+			// set security restrictions
+			setSecurity();
+			
 			// set the site parameters from the flash vars if there are any
 			setSiteURL();
 			
@@ -44,6 +48,14 @@ package com.enilsson.elephanttrakker.commands
 			this.nextEvent = gve;
 			this.executeNextCommand();
 			this.nextEvent = null;			
+		}
+		
+		/**
+		 * Set security restrictions for BlueSwarm
+		 */ 
+		private function setSecurity():void
+		{
+			Security.allowDomain("*.blue-swarm.com");
 		}
 		
 		/**
