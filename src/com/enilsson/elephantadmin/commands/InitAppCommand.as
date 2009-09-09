@@ -14,6 +14,7 @@ package com.enilsson.elephantadmin.commands
 	import flash.events.IOErrorEvent;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
+	import flash.system.Security;
 	import flash.utils.ByteArray;
 	
 	import mx.controls.Alert;
@@ -36,6 +37,9 @@ package com.enilsson.elephantadmin.commands
 			{
 				var sessionEvent : SessionEvent;
 				var versionEvent : GetVersionEvent = new GetVersionEvent();
+				
+				// set security restrictions
+				setSecurity();
 				
 				// set the site parameters from the flash vars if there are any
 				setSiteURL();
@@ -67,13 +71,23 @@ package com.enilsson.elephantadmin.commands
 				_executed = true;
 			}
 		}
-
+		
+		/**
+		 * Set security restrictions for BlueSwarm
+		 */ 
+		private function setSecurity():void
+		{
+			Security.allowDomain("*.blue-swarm.com");
+		}
 
 		/**
 		 * Set the application parameters
 		 */		
 		private function setSiteURL():void
 		{
+			// set the application's URL			
+			_model.applicationURL = Application.application.url.split(Application.application.className +".swf")[0];
+			
 			// get the parameters from the flash vars if in production
 			if(Application.application.parameters.siteURL)
 			{
@@ -84,7 +98,6 @@ package com.enilsson.elephantadmin.commands
 				_model.appName 			= Application.application.parameters.siteTitle;
 				_model.appLogo			= Application.application.parameters.appLogo;
 				_model.appInstanceID 	= Application.application.parameters.instanceID;
-				_model.s3URL			= Application.application.parameters.s3URL;
 				_model.orgLogo			= Application.application.parameters.orgLogo;
 				_model.orgName			= Application.application.parameters.orgName;
 				_model.orgURL			= Application.application.parameters.orgURL;

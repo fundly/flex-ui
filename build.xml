@@ -2,39 +2,8 @@
 
 <project name="BlueSwarm" default="deploy">
 	
-	<import file="ant/build-base-blueswarm.xml" />
-		
-	<macrodef name="deploy.all">
-		<attribute name="target"/>
-		<sequential>
-			<subant target="@{target}" >
-				<fileset dir="server" includes="**/build.xml"/>
-			</subant>
-		</sequential>
-	</macrodef>
-
-	<target name="deploy.all.admin" description="deploys the administrator UI to all servers">
-		<deploy.all target="deploy.admin"/>
-	</target>
+	<import file="ant/build-blueswarm-with-modules.xml" />
+			
+	<target name="deploy" description="deploy" depends="build.blueswarm.with.modules.compile, build.blueswarm.package" />
 	
-	<target name="deploy.all.client" description="deploys the client UI to all servers">
-		<deploy.all target="deploy.client"/>
-	</target>
-	
-	<target name="deploy.all.report.modules" description="deploys the report modules to all servers">
-		<deploy.all target="deploy.report.modules"/>
-	</target>
-	
-	<target name="deploy.all.assets" description="deploys the common files for all instances">
-		<deploy.all target="deploy.assets" />
-	</target>
-	
-	<target name="deploy" description="deploys the client and the administrator UI to all servers">
-		<deploy.all target="deploy"/>
-	</target>
-	
-	<target name="deploy.sandboxes">
-		<deploy.all target="deploy.sandbox"/>
-	</target>
-
 </project>

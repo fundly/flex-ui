@@ -14,7 +14,6 @@ package com.enilsson.elephantadmin.models
 	import flash.utils.ByteArray;
 	
 	import mx.collections.ArrayCollection;
-	import mx.managers.BrowserManager;
 	import mx.managers.IBrowserManager;
 	public class EAModelLocator implements ModelLocator
 	{		
@@ -22,10 +21,10 @@ package com.enilsson.elephantadmin.models
 		 * Versioning
 		 */
 		[Embed(source="/revision.xml", mimeType="application/octet-stream")]
-        private var VersionFile:Class;       
-        [Bindable] public var version : String;
-        [Bindable] public var revision : String;
-        [Bindable] public var versionInfoUrl : String = "revision.xml";
+        private var VersionFile:Class;        
+        [Bindable] public var version 	: String;
+        [Bindable] public var revision 	: String;
+        [Bindable] public var versionXmlUrl : String = "revision.xml";
 		
 		private static var modelLocator : EAModelLocator;
 		
@@ -63,6 +62,8 @@ package com.enilsson.elephantadmin.models
 		/**
 		* Application level variables
 		*/
+		[Bindable] public var applicationURL : String;
+		
 		// url for the auth gateway, and the instance ID
  		[Bindable] public var authURL:String;
 		[Bindable] public var appInstanceID:int;  	
@@ -79,7 +80,6 @@ package com.enilsson.elephantadmin.models
 		[Bindable] public var gatewayURL : String = null;
 		[Bindable] public var gatewayBaseURL : String = '';
 		[Bindable] public var s3URL : String = 'https://trakker.s3.amazonaws.com/';
-		
 		
 		/**
 		* Session variables
@@ -190,7 +190,7 @@ package com.enilsson.elephantadmin.models
 		/**
 		* Variables for the deeplinking
 		*/
-		public var browserManager : IBrowserManager = BrowserManager.getInstance();
+		public var browserManager : IBrowserManager;
 		public var is_parsing_url : Boolean = false;
 		public var browserFragments : Array;
 		// array holding the fragment portions delimited by a forward slash

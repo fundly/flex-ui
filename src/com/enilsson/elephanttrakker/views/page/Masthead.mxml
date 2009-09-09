@@ -7,6 +7,7 @@
 		
 	<mx:Image id="appLogo" 
 		source="{_model.appLogo}"
+		trustContent="true"
 		bottom="20" right="25"
 		click="goToHome()"
 		useHandCursor="{_model.screenState > 0}" 
@@ -19,6 +20,7 @@
 				
 	<mx:Image id="orgLogo"
 		source="{_model.orgLogo}"
+		trustContent="true"
 		bottom="20" left="15"
 		maxHeight="65"	
 		toolTip="Visit {_model.orgName}"

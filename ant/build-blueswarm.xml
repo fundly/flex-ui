@@ -13,29 +13,17 @@
 	<property name="swf.client" value="${module.client}.swf" />
 	<property name="swf.admin" value="${module.admin}.swf" />
 	
-	<property name="server.dir" value="server" />
-	<property name="server.common.dir" value="${server.dir}/common" />
-	<property name="html.template" value="html-template" />
-	<property name="html.template.dir" value="${server.common.dir}/${html.template}" />
-	
-	<property name="swf.container.template" value="${html.template.dir}/index.template.php" />
-	<property name="swf.container" value="${html.template.dir}/index.php" />	
-	<property name="config.file" value="config.php" />
-	
-	<property name="client.dir" value="${deploy.dir}" />
-	<property name="admin.dir" value="${deploy.dir}/admin"/>
+	<property name="client.dir" value="${package.dir}" />
+	<property name="admin.dir" value="${package.dir}/admin"/>
 	<property name="client.build.dir" value="${build.dir}/client" />
 	<property name="admin.build.dir" value="${build.dir}/admin" />
 	
-	<property name="rsl.url" value="https://assets.blue-swarm.com/rsls" />
 	<property name="framework.swz.url" value="${rsl.url}/${framework.file}" />
 	<property name="framework.swf.url" value="${rsl.url}/${framework.fallback.file}" />
 	<property name="rpc.swz.url" value="${rsl.url}/${rpc.file}" />
 	<property name="rpc.swf.url" value="${rsl.url}/${rpc.fallback.file}" />
 	<property name="crossdomain.file" value="" />
 	
-	<property name="sandbox.root" value="/mnt/s3/public_html/sandbox.blue-swarm.com" />
-		
 	<target name="init" depends="buildbase.init">
 		<mkdir dir="${admin.dir}" />
 		<mkdir dir="${client.dir}" />
@@ -62,14 +50,9 @@
 			
 			<source-path path-element="${flex.sdk.home}" />
 			<source-path path-element="${flex.src.dir}" />
-			<source-path path-element="${enilsson.library}" />
 			
-			<external-library-path dir="${enilsson.library}" append="true">
-				<include name="libs" />
-			</external-library-path>
-			
-			<external-library-path dir="${flex.lib.dir}" append="true">
-				<include name="**/*.swc" />
+			<external-library-path dir="${basedir}" append="true">
+				<include name="${flex.lib.dir}" />
 			</external-library-path>
 			
 			<runtime-shared-library-path 
@@ -94,7 +77,6 @@
 		
 	</target>
 	
-	
 	<target name="compile.application">
 		<mxmlc
 			file="${param.mxml}"
@@ -110,14 +92,9 @@
 			
 			<source-path path-element="${flex.sdk.home}" />
 			<source-path path-element="${flex.src.dir}" />
-			<source-path path-element="${enilsson.library}" />
 			
-			<library-path dir="${enilsson.library}" append="true">
-				<include name="libs" />
-			</library-path>
-			
-			<library-path dir="${flex.lib.dir}" append="true">
-				<include name="**/*.swc" />
+			<library-path dir="${basedir}" append="true">
+				<include name="${flex.lib.dir}" />
 			</library-path>
 			
 			<runtime-shared-library-path 
@@ -181,50 +158,14 @@
 	
 	
 	<!-- Compiles both the client and administrator UIs -->
-	<target name="compile"
-		depends="compile.client, compile.admin" />
-
+	<target name="compile" depends="compile.client, compile.admin" />
 	
 	<!--  Writes the current SVN revision number into an external xml file -->
 	<target name="export.revision" description="Exports the revision number to an XML file, also places it into the html template.">
-		<echo message="Reading current revision number..." />
 		<exec outputproperty="revision.number" executable="${svnversion}" dir="${flex.src.dir}" />
-		<echo message="Current revision is ${revision.number}" />
-		
-		<echo message="Creating file ${revision.file} from template ${revision.file.template}..." />
 		<copy file="${revision.file.template}" tofile="${revision.file}" overwrite="true" />		
-		<echo message="Writing revision number to ${revision.file}..." />
 		<replace file="${revision.file}" token="#REVISION#" value="${revision.number}" />
-		
-		<echo message="Creating file ${swf.container} from template ${swf.container.template}..." />
-		<copy file="${swf.container.template}" tofile="${swf.container}" overwrite="true" />		
-		<echo message="Writing revision number to ${swf.container}..." />
-		<replace file="${swf.container}" token="#REVISION#" value="${revision.number}" />
 	</target>
-
-
-	<!-- Copies common server files to the client deployment directory -->
-	<target name="copy.client.html.files" depends="init">
-		<copy todir="${client.dir}" overwrite="true" verbose="false" failonerror="false">
-			<fileset dir="${html.template.dir}" excludes="${swf.container.template}" />
-		</copy>
-	</target>
-	
-	
-	<!-- Copies common server files to the admin deployment directory -->
-	<target name="copy.admin.html.files" depends="init">
-		<copy todir="${admin.dir}" overwrite="true" verbose="false" failonerror="false">
-			<fileset dir="${html.template.dir}" excludes="${swf.container.template}" />
-		</copy>
-	</target>
-	
-	
-	<!-- Copies common server files to the deployment directory -->
-	<target name="copy.html.files"
-		depends="copy.client.html.files, copy.admin.html.files">
-		<echo message="Copying common server files to the deployment directory" />
-	</target>
-	
 	
 	<target name="copy.client.build.files" depends="init">
 		<copy todir="${client.dir}" overwrite="true" verbose="false" failonerror="false">
@@ -232,65 +173,28 @@
 		</copy>
 	</target>
 	
-	
 	<target name="copy.admin.build.files" depends="init">
 		<copy todir="${admin.dir}" overwrite="true" verbose="false" failonerror="false">
 			<fileset dir="${admin.build.dir}" excludes="**/*.cache" />
 		</copy>
 	</target>
 	
-	
 	<!-- Copies both the admin and client to the deployment dir -->
 	<target name="copy.build.files" depends="copy.client.build.files, copy.admin.build.files" />
 	
-	
-	<!-- 
-		Copies instance specific files
-		This task gets called via "antcall" from the instance build files.
-	--> 
-	<target name="deploy.instance.assets" depends="clean.deploy">
-		<echo message="Copying instance specific files to deployment dir" />
-		<copy todir="${client.dir}" file="${server.dir}/${domain}/${config.file}" overwrite="true" failonerror="false" />
-		<copy todir="${client.dir}" overwrite="true" verbose="false" failonerror="false">
-			<fileset dir="${server.dir}/${domain}/client" />
-		</copy>
-	</target>
-	
-	<!-- 
-		Uploads files in the deploy dir to specified server
-		This task gets called via "antcall" from the instance build files.
-	--> 
-	<target name="upload.instance">
-		<echo message="Uploading to ${domain}..." />
-		<scp todir="${user}:${password}@${host}:${path}" port="${port}" sftp="true" failonerror="false">
-			<fileset dir="${deploy.dir}" />			
-		</scp>
-	</target>
+	<!-- copies all application files to package dir and zips them -->
+	<target name="package" depends="clean.package, copy.build.files">
+		<property name="revision.folder" value="${package.dir}/${revision.number}" />
+		<property name="zip.folder" value="${package.dir}/zip" />
+		<mkdir dir="${zip.folder}" />
 		
-	<target name="update.sandbox">
-		<echo message="Updating ${sandbox.root}/${domain}..." />
-		<mkdir dir="${sandbox.root}/${domain}"/>
-		<copy todir="${sandbox.root}/${domain}" failonerror="false">
-			<fileset dir="${deploy.dir}" />
-		</copy>
-	</target>
-	
-	<!-- copies the client deployment files to deployment dir -->
-	<target name="deploy.client"
-		depends="clean.deploy, compile.client, copy.client.build.files, copy.client.html.files">
-		<!-- Override and add deployment code for specific instance. -->
-	</target>
-	
-	<!-- copies the admin deployment files to deployment dir -->
-	<target name="deploy.admin" 
-		depends="clean.deploy, compile.admin, copy.admin.build.files, copy.admin.html.files">
-		<!--  Override and add deployment code for specific instance here. -->
-	</target>
-	
-	<!-- copies all application files to deployment dir -->
-	<target name="deploy"
-		depends="clean.deploy, deploy.instance.assets, compile, copy.build.files, copy.html.files">
-		<!-- Override and add deployment code for specific instance here. -->
+		<move todir="${zip.folder}">
+			<fileset dir="${package.dir}" includes="**/*" excludes="zip" />
+		</move>
+		<mkdir dir="${revision.folder}" />
+		<zip destfile="${revision.folder}/revision.zip" basedir="${zip.folder}" />
+		<delete dir="${zip.folder}" />
+		<copy todir="${revision.folder}" file="${revision.file}" />
 	</target>
 	
 </project>

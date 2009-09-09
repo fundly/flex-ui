@@ -10,8 +10,8 @@ flex.sdk.home=/Applications/Adobe Flex Builder 3 Plug-in/sdks/3.3.0
 flex.framework.version=3.3.0.4852
 FLEX_HOME=${flex.sdk.home}
 
-# path to your local working copy of the eNilsson Flex library
-enilsson.library=/Users/david/Documents/workspaces/main/eNilssonFlexLibrary
+# url of the runtime shared libraries
+rsl.url=https://assets.blue-swarm.com/rsls
 
 # path to svnversion
 svnversion=/usr/local/bin/svnversion

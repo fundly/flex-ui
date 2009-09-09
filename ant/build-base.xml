@@ -2,9 +2,9 @@
 
 <project name="buildbase" default="compile">
 	<property name="flex.src.dir" value="${basedir}/src" />
-	<property name="flex.lib.dir" value="${basedir}/libs" />
+	<property name="flex.lib.dir" value="libs" />
 	<property name="build.dir" value="${basedir}/build" />
-	<property name="deploy.dir" value="${basedir}/deploy" />
+	<property name="package.dir" value="${basedir}/deploy" />
 	
 	<property file="build.properties" />
 	
@@ -18,27 +18,29 @@
 	
 	<target name="init">
 		<mkdir dir="${build.dir}" />
-		<mkdir dir="${deploy.dir}" />
+		<mkdir dir="${package.dir}" />
 	</target>
 	
 	<target name="clean">
 		<delete dir="${build.dir}" />
-		<delete dir="${deploy.dir}" deleteonexit="true" />
+		<delete dir="${package.dir}" />
 	</target>
 			
-	<target name="clean.deploy" depends="init">
-		<delete includeemptydirs="true">
-			<fileset dir="${deploy.dir}" includes="*/**" />
-		</delete>
+	<target name="clean.package" depends="init">
+		<delete includeemptydirs="true" dir="${package.dir}" />
 	</target>
 	
 	<target name="compile">
 		<echo>Add project specific compilation here.</echo>
 	</target>
 	
-	<target name="deploy">
-		<echo>Add deployment tasks in your build.xml by overriding this task.</echo>
+	<target name="package">
+		<echo>Add package tasks in your build.xml by overriding this task.</echo>
 	</target>
 	
-	<target name="all" depends="clean, init, compile, deploy" />
+	<target name="deploy">
+		<echo>Add package tasks in your build.xml by overriding this task.</echo>
+	</target>
+	
+	<target name="all" depends="clean, init, compile, package, deploy" />
 </project>
