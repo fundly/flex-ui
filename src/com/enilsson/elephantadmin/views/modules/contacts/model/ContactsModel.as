@@ -94,7 +94,7 @@ package com.enilsson.elephantadmin.views.modules.contacts.model
 		/**
 		 * Get list of all pledge made by this contact
 		 */
-		private function getPledges():void
+		public function getPledges():void
 		{
 			pledgesTabLoading = true;
 			pledges = new ArrayCollection();

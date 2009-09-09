@@ -39,6 +39,8 @@
 			[Bindable] public var popupTitle:String = "Add a new Pledge";
 			[Bindable] public var defaultType:String = "check";
 			[Bindable] public var defaultTab:String = "contact";
+			[Bindable] public var contactID:int;
+			[Bindable] public var pledgeID:int;
 		
 			private function closeComponent():void
 			{

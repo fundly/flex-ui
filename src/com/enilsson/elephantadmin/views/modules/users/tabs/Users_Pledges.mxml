@@ -86,6 +86,16 @@
 				</mx:DataGrid>		
 			</mx:Canvas>
 		</mx:ViewStack>
+		<mx:HBox width="100%" horizontalAlign="center" 
+			horizontalGap="12" paddingTop="4">
+			<common:CMSSubmitBtn
+				xmlns:common="com.enilsson.elephantadmin.views.common.*"
+				label="NEW PLEDGE"
+				toolTip="Add a new pledge fot this fundraiser"
+				width="100"
+				click="popupPledgeWorkspace();"
+				/>
+		</mx:HBox>
 	</mx:VBox>
 
 	<mx:CurrencyFormatter id="currencyFormat"
@@ -103,6 +113,12 @@
 
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.elephantadmin.views.modules.pledge_workspace.model.PledgeWorkspaceModel;
+			import mx.core.Application;
+			import mx.managers.PopUpManager;
+			import com.enilsson.elephantadmin.models.EAModelLocator;
+			import com.enilsson.elephantadmin.views.modules.pledge_workspace.model.PledgeWorkspaceVO;
+			import com.enilsson.elephantadmin.views.modules.pledge_workspace.PWPopupContainer;
 			import com.enilsson.utils.EDateUtil;
 			import com.enilsson.elephantadmin.views.modules.users.model.UsersModel;
 			import com.enilsson.elephantadmin.interfaces.IRecordModel;
@@ -117,6 +133,32 @@
 			public function get presentationModel():IRecordModel
 			{
 				return _usersModel;
+			}
+
+			public function popupPledgeWorkspace():void
+			{
+				// set up the popup
+				var popup:PWPopupContainer = new PWPopupContainer();
+				popup.defaultTab = "contact";
+				popup.popupTitle = "Add a new Pledge for this Fundraiser";
+
+				// set up the pwsVO
+				var pwVO:PledgeWorkspaceVO = new PledgeWorkspaceVO();
+				pwVO.action = PledgeWorkspaceModel.ADD_NEW;
+				pwVO.fundraiserID = _usersModel.selectedRecord.user_id;
+				EAModelLocator.getInstance().pledgeWorkspace = pwVO;
+
+				// popup the window
+				PopUpManager.addPopUp(popup, DisplayObject(Application.application), true);
+				PopUpManager.centerPopUp(popup);
+
+				// set up close window action
+				popup.addEventListener(Event.CLOSE, function (event:Event):void
+				{
+					PopUpManager.removePopUp(PWPopupContainer(event.currentTarget));
+					// refresh the check list to display new check if any
+					_usersModel.loadPledgesTab();
+				});
 			}
 
 			private function eventLabel(item:Object, column:DataGridColumn):String

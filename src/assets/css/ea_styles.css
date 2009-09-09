@@ -533,6 +533,20 @@ ModuleControlBar {
 	horizontalGap: 30;
 }
 
+.dateRangeField
+{
+	textInputStyleName: dateRangeTextInput;
+	fontWeight: normal;
+}
+
+.dateRangeTextInput
+{
+	fontFamily: "Silkscreen"; 
+	fontSize: 8;
+	paddingTop: 4;
+	borderSkin: ClassReference("mx.skins.ProgrammaticSkin");
+}
+
 /*--- End Application wide Styles ---*/
 
 
