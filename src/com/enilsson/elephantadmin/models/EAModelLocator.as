@@ -81,9 +81,6 @@ package com.enilsson.elephantadmin.models
 		[Bindable] public var gatewayBaseURL : String = '';
 		[Bindable] public var s3URL : String = 'https://trakker.s3.amazonaws.com/';
 		
-		// base URL to the reporting modules
-		[Bindable] public var repModulesBaseURL : String = '';
-		
 		/**
 		* Session variables
 		*/
