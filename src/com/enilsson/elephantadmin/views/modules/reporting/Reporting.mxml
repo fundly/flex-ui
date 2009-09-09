@@ -163,9 +163,9 @@
 
 				// set the module path depending on the environment (testing or production)
 				var modulePath:String; 
-				if(Application.application.parameters.siteURL)
+				if(_model.siteURL && _model.siteURL.length > 0)
 				{
-					modulePath = _model.repModulesBaseURL + moduleURL + '_Module.swf'; 
+					modulePath = _model.siteURL + "/report_modules/core/" + moduleURL + '_Module.swf'; 
 				}
 				else
 				{
