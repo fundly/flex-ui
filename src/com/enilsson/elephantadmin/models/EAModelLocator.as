@@ -358,6 +358,7 @@ package com.enilsson.elephantadmin.models
 		[Bindable] public var transactions_failed : TransactionsFailedViewClass = new TransactionsFailedViewClass();
 		[Bindable] public var paypal_transactions : PaypalTransactionsViewClass = new PaypalTransactionsViewClass();
 		[Bindable] public var batch : BatchViewClass = new BatchViewClass();
+		[Bindable] public var customReporting : CustomReportingViewClass = new CustomReportingViewClass();
 				
 		//Email submodules
 		[Bindable] public var email_log : EmailLogViewClass = new EmailLogViewClass();
@@ -421,6 +422,7 @@ package com.enilsson.elephantadmin.models
 			transactions = new TransactionsViewClass();
 			transactions_failed = new TransactionsFailedViewClass();
 			batch = new BatchViewClass();
+			customReporting = new CustomReportingViewClass();
 
 			// email submodules
 			email_log = new EmailLogViewClass();

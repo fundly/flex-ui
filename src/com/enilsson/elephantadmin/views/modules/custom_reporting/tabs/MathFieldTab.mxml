@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" label="Math Fields">
+	<mx:Text top="5" left="10" width="100%"
+		text="Listed below are all the numeric and currency fields you have selected, you can add in a number of calculations into your report based on these fields if you wish." />
+	<mx:Canvas id="mathFieldsList" width="100%" top="60" left="10">
+		<mx:Text id="mfNoFields" horizontalCenter="0" verticalCenter="0" 
+			text="You have not selected any numeric or currency fields!" fontSize="16" fontWeight="bold" />
+		<mx:DataGrid id="mathFields" width="100%" top="5" left="0" fontSize="12" visible="{_presentationModel.fieldVisible}"
+			dataProvider="{_presentationModel.fieldDataProvider}">
+			<mx:columns>
+				<mx:DataGridColumn dataField="table" headerText="Table" />
+				<mx:DataGridColumn dataField="fieldname" headerText="Field" />
+				<mx:DataGridColumn headerText="Sum" width="85" textAlign="center">
+					<mx:itemRenderer>
+						<mx:Component>
+							<mx:HBox horizontalAlign="center">
+								<mx:CheckBox selected="{data.values.sum === true}"
+									click="parentDocument.mathFieldClickHandler(event, 'sum', data.field)" />
+							</mx:HBox>
+						</mx:Component>
+					</mx:itemRenderer>
+				</mx:DataGridColumn>
+				<mx:DataGridColumn headerText="Average" width="85" textAlign="center">
+					<mx:itemRenderer>
+						<mx:Component>
+							<mx:HBox horizontalAlign="center">
+								<mx:CheckBox selected="{data.values.average === true}"
+									click="parentDocument.mathFieldClickHandler(event, 'average', data.field)" />
+							</mx:HBox>
+						</mx:Component>
+					</mx:itemRenderer>
+				</mx:DataGridColumn>
+				<mx:DataGridColumn headerText="Lowest" width="85" textAlign="center">
+					<mx:itemRenderer>
+						<mx:Component>
+							<mx:HBox horizontalAlign="center">
+								<mx:CheckBox selected="{data.values.lowest === true}"
+									click="parentDocument.mathFieldClickHandler(event, 'lowest', data.field)" />
+							</mx:HBox>
+						</mx:Component>
+					</mx:itemRenderer>
+				</mx:DataGridColumn>
+				<mx:DataGridColumn headerText="Highest" width="85" textAlign="center">
+					<mx:itemRenderer>
+						<mx:Component>
+							<mx:HBox horizontalAlign="center">
+								<mx:CheckBox selected="{data.values.highest === true}"
+									click="parentDocument.mathFieldClickHandler(event, 'highest', data.field)" />
+							</mx:HBox>
+						</mx:Component>
+					</mx:itemRenderer>
+				</mx:DataGridColumn>
+				<mx:DataGridColumn headerText="Std dev." width="85" textAlign="center">
+					<mx:itemRenderer>
+						<mx:Component>
+							<mx:HBox horizontalAlign="center">
+								<mx:CheckBox selected="{data.values.std_dev === true}"
+									click="parentDocument.mathFieldClickHandler(event, 'std_dev', data.field)" />
+							</mx:HBox>
+						</mx:Component>
+					</mx:itemRenderer>
+				</mx:DataGridColumn>
+			</mx:columns>
+		</mx:DataGrid>
+	</mx:Canvas>
+
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephantadmin.views.modules.batch.model.AbstractPM;
+			import com.enilsson.elephantadmin.views.modules.custom_reporting.model.MathFieldTabModel;
+
+			public function set presentationModel(value:AbstractPM):void
+			{
+				if(value && value != _presentationModel)
+					_presentationModel = MathFieldTabModel(value);
+			}
+			[Bindable] private var _presentationModel:MathFieldTabModel;
+		]]>
+	</mx:Script>
+</mx:Canvas>

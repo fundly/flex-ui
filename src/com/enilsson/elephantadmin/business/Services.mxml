@@ -173,7 +173,9 @@
 		source="struktor.layout" 
 		showBusyCursor="true"
 		fault="handleFault(event)">
-		<mx:method name="fetch_layout" />  	
+		<mx:method name="fetch_layout" />
+		<mx:method name="fetch_relations" />
+		<mx:method name="fetch_layout_schema" />
 	</mx:RemoteObject>
 
 	<mx:RemoteObject id="struktorTicket"
@@ -277,7 +279,29 @@
 		fault="handleFault(event)">
 		<mx:method name="export_batch" />
 	</mx:RemoteObject>
-	
+
+	<mx:RemoteObject id="customReporting"
+		endpoint="{_model.gatewayURL}" 
+		destination="amfphp"
+		source="reporting.manage" 
+		requestTimeout="120"
+		showBusyCursor="true"
+		fault="handleFault(event)">
+		<mx:method name="load_report" />
+		<mx:method name="save_report" />
+	</mx:RemoteObject>
+
+	<mx:RemoteObject id="reportingGenerate"
+		endpoint="{_model.gatewayURL}" 
+		destination="amfphp"
+		source="reporting.generate" 
+		requestTimeout="120"
+		showBusyCursor="true"
+		fault="handleFault(event)">
+		<mx:method name="create_report" />
+	</mx:RemoteObject>
+
+
 	<mx:HTTPService id="versionService"
 		url="{_model.versionXmlUrl}"
 		contentType="application/xml"

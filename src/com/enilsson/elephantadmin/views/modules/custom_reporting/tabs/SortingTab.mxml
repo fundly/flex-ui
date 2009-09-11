@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" label="Sorting">
+	<mx:Text text="Please select a some fields" 
+		verticalCenter="0" horizontalCenter="0" 
+		fontSize="18" fontWeight="bold"
+		id="sortingError" visible="{_presentationModel.sortingErrorVisible}"/>
+	<mx:VBox top="5" left="10" right="10" width="100%" id="sortingOptions"
+		visible="{_presentationModel.sortingOptionsVisible}">
+		<mx:Text text="Please select which listed fields you would like to sort by:" />
+		<mx:Form width="100%">
+			<mx:FormItem label="Sort by:" width="100%">
+				<mx:HBox>
+					<mx:ComboBox id="sortField_1" change="updateSorting(event)"
+						selectedIndex="{_presentationModel.sortFieldIndex1}"
+						dataProvider="{_presentationModel.fields}"/>
+					<mx:ComboBox id="sortDirection_1" change="updateSorting(event)"
+						selectedIndex="{_presentationModel.sortDirectionIndex1}"
+						dataProvider="{_presentationModel.DIRECTION_FILTER}"/>
+				</mx:HBox>
+			</mx:FormItem>
+			<mx:FormItem label="And then by:" width="100%">
+				<mx:HBox>
+					<mx:ComboBox id="sortField_2" change="updateSorting(event)"
+						selectedIndex="{_presentationModel.sortFieldIndex2}"
+						dataProvider="{_presentationModel.fields}"/>
+					<mx:ComboBox id="sortDirection_2" change="updateSorting(event)"
+						selectedIndex="{_presentationModel.sortDirectionIndex2}"
+						dataProvider="{_presentationModel.DIRECTION_FILTER}"/>
+				</mx:HBox>
+			</mx:FormItem>	
+			<mx:FormItem label="And finally by:" width="100%">
+				<mx:HBox>
+					<mx:ComboBox id="sortField_3" change="updateSorting(event)"
+						selectedIndex="{_presentationModel.sortFieldIndex3}"
+						dataProvider="{_presentationModel.fields}"/>
+					<mx:ComboBox id="sortDirection_3" change="updateSorting(event)"
+						selectedIndex="{_presentationModel.sortDirectionIndex3}"
+						dataProvider="{_presentationModel.DIRECTION_FILTER}"/>
+				</mx:HBox>
+			</mx:FormItem>
+		</mx:Form>
+	</mx:VBox>
+
+	<mx:Script>
+		<![CDATA[
+			import mx.events.ListEvent;
+			import com.enilsson.elephantadmin.views.modules.custom_reporting.model.SortingTabModel;
+			import com.enilsson.elephantadmin.views.modules.batch.model.AbstractPM;
+
+			public function set presentationModel(value:AbstractPM):void
+			{
+				if(value && value != _presentationModel)
+					_presentationModel = SortingTabModel(value);
+			}
+			[Bindable] private var _presentationModel:SortingTabModel;
+
+			public function updateSorting(e:ListEvent):void
+			{
+				var type:Array = e.currentTarget.id.split('_');
+				var sort:Object;
+				
+				switch(type[0]){
+					case 'sortField' :
+						sort = {
+						'fld' : e.currentTarget.selectedItem.value,
+						'dir' : this[ 'sortDirection_'+type[1] ].selectedItem.value
+						}
+						break;
+					case 'sortDirection' :
+						sort = {
+							'fld' : this[ 'sortField_'+type[1] ].selectedItem.value,
+							'dir' : e.currentTarget.selectedItem.value
+						}
+						break;
+				}
+				_presentationModel.updateSorting(sort, type[1]);
+			}
+
+		]]>
+	</mx:Script>
+</mx:Canvas>

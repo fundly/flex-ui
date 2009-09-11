@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" label="Column Ordering">
+	<mx:Text text="Select the order of the fields in the final report." top="10" left="10" fontSize="18" fontWeight="bold" />
+	<mx:Text text="Drag fields to reorder." top="35" left="10" />
+	<mx:HBox width="100%" height="100%" top="65" left="10" paddingBottom="10">
+		<mx:VBox width="50%" height="100%" verticalGap="0">
+			<mx:List id="finalColumns" width="100%" height="100%"
+				dataProvider="{_presentationModel.orderDataProvider}" dragComplete="_presentationModel.updateOrdering()"
+				dragEnabled="true" dropEnabled="true" allowMultipleSelection="true" dragMoveEnabled="true" />
+		</mx:VBox>
+	</mx:HBox>
+
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephantadmin.views.modules.custom_reporting.model.OrderingTabModel;
+			import com.enilsson.elephantadmin.views.modules.batch.model.AbstractPM;
+
+			public function set presentationModel(value:AbstractPM):void
+			{
+				if(value && value != _presentationModel)
+					_presentationModel = OrderingTabModel(value);
+			}
+			[Bindable] private var _presentationModel:OrderingTabModel;
+		]]>
+	</mx:Script>
+</mx:Canvas>

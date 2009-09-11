@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:flexlib="flexlib.controls.*"
+	label="Rules" horizontalScrollPolicy="off">
+	<mx:Text text="Filter the report based on the value of selected fields." top="5" left="10" fontSize="18" fontWeight="bold" />
+	<mx:VBox top="30" left="10" styleName="fieldSet" width="100%" >
+		<mx:HBox fontSize="12" width="100%">
+			<mx:ComboBox id="filterList" change="showFilters(event);
+			_presentationModel.selectedFilterItem = filterList.selectedItem"
+			prompt="Select a field"
+			dataProvider="{_presentationModel.fields}" >
+				
+			</mx:ComboBox>
+			<mx:Canvas>
+				<mx:HBox id="textConditions" top="0" left="0">
+					<mx:ComboBox id="conditions_text" dataProvider="{_presentationModel.STRING_FILTER}"
+						change="_presentationModel.selectedTextCondition = conditions_text.selectedItem;
+								_presentationModel.selectedTextConditionIndex = conditions_text.selectedIndex"/>
+					<mx:Canvas>
+						<flexlib:PromptingTextInput id="text_value" prompt="...value" 
+							top="0" left="0" width="150" visible="{conditions_text.selectedIndex!=1}"
+							change="_presentationModel.selectedTextValue = text_value.text"/>
+						<mx:ComboBox id="matches_field" top="0" left="0" visible="{conditions_text.selectedIndex==1}"
+							dataProvider="{_presentationModel.fields}"
+							change="_presentationModel.selectedTextItem = matches_field.selectedItem"/>
+					</mx:Canvas>
+				</mx:HBox>
+				<mx:HBox id="dateConditions" visible="false" top="0" left="0">
+					<mx:ComboBox id="conditions_date" dataProvider="{_presentationModel.INT_FILTER}"
+						change="_presentationModel.selectedDateCondition = conditions_date.selectedItem"/>
+					<mx:DateField id="date_value" width="150"
+						change="_presentationModel.selectedDate = date_value.selectedDate"/>
+				</mx:HBox>
+				<mx:HBox id="intConditions" visible="false" top="0" left="0">
+					<mx:ComboBox id="conditions_int" dataProvider="{_presentationModel.INT_FILTER}"
+						change="_presentationModel.selectedDateCondition = conditions_int.selectedItem"/>
+					<mx:ComboBox id="int_type" dataProvider="{_presentationModel.INT_TYPE}"
+						change="_presentationModel.selectedIntType = int_type.selectedItem;
+								_presentationModel.selectedIntIndex - int_type.selectedIndex"/>
+					<mx:Canvas>
+						<flexlib:PromptingTextInput id="int_value" prompt="...value" 
+							top="0" left="0" width="150" visible="{int_type.selectedIndex==0}"
+							change="_presentationModel.selectedIntValue = int_value.text"/>
+						<mx:ComboBox id="int_field_match" top="0" left="0" visible="{int_type.selectedIndex==1}"
+							dataProvider="{_presentationModel.fields}"
+							change="_presentationModel.selectedIntLabel = int_field_match.selectedLabel"/>
+					</mx:Canvas>
+				</mx:HBox>
+			</mx:Canvas>
+		</mx:HBox>
+		<mx:HBox verticalAlign="middle">
+			<mx:Text text="Add rule as: " />
+			<mx:Button label="AND" styleName="formBtn" click="_presentationModel.addFilter('AND');" />
+			<mx:Button label="OR" styleName="formBtn" click="_presentationModel.addFilter('OR');" />
+		</mx:HBox>
+	</mx:VBox>
+	<mx:Text text="List of Rules" fontSize="18" fontWeight="bold" top="120" left="10" />
+	<mx:DataGrid id="rulesList" width="100%" top="145" left="10" rowCount="5" dataProvider="{_presentationModel.rulesDataProvider}">
+		<mx:columns>
+			<mx:DataGridColumn headerText="Rule ID" dataField="ruleID" width="50" />
+			<mx:DataGridColumn headerText="Operator" dataField="operator" width="60" />
+			<mx:DataGridColumn headerText="Field" dataField="label" />
+			<mx:DataGridColumn headerText="Conditions" dataField="conditions" />
+			<mx:DataGridColumn headerText="Value" dataField="value" />
+			<mx:DataGridColumn headerText="Action" width="50">
+				<mx:itemRenderer>
+					<mx:Component>
+						<mx:HBox width="{explicitWidth}" horizontalAlign="center">
+							<mx:Image source="@Embed('/assets/images/icons/delete.png')" 
+								useHandCursor="true" buttonMode="true"
+								click="parentDocument._presentationModel.deleteRule(data)"
+								toolTip="Delete this rule" />
+						</mx:HBox>
+					</mx:Component>
+				</mx:itemRenderer>
+			</mx:DataGridColumn>
+		</mx:columns>
+	</mx:DataGrid>
+	<mx:VBox width="100%" top="{rulesList.height + rulesList.y + 20}" left="10">
+		<mx:Text text="Advanced" fontSize="18" fontWeight="bold" />
+		<mx:Text width="100%">
+			<mx:htmlText>
+				<![CDATA[Use this box to enter advanced <b>AND</b> or <b>OR</b> statements such as <b>(1 AND 2) OR 3</b>. Please note that any rules in the box below will overload any of the above boolean operators.]]>
+			</mx:htmlText>
+		</mx:Text>
+		<mx:TextInput id="boolOps" width="400" focusOut="_presentationModel.updateAdvancedFilter(event)" />
+	</mx:VBox>
+
+	<mx:Script>
+		<![CDATA[
+			import mx.events.ListEvent;
+			import com.enilsson.elephantadmin.views.modules.custom_reporting.model.RulesTabModel;
+			import com.enilsson.elephantadmin.views.modules.batch.model.AbstractPM;
+
+			public function set presentationModel(value:AbstractPM):void
+			{
+				if(value && value != _presentationModel)
+					_presentationModel = RulesTabModel(value);
+			}
+			[Bindable] private var _presentationModel:RulesTabModel;
+			
+			public function showFilters(e:ListEvent):void
+			{
+				switch(filterList.selectedItem.type){
+					case 'date' :
+						textConditions.visible = false;
+						dateConditions.visible = true;
+						intConditions.visible = false;
+					break;
+					case 'number' :
+					case 'currency' :
+						textConditions.visible = false;
+						dateConditions.visible = false;
+						intConditions.visible = true;
+					break;
+					default :
+						textConditions.visible = true;
+						dateConditions.visible = false;
+						intConditions.visible = false;
+					break;
+				}
+			}
+
+		]]>
+	</mx:Script>
+</mx:Canvas>
