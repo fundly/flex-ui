@@ -162,12 +162,28 @@ package com.enilsson.elephantadmin.views.modules.reporting.all_contributions.mod
 				gridTotalRecords = vo.total_records;
 				if(vo.addData)
 				{
-					if(vo.addData['contrib_total'])
-						totalContribSum = vo.addData['contrib_total'];
-					else
-						totalContribSum = 0;
-				} else {
-					totalContribSum = 0;
+					switch(filter)
+					{
+						case FILTER_ALL:
+							if(vo.addData['contrib_total'])
+								totalContribSum = vo.addData['contrib_total'];
+							break;
+
+						case FILTER_CREDIT_CARD:
+							if(vo.addData['credit_total'])
+								totalContribSum = vo.addData['credit_total'];
+							break;
+
+						case FILTER_CHECK:
+							if(vo.addData['check_total'])
+								totalContribSum = vo.addData['check_total'];
+							break;
+
+						case FILTER_PAYPAL:
+							if(vo.addData['paypal_total'])
+								totalContribSum = vo.addData['paypal_total'];
+							break;
+					}
 				}
 				updateText();
 			}

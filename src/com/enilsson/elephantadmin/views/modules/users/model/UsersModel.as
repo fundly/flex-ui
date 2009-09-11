@@ -171,7 +171,7 @@ package com.enilsson.elephantadmin.views.modules.users.model
 		/**
 		 * Get the appropriate data and build the pledges tab
 		 */
-		private function loadPledgesTab():void
+		public function loadPledgesTab():void
 		{
 			pledgesTabLoading = true;
 			pledges = new ArrayCollection();

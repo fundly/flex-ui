@@ -27,6 +27,10 @@ package com.enilsson.elephantadmin.views.modules.events.model
 			_addNewRecordLabel = 'ADD EVENT';
 		}
 		
+		public var pledgesTabLoading:Boolean;
+		
+		public var pledges:ArrayCollection;
+		
 		/**
 		 * Capture the get record event and add the Pledge specific elements to it
 		 */
@@ -34,7 +38,8 @@ package com.enilsson.elephantadmin.views.modules.events.model
 		{
 			super.getRecordDetails();
 			
-			getHostCommittee();			
+			getHostCommittee();
+			getPledges();
 		}
 
 		/**
@@ -159,7 +164,31 @@ package com.enilsson.elephantadmin.views.modules.events.model
 			
 			new EventsEvent( EventsEvent.GET_HOSTS, this, r ).dispatch();
 		}
-		
+
+		public function getPledges():void
+		{
+			pledgesTabLoading = true;
+			pledges = new ArrayCollection();
+			
+			var eSQL:String = 'pledges(';
+			eSQL += 'event_id,';
+			eSQL += 'transactions<amount:full_name:card_number:card_number_type:created_on:transactionid:address:city:state:zip>,';
+			eSQL += 'checks<entry_date:amount:batch_code:batch_id>,';
+			eSQL += 'paypal_transactions<amount:created_on:transactionid>';
+			eSQL += ')';
+			
+			var where:Object = {'statement':'(1)','1':{ 
+					'what' : 'pledges.event_id',
+					'val' : this.recordID,
+					'op' : '='
+				}};
+
+			var recordsVO:RecordsVO = new RecordsVO( eSQL, where );
+			
+			new EventsEvent( EventsEvent.GET_PLEDGES, this, recordsVO ).dispatch();
+		}
+
+
 		/**
 		 * Get and save a list of searched fundraisers for the host committee
 		 */

@@ -43,6 +43,9 @@ package com.enilsson.elephantadmin.commands.modules
 				case EventsEvent.GET_HOSTS :
 					getHosts( event as EventsEvent );
 				break;
+				case EventsEvent.GET_PLEDGES :
+					getPledges( event as EventsEvent );
+				break;
 				case EventsEvent.LOOKUP_SEARCH :
 					hostsLookup( event as EventsEvent );
 				break;
@@ -117,6 +120,44 @@ package com.enilsson.elephantadmin.commands.modules
 		{
 			//if(_model.debug) 
 			Logger.info('getHosts Fault', ObjectUtil.toString( event.fault ));
+
+			_model.dataLoading = false;
+		}
+
+		/**
+		 * Get the list of pledges for a specific event
+		 */
+		private function getPledges( event:EventsEvent ):void
+		{
+			var handlers:IResponder = new mx.rpc.Responder(onResults_getPledges, onFault_getPledges);
+			var delegate:RecordsDelegate = new RecordsDelegate(handlers);
+			
+			// show the data loading icon
+			_model.dataLoading = true
+			_eventsModel.pledgesTabLoading = true;
+
+			delegate.getRecords( event.recordsVO );			
+		}
+		
+		private function onResults_getPledges( event:ResultEvent ):void 
+		{
+			if(_model.debug) Logger.info('getPledges Success', ObjectUtil.toString( event.result ));
+
+			_model.dataLoading = false;
+			_eventsModel.pledgesTabLoading = false;
+			
+			var records:ArrayCollection = new ArrayCollection();
+			for each ( var item:Object in event.result[event.result.table_name] )
+				records.addItem( item );
+				
+			_eventsModel.pledges = records;			
+		}
+
+		private function onFault_getPledges( event:FaultEvent ):void 
+		{
+			//if(_model.debug) 
+			Logger.info('getPledges Fault', ObjectUtil.toString( event.fault ));
+			_eventsModel.pledgesTabLoading = false;
 
 			_model.dataLoading = false;
 		}

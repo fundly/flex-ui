@@ -8,6 +8,7 @@
 	<events:ManageEventRecord id="manageEventRecord" 
 		width="100%" height="100%">
 		<tabs:Events_HostCommittee />
+		<tabs:Events_Pledges />
 	</events:ManageEventRecord>
 
 	<mx:Script>

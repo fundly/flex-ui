@@ -19,22 +19,6 @@
 		[Event(name="toDateChange", type="flash.events.Event")]
 	</mx:Metadata>
 	
-	
-	<mx:Style>
-	.dateRangeField
-	{
- 		fontFamily: "Silkscreen"; 
-		fontSize: 8;
- 		textInputStyleName: dateRangeTextInput; 
-	}
-	
-	.dateRangeTextInput
-	{
-		paddingTop: 4;
-		borderSkin: ClassReference("mx.skins.ProgrammaticSkin");
-	}
-
-	</mx:Style>
 	<mx:Script>
 		<![CDATA[
 			import mx.events.CalendarLayoutChangeEvent;

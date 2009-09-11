@@ -28,8 +28,8 @@
 				<mx:List width="100%" height="100%" 
 					alternatingItemColors="['#FFFFFF', '#EDEDED']" 
 					variableRowHeight="true" 
-					itemRenderer="com.enilsson.elephantadmin.views.modules.contacts.renderers.Contacts_PledgesRenderer"
-					dataProvider="{_presentationModel.pledges}" />			
+					itemRenderer="com.enilsson.elephantadmin.views.modules.events.renderers.Events_PledgesRenderer"
+					dataProvider="{_presentationModel.pledges}" />
 			</mx:Canvas>
 			<mx:Canvas>
 				<mx:DataGrid width="100%" height="100%" 
@@ -79,7 +79,7 @@
 			<common:CMSSubmitBtn
 				xmlns:common="com.enilsson.elephantadmin.views.common.*"
 				label="NEW PLEDGE"
-				toolTip="Add a new pledge for this contact"
+				toolTip="Add a new pledge for this event"
 				width="100"
 				click="popupPledgeWorkspace();"
 				/>
@@ -111,14 +111,14 @@
 			import com.enilsson.elephantadmin.views.modules.pledge_workspace.PWPopupContainer;
 			import com.enilsson.utils.EDateUtil;
 			import com.enilsson.elephantadmin.views.manage_record_base.model.RecordModel;
-			import com.enilsson.elephantadmin.views.modules.contacts.model.ContactsModel;
+			import com.enilsson.elephantadmin.views.modules.events.model.EventsModel;
 			import com.enilsson.elephantadmin.interfaces.IRecordModel;
 
 			[Bindable] private var _model:EAModelLocator = EAModelLocator.getInstance();
-			[Bindable] private var _presentationModel:ContactsModel;
+			[Bindable] private var _presentationModel:EventsModel;
 			public function set presentationModel ( value:IRecordModel ):void
 			{
-				_presentationModel = ContactsModel(value);
+				_presentationModel = EventsModel(value);
 			}
 			public function get presentationModel():IRecordModel
 			{
@@ -144,14 +144,13 @@
 			{
 				// set up the popup
 				var popup:PWPopupContainer = new PWPopupContainer();
-				popup.defaultTab = "pledge";
-				popup.popupTitle = "Add a new Pledge for this Contact";
+				popup.defaultTab = "contact";
+				popup.popupTitle = "Add a new Pledge for this Event";
 
 				// set up the pwsVO
 				var pwVO:PledgeWorkspaceVO = new PledgeWorkspaceVO();
-				pwVO.action = PledgeWorkspaceModel.ADD_SHARED;
-				pwVO.contactID = _presentationModel.selectedRecord.id;
-				pwVO.contactData = _presentationModel.selectedRecord;
+				pwVO.action = PledgeWorkspaceModel.ADD_NEW;
+				pwVO.eventID = _presentationModel.selectedRecord.id;
 				EAModelLocator.getInstance().pledgeWorkspace = pwVO;
 
 				// popup the window
@@ -163,7 +162,7 @@
 				{
 					PopUpManager.removePopUp(PWPopupContainer(event.currentTarget));
 					// refresh the check list to display new check if any
-					_presentationModel.getPledges();
+				//	_presentationModel.getPledges();
 				});
 			}
 

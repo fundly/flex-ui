@@ -82,7 +82,15 @@
 
 	<mx:Array id="footerButtons">
 		<mx:HBox verticalCenter="0" right="5" verticalAlign="middle">
-			<mx:FormItem label="Filter by Batch" color="#ffffff">
+			<common:CMSSubmitBtn
+				xmlns:common="com.enilsson.elephantadmin.views.common.*"
+				label="NEW CHECK"
+				toolTip="Add a new check not listed here"
+				width="90"
+				click="popupPledgeWorkspace();"
+				/>
+			<mx:VRule height="20" />
+			<mx:FormItem label="Batch" color="#ffffff" indicatorGap="5">
 				<mx:TextInput borderStyle="solid" cornerRadius="3" id="batchInput" width="40" height="20"
 					filters="{[ds]}" color="#333333" restrict="0-9" enter="batchSelectButtonHandler()"/>
 			</mx:FormItem>
@@ -99,6 +107,7 @@
 
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.elephantadmin.views.modules.pledge_workspace.PWPopupContainer;
 			import mx.messaging.AbstractConsumer;
 			import mx.controls.Alert;
 			import mx.core.Application;
@@ -413,6 +422,20 @@
 			{
 				return ObjectUtil.numericCompare( itemA.pledge_id.pledge_date, itemB.pledge_id.pledge_date );
 			}
+
+			public function popupPledgeWorkspace():void
+			{
+				var popup:PWPopupContainer = new PWPopupContainer();
+				PopUpManager.addPopUp(popup, DisplayObject(Application.application), true);
+				popup.addEventListener(Event.CLOSE, function (event:Event):void
+				{
+					PopUpManager.removePopUp(PWPopupContainer(event.currentTarget));
+					// refresh the check list to display new check if any
+					_model.checks.lastQuery.dispatch();
+				});
+				PopUpManager.centerPopUp(popup);
+			}
+
 		]]>
 	</mx:Script>
 	
