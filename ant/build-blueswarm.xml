@@ -47,13 +47,18 @@
 			optimize="true"
 			static-rsls="false"
 			debug="${swf.debug}">
-			
-			<source-path path-element="${flex.sdk.home}" />
+		
 			<source-path path-element="${flex.src.dir}" />
+			<source-path path-element="${flex.framework.dir}" />
 			
-			<external-library-path dir="${basedir}" append="true">
+			<library-path dir="${flex.framework.dir}" append="true">
 				<include name="${flex.lib.dir}" />
-			</external-library-path>
+               	<include name="locale/en_US" />
+			</library-path>
+			
+			<library-path dir="${basedir}" append="true">
+				<include name="${flex.lib.dir}" />
+			</library-path>
 			
 			<runtime-shared-library-path 
 				path-element="${flex.sdk.home}/frameworks/libs/framework.swc">
@@ -90,8 +95,13 @@
 			static-rsls="false"
 			debug="${swf.debug}">
 			
-			<source-path path-element="${flex.sdk.home}" />
 			<source-path path-element="${flex.src.dir}" />
+			<source-path path-element="${flex.framework.dir}" />
+						
+			<library-path dir="${flex.framework.dir}" append="true">
+				<include name="${flex.lib.dir}" />
+				<include name="locale/en_US" />
+			</library-path>
 			
 			<library-path dir="${basedir}" append="true">
 				<include name="${flex.lib.dir}" />

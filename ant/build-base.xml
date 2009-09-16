@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 
 <project name="buildbase" default="compile">
-	<property name="flex.src.dir" value="${basedir}/src" />
-	<property name="flex.lib.dir" value="libs" />
-	<property name="build.dir" value="${basedir}/build" />
-	<property name="package.dir" value="${basedir}/deploy" />
 	
 	<property file="build.properties" />
 	
 	<taskdef resource="flexTasks.tasks" classpath="${flex.sdk.home}/ant/flexTasks.jar"/>
 	
-	<property name="framework.rsl.dir" value="${flex.sdk.home}/frameworks/rsls" />
+	<property name="build.dir" value="${basedir}/build" />
+	<property name="package.dir" value="${basedir}/deploy" />
+	
+	<property name="flex.src.dir" value="${basedir}/src" />
+	<property name="flex.lib.dir" value="libs" />
+	<property name="flex.framework.dir" value="${flex.sdk.home}/frameworks" />
+	<property name="framework.rsl.dir" value="${flex.framework.dir}/rsls" />
 	<property name="framework.file" value="framework_${flex.framework.version}.swz" />
 	<property name="framework.fallback.file" value="framework_${flex.framework.version}.swf" />
 	<property name="rpc.file" value="rpc_${flex.framework.version}.swz" />
