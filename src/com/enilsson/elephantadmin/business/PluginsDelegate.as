@@ -124,7 +124,7 @@ package com.enilsson.elephantadmin.business
 
 		public function validateCheckEntry(checkID:int, checkAmount:int):void
 		{
-			this.service = ServiceLocator.getInstance().getRemoteObject('struktorPluginsPledges');
+			this.service = ServiceLocator.getInstance().getRemoteObject('struktorPluginsChecks');
 			var token:AsyncToken = service.validate_check_entry(
 										checkID,
 										checkAmount
