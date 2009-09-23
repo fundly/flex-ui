@@ -302,7 +302,8 @@ package com.enilsson.elephanttrakker.commands
 					dp.addItem( new ObjectProxy( rssVO ) );					
 				}
 			}
-			catch( e : Error ) { 
+			catch( e : Error ) {
+				dp.removeAll();
 				dp.addItem( getErrorRssVO() );
 			}		
 			
