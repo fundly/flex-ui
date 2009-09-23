@@ -78,7 +78,7 @@
 			
 			private function fadeTicker(event:TimerEvent):void 
 				{	
-					if(!_model.rssData){ return; }					
+					if(!hasRssData) return; 					
 					
 					Tweener.addTween(newsItem, { alpha: 0, time: 1, transition: 'linear', onComplete: function():void {
 						tickerCurr++;
@@ -92,6 +92,8 @@
 			
 			private function launchEmailPopUp(e:MouseEvent):void
 			{
+				if(!hasRssData) return;
+				
 				var rssObj:RssVO = new RssVO( _model.rssData.getItemAt(0) );
 				
 				if ( rssObj.error === true ) return; 
@@ -106,9 +108,11 @@
 			
 			private function clickExpandHandler( event:MouseEvent ):void
 			{
-				var rssItem:RssVO = new RssVO( _model.rssData.getItemAt(0) );
-				
 				Logger.info('RssItem click', ObjectUtil.toString(_model.rssData));
+				
+				if(!hasRssData) return;
+				
+				var rssItem:RssVO = new RssVO( _model.rssData.getItemAt(0) );
 				
 				if ( rssItem.error === true ) return;					
 				
@@ -136,6 +140,10 @@
 						bnExpand.toolTip = 'Expand news ticker';
 					}
 				}				
+			}
+			
+			private function get hasRssData() : Boolean {
+				return ( _model.rssData && _model.rssData.length > 0 );
 			}			
 		
 		]]>
