@@ -301,10 +301,14 @@ package com.enilsson.elephanttrakker.commands
 					var rssVO:RssVO = new RssVO ( item );
 					dp.addItem( new ObjectProxy( rssVO ) );					
 				}
+				
+				if(dp.length == 0) {
+					dp.addItem( getNoNewsRssVO() );
+				}
 			}
 			catch( e : Error ) {
 				dp.removeAll();
-				dp.addItem( getErrorRssVO() );
+				dp.addItem( getErrorMessageRssVO() );
 			}		
 			
 			_model.rssData = dp;
@@ -315,19 +319,20 @@ package com.enilsson.elephanttrakker.commands
 			if(_model.debug) Logger.info('Fail RSS', ObjectUtil.toString(event));
 			
 			var dp:ArrayCollection = new ArrayCollection();
-			dp.addItem( getErrorRssVO() );		
+			dp.addItem( getErrorMessageRssVO() );		
 			_model.rssData = dp;
 		}
 		
-		private function getErrorRssVO() : RssVO
+		private function getErrorMessageRssVO() : RssVO { return getErrorRssVO('There is an error with the RSS feed, please inform your admin team!'); }
+		private function getNoNewsRssVO() : RssVO { return getErrorRssVO("There are no news available today."); }
+		
+		private function getErrorRssVO( title : String ) : RssVO
 		{
-			var rssVO:RssVO = new RssVO ();
-			rssVO.title = 'There is an error with the RSS feed, please inform your admin team!';
-			rssVO.error = true;
-			
+			var rssVO:RssVO = new RssVO();
+			rssVO.title = title;
+			rssVO.error = true;			
 			return rssVO;			
 		}
-
 
 		/**
 		 * Handler to launch the required elements once the session and layout have been loaded
