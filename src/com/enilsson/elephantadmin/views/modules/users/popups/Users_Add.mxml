@@ -10,17 +10,10 @@
 	<mx:HBox width="100%" height="100%" horizontalGap="0">
 		<mx:VBox width="100%" height="100%" verticalGap="0" horizontalAlign="right">
 			<mx:Form paddingTop="0" paddingBottom="5" verticalGap="4" width="400" id="form1">
-<!--				<mx:FormItem labelWidth="120" label="Sender Email:" width="100%" required="true" styleName="formLabel">
-						<mx:TextInput id="senderEmailInput" width="100%"/>
-				</mx:FormItem>
-				<mx:FormItem labelWidth="120" label="Sender Name:" width="100%" required="true" styleName="formLabel">
-						<mx:TextInput id="senderNameInput" width="100%"/>
-				</mx:FormItem>
-				<mx:HRule width="100%"/>
--->				<mx:FormItem labelWidth="120" label="User Email (login):" width="100%" required="true" styleName="formLabel">
+				<mx:FormItem labelWidth="120" label="User Email (login):" width="100%" required="true" styleName="formLabel">
 						<mx:TextInput id="emailInput" width="100%"/>
 				</mx:FormItem>
-				<struktorForm:StruktorForm id="myDetailsForm" 
+				<struktorForm:StruktorForm id="myDetailsForm"  
 					styleName="processingForm"
 					width="367" maxHeight="255"
 					formInputWidth="233"
@@ -29,7 +22,8 @@
 					formBuildComplete="this.enabled = true" 
 					excludedFields="{['_itemsperpage']}"
 					numColumns="1" 
-					debugMode="{_model.debug}" />
+					debugMode="{_model.debug}"
+					validateOnKeyPress="true" />
 				<mx:FormItem horizontalAlign="right" width="100%" paddingRight="15">
 					<mx:HBox horizontalAlign="right">
 						<mx:CheckBox id="includeDownlineCheck" selected="true"/>
