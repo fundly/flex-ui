@@ -8,26 +8,21 @@ package com.enilsson.elephantadmin.commands.modules
 	import com.enilsson.elephantadmin.business.RecordsDelegate;
 	import com.enilsson.elephantadmin.business.SearchDelegate;
 	import com.enilsson.elephantadmin.events.modules.EmailEvent;
-	import com.enilsson.elephantadmin.events.session.SessionFailEvent;
 	import com.enilsson.elephantadmin.models.EAModelLocator;
 	import com.enilsson.elephantadmin.vo.LayoutVO;
-	import com.enilsson.elephantadmin.vo.RecordsVO;
 	
 	import mx.collections.ArrayCollection;
 	import mx.rpc.IResponder;
+	import mx.rpc.events.FaultEvent;
+	import mx.rpc.events.ResultEvent;
 	import mx.utils.ObjectUtil;
 	
 	import org.osflash.thunderbolt.Logger;
 
-	public class EmailLogCommand extends SequenceCommand implements ICommand, IResponder
+	public class EmailLogCommand extends SequenceCommand implements ICommand
 	{
 		private var _model:EAModelLocator = EAModelLocator.getInstance();
 		private var _moduleName:String = 'email_log';
-		
-		public function EmailLogCommand()
-		{
-			super();
-		}
 		
 		override public function execute(event:CairngormEvent):void
 		{
@@ -47,14 +42,6 @@ package com.enilsson.elephantadmin.commands.modules
 			}
 		}
 
-
-		/**
-		 * Stubs required for IResponder interface; need as Delegate constructor argument
-		 */
-		public function fault(info:Object):void { Logger.info(info.toString()); }
-		public function result(data:Object):void { /* no longer used */ }
-
-
 		/**
 		 * Get the users table layout to build the form
 		 */			
@@ -68,7 +55,7 @@ package com.enilsson.elephantadmin.commands.modules
 			delegate.getLayout( new LayoutVO("email_log") );
 		}
 				
-		private function onResult_getLayout(event:Object):void 
+		private function onResult_getLayout(event:ResultEvent):void 
 		{
 			if(_model.debug){ Logger.info(_moduleName + ' getLayout Success', ObjectUtil.toString(event.result)); }
 			
@@ -77,13 +64,12 @@ package com.enilsson.elephantadmin.commands.modules
 			_model[_moduleName].layout = event.result[0];	
 		}
 		
-		public function onFault_getLayout(event:Object):void
+		public function onFault_getLayout(event:FaultEvent):void
 		{
 			if(_model.debug) Logger.info(_moduleName + ' getLayout Fail', ObjectUtil.toString(event));		
 			
 			_model.dataLoading = false;
 		}
-
 
 		/**
 		 * Get the users table layout to build the form
@@ -99,7 +85,7 @@ package com.enilsson.elephantadmin.commands.modules
 			delegate.getRecords( event.params.recordsVO );			
 		}
 				
-		private function onResults_getRecords(event:Object):void 
+		private function onResults_getRecords(event:ResultEvent):void 
 		{
 			if(_model.debug){ Logger.info(_moduleName + ' getRecords Success', ObjectUtil.toString(event.result)); }
 			
@@ -122,7 +108,7 @@ package com.enilsson.elephantadmin.commands.modules
 			}
 		}
 		
-		public function onFault_getRecords(event:Object):void
+		public function onFault_getRecords(event:FaultEvent):void
 		{
 			if(_model.debug) Logger.info(_moduleName + ' getRecords Fail', ObjectUtil.toString(event));		
 			
@@ -144,7 +130,7 @@ package com.enilsson.elephantadmin.commands.modules
 			delegate.search( event.params.searchVO );			
 		}
 				
-		private function onResults_searchRecords(event:Object):void 
+		private function onResults_searchRecords(event:ResultEvent):void 
 		{
 			if(_model.debug){ Logger.info(_moduleName + ' search Success', ObjectUtil.toString(event.result)); }
 			
@@ -169,7 +155,7 @@ package com.enilsson.elephantadmin.commands.modules
 			}
 		}
 		
-		public function onFault_searchRecords(event:Object):void
+		public function onFault_searchRecords(event:FaultEvent):void
 		{
 			if(_model.debug) Logger.info(_moduleName + ' search Fail', ObjectUtil.toString(event));		
 			
