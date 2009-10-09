@@ -87,15 +87,9 @@
 				//copyRight.htmlText += '  <a href="http://www.blue-swarm.com/" target="_blank"><b><font color="#52bdec">BlueSwarm</font></b>';
 			}
 			
-			/**
-			 * Set the version text, removing any alpha characters that creep in
-			 */
 			private function versionText():String
 			{
-				var regX:RegExp = /[a-zA-Z]/gi;
-				var rev:String = _model.revision;
-				
-				return 'version '  + _model.version + '.' + rev.replace(regX, '');
+				return 'version '  + _model.version + ' build ' + _model.revision;
 			}
 			
 			/**
