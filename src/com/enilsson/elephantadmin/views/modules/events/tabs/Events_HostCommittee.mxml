@@ -4,7 +4,7 @@
 	xmlns:controls="com.enilsson.controls.*"
 	implements="com.enilsson.elephantadmin.interfaces.IOptionView"
 	label="HOST COMMITTEE"
-	enabled="{!_presentationModel.hostCommitteeProcessing}"
+	enabled="{_presentationModel.hostCommittee &amp;&amp; !_presentationModel.hostCommitteeProcessing}"
 	width="100%" height="100%"
 	paddingLeft="5" paddingRight="5"
 	paddingBottom="5" xmlns:common="com.enilsson.elephantadmin.views.common.*">
@@ -31,7 +31,7 @@ List below are all the host committee members for this event. Clicking the fundr
 			searchStart="_presentationModel.hostsSearchStart( event )" />			
 		<common:CMSSubmitBtn
 			width="85" fontSize="10"
-			label="ADD HOST" 
+			label="ADD HOST"
 			click="_presentationModel.addEventHost( addHost.selectedData )"
 			/>		
 	</mx:HBox>
