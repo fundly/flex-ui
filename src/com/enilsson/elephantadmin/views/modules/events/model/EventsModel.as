@@ -240,16 +240,16 @@ package com.enilsson.elephantadmin.views.modules.events.model
 			};
 			var r:RecordVO = new RecordVO( 'events_host_committee', 0, p );
 
- 			// save the params to be inserted into the committee list on success
- 			newHost = ObjectUtil.copy(p);
-			newHost['user_id'] = value;
-			
 			// do the upsert
  			new EventsEvent (
 				EventsEvent.UPSERT_HOST_RECORD,
 				this,
 				r
 			).dispatch();
+			
+			// save the params to be inserted into the committee list on success
+ 			newHost = ObjectUtil.copy(p);
+			newHost['user_id'] = value;
  		}
 		
 		

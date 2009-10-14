@@ -40,9 +40,6 @@ package com.enilsson.elephantadmin.views.modules.events
 		override public function configuration(value:RecordModuleConfiguration):void
 		{
 			super.configuration(value);
-			
-			BindingUtils.bindProperty(accessOptionsTab, "dataProvider", presentationModel, "selectedRecord" );
-			BindingUtils.bindProperty(accessOptionsTab, "setGroups", _model, "orgGroups");
 		}
 		
 		override protected function createChildren():void
@@ -57,6 +54,9 @@ package com.enilsson.elephantadmin.views.modules.events
 				
 				accessOptionsTab.addEventListener(Event.CHANGE, handleAccessChange, false, 0, true);
 				optionsBox.addChild(accessOptionsTab);
+				
+				BindingUtils.bindProperty(accessOptionsTab, "dataProvider", this, ["presentationModel","selectedRecord"] );
+				BindingUtils.bindProperty(accessOptionsTab, "setGroups", _model, "orgGroups");
 			}
 		}
 		
