@@ -10,10 +10,6 @@ package com.enilsson.elephantadmin.models.viewclasses
 	[Bindable]
 	public class EmailLogViewClass
 	{
-		public function EmailLogViewClass()
-		{
-		}
-		
 		public var records:ArrayCollection;
 		public var totalRecords:Number = 0;
 		public var currPage:Number = 0;

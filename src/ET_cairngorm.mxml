@@ -15,7 +15,7 @@
 	<mx:ViewStack id="mainContainer"
 		styleName="contentContainer" 
 		selectedIndex="{_model.screenState}" 
-		visible="{_model.screenVStack}"
+		visible="{_model.mainScreenVisible}"
 		width="100%" height="475" 
 		horizontalCenter="0" top="90">
 		<views:Login id="loginScreen"

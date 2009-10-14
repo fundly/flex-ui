@@ -7,6 +7,7 @@
 
 	<mx:Script>
 		<![CDATA[
+			import com.asual.swfaddress.SWFAddress;
 	
 			import com.enilsson.elephantadmin.models.EAModelLocator;
 			import org.osflash.thunderbolt.Logger;
@@ -25,7 +26,7 @@
 				coverFlow.selectedIndex = coverFlow.selectedIndex==1 ? 0 : 1
 				// change the browser title accordingly
 				var title:String = coverFlow.selectedIndex == 1 ? 'Forgot Details' : 'Login'
-				_model.browserManager.setTitle(_model.appName + ' - ' + title);
+				SWFAddress.setTitle(_model.appName + ' - ' + title);
 			}
 				
 		]]>

@@ -1,6 +1,7 @@
 package com.enilsson.elephantadmin.models
 {
 	import com.adobe.cairngorm.model.ModelLocator;
+	import com.asual.swfaddress.SWFAddress;
 	import com.enilsson.elephantadmin.events.GetVersionEvent;
 	import com.enilsson.elephantadmin.events.session.PingEvent;
 	import com.enilsson.elephantadmin.models.viewclasses.*;
@@ -14,7 +15,6 @@ package com.enilsson.elephantadmin.models
 	import flash.utils.ByteArray;
 	
 	import mx.collections.ArrayCollection;
-	import mx.managers.IBrowserManager;
 	public class EAModelLocator implements ModelLocator
 	{		
 		/**
@@ -190,9 +190,7 @@ package com.enilsson.elephantadmin.models
 		/**
 		* Variables for the deeplinking
 		*/
-		public var browserManager : IBrowserManager;
 		public var is_parsing_url : Boolean = false;
-		public var browserFragments : Array;
 		// array holding the fragment portions delimited by a forward slash
 		
 		
@@ -397,6 +395,7 @@ package com.enilsson.elephantadmin.models
 			
 			// set the main screen back to the login
 			screenState = LOGIN_SCREEN;
+			mainScreenVisible = true;
 			mainViewState = NO_VIEW;
 			
 			// reset some of the model variables
@@ -431,8 +430,8 @@ package com.enilsson.elephantadmin.models
 			appOptions = new AppOptionsModel();
 			
 			// change the browser info to the login screen
-			browserManager.setFragment('login');
-			browserManager.setTitle(appName + ' - Login');
+			SWFAddress.setValue('login');
+			SWFAddress.setTitle(appName + ' - Login');
 			
 			// remove any moduleFWD references from the LSO
 			eNilssonUtils.flashCookie('module_fwd');

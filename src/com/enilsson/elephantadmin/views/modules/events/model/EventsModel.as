@@ -3,16 +3,21 @@ package com.enilsson.elephantadmin.views.modules.events.model
 	import com.adobe.cairngorm.model.ModelLocator;
 	import com.enilsson.elephantadmin.events.modules.EventsEvent;
 	import com.enilsson.elephantadmin.events.modules.RecordModuleEvent;
+	import com.enilsson.elephantadmin.views.common.ErrorMsgBox;
 	import com.enilsson.elephantadmin.views.manage_record_base.model.RecordModel;
+	import com.enilsson.elephantadmin.vo.ErrorVO;
 	import com.enilsson.elephantadmin.vo.RecordVO;
 	import com.enilsson.elephantadmin.vo.RecordsVO;
 	import com.enilsson.elephantadmin.vo.SearchVO;
 	
+	import flash.display.DisplayObject;
 	import flash.events.Event;
 	
 	import mx.collections.ArrayCollection;
 	import mx.controls.TextInput;
+	import mx.core.Application;
 	import mx.events.DataGridEvent;
+	import mx.managers.PopUpManager;
 	import mx.utils.ObjectUtil;
 
 	[Bindable]
@@ -212,13 +217,19 @@ package com.enilsson.elephantadmin.views.modules.events.model
 		 */
 		public function addEventHost( value:Object ):void
 		{			
-			// if there is no host selected then do nothing
-			if( value.user_id == null ) return;
+			// if there is no host selected or no host committee then do nothing
+			if( ! value 
+				|| value.user_id === undefined 
+				|| ! value.user_id 
+				|| ! hostCommittee ) 
+				return;
 			
 			// if the host is already in the committee then do nothing
 			for each ( var item:Object in hostCommittee)
-				if( item.user_id.user_id == value.user_id)
+				if( item.user_id.user_id == value.user_id) {
+					showError("This user is already listed as a committee member.");
 					return;
+				}
 			
 			// set the parameters for the upsert
 			var p:Object = { 
@@ -229,16 +240,16 @@ package com.enilsson.elephantadmin.views.modules.events.model
 			};
 			var r:RecordVO = new RecordVO( 'events_host_committee', 0, p );
 
- 			// save the params to be inserted into the committee list on success
- 			newHost = ObjectUtil.copy(p);
-			newHost['user_id'] = value;
-			
 			// do the upsert
  			new EventsEvent (
 				EventsEvent.UPSERT_HOST_RECORD,
 				this,
 				r
 			).dispatch();
+			
+			// save the params to be inserted into the committee list on success
+ 			newHost = ObjectUtil.copy(p);
+			newHost['user_id'] = value;
  		}
 		
 		
@@ -286,6 +297,16 @@ package com.enilsson.elephantadmin.views.modules.events.model
 				this,
 				r
 			).dispatch();
+ 		}
+ 		
+ 		
+ 		private function showError( message : String ) : void
+ 		{
+ 			var emb : ErrorMsgBox = new ErrorMsgBox();
+ 			emb.initialize();
+ 			emb.params = new ErrorVO( message, "errorBox", true ); 
+ 			PopUpManager.addPopUp( emb, Application.application as DisplayObject, false ); 			
+ 			PopUpManager.centerPopUp( emb );
  		}
 	}
 }

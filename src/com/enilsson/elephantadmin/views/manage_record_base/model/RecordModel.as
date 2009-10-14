@@ -215,14 +215,17 @@ package com.enilsson.elephantadmin.views.manage_record_base.model
 		private var _selectedRecord:Object = {};
 		public function set selectedRecord ( value:Object ):void
 		{
-			_selectedRecord = value;
-			recordID = value[layout.primary_key];
-			showRecordDetails = false;
-			setDeleteBtn( value );
-			
-			if ( debug ) Logger.info( 'Set Selected Record', recordID );
-
-			dispatchEvent( new Event('selectedRecordChange') );
+			if(value) 
+			{
+				_selectedRecord = value;
+				recordID = value[layout.primary_key];
+				showRecordDetails = false;
+				setDeleteBtn( value );
+				
+				if ( debug ) Logger.info( 'Set Selected Record', recordID );
+	
+				dispatchEvent( new Event('selectedRecordChange') );
+			}
 		}
 
 

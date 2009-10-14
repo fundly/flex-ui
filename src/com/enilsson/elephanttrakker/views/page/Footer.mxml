@@ -61,6 +61,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.asual.swfaddress.SWFAddress;
 			import mx.utils.StringUtil;
 			import com.enilsson.utils.eNilssonUtils;
 			import mx.controls.Image;
@@ -84,18 +85,11 @@
 			private function init():void
 			{
 				copyRight.htmlText = currDate.getFullYear().toString() + ' ';
-				//copyRight.htmlText += '  <a href="http://www.blue-swarm.com/" target="_blank"><b><font color="#52bdec">BlueSwarm</font></b>';
 			}
 			
-			/**
-			 * Set the version text, removing any alpha characters that creep in
-			 */
 			private function versionText():String
 			{
-				var regX:RegExp = /[a-zA-Z]/gi;
-				var rev:String = _model.revision;
-				
-				return 'version '  + _model.version + '.' + rev.replace(regX, '');
+				return 'version '  + _model.version + ' build ' + _model.revision;
 			}
 			
 			/**
@@ -202,7 +196,7 @@
 						var base64encode:Base64Encoder = new Base64Encoder();
 						base64encode.encode(_model.gatewayURL);
 						// build the admin link from the model reference and the encoded url and redirect
-						navigateToURL( new URLRequest(_model.adminUI + '#redirect/' + base64encode.toString()), '_parent');
+						SWFAddress.href( _model.adminUI + "/#/redirect/" + base64encode.toString() );
 					break;	
 					case 'Privacy Policy' :
 					 	var pClass:Class = PrivacyPolicy as Class;	 	

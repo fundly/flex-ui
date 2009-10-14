@@ -3,6 +3,7 @@ package com.enilsson.elephantadmin.commands
 	import com.adobe.cairngorm.commands.ICommand;
 	import com.adobe.cairngorm.commands.SequenceCommand;
 	import com.adobe.cairngorm.control.CairngormEvent;
+	import com.asual.swfaddress.SWFAddress;
 	import com.enilsson.elephantadmin.events.main.SidEvent;
 	import com.enilsson.elephantadmin.models.EAModelLocator;
 	
@@ -29,17 +30,14 @@ package com.enilsson.elephantadmin.commands
 				return;
 				
 			_isParsingUrl = true;
-				
-			// split the fragment by forward slashes and return the array
-			_model.browserFragments = _model.browserManager.fragment.split('/');
-			var fragment:String = _model.browserFragments[0];
+			
+			var fragment:String = SWFAddress.getValue().split('/')[1];
 			
 			// some debugging
-			if(_model.debug) Logger.info('URL Change', _model.browserFragments, fragment);
+			if(_model.debug) Logger.info('URL Change', fragment);
 			
 			// if there is no fragment or it is for the login module
 			if(fragment == '' || fragment == 'login') {
-				_model.reset();
 				_isParsingUrl = false;
 				return;
 			}			
@@ -80,8 +78,8 @@ package com.enilsson.elephantadmin.commands
 							if(_model.allowedModules.getItemIndex(fragment) == -1)
 							{
 								_model.mainViewState = 0;
-								_model.browserManager.setFragment(_model.viewStateList[0]);
-			   					_model.browserManager.setTitle(_model.appName + ' - ' + _model.viewStateNames[0]);
+								SWFAddress.setValue(_model.viewStateList[0]);
+			   					SWFAddress.setTitle(_model.appName + ' - ' + _model.viewStateNames[0]);
 			   					_isParsingUrl = false;
 			   					return;
 							}					
@@ -91,8 +89,8 @@ package com.enilsson.elephantadmin.commands
 						
 						// load the module that matches the fragment	
 						_model.mainViewState = i;
-						//_model.browserManager.setFragment(_model.viewStateList[i]);
-			   			_model.browserManager.setTitle(_model.appName + ' - ' + _model.viewStateNames[i]);	
+			   			SWFAddress.setTitle(_model.appName + ' - ' + _model.viewStateNames[i]);
+			   			break;
 			  		}									
 				}
 				

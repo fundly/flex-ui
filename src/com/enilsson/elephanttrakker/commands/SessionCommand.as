@@ -3,15 +3,13 @@ package com.enilsson.elephanttrakker.commands
 	import com.adobe.cairngorm.commands.ICommand;
 	import com.adobe.cairngorm.commands.SequenceCommand;
 	import com.adobe.cairngorm.control.CairngormEvent;
+	import com.asual.swfaddress.SWFAddress;
 	import com.enilsson.elephanttrakker.business.SessionDelegate;
 	import com.enilsson.elephanttrakker.events.modules.message_center.MessageCenterEvent;
 	import com.enilsson.elephanttrakker.events.session.*;
 	import com.enilsson.elephanttrakker.models.*;
 	import com.enilsson.elephanttrakker.models.viewclasses.*;
 	import com.enilsson.elephanttrakker.vo.SessionVO;
-	
-	import flash.net.URLRequest;
-	import flash.net.navigateToURL;
 	
 	import mx.controls.Alert;
 	import mx.rpc.IResponder;
@@ -20,13 +18,10 @@ package com.enilsson.elephanttrakker.commands
 	
 	import org.osflash.thunderbolt.Logger;
 
-	public class SessionCommand extends SequenceCommand implements ICommand, IResponder
+	public class SessionCommand extends SequenceCommand implements ICommand
 	{
 		private var _model:ETModelLocator = ETModelLocator.getInstance();
 		
-		public function SessionCommand()
-		{
-		}
 
 		/**
 		  * Execute() method required by the ICommand interface.
@@ -56,13 +51,6 @@ package com.enilsson.elephanttrakker.commands
 				break;
 			}
 		}
-
-		/**
-		 * Stubs required for IResponder interface; need as Delegate constructor argument
-		 */
-		public function fault(info  :  Object)  :  void {	Alert.show(info.toString());		}
-		public function result(data :  Object)  :  void {   /* no longer used */ 				}
-
 
 		/**
 		  * Convenience method to create instance of CatalogDelegate
@@ -178,10 +166,7 @@ package com.enilsson.elephanttrakker.commands
 		private function onResult_endSession(data:Object):void
 		{
 			if(_model.debug) Logger.info('End Session Success', ObjectUtil.toString(data.result));
-			
-			// push the user back to the first module
-			_model.mainViewState = 0;
-			
+	
 			// reset model data
 			_model.reset();
 		}
@@ -189,10 +174,7 @@ package com.enilsson.elephanttrakker.commands
 		private function onFault_endSession(data:Object):void
 		{
 			if(_model.debug) Logger.info('End Session Fail', ObjectUtil.toString(data.fault));
-			
-			// push the user back to the first module
-			_model.mainViewState = 0;
-			
+					
 			// reset model data
 			_model.reset();
 		}	
@@ -215,7 +197,7 @@ package com.enilsson.elephanttrakker.commands
 			var base64encode:Base64Encoder = new Base64Encoder();
 			base64encode.encode(_model.gatewayURL);
 			// build the admin link from the model reference and the encoded url and redirect
-			navigateToURL( new URLRequest(_model.adminUI + '#redirect/' + base64encode.toString()), '_parent');
+			SWFAddress.href( _model.adminUI + "/#/redirect/" + base64encode.toString() );
 		}
 		
 		private function onFault_endProxySession(data:Object):void
@@ -224,7 +206,7 @@ package com.enilsson.elephanttrakker.commands
 				
 			var base64encode:Base64Encoder = new Base64Encoder();
 			base64encode.encode(_model.gatewayURL);
-			navigateToURL( new URLRequest(_model.adminUI + '#redirect/' + base64encode.toString()), '_parent');
+			SWFAddress.href( _model.adminUI + "/#/redirect/" + base64encode.toString() );
 		}	
 		
 		/**

@@ -2,15 +2,13 @@ package com.enilsson.elephantadmin.commands
 {
 	import com.adobe.cairngorm.commands.ICommand;
 	import com.adobe.cairngorm.control.CairngormEvent;
+	import com.asual.swfaddress.SWFAddress;
 	import com.enilsson.elephantadmin.business.AuthentikatorDelegate;
 	import com.enilsson.elephantadmin.business.SessionDelegate;
 	import com.enilsson.elephantadmin.events.session.*;
 	import com.enilsson.elephantadmin.models.*;
 	import com.enilsson.elephantadmin.vo.SessionVO;
 	import com.enilsson.utils.eNilssonUtils;
-	
-	import flash.net.URLRequest;
-	import flash.net.navigateToURL;
 	
 	import mx.controls.Alert;
 	import mx.rpc.IResponder;
@@ -19,14 +17,10 @@ package com.enilsson.elephantadmin.commands
 	
 	import org.osflash.thunderbolt.Logger;
 
-	public class SessionCommand implements ICommand, IResponder
+	public class SessionCommand implements ICommand
 	{
 		private var _model:EAModelLocator = EAModelLocator.getInstance();
 		
-		public function SessionCommand()
-		{
-		}
-
 		/**
 		  * Execute() method required by the ICommand interface.
 		  * Allows events to be delegated to a command instance for processing
@@ -57,12 +51,6 @@ package com.enilsson.elephantadmin.commands
 				break;
 			}
 		}
-
-		/**
-		 * Stubs required for IResponder interface; need as Delegate constructor argument
-		 */
-		public function fault(info  :  Object)  :  void {	Alert.show(info.toString());		}
-		public function result(data :  Object)  :  void {   /* no longer used */ 				}
 
 
 		/**
@@ -215,8 +203,8 @@ package com.enilsson.elephantadmin.commands
 				// change the view screen to Main
 				_model.screenState = EAModelLocator.MAIN_SCREEN;
 				// update the browser fragments
-				_model.browserManager.setFragment(_model.viewStateList[0]);
-				_model.browserManager.setTitle(_model.appName + ' - ' + _model.viewStateNames[0]);			
+				SWFAddress.setValue(_model.viewStateList[0]);
+				SWFAddress.setTitle(_model.appName + ' - ' + _model.viewStateNames[0]);			
 				// save the gatewayURL to a cookie for use if the app is refreshed
 				eNilssonUtils.clearCookie('gatewayURL');
 			 	eNilssonUtils.writeCookie('gatewayURL', _model.gatewayURL);
@@ -261,8 +249,8 @@ package com.enilsson.elephantadmin.commands
 			
 			var base64encode:Base64Encoder = new Base64Encoder();
 			base64encode.encode(_model.gatewayURL);
-
-			navigateToURL( new URLRequest( _model.clientUI + '#redirect/' + base64encode.toString()), '_parent');
+			
+			SWFAddress.href( _model.clientUI + "/#/redirect/" + base64encode.toString() );
 		}
 		private function onFault_sessionWheel(data:Object):void
 		{
@@ -289,9 +277,10 @@ package com.enilsson.elephantadmin.commands
 		{			
 			if(_model.debug) Logger.info('SessionFailHandler', ObjectUtil.toString(faultCode));
 			
+			_model.reset();
+			
 			if( _model.session && faultCode == "AMFPHP_AUTHENTICATE_ERROR" )
 			{
-				_model.reset();
 				Alert.show(	
 					'Your ' + _model.appName + ' session has expired, please login to continue!',
 					'Session timeout', 
