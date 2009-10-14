@@ -3,6 +3,7 @@ package com.enilsson.elephanttrakker.commands
 	import com.adobe.cairngorm.commands.ICommand;
 	import com.adobe.cairngorm.commands.SequenceCommand;
 	import com.adobe.cairngorm.control.CairngormEvent;
+	import com.asual.swfaddress.SWFAddress;
 	import com.enilsson.elephanttrakker.business.*;
 	import com.enilsson.elephanttrakker.events.main.*;
 	import com.enilsson.elephanttrakker.events.session.*;
@@ -27,14 +28,10 @@ package com.enilsson.elephanttrakker.commands
 	
 	import org.osflash.thunderbolt.Logger;
 
-	public class InitMainCommand extends SequenceCommand implements ICommand, IResponder
+	public class InitMainCommand extends SequenceCommand implements ICommand
 	{
 		private var _model:ETModelLocator = ETModelLocator.getInstance();
 		
-		public function InitMainCommand()
-		{
-		}
-
 		override public function execute(event:CairngormEvent):void
 		{
 			switch(event.type)
@@ -56,13 +53,6 @@ package com.enilsson.elephanttrakker.commands
 				break;
 			}
 		}
-
-		/**
-		 * Stubs required for IResponder interface; need as Delegate constructor argument
-		 */
-		public function fault(info:Object):void { Logger.info(info.toString()); }
-		public function result(data:Object):void { /* no longer used */ }
-		
 
 		/**
 		 * Initial Session check event
@@ -88,7 +78,12 @@ package com.enilsson.elephanttrakker.commands
 			// set the items per page
 			_model.itemsPerPage = Number(_model.session.data._itemsperpage);
 			// save the PHP sess id
-			_model.sess_id = data.result.php_session_id;	
+			_model.sess_id = data.result.php_session_id;
+			
+			// session is valid so jump to the main screen
+			_model.screenState = ETModelLocator.MAIN_SCREEN;
+			_model.mainViewState = _model.firstModule;
+			_model.mainScreenVisible = true;
 			
 			this.nextEvent = new GetSiteLayoutEvent();
 			this.executeNextCommand();
@@ -99,37 +94,11 @@ package com.enilsson.elephanttrakker.commands
 		{
 			if(_model.debug) Logger.info('InitMainCommand Session Fault');
 
+			var f : String = SWFAddress.getValue().split("/")[1];
 			eNilssonUtils.clearCookie('module_fwd');
-			eNilssonUtils.writeCookie('module_fwd', _model.browserManager.fragment);
-
-/* 			
-		 	if(data.fault.faultCode){
-		 		switch(data.fault.faultCode)
-		 		{
-		 			case 'AMFPHP_AUTHENTICATE_ERROR' :
-						Alert.show(	
-							'Your ' + _model.appName + ' session has expired, please login to continue!',
-							'Session timeout', 
-							0, 
-							null,
-							handleClose,
-							Icons.ALERT
-						);
-					break;
-					case 'Client.Error.MessageSend' :
-					case 'Client.Error.DeliveryInDoubt' :
-						Alert.show(	
-							'Your ' + _model.appName + ' session is not authenticated, please login to continue!',
-							'Session authentication error', 
-							0, 
-							null,
-							handleClose,
-							Icons.ALERT
-						);
-					break;
-		 		}
-		 	}			
- */
+			eNilssonUtils.writeCookie('module_fwd', f);
+			
+			_model.reset();
  		}	
 		
 		private function handleClose(e:CloseEvent):void
@@ -179,7 +148,7 @@ package com.enilsson.elephanttrakker.commands
 		{
 			if(_model.debug) Logger.info('Fail Layout', ObjectUtil.toString(event));
 		
-			_model.dataLoading = false;
+			_model.reset();
 		}
 
 
@@ -227,8 +196,7 @@ package com.enilsson.elephanttrakker.commands
 		private function onFault_getSiteOptions( event:Object ):void
 		{
 			if(_model.debug) Logger.info('Fail Site Options', ObjectUtil.toString(event));
-		
-			_model.dataLoading = false;
+			_model.reset();
 		}
 
 
@@ -256,11 +224,11 @@ package com.enilsson.elephanttrakker.commands
 				if(_model.struktorLayout.hasOwnProperty(table.table))
 					_model.struktorLayout[table.table] = new StruktorLayoutVO( table );
 			
-			// tell the model that the layouts are in place	
-			_model.struktorLayout.loaded = true;	
-
 			// set all the flags and browser elements once the session and layout have been returned
 			handleSuccessfulLoad();
+			
+			// tell the model that the layouts are in place	
+			_model.struktorLayout.loaded = true;	
 			
 			// run the command to get the RSS info
 			this.nextEvent = new GetRSSEvent('get_rss');
@@ -271,8 +239,7 @@ package com.enilsson.elephanttrakker.commands
 		public function onFault_getStruktorLayout(event:Object):void
 		{
 			if(_model.debug) Logger.info('getStruktorLayout Fail', ObjectUtil.toString(event));		
-			
-			_model.dataLoading = false;
+			_model.reset();			
 		}		
 	
 
@@ -338,15 +305,13 @@ package com.enilsson.elephanttrakker.commands
 		 * Handler to launch the required elements once the session and layout have been loaded
 		 */
 		private function handleSuccessfulLoad():void
-		{			
+		{				
+			// set the main container to the correct module
+				
 			// test to see if the requested module is in the allowed list
 			if(_model.allowedModules.getItemIndex(_model.viewStateList[_model.firstModule]) == -1)
 				_model.firstModule = 0;
-			
-			// set the main container to the correct module	
-			_model.screenState = ETModelLocator.MAIN_SCREEN;
-			_model.mainViewState = _model.firstModule;
-
+				
 			// initialise the first view module
 			_model.runInit = true;	
 			
@@ -356,8 +321,8 @@ package com.enilsson.elephanttrakker.commands
 			if(_model.debug) Logger.info('handleSuccessfulLoad', _model.firstModule, _model.viewStateList[_model.firstModule]);
 		
 			// set the fragment and set the page title
-			_model.browserManager.setFragment(_model.viewStateList[_model.firstModule]);
-			_model.browserManager.setTitle(_model.appName + ' - ' + _model.viewStateNames[_model.firstModule]);
+			SWFAddress.setValue(_model.viewStateList[_model.firstModule]);
+			SWFAddress.setTitle(_model.appName + ' - ' + _model.viewStateNames[_model.firstModule]);
 
 			// show the initial login form / agent agreement if needed
 			if (_model.session.data._firstlogin == 0) 

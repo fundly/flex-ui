@@ -26,16 +26,6 @@
 				super.init();
 
 				_model.record.sid = "0ca00t0d0";
-
-				// if there is no SID then alert the user and redirect
-				if(_model.browserFragments.length == 1)
-				{
-					//redirectUser();
-					//return;
-				}
-				
-				// set the sid for the record to be viewed
-				//_model.record.sid = _model.browserFragments[1];
 				
 				//if(_model.debug) 
 				Logger.info('Record SID', _model.record.sid);

@@ -3,6 +3,7 @@ package com.enilsson.elephantadmin.commands
 	import com.adobe.cairngorm.commands.ICommand;
 	import com.adobe.cairngorm.commands.SequenceCommand;
 	import com.adobe.cairngorm.control.CairngormEvent;
+	import com.asual.swfaddress.SWFAddress;
 	import com.enilsson.elephantadmin.business.*;
 	import com.enilsson.elephantadmin.events.main.*;
 	import com.enilsson.elephantadmin.events.modules.RecordEvent;
@@ -25,14 +26,10 @@ package com.enilsson.elephantadmin.commands
 	
 	import org.osflash.thunderbolt.Logger;
 
-	public class InitMainCommand extends SequenceCommand implements ICommand, IResponder
+	public class InitMainCommand extends SequenceCommand implements ICommand
 	{
 		private var _model:EAModelLocator = EAModelLocator.getInstance();
 		
-		public function InitMainCommand()
-		{
-		}
-
 		override public function execute(event:CairngormEvent):void
 		{
 			switch(event.type)
@@ -54,13 +51,6 @@ package com.enilsson.elephantadmin.commands
 				break;
 			}
 		}
-
-		/**
-		 * Stubs required for IResponder interface; need as Delegate constructor argument
-		 */
-		public function fault(info:Object):void { Logger.info(info.toString()); }
-		public function result(data:Object):void { /* no longer used */ }
-		
 
 		/**
 		 * Session Check method
@@ -128,8 +118,8 @@ package com.enilsson.elephantadmin.commands
 				if(_model.session.admin_acl.hasOwnProperty('system_super')) _model.userLevel = 'super';
 				
 				// show the main screen
-				_model.mainScreenVisible = true;
 				_model.screenState = EAModelLocator.MAIN_SCREEN;
+				_model.mainScreenVisible = true;
 				
 				// set the items per page
 				_model.itemsPerPage = Number(_model.session.data._itemsperpage);
@@ -176,11 +166,12 @@ package com.enilsson.elephantadmin.commands
 			_model.dataLoading = true;
 			
 			// remove the gURL from the cookie and save the attempted fragment
+			var f : String = SWFAddress.getValue().split("/")[1];
 			eNilssonUtils.clearCookie('gatewayURL');
 			eNilssonUtils.clearCookie('module_fwd');
-			eNilssonUtils.writeCookie('module_fwd', _model.browserManager.fragment);
+			eNilssonUtils.writeCookie('module_fwd', f);
 			
-			//if(_model.debug)
+			if(_model.debug)
 				Logger.info('Session Fault', ObjectUtil.toString(data.fault)) 
 
 		 	if(data.fault.faultCode){
@@ -293,6 +284,7 @@ package com.enilsson.elephantadmin.commands
 			if(_model.debug){ Logger.info('Fail Layout', ObjectUtil.toString(event)); }
 		
 			_model.dataLoading = false;
+			logout();
 		}
 
 
@@ -359,6 +351,7 @@ package com.enilsson.elephantadmin.commands
 			if(_model.debug){ Logger.info('Fail Get Groups', ObjectUtil.toString(event)); }
 		
 			_model.dataLoading = false;
+			logout();
 		}					
 
 
@@ -383,6 +376,7 @@ package com.enilsson.elephantadmin.commands
 		private function onFault_getS3credentials(event:Object):void
 		{
 			if(_model.debug) Logger.info('Fail getS3credentials', ObjectUtil.toString(event));
+			logout();
 		}
 		
 		
@@ -409,17 +403,16 @@ package com.enilsson.elephantadmin.commands
 				Logger.info(
 					'handleSuccessfulLoad', 
 					_model.firstModule, 
-					_model.browserManager.fragment, 
 					_model.viewStateList[_model.firstModule]
 				);
 			}
 
 			// set the fragment if it needs changing
 			if(_model.firstModule == 0)
-				_model.browserManager.setFragment(_model.viewStateList[_model.firstModule]);
+				SWFAddress.setValue(_model.viewStateList[_model.firstModule]);
 	
 			// set the title
-			_model.browserManager.setTitle(_model.appName + ' - ' + _model.viewStateNames[_model.firstModule]);			
+			SWFAddress.setTitle(_model.appName + ' - ' + _model.viewStateNames[_model.firstModule]);			
 		}
 		
 
@@ -460,6 +453,7 @@ package com.enilsson.elephantadmin.commands
 			if(_model.debug) Logger.info('getLayouts Fail', ObjectUtil.toString(event));		
 			
 			_model.dataLoading = false;
+			logout();
 		}
 		
 	}

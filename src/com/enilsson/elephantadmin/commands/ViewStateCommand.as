@@ -2,6 +2,7 @@ package com.enilsson.elephantadmin.commands
 {
 	import com.adobe.cairngorm.commands.ICommand;
 	import com.adobe.cairngorm.control.CairngormEvent;
+	import com.asual.swfaddress.SWFAddress;
 	import com.enilsson.elephantadmin.events.main.ViewStateEvent;
 	import com.enilsson.elephantadmin.models.EAModelLocator;
 	
@@ -24,8 +25,8 @@ package com.enilsson.elephantadmin.commands
 			// grab the viewstack as a variable from the event
 			var vstack:ViewStack = e.viewstack;
 			// set the deeplinking
-			_model.browserManager.setFragment(_model.viewStateList[vstack.selectedIndex]);
-			_model.browserManager.setTitle(_model.appName + ' - ' + _model.viewStateNames[vstack.selectedIndex]);	
+			SWFAddress.setValue(_model.viewStateList[vstack.selectedIndex]);
+			SWFAddress.setTitle(_model.appName + ' - ' + _model.viewStateNames[vstack.selectedIndex]);	
 			
 			if(_model.debug) Logger.info('ViewState Change', _model.viewStateList[vstack.selectedIndex]);			
 		}

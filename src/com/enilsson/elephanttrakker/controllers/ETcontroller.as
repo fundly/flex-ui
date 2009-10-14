@@ -39,7 +39,6 @@ package com.enilsson.elephanttrakker.controllers
 			 */
 			this.addCommand(InitAppEvent.EVENT_INIT_APP, InitAppCommand);
 			this.addCommand(GetVersionEvent.GET_VERSION, GetVersionCommand);
-			this.addCommand(AppEvent.EVENT_APP, AppCommand);
 			this.addCommand(URLChangeEvent.EVENT_URL_CHANGE, URLChangeCommand);
 			
 			/**

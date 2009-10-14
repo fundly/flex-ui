@@ -1,6 +1,7 @@
 package com.enilsson.elephanttrakker.models
 {
 	import com.adobe.cairngorm.model.ModelLocator;
+	import com.asual.swfaddress.SWFAddress;
 	import com.enilsson.elephantadmin.utils.DispatchingTimer;
 	import com.enilsson.elephanttrakker.events.GetVersionEvent;
 	import com.enilsson.elephanttrakker.events.session.PingEvent;
@@ -15,7 +16,6 @@ package com.enilsson.elephanttrakker.models
 	import flash.utils.ByteArray;
 	
 	import mx.collections.ArrayCollection;
-	import mx.managers.IBrowserManager;
 	
 	public class ETModelLocator implements ModelLocator
 	{
@@ -62,6 +62,8 @@ package com.enilsson.elephanttrakker.models
 		/**
 		 * Application level variables
 		 */
+		[Bindable] public var applicationURL : String;
+		
 		[Bindable] public var authURL:String;
 		[Bindable] public var appInstanceID:int;
 		
@@ -95,7 +97,7 @@ package com.enilsson.elephanttrakker.models
 		public function get session() : SessionVO { return _session; }
 		
 		
-		[Bindable] public var firstModule:int = 0; // variable to define which module to load on initialise 
+		[Bindable] public var firstModule:int = OVERVIEW_VIEW; // variable to define which module to load on initialise 
 		[Bindable] public var sess_id:String; // hold the session id from Struktor
 
 
@@ -176,7 +178,6 @@ package com.enilsson.elephanttrakker.models
 		/**
 		 * Variables for the deeplinking
 		 */
-		public var browserManager:IBrowserManager;
 		public var is_parsing_url:Boolean = false;
 
 
@@ -280,7 +281,7 @@ package com.enilsson.elephanttrakker.models
 		[Bindable] public var dataLoading:Boolean = false;
 		[Bindable] public var rssData:ArrayCollection;
 		[Bindable] public var mainScreen:DisplayObject;
-		[Bindable] public var screenVStack:Boolean = false;
+		[Bindable] public var mainScreenVisible:Boolean = false;
 		[Bindable] public var runInit:Boolean = false;
 
 		[Bindable] public var errorVO:ErrorVO;
@@ -313,7 +314,8 @@ package com.enilsson.elephanttrakker.models
 		{
 			// move the screen to the login page
 			screenState = ETModelLocator.LOGIN_SCREEN;
-			mainViewState = NO_VIEW;
+			mainScreenVisible = true;
+			mainViewState = OVERVIEW_VIEW;
 
 			// clear any residual gateway cookie
 			eNilssonUtils.clearCookie('gatewayURL');
@@ -349,8 +351,8 @@ package com.enilsson.elephanttrakker.models
 			pledgeWorkspace = new PledgeWorkspaceVO();
 
 			// change the browser info to the login screen
-			browserManager.setFragment('login');
-			browserManager.setTitle(appName + ' - Login');
+			SWFAddress.setValue('login');
+			SWFAddress.setTitle(appName + ' - Login');
 
 			// some miscellaneous variables
 			siteMsgs = 0;

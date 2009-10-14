@@ -18,6 +18,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.asual.swfaddress.SWFAddress;
 			import org.osflash.thunderbolt.Logger;
 			import mx.core.Application;
 			import mx.managers.PopUpManager;
@@ -43,7 +44,7 @@
 			
 			private function handleClick() : void
 			{				
-				var url:String = _model.siteURL == '' ? _model.browserManager.url.split('#')[0] : _model.siteURL;
+				var url:String = _model.siteURL == '' ? SWFAddress.getBaseURL() : _model.siteURL;
 								
 				navigateToURL(new URLRequest( url ), '_parent');
 			}
