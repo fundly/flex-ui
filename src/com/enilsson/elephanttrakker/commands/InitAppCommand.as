@@ -251,6 +251,9 @@ package com.enilsson.elephanttrakker.commands
 		{
 			// look to see if they attempted to go to another module
 			var redirectModule:String = eNilssonUtils.flashCookie('module_fwd');
+			
+			// move from login screen to main screen
+			_model.screenState = ETModelLocator.MAIN_SCREEN;
 				
 			// list the redirect module as the go to destination					
 			if(redirectModule != null)

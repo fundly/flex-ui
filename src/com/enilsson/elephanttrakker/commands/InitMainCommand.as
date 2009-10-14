@@ -80,8 +80,6 @@ package com.enilsson.elephanttrakker.commands
 			// save the PHP sess id
 			_model.sess_id = data.result.php_session_id;
 			
-			// session is valid so jump to the main screen
-			_model.screenState = ETModelLocator.MAIN_SCREEN;
 			_model.mainViewState = _model.firstModule;
 			_model.mainScreenVisible = true;
 			
