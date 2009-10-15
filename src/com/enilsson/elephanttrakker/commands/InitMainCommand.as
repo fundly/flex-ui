@@ -25,6 +25,7 @@ package com.enilsson.elephanttrakker.commands
 	import mx.rpc.xml.SimpleXMLDecoder;
 	import mx.utils.ObjectProxy;
 	import mx.utils.ObjectUtil;
+	import mx.utils.URLUtil;
 	
 	import org.osflash.thunderbolt.Logger;
 
@@ -131,6 +132,12 @@ package com.enilsson.elephanttrakker.commands
             // assign the various values to the model			
 			_model.navLayout = xmlObj.layout.top_nav.link;
 			_model.userInfoLayout = xmlObj.layout.user_info.link;
+			
+			// add a link to the website to the user info layout
+			var link : Object = getWebsiteLink();
+			if(link)
+				_model.userInfoLayout.addItem(link);
+			
 			_model.allowedModules = xmlObj.layout.allowed_modules.module;
 			if(xmlObj.layout.hasOwnProperty( 'variables' ) )
 				for each(var item:Object in xmlObj.layout.variables.variable)
@@ -145,8 +152,17 @@ package com.enilsson.elephanttrakker.commands
 		private function onFault_getSiteLayout(event:Object):void
 		{
 			if(_model.debug) Logger.info('Fail Layout', ObjectUtil.toString(event));
-		
 			_model.reset();
+		}
+		
+		private function getWebsiteLink() : Object {
+			
+			if(!_model.orgURL) return null;
+			
+			var domain : String = URLUtil.getServerName( _model.orgURL ).replace(/^www\./gi,"");
+			var url : String = _model.orgURL;
+				
+			return new ObjectProxy( { name: domain, icon:"web_browser", action:{ type:"url",destination:url }, type:"url" } );
 		}
 
 
