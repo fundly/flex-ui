@@ -94,8 +94,8 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 		/**
 		 * Get the text for a successful pledges from the parent model
 		 */
-		public function get successTextCC():String { return "The Credit Card pledge was successful" ; }
-		public function get successTextCheck():String { return "The Check pledge was successful"; }
+		public function get successTextCC():String { return "The Credit Card pledge was successful." ; }
+		public function get successTextCheck():String { return "The Check pledge was successful."; }
 
 		/**
 		 * Some global variables for use during form completion

@@ -36,7 +36,8 @@
 			
 			private function init():void
 			{
-				if ( presentationModel.vo.check != null )
+				var check : Object = presentationModel.vo.check;
+				if ( check != null && check.hasOwnProperty("amount") )
 					titleText.htmlText = presentationModel.successTextCheck;
 				else
 					titleText.htmlText = presentationModel.successTextCC;
