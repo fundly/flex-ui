@@ -190,14 +190,17 @@ package com.enilsson.elephanttrakker.views.modules.pledge_workspace.model
 			// reset everything
 			reset();
 			
+			var ipd : Object = {};
 			// do some specific tasks based on the action
 			switch ( pwVO.action )
-			{
+			{			
 				case ADD_NEW :
 					if ( pwVO.eventID )
-						initialPledgeData['event_id'] = pwVO.eventID;
+						ipd['event_id'] = pwVO.eventID;
 					if ( pwVO.fundraiserID )
-						initialPledgeData['tr_users_id'] = pwVO.fundraiserID;
+						ipd['tr_users_id'] = pwVO.fundraiserID;
+					
+					initialPledgeData = ipd;
 				break;				
 				case ADD_EXISTING :
 				case ADD_SHARED :
@@ -206,15 +209,17 @@ package com.enilsson.elephanttrakker.views.modules.pledge_workspace.model
 					if ( pwVO.contactData )	
 					{		
 						initialContactData = pwVO.contactData;
-						initialPledgeData = pwVO.contactData;
+						ipd = pwVO.contactData;
 					}
 					else
 						new PWEvent ( PWEvent.GET_CONTACT, this, { contactID : pwVO.contactID } ).dispatch();
 						
 					if ( pwVO.eventID )
-						initialPledgeData['event_id'] = pwVO.eventID;
+						ipd['event_id'] = pwVO.eventID;
 					if ( pwVO.fundraiserID )
-						initialPledgeData['tr_users_id'] = pwVO.fundraiserID;
+						ipd['tr_users_id'] = pwVO.fundraiserID;
+						
+					initialPledgeData = ipd;
 						
 				break;
 				case RESTORE_SAVED :
@@ -386,7 +391,8 @@ package com.enilsson.elephanttrakker.views.modules.pledge_workspace.model
 		private var _checkData:Object;
 		public function set checkData ( value:Object ):void
 		{
-			delete value.id;
+			if(value)
+				delete value.id;
 			_checkData = ObjectUtil.copy( value );
 		}
 		public function get checkData ():Object

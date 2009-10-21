@@ -94,8 +94,8 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 		/**
 		 * Get the text for a successful pledges from the parent model
 		 */
-		public function get successTextCC():String { return "The Credit Card pledge was successful" ; }
-		public function get successTextCheck():String { return "The Check pledge was successful"; }
+		public function get successTextCC():String { return "The Credit Card pledge was successful." ; }
+		public function get successTextCheck():String { return "The Check pledge was successful."; }
 
 		/**
 		 * Some global variables for use during form completion
@@ -178,14 +178,17 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 			// reset everything
 			reset();
 			
+			var ipd : Object = {};
 			// do some specific tasks based on the action
 			switch ( pwVO.action )
-			{
+			{			
 				case ADD_NEW :
 					if ( pwVO.eventID )
-						initialPledgeData['event_id'] = pwVO.eventID;
+						ipd['event_id'] = pwVO.eventID;
 					if ( pwVO.fundraiserID )
-						initialPledgeData['tr_users_id'] = pwVO.fundraiserID;
+						ipd['tr_users_id'] = pwVO.fundraiserID;
+					
+					initialPledgeData = ipd;
 				break;				
 				case ADD_EXISTING :
 				case ADD_SHARED :
@@ -194,15 +197,17 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 					if ( pwVO.contactData )	
 					{		
 						initialContactData = pwVO.contactData;
-						initialPledgeData = pwVO.contactData;
+						ipd = pwVO.contactData;
 					}
 					else
 						new PWEvent ( PWEvent.GET_CONTACT, this, { contactID : pwVO.contactID } ).dispatch();
 						
 					if ( pwVO.eventID )
-						initialPledgeData['event_id'] = pwVO.eventID;
+						ipd['event_id'] = pwVO.eventID;
 					if ( pwVO.fundraiserID )
-						initialPledgeData['tr_users_id'] = pwVO.fundraiserID;
+						ipd['tr_users_id'] = pwVO.fundraiserID;
+						
+					initialPledgeData = ipd;
 						
 				break;
 				case RESTORE_SAVED :

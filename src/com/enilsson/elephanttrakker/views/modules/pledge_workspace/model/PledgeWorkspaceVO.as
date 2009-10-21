@@ -1,11 +1,8 @@
 package com.enilsson.elephanttrakker.views.modules.pledge_workspace.model
 {
+	[Bindable]
 	public class PledgeWorkspaceVO
 	{
-		public function PledgeWorkspaceVO()
-		{
-		}
-		
 		public var action:String = PledgeWorkspaceModel.ADD_NEW;
 
 		public var pledgeID:int;
