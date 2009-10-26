@@ -12,11 +12,8 @@
 		width="703" height="45"
 		dataProvider="{_model.navLayout}" />
 
-	<mx:Canvas id="contentBox" 
-		styleName="contentBox" 
-		width="681" height="332" 
-		clipContent="false">
-		
+	<mn:ContentBox id="contentBox">
+			
 		<mx:ViewStack id="mainVS"
 			enabled="{_model.siteLayoutLoaded}" 
 			selectedIndex="{_model.mainViewState}" 
@@ -66,7 +63,8 @@
 				showEffect="fadeIn" hideEffect="fadeOut" 
 				xmlns:pledgeWorkspace="com.enilsson.elephanttrakker.views.modules.pledge_workspace.*" />															
 		</mx:ViewStack>
-	</mx:Canvas>
+		
+	</mn:ContentBox>
 
 	<mx:Button id="homeLink" styleName="homeLink"
 		verticalCenter="-15" horizontalCenter="-405"
