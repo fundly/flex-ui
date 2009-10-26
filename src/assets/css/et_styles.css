@@ -230,21 +230,23 @@ Application {
 	condenseWhite:"true";
 	fontSize:9;
 }
-.sitePaidFor {
+.paidForContainer {
+	paddingLeft:30;
+	paddingRight:30;
+	paddingTop:3;
+	paddingBottom:3;
 	borderStyle:"solid";
 	borderThickness:1;
 	borderColor:#FFFFFF;
 	cornerRadius:3;
-	paddingTop:3;
-	paddingBottom:3;	
-	paddingRight:30;
-	paddingLeft:30;		
+	backgroundColor:#08286e;
+}
+.paidForText {
 	color:#FFFFFF;	
 	selectable:"true";
 	condenseWhite:"true";
-	fontSize:11;
 	textAlign:"center";
-	backgroundColor:#08286e;
+	fontSize:11;
 }
 /*-- End Footer styles --*/
 
