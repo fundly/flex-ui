@@ -436,15 +436,15 @@ package com.enilsson.elephanttrakker.views.modules.pledge_workspace.commands
 			{
 				case 98 :
 				case 99 :
+					var df:DateFormatter = new DateFormatter();
+						df.formatString = 'MM/DD/YYYY';
+						var cf:CurrencyFormatter = new CurrencyFormatter();
+					var params:Object = _presentationModel.vo.pledge;
+						params['date'] = df.format(new Date());
+				
 					// send an email if there is a contribution
 					if ( _presentationModel.vo.check != null || _presentationModel.vo.transaction != null ) 
 					{
-						var df:DateFormatter = new DateFormatter();
-						df.formatString = 'MM/DD/YYYY';
-						var cf:CurrencyFormatter = new CurrencyFormatter();
-						
-						var params:Object = _presentationModel.vo.pledge;
-						params['date'] = df.format(new Date());
 						params['pledge_amount'] = _presentationModel.vo.check == null ? 
 							cf.format(_presentationModel.vo.transactionData.amount) :  
 							cf.format(_presentationModel.vo.check.amount);
@@ -532,7 +532,29 @@ package com.enilsson.elephanttrakker.views.modules.pledge_workspace.commands
 							this.executeNextCommand();
 							this.nextEvent = null;		
 						}
-					}				
+					}
+					// no contribution details were entered, so it's a plain pledge
+					else {
+						if( _presentationModel.noContribData.form_send == 'email' ) {
+							params['pledge_amount'] = _presentationModel.pledgeAmount;
+							
+							if(_presentationModel.debug) Logger.info('Email Params - Pledge without contribution', params);								
+															
+							this.nextEvent = new PWEvent(
+								PWEvent.SEND_EMAIL, 
+								_presentationModel,
+								{
+									'emails' : _presentationModel.noContribData.email, 
+									'message' : '',
+									'template_id' : _model.serverVariables.donation_form_template_id,
+									'template_vars' : params,
+									'attachments' : ''
+								}
+							);
+							this.executeNextCommand();
+							this.nextEvent = null;
+						}
+					}
 				
 				
 					if (_presentationModel.action != PledgeWorkspaceModel.EDIT) 

@@ -28,8 +28,7 @@
 		
 	<mx:ViewStack id="vstack" 
 		creationPolicy="all"  
-		width="630" height="242" 
-		top="40" left="5" 
+		top="40" left="0" bottom="40" right="36" 
 		change="_IndexChange = event" 
 		childAdd="presentationModel.numTabs = event.currentTarget.numChildren"
 		selectedIndex="{presentationModel.vindex}">
@@ -158,7 +157,7 @@
 			{
 				// dont build anything if the layout isnt loaded or there is no agreement or it has already been built
 				if ( !value ) return;
-				if ( presentationModel.options.workspace_agreement == null ) return;
+				if ( ! presentationModel || ! presentationModel.options || ! presentationModel.options.workspace_agreement ) return;
 				if ( aTab ) return;
 				
 				// create the tab

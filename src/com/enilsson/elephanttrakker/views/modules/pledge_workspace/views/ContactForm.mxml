@@ -16,19 +16,15 @@
 		selectedGroups="{[1]}" 
 		layoutProvider="{presentationModel.pledgeLayout}"
 		dataProvider="{presentationModel.initialContactData}"
-		debugMode="false" validateOnKeyPress="false" 
+		validateOnKeyPress="{true}" 
 		numColumns="2"
-		isValidChanged="this.isValid = true;" 
+		isValidChanged="setIsValid()"
 		formBuildComplete="formBuildCompleteAction(event)"			
 		groupLabels="false" />
 
 	<mx:Binding source="contactDetails.formVariables" destination="presentationModel.contactData" />
 	<mx:Binding source="contactDetails.fieldNames" destination="presentationModel.contactsFields" />
 	<mx:Binding source="contactDetails.invalidFields" destination="presentationModel.contactsErrors" />
-	
-	<mx:Metadata>
-		[Event(name="isValidChanged", type="flash.events.Event")]
-	</mx:Metadata>
 	
 	<mx:Script>
 		<![CDATA[
@@ -49,11 +45,11 @@
 			/**
 			 * Public functions to announce that this tab is valid (or not)
 			 */
-			public function set isValid(value:Boolean):void
+			private function setIsValid():void
 			{
 				if(contactDetails.numChildren == 0)
 				{
-					presentationModel.contactDetailsValid = false;
+					_isValid = presentationModel.contactDetailsValid = false;
 					return;
 				}
 				
@@ -62,14 +58,6 @@
 				presentationModel.workspaceValid = _isValid;
 				
 				if(presentationModel.debug) Logger.info('ContactDetails Status', _isValid);
-				
-				dispatchEvent( new Event('isValidChanged') );
-			}
-			
-			[Bindable(event="isValidChanged")]
-			public function get isValid():Boolean
-			{
-				return _isValid;
 			}
 						
 			/**
@@ -126,7 +114,7 @@
 															
 				// validate the form if the action is edit
 				if(presentationModel.action == PledgeWorkspaceModel.EDIT)
-					isValid = true;
+					setIsValid();
 				
 				// send the form variables to the model to begin the process
 				presentationModel.contactData = contactDetails.formVariables;

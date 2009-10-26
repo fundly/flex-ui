@@ -130,6 +130,7 @@ package com.enilsson.elephanttrakker.views.modules.pledge_workspace.model
 		public var setSubmitFocus:Boolean = false;	// set the submit button focus
 		public var clearPaymentForms:Boolean = false;// clear the CC or Check form when needed
 		
+		
 		/**
 		 * Variable holding the entered pledge amount
 		 */
@@ -171,7 +172,7 @@ package com.enilsson.elephanttrakker.views.modules.pledge_workspace.model
 			completedPledge = false;
 			
 			if ( action == EDIT )
-				transVStack = 2;
+				transVStack = 3;
 		}
 		
 		/**
@@ -399,8 +400,10 @@ package com.enilsson.elephanttrakker.views.modules.pledge_workspace.model
 		{
 			return _checkData;
 		}
+		
+		public var noContribData : Object;
 
-
+		
 		/**
 		 * Variables for the lookup search input fields
 		 */
@@ -421,6 +424,7 @@ package com.enilsson.elephanttrakker.views.modules.pledge_workspace.model
 		public var billingFields:Array;
 		public var ccFields:Array;
 		public var checkFields:Array;
+		public var noContribFields:Array;
 
 
 		/**
@@ -454,6 +458,7 @@ package com.enilsson.elephanttrakker.views.modules.pledge_workspace.model
 		public var ccErrors:Array;
 		public var checkErrors:Array;
 		public var billingErrors:Array;
+		public var noContribErrors:Array;
 
 		/**
 		 * Flag to initiate a reset on the agreement initials boxes
@@ -487,7 +492,7 @@ package com.enilsson.elephanttrakker.views.modules.pledge_workspace.model
 				pledge : savedPledgeData, 
 				contact : contactData, 
 				check : checkData,
-				billing : billingData 
+				billing : billingData
 			};			
 			
 			// add the contact owner to the information
