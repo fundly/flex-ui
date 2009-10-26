@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Resize xmlns="*" xmlns:mx="http://www.adobe.com/2006/mxml" duration="500" easingFunction="{Bounce.easeInOut}">
+	<mx:Script>
+		<![CDATA[
+			import mx.effects.easing.Bounce;
+		]]>
+	</mx:Script>
+</mx:Resize>
