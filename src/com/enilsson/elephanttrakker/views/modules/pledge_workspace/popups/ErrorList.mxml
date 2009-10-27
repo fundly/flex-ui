@@ -49,7 +49,7 @@
 						num = p.length + ch.length;
 					break;
 					case 2 :
-						num = p.length = nc.length;
+						num = p.length + nc.length;
 					case 3 :
 						num = p.length;
 					break;
