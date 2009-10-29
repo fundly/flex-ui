@@ -30,10 +30,7 @@
 			toolTip="Pledge date"
 			styleName="listDesc" />
 	</mx:VBox>
-
-<!--		<mx:Label text="Raised by {_wrapper.check.pledge_id.user_id.fname} {_wrapper.check.pledge_id.user_id.lname} - {_wrapper.check.pledge_id.user_id._fid}" 
-			width="100%" 
--->
+	
 	<mx:Image id="overlayIcon"
 		horizontalCenter="0"
 		verticalCenter="0"
