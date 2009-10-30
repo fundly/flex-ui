@@ -190,8 +190,11 @@
 							moduleURL = "fundraisers/" + moduleURL;
 							break;							
 						case "NetFile":
-							moduleURL = "netfile/" + moduleURL;
-							break;							
+							moduleURL = "external/netfile/" + moduleURL;
+							break;
+						case "OCPF":
+							moduleURL = "external/ocpf/" + moduleURL;
+							break;														
 						case "DailyIncome":
 							moduleURL = "dailyincome/" + moduleURL;
 							break;							
