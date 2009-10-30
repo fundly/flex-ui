@@ -20,7 +20,7 @@ package com.enilsson.elephantadmin.views.modules.events
 		private function handleAccessChange( event : Event ) : void
 		{
 			var e_read 		: int = accessOptionsTab.visibilityType == 'all' ? 1 : 0;
-			var group_id 	: int = accessOptionsTab.visibilityType == 'group' ? accessOptionsTab.groupID : 0;
+			var group_id 	: int = accessOptionsTab.groupID;
 			var g_read 		: int = 0;
 			var g_write		: int = 0;
 			

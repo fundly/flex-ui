@@ -64,7 +64,7 @@
 				
 				var groupID:int = value.mod_group_id;
 				
-				showAll.selected = ( groupID == 0 && value.mod_e_read == 1 );
+				showAll.selected = ( value.mod_e_read == 1 );
 
 				if(listItemGroup.dataProvider)
 				{
