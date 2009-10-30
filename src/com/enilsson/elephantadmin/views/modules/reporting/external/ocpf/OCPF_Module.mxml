@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ExternalReportModule
+	xmlns="com.enilsson.elephantadmin.views.modules.reporting.external.common.*" 
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	creationComplete="init()">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.events.ListEvent;
+			
+			[Bindable] private var _pm : OCPFModulePM;
+		
+			private function init() : void {
+				_pm = new OCPFModulePM();
+				presentationModel = _pm;
+			}
+		]]>
+	</mx:Script>
+	
+</ExternalReportModule>	
+	
+
