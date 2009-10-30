@@ -89,7 +89,7 @@
 			
 			private function versionText():String
 			{
-				return 'version '  + _model.version + ' build ' + _model.revision;
+				return 'version '  + _model.version + '.' + _model.revision;
 			}
 			
 			/**
