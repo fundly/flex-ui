@@ -22,13 +22,12 @@
     <application path="ET_admin.mxml"/>
   </applications>
   <modules>
-    <module application="src/ET_admin.mxml" destPath="com/enilsson/elephantadmin/views/modules/reporting/dailyincome/DailyIncome_Module.swf" optimize="true" sourcePath="src/com/enilsson/elephantadmin/views/modules/reporting/dailyincome/DailyIncome_Module.mxml"/>
-    <module application="src/ET_admin.mxml" destPath="com/enilsson/elephantadmin/views/modules/reporting/donationwidget/DonationWidget_Module.swf" optimize="true" sourcePath="src/com/enilsson/elephantadmin/views/modules/reporting/donationwidget/DonationWidget_Module.mxml"/>
-    <module application="src/ET_admin.mxml" destPath="com/enilsson/elephantadmin/views/modules/reporting/host_committee/HostCommittee_Module.swf" optimize="true" sourcePath="src/com/enilsson/elephantadmin/views/modules/reporting/host_committee/HostCommittee_Module.mxml"/>
-    <module application="src/ET_admin.mxml" destPath="com/enilsson/elephantadmin/views/modules/reporting/all_pledges/AllPledges_Module.swf" optimize="true" sourcePath="src/com/enilsson/elephantadmin/views/modules/reporting/all_pledges/AllPledges_Module.mxml"/>
     <module application="src/ET_admin.mxml" destPath="com/enilsson/elephantadmin/views/modules/reporting/fundraisers/Fundraisers_Module.swf" optimize="true" sourcePath="src/com/enilsson/elephantadmin/views/modules/reporting/fundraisers/Fundraisers_Module.mxml"/>
-    <module application="src/ET_admin.mxml" destPath="com/enilsson/elephantadmin/views/modules/reporting/netfile/NetFile_Module.swf" optimize="true" sourcePath="src/com/enilsson/elephantadmin/views/modules/reporting/netfile/NetFile_Module.mxml"/>
     <module application="src/ET_admin.mxml" destPath="com/enilsson/elephantadmin/views/modules/reporting/all_contributions/AllContributions_Module.swf" optimize="true" sourcePath="src/com/enilsson/elephantadmin/views/modules/reporting/all_contributions/AllContributions_Module.mxml"/>
+    <module application="src/ET_admin.mxml" destPath="com/enilsson/elephantadmin/views/modules/reporting/all_pledges/AllPledges_Module.swf" optimize="true" sourcePath="src/com/enilsson/elephantadmin/views/modules/reporting/all_pledges/AllPledges_Module.mxml"/>
+    <module application="src/ET_admin.mxml" destPath="com/enilsson/elephantadmin/views/modules/reporting/dailyincome/DailyIncome_Module.swf" optimize="true" sourcePath="src/com/enilsson/elephantadmin/views/modules/reporting/dailyincome/DailyIncome_Module.mxml"/>
+    <module application="src/ET_admin.mxml" destPath="com/enilsson/elephantadmin/views/modules/reporting/host_committee/HostCommittee_Module.swf" optimize="true" sourcePath="src/com/enilsson/elephantadmin/views/modules/reporting/host_committee/HostCommittee_Module.mxml"/>
+    <module application="src/ET_admin.mxml" destPath="com/enilsson/elephantadmin/views/modules/reporting/donationwidget/DonationWidget_Module.swf" optimize="true" sourcePath="src/com/enilsson/elephantadmin/views/modules/reporting/donationwidget/DonationWidget_Module.mxml"/>
   </modules>
   <buildCSSFiles/>
 </actionScriptProperties>

@@ -27,8 +27,11 @@
 	<property name="host_committee.dir" value="${report.modules.src.dir}/host_committee" />
 	<property name="module.host_committee" value="HostCommittee_Module" />
 	
-	<property name="netfile.dir" value="${report.modules.src.dir}/netfile" />
+	<property name="netfile.dir" value="${report.modules.src.dir}/external/netfile" />
 	<property name="module.netfile" value="NetFile_Module" />
+	
+	<property name="ocpf.dir" value="${report.modules.src.dir}/external/ocpf" />
+	<property name="module.ocpf" value="OCPF_Module" />
 	
 	
 	<target name="init" depends="build.blueswarm.init">
@@ -70,6 +73,11 @@
 		<antcall target="compile.module">
 			<param name="param.mxml" value="${dailyincome.dir}/${module.dailyincome}.mxml" />
 			<param name="param.swf" value="${report.modules.build.dir}/${module.dailyincome}.swf" />
+		</antcall>
+		
+		<antcall target="compile.module">
+			<param name="param.mxml" value="${ocpf.dir}/${module.ocpf}.mxml" />
+			<param name="param.swf" value="${report.modules.build.dir}/${module.ocpf}.swf" />
 		</antcall>
 				
 		<!-- copy the revision as a marker so that ANT knows when to rebuild -->

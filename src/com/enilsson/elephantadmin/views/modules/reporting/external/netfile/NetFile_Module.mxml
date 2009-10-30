@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ExternalReportModule
+	xmlns="com.enilsson.elephantadmin.views.modules.reporting.external.common.*" 
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	currentState="netfile"
+	creationComplete="init()">
+	
+	<states>
+		<mx:State name="netfile" >
+			
+			<!-- add a combo box containing report type choices to the filter box of the ExternalReportModule -->
+			<mx:AddChild relativeTo="{filterBox}" position="lastChild">
+			
+				<mx:FormItem 
+					label="report:">
+					<mx:ComboBox id="report"
+						dataProvider="{_pm.netfileFilter}"
+						enabled="{!dataLoading}"
+						change="reportChangeHandler(event)"
+						width="150" color="#000000" />
+				</mx:FormItem>
+				
+			</mx:AddChild>
+			
+			<!-- create the netfile logo and add it to the main container -->
+			<mx:AddChild relativeTo="{mainContainer}" position="lastChild">
+				
+				<mx:VBox width="100%" height="100%" horizontalAlign="center">
+					<mx:Canvas width="100%" height="50" backgroundColor="#000000">
+						<mx:Image horizontalCenter="0" verticalCenter="0" 
+							source="@Embed('/assets/images/logos/netfilelogo.gif')" />
+					</mx:Canvas>
+					<mx:Image source="@Embed('/assets/images/logos/netfilelogo.jpg')" />
+				</mx:VBox>
+				
+			</mx:AddChild>
+			
+		</mx:State>
+	</states>
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.events.ListEvent;
+			
+			[Bindable] private var _pm : NetFileModulePM;
+		
+			private function init() : void {
+				_pm = new NetFileModulePM();
+				presentationModel = _pm;
+			}
+			
+			private function reportChangeHandler(event:ListEvent):void {
+				_pm.reportType = event.currentTarget.selectedItem.data;
+			}
+		]]>
+	</mx:Script>
+	
+</ExternalReportModule>	
+	
+
