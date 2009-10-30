@@ -31,7 +31,7 @@
 	<property name="module.netfile" value="NetFile_Module" />
 	
 	<property name="ocpf.dir" value="${report.modules.src.dir}/external/ocpf" />
-		<property name="module.ocpf" value="OCPF_Module" />
+	<property name="module.ocpf" value="OCPF_Module" />
 	
 	
 	<target name="init" depends="build.blueswarm.init">
