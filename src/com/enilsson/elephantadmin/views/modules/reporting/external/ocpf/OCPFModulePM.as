@@ -8,6 +8,11 @@ package com.enilsson.elephantadmin.views.modules.reporting.external.ocpf
 	[Bindable]
 	public class OCPFModulePM extends ExternalReportModulePM
 	{
+		public function OCPFModulePM() {
+			filenamePrefix = "OCPF";
+			filenameExtension = "txt";
+		}
+		
 		override protected function configureExportService():void {
 			super.configureExportService();
 			super.service.source = 'plugins.' + instanceID + '.reporting.ocpf';
@@ -28,7 +33,6 @@ package com.enilsson.elephantadmin.views.modules.reporting.external.ocpf
 			vo.export = true;
 			vo.exportTimeOffset = timezoneOffset;
 			
-			filenamePrefix = 'OCPF';
 			service['export_ocpf'].send.apply(null, [vo]);
 		}
 	}

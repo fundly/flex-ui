@@ -7,7 +7,6 @@ package com.enilsson.elephantadmin.views.modules.reporting.external.common
 	import flash.net.URLRequest;
 	import flash.net.navigateToURL;
 	
-	import mx.binding.utils.BindingUtils;
 	import mx.collections.ArrayCollection;
 	import mx.controls.Alert;
 	import mx.formatters.DateFormatter;
@@ -28,6 +27,8 @@ package com.enilsson.elephantadmin.views.modules.reporting.external.common
 		public var sortArray:Array;
 		// the filename prefix that will be used for the exported file
 		public var filenamePrefix : String;
+		// the filename extension that should be used for the exported file
+		public var filenameExtension : String;
 		// the service object used for the export call
 		protected var service : RemoteObject;
 		// dataprovider for the type filter list
@@ -38,10 +39,11 @@ package com.enilsson.elephantadmin.views.modules.reporting.external.common
 		 * Constructor
 		 **/
 		public function ExternalReportModulePM() {	
-			startDate 		= EDateUtil.todayToTimestamp() - ONE_DAY;
-			endDate			= EDateUtil.todayToTimestamp();
-			sortArray		= ['created_on DESC'];
-			filenamePrefix	= "Export";
+			startDate 			= EDateUtil.todayToTimestamp() - ONE_DAY;
+			endDate				= EDateUtil.todayToTimestamp();
+			sortArray			= ['created_on DESC'];
+			filenamePrefix		= "Export";
+			filenameExtension	= "csv";
 			
 			typeFilter 		= new ArrayCollection([
 				{label:'All',data:'0'},
@@ -109,7 +111,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.external.common
 			var request : URLRequest = new URLRequest(gatewayBaseURL + 
 				'export.php?id='+event.result+
 				'&file_name='+filenamePrefix+df.format(new Date())+
-				'&ext=txt' +
+				'&ext=' + filenameExtension +
 				'&refresh='+new Date().getTime() )
 			
 			navigateToURL( request, '_parent');
