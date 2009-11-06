@@ -38,7 +38,8 @@ package com.enilsson.elephantadmin.views.modules.reporting.external.common
 		/**
 		 * Constructor
 		 **/
-		public function ExternalReportModulePM() {	
+		public function ExternalReportModulePM() {
+			super();	
 			startDate 			= EDateUtil.todayToTimestamp() - ONE_DAY;
 			endDate				= EDateUtil.todayToTimestamp();
 			sortArray			= ['created_on DESC'];

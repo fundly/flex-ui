@@ -9,9 +9,10 @@ package com.enilsson.elephantadmin.views.modules.reporting.base
 	[Bindable]
 	public class ReportModuleModel
 	{
-		public static const FILTER_CC 		: int = 0;
-		public static const FILTER_CHECK	: int = 1;
-		public static const FILTER_ALL		: int = 2;
+		public static const FILTER_NONE		: int = -1;
+		public static const FILTER_ALL		: int = 0;
+		public static const FILTER_CC 		: int = 1;
+		public static const FILTER_CHECK	: int = 2;
 
 		public var allGroups:ArrayCollection;
 		public var userGroups:Array;
@@ -53,7 +54,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.base
 		
 		public function set filter( value : int ) : void { _filter = value; }
 		public function get filter() : int { return _filter; }
-		private var _filter : int;
+		private var _filter : int = FILTER_NONE;
 
 		public function init():void
 		{

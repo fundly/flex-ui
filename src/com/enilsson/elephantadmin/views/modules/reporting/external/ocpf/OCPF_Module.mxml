@@ -14,12 +14,14 @@
 					<mx:CheckBox id="restrictCb" styleName="restrictCb"
 						label="Restrict by batch ID:"
 						selected="{ restrictCb.selected &amp;&amp; _pm.restrictable }"
+						change="_pm.restricted = event.currentTarget.selected"
 						enabled="{ _pm.restrictable }" />
 					<mx:TextInput
 						styleName="batchIdInput"
 						restrict="0-9"
 						enabled="{restrictCb.selected}"
-						change="handleBatchIdInputChange(event)"
+						text="{ isNaN(_pm.filteredBatchId) ? '' : _pm.filteredBatchId }"
+						change="_pm.filteredBatchId = Number(event.currentTarget.text)"
 						width="50" />
 				</mx:HBox>
 				
@@ -37,12 +39,6 @@
 			private function init() : void {
 				_pm = new OCPFModulePM();
 				presentationModel = _pm;
-			}
-			
-			
-			
-			private function handleBatchIdInputChange( event : Event ) : void {
-				_pm.filteredBatchId = Number(event.currentTarget.text);
 			}
 		]]>
 	</mx:Script>
