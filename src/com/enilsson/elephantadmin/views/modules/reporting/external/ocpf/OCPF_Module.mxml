@@ -2,10 +2,34 @@
 <ExternalReportModule
 	xmlns="com.enilsson.elephantadmin.views.modules.reporting.external.common.*" 
 	xmlns:mx="http://www.adobe.com/2006/mxml" 
-	creationComplete="init()">
+	creationComplete="init()"
+	currentState="ocpf">
+	
+	<states>
+		<mx:State name="ocpf">
+			<mx:AddChild position="lastChild" relativeTo="{filterBox}">
+				
+				<mx:HBox width="100%">
+				<mx:Spacer width="40" />
+					<mx:CheckBox id="restrictCb" styleName="restrictCb"
+						label="Restrict by batch ID:"
+						selected="{ restrictCb.selected &amp;&amp; _pm.restrictable }"
+						enabled="{ _pm.restrictable }" />
+					<mx:TextInput
+						styleName="batchIdInput"
+						restrict="0-9"
+						enabled="{restrictCb.selected}"
+						change="handleBatchIdInputChange(event)"
+						width="50" />
+				</mx:HBox>
+				
+			</mx:AddChild>
+		</mx:State>
+	</states>
 	
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.elephantadmin.views.modules.reporting.base.ReportModuleModel;
 			import mx.events.ListEvent;
 			
 			[Bindable] private var _pm : OCPFModulePM;
@@ -14,8 +38,25 @@
 				_pm = new OCPFModulePM();
 				presentationModel = _pm;
 			}
+			
+			
+			
+			private function handleBatchIdInputChange( event : Event ) : void {
+				_pm.filteredBatchId = Number(event.currentTarget.text);
+			}
 		]]>
 	</mx:Script>
+	
+	<mx:Style>
+		.restrictCb {
+			color: #FFFFFF;
+			textRollOverColor: #FFFFFF;
+			textSelectedColor: #FFFFFF;			
+		}
+		.batchIdInput {
+			color: #000000;
+		}
+	</mx:Style>
 	
 </ExternalReportModule>	
 	

@@ -2,8 +2,6 @@ package com.enilsson.elephantadmin.views.modules.reporting.external.ocpf
 {
 	import com.enilsson.elephantadmin.views.modules.reporting.base.ReportVO;
 	import com.enilsson.elephantadmin.views.modules.reporting.external.common.ExternalReportModulePM;
-	
-	import mx.collections.ArrayCollection;
 
 	[Bindable]
 	public class OCPFModulePM extends ExternalReportModulePM
@@ -11,6 +9,14 @@ package com.enilsson.elephantadmin.views.modules.reporting.external.ocpf
 		public function OCPFModulePM() {
 			filenamePrefix = "OCPF";
 			filenameExtension = "txt";
+		}
+		
+		public var filteredBatchId : int;
+		public var restrictable : Boolean;
+				
+		override public function set filter(value:int):void {
+			super.filter = value;
+			restrictable = ( filter == FILTER_ALL || filter == FILTER_CHECK );  
 		}
 		
 		override protected function configureExportService():void {
@@ -32,6 +38,9 @@ package com.enilsson.elephantadmin.views.modules.reporting.external.ocpf
 			vo.filter = filter;
 			vo.export = true;
 			vo.exportTimeOffset = timezoneOffset;
+			
+			if(!isNaN(filteredBatchId)) 
+				vo.batchID = filteredBatchId;
 			
 			service['export_ocpf'].send.apply(null, [vo]);
 		}

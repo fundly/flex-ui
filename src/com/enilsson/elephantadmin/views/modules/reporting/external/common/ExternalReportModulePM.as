@@ -17,7 +17,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.external.common
 	[Bindable]
 	public class ExternalReportModulePM extends ReportModuleModel
 	{
-		public static const ONE_DAY:int = 24 * 60 * 60;
+		public static const ONE_DAY	: int = 24 * 60 * 60;
 		
 		// default start date
 		public var startDate:int;
@@ -46,9 +46,9 @@ package com.enilsson.elephantadmin.views.modules.reporting.external.common
 			filenameExtension	= "csv";
 			
 			typeFilter 		= new ArrayCollection([
-				{label:'All',data:'0'},
-				{label:'Credit Card',data:'1'},
-				{label:'Check',data:'2'}
+				{label:'All',data:FILTER_ALL},
+				{label:'Credit Card',data:FILTER_CC},
+				{label:'Check',data:FILTER_CHECK}
 			]);
 			
 			init();

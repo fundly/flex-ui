@@ -8,6 +8,8 @@ package com.enilsson.elephantadmin.views.modules.reporting.external.netfile
 	[Bindable]
 	public class NetFileModulePM extends ExternalReportModulePM
 	{
+		public static const FILTER_PAYPAL : int = 3;
+		
 		public var netfileFilter:ArrayCollection = new ArrayCollection([
 			{label:'Entity',data:'0'},
 			{label:'Income',data:'1'}
@@ -18,7 +20,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.external.netfile
 
 		public function NetFileModulePM() {
 			init();
-			super.typeFilter.addItem( {label:'PayPal',data:'3'} );
+			super.typeFilter.addItem( {label:'PayPal',data:FILTER_PAYPAL} );
 		}
 		
 		

@@ -16,6 +16,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.base
 		public var eventID:int;
 		public var pledgeID:int;
 		public var userID:int;
+		public var batchID:int;
 
 		public var export:Boolean;
 		public var exportTitle:String;
@@ -23,10 +24,5 @@ package com.enilsson.elephantadmin.views.modules.reporting.base
 		public var exportFields:Array = [];
 		public var exportTimeOffset:int;
 		public var exportData:Object = {};
-
-		public function ReportVO()
-		{
-		}
-
 	}
 }

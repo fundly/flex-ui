@@ -9,6 +9,9 @@ package com.enilsson.elephantadmin.views.modules.reporting.base
 	[Bindable]
 	public class ReportModuleModel
 	{
+		public static const FILTER_CC 		: int = 0;
+		public static const FILTER_CHECK	: int = 1;
+		public static const FILTER_ALL		: int = 2;
 
 		public var allGroups:ArrayCollection;
 		public var userGroups:Array;
@@ -17,6 +20,10 @@ package com.enilsson.elephantadmin.views.modules.reporting.base
 		public var gatewayBaseURL:String;
 		public var instanceID:int;
 		public var recordID:int;
+		
+		public function ReportModuleModel() {
+			filter = ReportModuleModel.FILTER_ALL;
+		}
 
 		public function set dataLoading(value:Boolean):void
 		{
@@ -42,13 +49,12 @@ package com.enilsson.elephantadmin.views.modules.reporting.base
 		public var gridTotalRecords:int;
 		public var gridSearchTerm:String;
 
-		public var filter:int = 0;
-		public var group:int = 0;
-
-		public function ReportModuleModel():void
-		{
-		}
+		public var group:int	= 0;
 		
+		public function set filter( value : int ) : void { _filter = value; }
+		public function get filter() : int { return _filter; }
+		private var _filter : int;
+
 		public function init():void
 		{
 			timezoneOffset = new Date().getTimezoneOffset() * 60;
