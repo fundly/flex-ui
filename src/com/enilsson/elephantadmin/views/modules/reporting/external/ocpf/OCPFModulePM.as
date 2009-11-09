@@ -40,7 +40,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.external.ocpf
 				
 		override public function set filter(value:int):void {
 			super.filter = value;
-			restrictable = ( filter == FILTER_ALL || filter == FILTER_CHECK );  
+			restrictable = ( filter == FILTER_CHECK );  
 		}
 		
 		
@@ -58,13 +58,18 @@ package com.enilsson.elephantadmin.views.modules.reporting.external.ocpf
 			var vo:ReportVO = new ReportVO();
 			var sortBy:String = sortArray.join(",");
 
-			vo.startTime = startDate;
-			vo.endTime = endDate + ONE_DAY;
+			// don't send any dates if the export has been restricted by batch id
+			if(!restricted) {
+				vo.startTime = startDate;
+				vo.endTime = endDate + ONE_DAY;
+			}
+			
 			vo.sortBy = sortBy;
 			vo.filter = filter;
 			vo.export = true;
 			vo.exportTimeOffset = timezoneOffset;
 			
+			// only set the batch id on the VO if has been set in the UI
 			if(! isNaN(filteredBatchId)) 
 				vo.batchID = filteredBatchId;
 			

@@ -11,15 +11,16 @@
 				
 				<mx:HBox width="100%">
 				<mx:Spacer width="40" />
-					<mx:CheckBox id="restrictCb" styleName="restrictCb"
+					<mx:CheckBox id="restrictCb"
+						styleName="restrictCb"
 						label="Restrict by batch ID:"
 						selected="{ restrictCb.selected &amp;&amp; _pm.restrictable }"
 						change="_pm.restricted = event.currentTarget.selected"
-						enabled="{ _pm.restrictable }" />
+						enabled="{ _pm.restrictable &amp;&amp; !dataLoading }" />
 					<mx:TextInput
 						styleName="batchIdInput"
 						restrict="0-9"
-						enabled="{restrictCb.selected}"
+						enabled="{restrictCb.selected &amp;&amp; !dataLoading}"
 						text="{ isNaN(_pm.filteredBatchId) ? '' : _pm.filteredBatchId }"
 						change="_pm.filteredBatchId = Number(event.currentTarget.text)"
 						width="50" />
@@ -28,6 +29,8 @@
 			</mx:AddChild>
 		</mx:State>
 	</states>
+	
+	<mx:Binding source="_pm.restricted" destination="datesEnabled" />
 	
 	<mx:Script>
 		<![CDATA[
@@ -39,6 +42,11 @@
 			private function init() : void {
 				_pm = new OCPFModulePM();
 				presentationModel = _pm;
+			}
+			
+			override protected function set datesEnabled( value : Boolean ) : void {
+				super.datesEnabled = value;
+				_datesEnabled = _datesEnabled && !_pm.restricted;
 			}
 		]]>
 	</mx:Script>
