@@ -17,7 +17,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.external.common
 	[Bindable]
 	public class ExternalReportModulePM extends ReportModuleModel
 	{
-		public static const ONE_DAY:int = 24 * 60 * 60;
+		public static const ONE_DAY	: int = 24 * 60 * 60;
 		
 		// default start date
 		public var startDate:int;
@@ -38,7 +38,8 @@ package com.enilsson.elephantadmin.views.modules.reporting.external.common
 		/**
 		 * Constructor
 		 **/
-		public function ExternalReportModulePM() {	
+		public function ExternalReportModulePM() {
+			super();	
 			startDate 			= EDateUtil.todayToTimestamp() - ONE_DAY;
 			endDate				= EDateUtil.todayToTimestamp();
 			sortArray			= ['created_on DESC'];
@@ -46,9 +47,9 @@ package com.enilsson.elephantadmin.views.modules.reporting.external.common
 			filenameExtension	= "csv";
 			
 			typeFilter 		= new ArrayCollection([
-				{label:'All',data:'0'},
-				{label:'Credit Card',data:'1'},
-				{label:'Check',data:'2'}
+				{label:'All',data:FILTER_ALL},
+				{label:'Credit Card',data:FILTER_CC},
+				{label:'Check',data:FILTER_CHECK}
 			]);
 			
 			init();
@@ -123,7 +124,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.external.common
 		 * Parses a service fault and shows an error Alert window.
 		 **/
 		protected function getExportDataFault( event : FaultEvent ) : void {
-			Alert.show( "Internet connection error please try again soon (" + event.fault + ")", "Error", 0 );
+			Alert.show( "An error occured while exporting the pledges, please decrease the selected date range and try again.", "Error", 0 );
 			dataLoading = false;
 			exporting = false;
 		}

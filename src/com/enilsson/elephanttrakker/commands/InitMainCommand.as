@@ -305,7 +305,7 @@ package com.enilsson.elephanttrakker.commands
 		}
 		
 		private function getErrorMessageRssVO() : RssVO { return getErrorRssVO('There is an error with the RSS feed, please inform your admin team!'); }
-		private function getNoNewsRssVO() : RssVO { return getErrorRssVO("There are no news available today."); }
+		private function getNoNewsRssVO() : RssVO { return getErrorRssVO("There is no news available today."); }
 		
 		private function getErrorRssVO( title : String ) : RssVO
 		{

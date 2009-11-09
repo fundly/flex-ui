@@ -17,24 +17,26 @@
 					horizontalGap="2" verticalGap="2" horizontalAlign="right"
 					direction="{this.width &gt; 700 ? 'horizontal' : 'vertical'}">
 					
-					<mx:FormItem label="from:">
-						<mx:DateField
+					<mx:FormItem
+						label="from:">
+						<mx:DateField id="startDateField"
 							width="100" color="#000000"
 							textAlign="center"  
 							formatString="MM/DD/YYYY" 
 							selectedDate="{EDateUtil.dateFromTimestamp(_pm.startDate)}" 
 							change="_pm.startDate = EDateUtil.dateToTimestamp(event.target.selectedDate)"							
-							enabled="{!dataLoading &amp;&amp; !_pm.searching}" />
+							enabled="{_datesEnabled}" />
 					</mx:FormItem>
 					
-					<mx:FormItem label="to:">
-						<mx:DateField 
+					<mx:FormItem 
+						label="to:">
+						<mx:DateField id="endDateField" 
 							width="100" color="#000000"
 							formatString="MM/DD/YYYY"
 							textAlign="center" 
 							selectedDate="{EDateUtil.dateFromTimestamp(_pm.endDate)}" 
 							change="_pm.endDate = EDateUtil.dateToTimestamp(event.target.selectedDate)"  
-							enabled="{!dataLoading &amp;&amp; !_pm.searching}" />
+							enabled="{_datesEnabled}" />
 					</mx:FormItem>
 					
 				</mx:Box>
@@ -64,6 +66,9 @@
 		
 	</mx:VBox>
 	
+	<mx:Binding source="dataLoading" destination="datesEnabled" />
+	<mx:Binding source="_pm.searching" destination="datesEnabled" />
+	
 	<mx:Script>
 		<![CDATA[
 			import com.enilsson.elephantadmin.views.modules.reporting.base.ReportModuleModel;
@@ -73,6 +78,12 @@
 			public function typeChangeHandler(event:ListEvent):void {
 				presentationModel.filter = event.currentTarget.selectedItem.data;
 			}
+				
+			protected function set datesEnabled( value : Boolean ) : void {
+				_datesEnabled = !dataLoading && !_pm.searching;
+			}		
+			[Bindable] protected var _datesEnabled : Boolean;
+
 			
 			override public function set presentationModel(value:ReportModuleModel):void {
 				super.presentationModel = value;
