@@ -124,7 +124,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.external.common
 		 * Parses a service fault and shows an error Alert window.
 		 **/
 		protected function getExportDataFault( event : FaultEvent ) : void {
-			Alert.show( "An error occured while exporting the pledges, please decrease the selected date range and try again." "Error", 0 );
+			Alert.show( "An error occured while exporting the pledges, please decrease the selected date range and try again.", "Error", 0 );
 			dataLoading = false;
 			exporting = false;
 		}
