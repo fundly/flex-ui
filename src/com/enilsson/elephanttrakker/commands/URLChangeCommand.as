@@ -59,7 +59,7 @@ package com.enilsson.elephanttrakker.commands
 							// return them to the overview
 							if(_model.allowedModules.getItemIndex(f) == -1)
 							{
-								_model.mainViewState = 0;
+								_model.mainViewState = ETModelLocator.OVERVIEW_VIEW;
 								SWFAddress.setValue(_model.viewStateList[0]);
 								SWFAddress.setTitle(_model.appName + ' - ' + _model.viewStateNames[0]);
 								_model.is_parsing_url = false;
