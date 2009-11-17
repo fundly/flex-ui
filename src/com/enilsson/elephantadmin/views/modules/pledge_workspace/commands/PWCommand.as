@@ -377,8 +377,8 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.commands
 			{
 				case 'pledges' :
 					if(data.result[0].hasOwnProperty('pledges'))
-					{
-						_presentationModel.pledgeDups = [];
+					{	
+						_presentationModel.pledgeDups = new Array();
 						
 						for each ( item in data.result[0].pledges )
 							_presentationModel.pledgeDups.push(item);
@@ -517,7 +517,7 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.commands
 	
 							// set the transaction vstack to the payments list
 							_presentationModel.vindex = 1;
-							_presentationModel.transVStack = 2;
+							_presentationModel.transVStack = PledgeWorkspaceModel.LIST_CONTRIBS_VIEW;
 							
 							this.nextEvent = new PWEvent( 
 								PWEvent.GET_PLEDGE, 
