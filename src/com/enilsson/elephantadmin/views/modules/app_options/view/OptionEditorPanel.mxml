@@ -20,30 +20,6 @@
 		<option_views:Options_DownlineRequest pm="{_pm}" />
 		<option_views:Options_ContactsRequest pm="{_pm}" />
 	</mx:ViewStack>
-	
-<!--	
-	<mx:VBox id="container" width="100%" height="100%"
-		paddingLeft="15" paddingRight="15" paddingTop="15" paddingBottom="40">
-		
-		<mx:Text id="descriptionText" 
-			width="100%"
-			fontSize="14"
-			text="{_pm.editingSiteOption.description}" 
-			selectable="false" />
-					
-		<mx:FormItem label="Show this content in BlueSwarm:">
-			<mx:CheckBox id="displayCb" 
-				selected="{_pm.displayOption}" 
-				change="_pm.changeOption('display', displayCb.selected)"/>	
-		</mx:FormItem>
-			
-		<components:SiteOptionsRTE id="valueText"
-			width="100%" height="100%"
-			htmlText="{_pm.editingSiteOption.value}"
-			change="_pm.changeOption('value', valueText.htmlText)"
-			variables="{siteOption.variables}" />		
-	</mx:VBox>
--->
 
 	<common:ModuleControlBar id="moduleControlBar" 
 		width="100%" horizontalAlign="left">
@@ -57,24 +33,6 @@
 				enabled="{_pm.changed}" />
 		</mx:HBox>		
 	</common:ModuleControlBar>
-
-<!--	
-	<common:states>
-		<mx:State name="{SiteOption.WORKSPACE_AGREEMENT}">
-			<mx:RemoveChild target="{valueText}" />
-			<mx:AddChild relativeTo="{container}" position="lastChild">
-				<components:WorkspaceAgreementEditor id="waEditor"
-					width="100%" height="100%"
-					xmlString="{_pm.editingSiteOption.value}"
-					change="_pm.changeOption('value', waEditor.xmlString);" />
-			</mx:AddChild>
-			<mx:AddChild relativeTo="{moduleControlBar}" position="firstChild">
-				<components:VariableSelector includeInLayout="false"/>
-			</mx:AddChild>
-		</mx:State>
-	</common:states>
--->
-	
 	
 	<mx:Binding source="this.siteOption" destination="siteOption" />
 		
@@ -92,22 +50,6 @@
 			
 			public function set pm( value : OptionsEditorPM ) : void { _pm = value; } 
 			[Bindable] private var _pm : OptionsEditorPM;
-			
-/* 			override public function set currentState(value:String):void
-			{
-				if(!_pm.changed)
-				{
-					switch(value)
-					{
-						case SiteOption.WORKSPACE_AGREEMENT:
-							super.currentState = value;
-						break;
-						default:
-							super.currentState = "";
-						break;
-					}
-				}
-			} */
 		]]>
 	</mx:Script>
 	
