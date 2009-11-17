@@ -124,8 +124,6 @@
 			import com.enilsson.elephanttrakker.events.session.EndSessionEvent;
 			import com.enilsson.elephanttrakker.events.modules.first_login.FirstLoginEvent;
 			import com.enilsson.elephanttrakker.events.modules.my_details.MyDetailsEvent;
-			import com.enilsson.elephanttrakker.views.modules.call_logging.renderers.*;
-			import com.enilsson.elephanttrakker.events.modules.call_logging.CallLoggingAutoCompleteEvent;
 			import com.enilsson.elephanttrakker.events.session.PingEvent;
 			import mx.utils.ObjectUtil;
 			import org.osflash.thunderbolt.Logger;
