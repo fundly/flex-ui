@@ -4,7 +4,8 @@
 	xmlns:struktorForm="com.enilsson.utils.struktorForm.*"
 	xmlns:views="com.enilsson.elephanttrakker.views.modules.pledge_workspace.views.*"
 	xmlns:controls="com.enilsson.controls.*"	
-	show="init()" 
+	show="init()"
+	hide="hideTooltips()"
 	height="100%" width="100%" 
 	verticalScrollPolicy="off">	
 	
@@ -47,6 +48,7 @@
 					<struktorForm:StruktorForm id="ccForm" 
 						styleName="processingForm" 
 						showEffect="fadeIn" hideEffect="fadeOut"
+						show="lastField = ccForm.lastField"
 						layoutProvider="{presentationModel.transactionLayout}"
 						isValidChanged="setIsValid()" 
 						validateOnKeyPress="true"
@@ -55,6 +57,7 @@
 						selectedGroups="{[1]}" 
 						groupLabels="false" />
 					<mx:Canvas horizontalScrollPolicy="off"
+						show="lastField = billingForm.lastField"
 						showEffect="fadeIn" hideEffect="fadeOut">
 						<mx:Text fontSize="9" width="90%" horizontalCenter="20"
 							text="Billing details for credit card if different from contact details" />
@@ -95,6 +98,7 @@
 				styleName="processingForm"
 				label="Check" 
 				selectedGroups="{[1]}" groupLabels="false"
+				show="lastField = checkForm.lastField"
 				showEffect="fadeIn" hideEffect="fadeOut"			
 				width="100%" height="200" maxHeight="200" 
 				clearForm="{presentationModel.clearPaymentForms}"
@@ -106,8 +110,8 @@
 			<mx:Canvas
 				horizontalScrollPolicy="off"
 				width="100%"
-				visible="{presentationModel.action != PledgeWorkspaceModel.EDIT}" 
-				includeInLayout="{presentationModel.action != PledgeWorkspaceModel.EDIT}">
+				showEffect="fadeIn" hideEffect="fadeOut"
+				show="lastField = noContribForm.lastField">
 				<mx:Text top="5" right="5" left="5" 
 					styleName="labelStyleName" width="100%" selectable="false" 
 					text="If you don't want to provide contribution details, please choose a way to send a donation form to the donor." />
@@ -116,7 +120,6 @@
 					styleName="processingForm"
 					label="No contribution details"
 					selectedGroups="{[1]}" groupLabels="false"
-					showEffect="fadeIn" hideEffect="fadeOut"			
 					width="100%" 
 					clearForm="{presentationModel.clearPaymentForms}"
 					layoutProvider="{presentationModel.checkLayout}"
@@ -135,7 +138,7 @@
 		<mx:LinkBar id="transactionLinkBar" 
 			styleName="transactionLinkBar" 
 			dataProvider="{addLabels}"
-			visible="{presentationModel.action != PledgeWorkspaceModel.EDIT}" 
+			visible="{presentationModel.action != PledgeWorkspaceModel.EDIT}"
 			includeInLayout="{presentationModel.action != PledgeWorkspaceModel.EDIT}"			 
 			itemClick="transactionLinkBarClickHandler(event)" 
 			tabEnabled="false" />
@@ -189,6 +192,9 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.core.UIComponent;
+			import mx.managers.ToolTipManager;
+			import mx.core.IToolTip;
 			import com.enilsson.elephanttrakker.views.main.ContentBox;
 			import com.enilsson.elephanttrakker.events.main.ResizeContentEvent;
 			import com.enilsson.elephanttrakker.views.modules.pledge_workspace.events.PWEvent;
@@ -230,19 +236,19 @@
 				// validate against the transaction requested
 				switch(presentationModel.transVStack)
 				{
-					case 0 :
+					case PledgeWorkspaceModel.CC_VIEW :
 						if ( presentationModel.billingData != null )
 							_isValid = pledgeInfo.isValid && ccForm.isValid && billingForm.isValid;
 						else
 							_isValid = pledgeInfo.isValid && ccForm.isValid;
 					break;
-					case 1 :
+					case PledgeWorkspaceModel.CHECK_VIEW :
 						_isValid = pledgeInfo.isValid && checkForm.isValid;
 					break;
-					case 2: 
+					case PledgeWorkspaceModel.NO_CONTRIB_VIEW: 
 						_isValid = pledgeInfo.isValid && noContribForm.isValid;
 					break;
-					case 3 :
+					case PledgeWorkspaceModel.LIST_CONTRIBS_VIEW :
 						_isValid = pledgeInfo.isValid;
 					break;
 				}					 
@@ -262,28 +268,23 @@
 			{
 				if(presentationModel.debug) Logger.info('TransVStack', presentationModel.transVStack);
 
-				if(presentationModel.vindex >= presentationModel.prevVIndex) 
-					if(firstField) firstField.setFocus();
-				else 
+				if(lastField && presentationModel.tabBackward)
 				{
-					if(presentationModel.tabBackward)
-					{
-						lastField.setFocus();
-						presentationModel.tabBackward = false;
-					}
+					lastField.setFocus();
+					presentationModel.tabBackward = false;
 				}
-				
-//				transactionLinkBar.selectedIndex = presentationModel.transVStack == 1 ? 1 : 0;
-				transactionLinkBar.selectedIndex = presentationModel.transVStack;
+				else if(presentationModel.vindex >= presentationModel.prevVIndex) 
+					if(firstField) firstField.setFocus();
 				
 				// validate the form if this is an edit
 				if(presentationModel.action == PledgeWorkspaceModel.EDIT)
 				{
 					if(presentationModel.debug) Logger.info('Pledge Info - Init', pledgeInfo.isValid);
-					
 					setIsValid();
-				}	
-				
+				}
+				else {
+					transactionLinkBar.selectedIndex = presentationModel.transVStack;
+				}
 			}
 
 			/**
@@ -327,9 +328,10 @@
 						firstField.addEventListener(FocusEvent.KEY_FOCUS_CHANGE, function(evt:FocusEvent):void {
 							if (evt.shiftKey && evt.keyCode == 9) 
 							{
+								evt.preventDefault();
+								presentationModel.prevVIndex = presentationModel.vindex;
 								presentationModel.vindex--;
 								presentationModel.tabBackward = true;
-								evt.preventDefault();
 							}
 						});
 						// grab the source code ac input and apply its parameters
@@ -369,8 +371,10 @@
 							{
 								evt.preventDefault();
 								
-								if ( presentationModel.numTabs > 2 && presentationModel.action != PledgeWorkspaceModel.EDIT )
+								if ( presentationModel.numTabs > 2 && presentationModel.action != PledgeWorkspaceModel.EDIT ) {
+									presentationModel.prevVIndex = presentationModel.vindex;
 									presentationModel.vindex++;
+								}
 								else if ( presentationModel.workspaceValid )
 									presentationModel.setSubmitFocus = true;
 							}
@@ -381,29 +385,38 @@
 					break;
 					
 					case checkForm :
-						var focusfield2:ComboBox = event.currentTarget.getField('form_send') as ComboBox;
-						
-						focusfield2.addEventListener(FocusEvent.KEY_FOCUS_CHANGE, function(evt:FocusEvent):void {
-							if (!evt.shiftKey && evt.keyCode == 9 && presentationModel.numTabs > 2) 
-							{
-								presentationModel.vindex++;
-								evt.preventDefault();
-							}
-						});
-
 						field = event.currentTarget.getField('amount') as TextInput;
  						BindingUtils.bindProperty(field, 'text', presentationModel, 'pledgeAmount');
  						
- 						field = event.currentTarget.getField('email') as TextInput;
- 						BindingUtils.bindProperty(field, 'text', presentationModel, 'contactEmail');
+ 						addCheckFormListeners( event.currentTarget as StruktorForm );
 					break;
 					
 					case noContribForm :
-						field = event.currentTarget.getField('email') as TextInput;
- 						BindingUtils.bindProperty(field, 'text', presentationModel, 'contactEmail');
+						addCheckFormListeners( event.currentTarget as StruktorForm );						
 					break;
 				}
 				
+			}
+			
+			private function addCheckFormListeners( form : StruktorForm ) : void {
+				var sendByField : UIComponent = form.getField('form_send') as UIComponent;
+				var emailField : UIComponent = form.getField('email') as UIComponent;
+				
+				sendByField.addEventListener( FocusEvent.KEY_FOCUS_CHANGE, function( event : FocusEvent ) : void {
+					if( ! emailField.parent.visible )
+						handleKeyFocusChange( event );
+				});
+				emailField.addEventListener( FocusEvent.KEY_FOCUS_CHANGE, handleKeyFocusChange );
+				
+				BindingUtils.bindProperty(emailField, 'text', presentationModel, 'contactEmail');
+			}
+			
+			private function handleKeyFocusChange( event : FocusEvent ) : void {
+				if(!event.shiftKey && event.keyCode == Keyboard.TAB && presentationModel.numTabs > 2) {
+					event.preventDefault();
+					presentationModel.prevVIndex = presentationModel.vindex;
+					presentationModel.vindex++;
+				}
 			}
 			
 			/**
@@ -458,6 +471,8 @@
 			{
 				if(presentationModel.debug) Logger.info('Edit Click', event.label, event.index, presentationModel.action);
 				
+				hideTooltips();
+				
 				switch(presentationModel.action)	
 				{	
 					case PledgeWorkspaceModel.ADD_NEW :
@@ -467,26 +482,23 @@
 						
 						if(presentationModel.debug) Logger.info('Edit Click', presentationModel.transVStack);
 						
-						var cfield:*
 						switch(event.index)	
 						{
-							case 0:
-								cfield = ccForm.lastField;
+							case PledgeWorkspaceModel.CC_VIEW:
+								lastField = ccForm.lastField;
 							break;
-							case 1:
-								cfield = checkForm.lastField;
+							case PledgeWorkspaceModel.CHECK_VIEW:
+								lastField = checkForm.lastField;
 							break;
-							case 2:
-								cfield = noContribForm.lastField;
+							case PledgeWorkspaceModel.NO_CONTRIB_VIEW:
+								lastField = noContribForm.lastField;
 							break;
 						}
-	
-						lastField = cfield;
 					break;
 					default :
 					case PledgeWorkspaceModel.EDIT :
-						presentationModel.transVStack = 3;
-					break
+						presentationModel.transVStack = PledgeWorkspaceModel.LIST_CONTRIBS_VIEW;
+					break;
 				}
 			}
 			
@@ -496,6 +508,7 @@
 			private function vstackChangeHandler(event:IndexChangedEvent):void
 			{
 				setIsValid();
+				hideTooltips();
 				
 				switch(event.newIndex)
 				{
@@ -510,6 +523,20 @@
 						presentationModel.checkData = null;
 					break;
 				}
+			}
+			
+			
+			/**
+			 * Hide any error tips when the form is hidden (ie the user moves to a new tab)
+			 */
+			private function hideTooltips():void
+			{
+				var curTT : IToolTip = ToolTipManager.currentToolTip;
+				
+				try {
+					ToolTipManager.destroyToolTip( curTT );
+					ToolTipManager.currentToolTip = null;
+				} catch( e : Error ) { }
 			}
 			
 		]]>

@@ -83,17 +83,6 @@ package com.enilsson.elephanttrakker.controllers
 			this.addCommand(MyFundraisingEvent.EVENT_MY_FUNDRAISING, OverviewCommand);
 			this.addCommand(UpdateGoalLineEvent.EVENT_UPDATE_GOALLINE, OverviewCommand);
 			
-			// call_logging
-			this.addCommand(PledgeWorkspaceEvent.GET_CONTACT, CallLoggingCommand);
-			this.addCommand(PledgeWorkspaceEvent.GET_PLEDGE, CallLoggingCommand);
-			this.addCommand(PledgeWorkspaceEvent.LOOKUP_INPUT_SEARCH, CallLoggingCommand);			
-			this.addCommand(PledgeWorkspaceEvent.GET_LABEL, CallLoggingCommand);	
-			this.addCommand(PledgeWorkspaceEvent.SAVE, CallLoggingCommand);
-			this.addCommand(PledgeWorkspaceEvent.DUP_SEARCH, CallLoggingCommand);	
-			this.addCommand(PledgeWorkspaceEvent.DO_TRANSACTION, CallLoggingCommand);
-			this.addCommand(PledgeWorkspaceEvent.SEND_EMAIL, CallLoggingCommand);
-			this.addCommand(PledgeWorkspaceEvent.DELETE_SAVED_PLEDGE, CallLoggingCommand);		
-
 			/**
 			 * Start Pledge Workspace events
 			 */

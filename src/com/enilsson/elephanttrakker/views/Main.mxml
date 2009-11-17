@@ -24,9 +24,6 @@
 			<overview:Overview id="OverviewView" runInit="{_model.runInit}" 
 				showEffect="fadeIn" hideEffect="fadeOut" width="100%" height="100%"
 				xmlns:overview="com.enilsson.elephanttrakker.views.modules.overview.*" />
-			<call_logging:CallLogging2 id="CallLoggingView" runInit="{_model.runInit}" 
-				showEffect="fadeIn" hideEffect="fadeOut" width="100%" height="100%"
-				xmlns:call_logging="com.enilsson.elephanttrakker.views.modules.call_logging.*" />
 			<email:Email id="EmailView"  runInit="{_model.runInit}"
 				showEffect="fadeIn" hideEffect="fadeOut" width="100%" height="100%"
 				xmlns:email="com.enilsson.elephanttrakker.views.modules.email.*" />
@@ -57,7 +54,7 @@
 			<invitation:Invitation id="InvitationView" runInit="{_model.runInit}" 
 				showEffect="fadeIn" hideEffect="fadeOut" width="100%" height="100%"
 				xmlns:invitation="com.enilsson.elephanttrakker.views.modules.invitation.*" />															
-			<pledgeWorkspace:PledgeWorkspace 
+			<pledgeWorkspace:PledgeWorkspace id="PledgeWorkspaceView"
 				runInit="{_model.runInit}"
 				width="100%" height="100%" 
 				showEffect="fadeIn" hideEffect="fadeOut" 

@@ -4,7 +4,7 @@
 	xmlns:struktorForm="com.enilsson.utils.struktorForm.*"
 	xmlns:graphics="com.enilsson.graphics.*"
 	show="init()"
-	hide="hideAction()"
+	hide="hideTooltips()"
 	width="100%" 
 	verticalScrollPolicy="off" 
 	horizontalScrollPolicy="off">
@@ -67,28 +67,24 @@
 			{
 				// ping the server to make sure that all is well
 				new PingEvent().dispatch();
-
- 				if(presentationModel.vindex >= presentationModel.prevVIndex)
-					firstField.setFocus();
-				else 
-				{
-					if(presentationModel.tabBackward)
-					{
-						lastField.setFocus();
-						presentationModel.tabBackward = false;
-					}
-				}
+				
+				if( presentationModel.tabBackward && lastField ) {
+					lastField.setFocus();
+					presentationModel.tabBackward = false;
+				}				
 			}
 			
 			/**
 			 * Hide any error tips when the form is hidden (ie the user moves to a new tab)
 			 */
-			private function hideAction():void
+			private function hideTooltips():void
 			{
-				var curTT:IToolTip = ToolTipManager.currentToolTip;
+				var curTT : IToolTip = ToolTipManager.currentToolTip;
 				
-				if(curTT)
-					ToolTipManager.destroyToolTip(curTT);
+				try {
+					ToolTipManager.destroyToolTip( curTT );
+					ToolTipManager.currentToolTip = null;
+				} catch( e : Error ) { }
 			}
 		
 			/**
@@ -107,8 +103,8 @@
 				// assign an event handler to the last field to cope with tabbing to the next page						
 				lastField.addEventListener(FocusEvent.KEY_FOCUS_CHANGE, function(evt:FocusEvent):void {
 					if (!evt.shiftKey && evt.keyCode == 9) {
-						presentationModel.vindex++;
 						evt.preventDefault();
+						presentationModel.vindex++;						
 					}
 				});	
 															

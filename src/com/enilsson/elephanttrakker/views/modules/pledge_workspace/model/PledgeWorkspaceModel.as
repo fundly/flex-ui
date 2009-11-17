@@ -24,16 +24,29 @@ package com.enilsson.elephanttrakker.views.modules.pledge_workspace.model
 		/**
 		 * List of static variables defining the four types of form action available
 		 */
-		static public const ADD_NEW:String 			= 'pledgeworkspace_addnew';
-		static public const ADD_EXISTING:String 	= 'pledgeworkspace_addexisting';
-		static public const ADD_SHARED:String 		= 'pledgeworkspace_addshared';
-		static public const EDIT:String 			= 'pledgeworkspace_edit';
+		public static const ADD_NEW:String 			= 'pledgeworkspace_addnew';
+		public static const ADD_EXISTING:String 	= 'pledgeworkspace_addexisting';
+		public static const ADD_SHARED:String 		= 'pledgeworkspace_addshared';
+		public static const EDIT:String 			= 'pledgeworkspace_edit';
+		
+		
+		public static const CC_VIEW 			: int = 0;
+		public static const CHECK_VIEW			: int = 1;
+		public static const NO_CONTRIB_VIEW		: int = 2;
+		public static const LIST_CONTRIBS_VIEW	: int = 3;
+		
+		public static const CONTACT_FORM_VIEW	: int = 0;
+		public static const PLEDGE_FORM_VIEW	: int = 1;
+		
+		public static const CC_DETAILS_VIEW			: int = 0;
+		public static const BILLING_DETAILS_VIEW	: int = 1;
+		
 		
 		/**
 		 * Variable to register when a saved record is being restored
 		 */
-		static public const RESTORE_SAVED:String	= 'pledgeworkspace_restoresaved';		
-
+		public static const RESTORE_SAVED:String	= 'pledgeworkspace_restoresaved';
+		
 		/**
 		 * The model variables
 		 */
@@ -47,67 +60,38 @@ package com.enilsson.elephanttrakker.views.modules.pledge_workspace.model
 			// add the parent model as a variable to the class
 			model = parentModel as ETModelLocator;
 			
-			// listen for a change to the parent model variable holding the global VO
-			BindingUtils.bindSetter( workspaceChangeHandler, model, 'pledgeWorkspace' );
+			
+			if(model) {
+				// listen for a changes to the parent model
+				BindingUtils.bindSetter( workspaceChangeHandler, model, 'pledgeWorkspace' );
+				BindingUtils.bindProperty(this, 'session', model, 'session' );
+				BindingUtils.bindProperty(this, 'pledgeLayout', model, ['struktorLayout','pledges'] );
+				BindingUtils.bindProperty(this, 'transactionLayout', model, ['struktorLayout', 'transactions'] );
+				BindingUtils.bindProperty(this, 'checkLayout', model, ['struktorLayout', 'checks'] );
+				BindingUtils.bindProperty(this, 'siteLayoutLoaded', model, 'siteLayoutLoaded' );
+				BindingUtils.bindProperty(this, 'options', model, 'options' );
+				BindingUtils.bindProperty(this, 'icons', model, 'icons' );
+				BindingUtils.bindProperty(this, 'debug', model, 'debug' );
+				BindingUtils.bindProperty(this, 'mainViewState', model, 'mainViewState' );
+				BindingUtils.bindProperty(this, 'successTextCC', model, 'successTextCC' );
+				BindingUtils.bindProperty(this, 'successTextCheck', model, 'successTextCheck');
+				
+			}
 			
 			if(debug) Logger.info ( 'Instantiate PledgeWorkspaceModel' );
 		}
 
-		/**
-		 * Get the session from the parent model
-		 */
-		public function get session():SessionVO
-		{
-			return model.session;			
-		}
-
-		/**
-		 * Get the necessary layout objects
-		 */
-		public function get pledgeLayout():StruktorLayoutVO
-		{
-			return model.struktorLayout.pledges as StruktorLayoutVO;
-		}
-		public function get transactionLayout():StruktorLayoutVO
-		{
-			return model.struktorLayout.transactions as StruktorLayoutVO;
-		}
-		public function get checkLayout():StruktorLayoutVO
-		{
-			return model.struktorLayout.checks as StruktorLayoutVO;
-		}
-
-		/**
-		 * Get the siteLayoutLoaded flag from the parent model
-		 */
-		public function get siteLayoutLoaded():Boolean { return model.siteLayoutLoaded; }		
-
-		/**
-		 * Get the workspace agreement from the parent model
-		 */
-		public function get options():AppOptionsVO { return model.options; }		
-
-		/**
-		 * Get the icons class from the parent model
-		 */
-		public function get icons():Icons { return model.icons; }		
-		
-		/**
-		 * Get the debug flag from the parent model
-		 */
-		public function get debug():Boolean { return model.debug; }		
-
-		/**
-		 * Get the main view state from the parent model
-		 */
-		public function get mainViewState():int { return model.mainViewState; }		
-
-		/**
-		 * Get the text for a successful pledges from the parent model
-		 */
-		public function get successTextCC():String { return model.successTextCC; }		
-		public function get successTextCheck():String { return model.successTextCheck; }		
-
+		public var session 				: SessionVO;
+		public var pledgeLayout			: StruktorLayoutVO;
+		public var transactionLayout	: StruktorLayoutVO;
+		public var checkLayout			: StruktorLayoutVO;
+		public var siteLayoutLoaded		: Boolean;
+		public var options				: AppOptionsVO;
+		public var icons				: Icons;
+		public var debug				: Boolean;
+		public var mainViewState		: int;
+		public var successTextCC		: String;
+		public var successTextCheck		: String;
 
 		/**
 		 * Some global variables for use during form completion
@@ -123,7 +107,11 @@ package com.enilsson.elephanttrakker.views.modules.pledge_workspace.model
 		public var pledgeDups:Array;				// list of found duplicate pledges
 		public var showDupBox:Boolean = false;		// show the popup of the duplicates
 		public var dupsVStack:int = 0;				// the state of the dups viewstack
-		public var transVStack:int = 0;				// the state of the transaction viewstack
+		
+		public function set transVStack( value : int ) : void { _transVStack = value; }
+		public function get transVStack() : int { return _transVStack; }
+		private var _transVStack : int = CC_VIEW;
+		
 		public var ccVStack:int = 0;				// the state of the credit card viewstack
 		public var savedID:Number = 0;				// to record if this is a saved pledge
 		public var transactionAttempts:int = 0;		// track how many attempts the user has at one record
@@ -156,8 +144,8 @@ package com.enilsson.elephanttrakker.views.modules.pledge_workspace.model
 		/**
 		 * Variables to handled the movement of the tabs
 		 */
-		public var vindex:int = 0;
-		public var prevVIndex:Number = -1;
+		public var vindex:int = CONTACT_FORM_VIEW;
+		public var prevVIndex:Number = CONTACT_FORM_VIEW;
 		public var tabBackward:Boolean = false;
 				
 
@@ -168,11 +156,13 @@ package com.enilsson.elephanttrakker.views.modules.pledge_workspace.model
 		{
 			if(debug) Logger.info ( 'PledgeWorkspaceModel Init', completedPledge );
 			
-			vindex = 0;
+			vindex = CONTACT_FORM_VIEW;
 			completedPledge = false;
 			
+			reset();
+			
 			if ( action == EDIT )
-				transVStack = 3;
+				transVStack = LIST_CONTRIBS_VIEW;
 		}
 		
 		/**
@@ -575,7 +565,7 @@ package com.enilsson.elephanttrakker.views.modules.pledge_workspace.model
 			// add any payments as necessary
 			switch ( transVStack )
 			{
-				case 0 :
+				case CC_VIEW :
 					vo.transaction = new TransactionVO();
 					vo.transaction.data = transactionData;
 					
@@ -591,7 +581,7 @@ package com.enilsson.elephanttrakker.views.modules.pledge_workspace.model
 					
 					vo.paymentType = 'credit card';	
 				break;
-				case 1 :
+				case CHECK_VIEW :
 					vo.check = {};
 					vo.check = checkData;
 					delete vo.check['id'];
@@ -644,9 +634,9 @@ package com.enilsson.elephanttrakker.views.modules.pledge_workspace.model
 			showErrorList = false;
 			showDupBox = false;
 			
-			vindex = 0;
-			transVStack = 0;
-			ccVStack = 0;
+			vindex = CONTACT_FORM_VIEW;
+			transVStack = CC_VIEW;
+			ccVStack = CC_DETAILS_VIEW;
 			
 			pledgeAmount = '';
 			

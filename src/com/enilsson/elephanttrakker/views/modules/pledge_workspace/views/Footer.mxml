@@ -14,8 +14,8 @@
 		toolTip="{presentationModel.action != PledgeWorkspaceModel.EDIT ? 
 			'Save this pledge to finish at a later date' : 
 			'You can not save an existing pledge!'}" 
-		tabIndex="2"
-		click="presentationModel.save()" />
+		click="presentationModel.save()"
+		tabEnabled="false" />
 	
 	<mx:HBox id="buttons" horizontalCenter="0" top="6">
 		<common:ValidFormIndicator 
@@ -38,24 +38,24 @@
 		label="clear" 
 		verticalCenter="0" right="85"
 		toolTip="Clear the form"
-		click="clearHandler( event )" 
-		tabIndex="3" />
+		click="clearHandler( event )"
+		tabEnabled="false" />
 	
 	<mx:Button id="backMove" styleName="backMove" 
 		left="5" verticalCenter="0"  
 		useHandCursor="true" buttonMode="true"
-		toolTip="Return to previous section" 
-		tabIndex="4"
+		toolTip="Return to previous section"
 		enabled="{presentationModel.vindex != 0}" 
-		click="presentationModel.vindex--"  />
+		click="presentationModel.vindex--"
+		tabEnabled="false"  />
 	
 	<mx:Button id="forwardMove" styleName="forwardMove" 
 		verticalCenter="0" right="5" 
 		enabled="{presentationModel.vindex &lt; (presentationModel.numTabs - 1)}"
 		toolTip="Progress to next section" 
-		tabIndex="5" 
 		useHandCursor="true" buttonMode="true" 
-		click="presentationModel.vindex++" />
+		click="presentationModel.vindex++"
+		tabEnabled="false" />
 
 	
 	<mx:Metadata>

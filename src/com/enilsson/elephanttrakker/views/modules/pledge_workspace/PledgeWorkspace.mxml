@@ -130,7 +130,7 @@
 			 */
 			public function set runInit(value:Boolean):void
 			{				
-				if(value && presentationModel.mainViewState == ETModelLocator.CALL_LOGGING_VIEW)
+				if(value && presentationModel.mainViewState == ETModelLocator.PLEDGE_WORKSPACE_VIEW)
 					showHandler();
 			}
 			

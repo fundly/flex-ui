@@ -19,6 +19,8 @@
 			
 			[Bindable] public var presentationModel:PledgeWorkspaceModel;
 			
+			private static const MAX_DISPLAYED_ERRORS : int = 6;
+			
 			private function init():void
 			{
 				this.removeAllChildren();
@@ -28,9 +30,9 @@
 				var cc:Array 	= presentationModel.ccErrors;
 				var ch:Array 	= presentationModel.checkErrors;
 				var b:Array 	= presentationModel.billingErrors;
+				var nc:Array	= presentationModel.noContribErrors;
 				
 				var title:Text;
-				var errorDesc:Text;
 				var otherTabs:Text;
 				var hr:HRule;
 				var spacer:Spacer;
@@ -41,12 +43,14 @@
 				switch (presentationModel.transVStack )
 				{
 					case 0 :
-						num = p.length + cc.length + ( presentationModel.billingData == null ? 0 : b.length )
+						num = p.length + cc.length + ( presentationModel.billingData == null ? 0 : b.length );
 					break;
 					case 1 :
-						num = p.length + ch.length
+						num = p.length + ch.length;
 					break;
 					case 2 :
+						num = p.length + nc.length;
+					case 3 :
 						num = p.length;
 					break;
 				}
@@ -81,13 +85,8 @@
 						title.htmlText = 'This page: <b>' + c.length.toString() + '</b> error' + (c.length == 1 ? '' : 's');
 						this.addChild(title);
 						
-						for each ( f in c )
-						{
-							errorDesc = new Text();
-							errorDesc.styleName = 'epDesc';
-							errorDesc.text = ' - ' + f.message;
-							errorDesc.percentWidth = 100;
-							this.addChild(errorDesc);
+						for each ( f in c ) {
+							this.addChild(createErrorDescription(f.message));
 						}
 						
 						spacer = new Spacer();
@@ -107,7 +106,7 @@
 						otherTabs = new Text();
 						otherTabs.styleName = 'epTitle';
 						otherTabs.percentWidth = 100;
-						otherTabs.htmlText = 'Pledge & Payment details - <b>' + num.toString() + '</b> error' +  (num == 1 ? '' : 's') + '<br>'; 
+						otherTabs.htmlText = 'Pledge & Payment details - <b>' + num + '</b> error' +  (num == 1 ? '' : 's') + '<br>'; 
 						if( presentationModel.numTabs == 3 )
 						{
 							otherTabs.htmlText += presentationModel.agreementValid ? 
@@ -121,20 +120,16 @@
 						title = new Text();
 						title.styleName = 'epTitle';
 						title.percentWidth = 100;
-						title.htmlText = 'This page: <b>' + num.toString() + '</b> error' + (num == 1 ? '' : 's');
+						title.htmlText = 'This page: <b>' + num + '</b> error' + (num == 1 ? '' : 's');
 						this.addChild(title);
 						
 						var iter:int = 0
 						
 						for each ( f in p )
 						{
-							errorDesc = new Text();
-							errorDesc.styleName = 'epDesc';
-							errorDesc.text = ' - ' + f.message;
-							errorDesc.percentWidth = 100;
-							this.addChild(errorDesc);
-							
 							iter++;
+							if(iter > MAX_DISPLAYED_ERRORS) continue;
+							this.addChild(createErrorDescription(f.message));
 						}
 						
 						if( presentationModel.transVStack == 0 )
@@ -142,15 +137,9 @@
 							// list the credit card form errors
 							for each ( f in cc )
 							{
-								if(iter > 6) continue;
-								
-								errorDesc = new Text();
-								errorDesc.styleName = 'epDesc';
-								errorDesc.text = ' - ' + f.message;
-								errorDesc.percentWidth = 100;
-								this.addChild(errorDesc);
-							
 								iter++;
+								if(iter > MAX_DISPLAYED_ERRORS) continue;								
+								this.addChild(createErrorDescription(f.message));							
 							}
 							
 							// list the billing form errors
@@ -158,40 +147,44 @@
 							{
 								for each ( f in b )
 								{
-									if(iter > 6) continue;
-									
-									errorDesc = new Text();
-									errorDesc.styleName = 'epDesc';
-									errorDesc.text = ' - ' + f.message;
-									errorDesc.percentWidth = 100;
-									this.addChild(errorDesc);
-								
 									iter++;
+									if(iter > MAX_DISPLAYED_ERRORS) continue;
+									this.addChild(createErrorDescription("Billing Address: " + f.message));
 								}
+							}
+							
+							// show either the CC or the billing address dialog depending on which one still has errors
+							if(cc.length > 0)
+								presentationModel.ccVStack = 0;
+							else if( presentationModel.billingData && b.length > 0) {
+								presentationModel.ccVStack = 1;
 							}
 						}
 						
-						if( presentationModel.transVStack == 1 )
+						else if( presentationModel.transVStack == 1 )
 						{
 							for each ( f in ch )
 							{
-								if(iter > 6) continue;
-
-								errorDesc = new Text();
-								errorDesc.styleName = 'epDesc';
-								errorDesc.text = ' - ' + f.message;
-								errorDesc.percentWidth = 100;
-								this.addChild(errorDesc);
+								iter++;
+								if(iter > MAX_DISPLAYED_ERRORS) continue;
+								this.addChild(createErrorDescription(f.message));
+							}
+						}
+						
+						else if( presentationModel.transVStack == 2 )
+						{
+							for each( f in nc ) 
+							{
+								iter++;
+								if(iter > MAX_DISPLAYED_ERRORS) continue;
+								this.addChild(createErrorDescription(f.message));
 							}
 						}
 
-						if(iter > 6)
+						var otherErrorsCount : int = iter - MAX_DISPLAYED_ERRORS;
+						if(otherErrorsCount > 0) 
 						{
-							errorDesc = new Text();
-							errorDesc.styleName = 'epDesc';
-							errorDesc.htmlText = ' ... and <b>' + (num - iter).toString() + '</b> other' + ((num - iter) == 1 ? '' : 's') + '.';
-							errorDesc.percentWidth = 100;
-							this.addChild(errorDesc);
+							addChild(createErrorDescription('... and <b>' + otherErrorsCount + '</b> other' + (otherErrorsCount == 1 ? '' : 's') + '.', false));
 						}
 						
 						spacer = new Spacer();
@@ -230,19 +223,11 @@
 						
 						if( presentationModel.agreementValid )
 						{
-							errorDesc = new Text();
-							errorDesc.styleName = 'epDesc';
-							errorDesc.htmlText = ' - All initials boxes are <b>correct</b>';
-							errorDesc.percentWidth = 100;
-							this.addChild(errorDesc);
+							this.addChild(createErrorDescription('All initials boxes are <b>correct</b>'));
 						}
 						else
 						{
-							errorDesc = new Text();
-							errorDesc.styleName = 'epDesc';
-							errorDesc.htmlText = ' - please enter all initials correctly as <b>' + presentationModel.session.fname.substr(0,1) + presentationModel.session.lname.substr(0,1) + '</b>';
-							errorDesc.percentWidth = 100;
-							this.addChild(errorDesc);
+							this.addChild(createErrorDescription('please enter all initials correctly as <b>' + presentationModel.session.fname.substr(0,1) + presentationModel.session.lname.substr(0,1) + '</b>'));
 						}
 						
 						spacer = new Spacer();
@@ -267,7 +252,16 @@
 						this.addChild(otherTabs);
 					break;
 				}
-			}			
+			}
+			
+			private function createErrorDescription( error : String, leadingDash : Boolean = true ) : Text {
+				var errorDesc : Text = new Text();
+				errorDesc.styleName = 'epDesc';
+				errorDesc.htmlText = (leadingDash ? ' - ' : ' ' )  + error;
+				errorDesc.percentWidth = 100;
+				
+				return errorDesc;
+			}	
 		]]>
 	</mx:Script>
 	

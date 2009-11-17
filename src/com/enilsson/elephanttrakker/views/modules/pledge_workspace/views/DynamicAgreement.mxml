@@ -2,6 +2,7 @@
 <mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
 	styleName="agreementPage"
 	show="init()"
+	hide="hideTooltips()"
 	horizontalScrollPolicy="off">
 
 	<mx:Metadata>
@@ -12,6 +13,8 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.managers.ToolTipManager;
+			import mx.core.IToolTip;
 			import com.enilsson.elephanttrakker.views.modules.pledge_workspace.model.PledgeWorkspaceModel;
 			import caurina.transitions.Tweener;
 			import mx.events.ValidationResultEvent;
@@ -252,7 +255,20 @@
 					time: 0.4, 
 					transition: 'linear' 
 				});
-			}		
+			}
+			
+			/**
+			 * Hide any error tips when the form is hidden (ie the user moves to a new tab)
+			 */
+			private function hideTooltips():void
+			{
+				var curTT : IToolTip = ToolTipManager.currentToolTip;
+				
+				try {
+					ToolTipManager.destroyToolTip( curTT );
+					ToolTipManager.currentToolTip = null;
+				} catch( e : Error ) { }
+			}
 			
 		]]>
 	</mx:Script>
