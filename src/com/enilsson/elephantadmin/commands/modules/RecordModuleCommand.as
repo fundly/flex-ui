@@ -353,6 +353,8 @@ package com.enilsson.elephantadmin.commands.modules
 						
 					_model.dataLoading = false;
 				break;
+				
+				case '-87' :
 				case '-88' :
 					var eMsg:String = '';
 					for(var j:String in event.result.errors)
