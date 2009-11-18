@@ -160,7 +160,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.all_contributions.mod
 				}
 				gridRecords = vo.list;
 				gridTotalRecords = vo.total_records;
-				if(vo.addData)
+				if(gridTotalRecords > 0 && vo.addData)
 				{
 					switch(filter)
 					{
@@ -184,6 +184,9 @@ package com.enilsson.elephantadmin.views.modules.reporting.all_contributions.mod
 								totalContribSum = vo.addData['paypal_total'];
 							break;
 					}
+				}
+				else {
+					totalContribSum = 0;
 				}
 				updateText();
 			}
