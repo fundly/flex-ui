@@ -18,7 +18,7 @@
 				rangeCount="4" 
 				verticalCenter="0" horizontalCenter="0" 
 				buttonHeight="18" 
-				newPage="_presentationModel.getBatchList()"
+				newPage="_presentationModel.getBatchList(event)"
 				itemsPerPage="{_presentationModel.itemsPerPage}" 
 				itemsTotal="{_presentationModel.batchListTotal}" 
 				/>
