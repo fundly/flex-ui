@@ -4,7 +4,6 @@
 	xmlns:struktorForm="com.enilsson.utils.struktorForm.*"
 	xmlns:graphics="com.enilsson.graphics.*"
 	show="init()"
-	hide="hideTooltips()"
 	width="100%" 
 	verticalScrollPolicy="off" 
 	horizontalScrollPolicy="off">
@@ -28,12 +27,9 @@
 	
 	<mx:Script>
 		<![CDATA[
-			import mx.events.ToolTipEvent;
 			import mx.controls.TextInput;
 			import com.enilsson.elephanttrakker.views.modules.pledge_workspace.model.PledgeWorkspaceModel;
 			import com.enilsson.elephanttrakker.events.session.PingEvent;
-			import mx.managers.ToolTipManager;
-			import mx.core.IToolTip;
 			import mx.utils.ObjectUtil;
 			import org.osflash.thunderbolt.Logger;
 			
@@ -75,19 +71,6 @@
 				}				
 			}
 			
-			/**
-			 * Hide any error tips when the form is hidden (ie the user moves to a new tab)
-			 */
-			private function hideTooltips():void
-			{
-				var curTT : IToolTip = ToolTipManager.currentToolTip;
-				
-				try {
-					ToolTipManager.destroyToolTip( curTT );
-					ToolTipManager.currentToolTip = null;
-				} catch( e : Error ) { }
-			}
-		
 			/**
 			 * Complete some actions once the Struktor forms complete building
 			 */

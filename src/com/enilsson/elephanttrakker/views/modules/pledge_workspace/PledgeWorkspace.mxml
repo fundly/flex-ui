@@ -7,6 +7,7 @@
 	xmlns:common="com.enilsson.elephanttrakker.views.common.*"
 	preinitialize="initialiseHandler()"
 	show="showHandler()"
+	hide="TooltipUtil.hideTooltip()"
 	verticalScrollPolicy="off" horizontalScrollPolicy="off">
 
 	<mx:Image source="{presentationModel.icons.pledge}" top="0" right="0" />
@@ -29,7 +30,7 @@
 	<mx:ViewStack id="vstack" 
 		creationPolicy="all"  
 		top="40" left="0" bottom="40" right="36" 
-		change="_IndexChange = event" 
+		change="_IndexChange = event; TooltipUtil.hideTooltip();" 
 		childAdd="presentationModel.numTabs = event.currentTarget.numChildren"
 		selectedIndex="{presentationModel.vindex}">
 		<views:ContactForm
@@ -105,6 +106,7 @@
 
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.common.utils.TooltipUtil;
 			import org.osflash.thunderbolt.Logger;
 			import com.enilsson.elephanttrakker.views.modules.pledge_workspace.views.DynamicAgreement;
 			import mx.events.FlexEvent;
@@ -149,7 +151,7 @@
 				// move the vstack back the first page
 				presentationModel.init();	
 			}
-
+			
 			/**
 			 * Listen for the site layout loading then build the agreement tab if need be
 			 */

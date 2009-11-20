@@ -10,6 +10,9 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 	import com.enilsson.elephanttrakker.vo.TransactionVO;
 	import com.enilsson.utils.eNilssonUtils;
 	
+	import flash.events.Event;
+	import flash.events.EventDispatcher;
+	
 	import mx.binding.utils.BindingUtils;
 	import mx.collections.ArrayCollection;
 	import mx.utils.ObjectUtil;
@@ -17,7 +20,7 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 	import org.osflash.thunderbolt.Logger;
 	
 	[Bindable]
-	public class PledgeWorkspaceModel
+	public class PledgeWorkspaceModel extends EventDispatcher
 	{
 		/**
 		 * List of static variables defining the four types of form action available
@@ -244,6 +247,8 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 			
 			if( value.billing_address1 != '' && value.billing_city != '' && value.billing_state != '' )
 				initialBillingDetails = value;
+				
+			dispatchEvent(new Event("initialContactDataChanged"));
 		}
 		public function get initialContactData ():Object
 		{
@@ -273,9 +278,11 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 		 * Get and set the initial pledge data
 		 */
 		private var _initialPledgeData:Object;
+		[Bindable(event="initialPledgeDataChanged")]
 		public function set initialPledgeData ( value:Object ):void
 		{
 			_initialPledgeData = value;	
+			dispatchEvent(new Event("initialPledgeDataChanged"));
 		}
 		public function get initialPledgeData ():Object
 		{

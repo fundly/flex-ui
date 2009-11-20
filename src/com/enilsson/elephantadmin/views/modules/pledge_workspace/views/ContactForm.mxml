@@ -4,7 +4,7 @@
 	xmlns:struktorForm="com.enilsson.utils.struktorForm.*"
 	xmlns:graphics="com.enilsson.graphics.*"
 	show="init()"
-	hide="hideTooltips()"
+	hide="TooltipUtil.hideTooltip()"
 	width="100%" 
 	verticalScrollPolicy="off" 
 	horizontalScrollPolicy="off">
@@ -28,6 +28,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.common.utils.TooltipUtil;
 			import mx.controls.TextInput;
 			import com.enilsson.elephantadmin.views.modules.pledge_workspace.model.PledgeWorkspaceModel;
 			import com.enilsson.elephantadmin.events.session.PingEvent;
@@ -72,19 +73,6 @@
 					lastField.setFocus();
 					presentationModel.tabBackward = false;
 				}				
-			}
-			
-			/**
-			 * Hide any error tips when the form is hidden (ie the user moves to a new tab)
-			 */
-			private function hideTooltips():void
-			{
-				var curTT : IToolTip = ToolTipManager.currentToolTip;
-				
-				try {
-					ToolTipManager.destroyToolTip( curTT );
-					ToolTipManager.currentToolTip = null;
-				} catch( e : Error ) { }
 			}
 		
 			/**

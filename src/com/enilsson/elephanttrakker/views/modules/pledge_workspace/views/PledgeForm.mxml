@@ -5,7 +5,6 @@
 	xmlns:views="com.enilsson.elephanttrakker.views.modules.pledge_workspace.views.*"
 	xmlns:controls="com.enilsson.controls.*"	
 	show="init()"
-	hide="hideTooltips()"
 	height="100%" width="100%" 
 	verticalScrollPolicy="off">	
 	
@@ -44,6 +43,7 @@
 				<mx:ViewStack id="ccBillingVStack"
 					selectedIndex="{presentationModel.ccVStack}"
 					width="330" height="100%"
+					change="TooltipUtil.hideTooltip();"
 					top="0" horizontalCenter="-8">
 					<struktorForm:StruktorForm id="ccForm" 
 						styleName="processingForm" 
@@ -114,9 +114,9 @@
 				show="lastField = noContribForm.lastField">
 				<mx:Text top="5" right="5" left="5" 
 					styleName="labelStyleName" width="100%" selectable="false" 
-					text="If you don't want to provide contribution details, please choose a way to send a donation form to the donor." />
+					text="If you don't have specific credit card or check information for this donor, please choose an option to send him or her a reminder email that contains a donor form with instructions on how to fulfill this pledge." />
 				<struktorForm:StruktorForm id="noContribForm"
-					top="40" left="-8"
+					top="80" left="-8"
 					styleName="processingForm"
 					label="No contribution details"
 					selectedGroups="{[1]}" groupLabels="false"
@@ -192,6 +192,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.common.utils.TooltipUtil;
 			import mx.core.UIComponent;
 			import mx.managers.ToolTipManager;
 			import mx.core.IToolTip;
@@ -471,7 +472,7 @@
 			{
 				if(presentationModel.debug) Logger.info('Edit Click', event.label, event.index, presentationModel.action);
 				
-				hideTooltips();
+				TooltipUtil.hideTooltip();				
 				
 				switch(presentationModel.action)	
 				{	
@@ -508,7 +509,7 @@
 			private function vstackChangeHandler(event:IndexChangedEvent):void
 			{
 				setIsValid();
-				hideTooltips();
+				TooltipUtil.hideTooltip();
 				
 				switch(event.newIndex)
 				{
@@ -524,21 +525,6 @@
 					break;
 				}
 			}
-			
-			
-			/**
-			 * Hide any error tips when the form is hidden (ie the user moves to a new tab)
-			 */
-			private function hideTooltips():void
-			{
-				var curTT : IToolTip = ToolTipManager.currentToolTip;
-				
-				try {
-					ToolTipManager.destroyToolTip( curTT );
-					ToolTipManager.currentToolTip = null;
-				} catch( e : Error ) { }
-			}
-			
 		]]>
 	</mx:Script>
 	
