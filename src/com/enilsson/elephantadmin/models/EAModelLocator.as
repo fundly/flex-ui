@@ -147,6 +147,7 @@ package com.enilsson.elephantadmin.models
 		
 		public function get successTextCC():String { return "The Credit Card pledge was successful." ; }
 		public function get successTextCheck():String { return "The Check pledge was successful."; }
+		public function get successTextNone():String { return "The pledge was successful."; }
 		
 		
 		/**
