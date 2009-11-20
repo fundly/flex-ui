@@ -572,6 +572,7 @@ package com.enilsson.elephanttrakker.views.modules.pledge_workspace.model
 			switch ( transVStack )
 			{
 				case CC_VIEW :
+					vo.check = null;
 					vo.transaction = new TransactionVO();
 					vo.transaction.data = transactionData;
 					
@@ -588,12 +589,18 @@ package com.enilsson.elephanttrakker.views.modules.pledge_workspace.model
 					vo.paymentType = 'credit card';	
 				break;
 				case CHECK_VIEW :
+					vo.transaction = null;
 					vo.check = {};
 					vo.check = checkData;
 					delete vo.check['id'];
 					
 					vo.paymentType = 'check';
-				break;				
+				break;
+				case NO_CONTRIB_VIEW :
+					vo.transaction = null;
+					vo.check = null;
+					vo.paymentType = 'none';
+				break;		
 			}
 			
 			// make some action dependant changes to the VO
@@ -634,8 +641,8 @@ package com.enilsson.elephanttrakker.views.modules.pledge_workspace.model
 		{
 			action = action;	
 			
-			pledgeID = 0;
-			contactID = 0;
+			pledgeID = undefined;
+			contactID = undefined;
 			formProcessing = false;
 			showErrorList = false;
 			showDupBox = false;

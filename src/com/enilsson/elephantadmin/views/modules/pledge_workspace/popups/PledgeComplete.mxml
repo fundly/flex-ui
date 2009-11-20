@@ -22,6 +22,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.elephanttrakker.vo.TransactionVO;
 			import com.enilsson.elephantadmin.views.modules.pledge_workspace.events.SPWEvent;
 			import com.enilsson.elephantadmin.views.modules.pledge_workspace.events.PWEvent;
 			import com.enilsson.elephantadmin.views.modules.pledge_workspace.model.PledgeWorkspaceModel;
@@ -36,11 +37,15 @@
 			
 			private function init():void
 			{
-				var check : Object = presentationModel.vo.check;
+				var check 		: Object = presentationModel.vo.check;
+				var transaction : TransactionVO = presentationModel.vo.transaction;
+				
 				if ( check != null && check.hasOwnProperty("amount") )
 					titleText.htmlText = presentationModel.successTextCheck;
-				else
+				else if( transaction && transaction.amount)
 					titleText.htmlText = presentationModel.successTextCC;
+				else
+					titleText.htmlText = presentationModel.successTextNone;
 				
 				// if this pledge was processed from a saved one, then removed the saved pledge
 				if( presentationModel.savedID )

@@ -73,7 +73,7 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 				BindingUtils.bindProperty(this, 'mainViewState', model, 'mainViewState' );
 				BindingUtils.bindProperty(this, 'successTextCC', model, 'successTextCC' );
 				BindingUtils.bindProperty(this, 'successTextCheck', model, 'successTextCheck');
-				
+				BindingUtils.bindProperty(this, 'successTextNone', model, 'successTextNone');
 			}
 			
 			if(debug) Logger.info ( 'Instantiate PledgeWorkspaceModel' );
@@ -88,6 +88,7 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 		public var mainViewState		: int;
 		public var successTextCC		: String;
 		public var successTextCheck		: String;
+		public var successTextNone		: String;
 
 		/**
 		 * Some global variables for use during form completion
@@ -564,6 +565,7 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 			switch ( transVStack )
 			{
 				case CC_VIEW :
+					vo.check = null;
 					vo.transaction = new TransactionVO();
 					vo.transaction.data = transactionData;
 					
@@ -580,12 +582,18 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 					vo.paymentType = 'credit card';	
 				break;
 				case CHECK_VIEW :
+					vo.transaction = null;
 					vo.check = {};
 					vo.check = checkData;
 					delete vo.check['id'];
 					
 					vo.paymentType = 'check';
-				break;				
+				break;
+				case NO_CONTRIB_VIEW :
+					vo.check = null;
+					vo.transaction = null;
+					vo.paymentType = 'none';
+				break;			
 			}
 			
 			// make some action dependant changes to the VO
