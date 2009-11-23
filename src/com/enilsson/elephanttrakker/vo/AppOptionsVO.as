@@ -25,6 +25,7 @@ package com.enilsson.elephanttrakker.vo
 		public var rss_feed:String;
 		public var success_cc:String;
 		public var success_check:String;
+		public var success_none:String;
 		public var downline_request:String;
 		public var contacts_request:String;
 		public var workspace_agreement:XML;
