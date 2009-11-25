@@ -15,7 +15,11 @@
 				</mx:Box>
 
 				<mx:FormItem label="Type:">
-					<mx:ComboBox width="150" color="#000000" dataProvider="{_presentationModel.typeFilter}" id="contribType" enabled="{!_presentationModel.dataLoading}" change="_presentationModel.typeChangeHandler(event)"/>
+					<mx:ComboBox id="contribType" 
+						width="150" color="#000000" 
+						dataProvider="{_presentationModel.typeFilter}"  
+						enabled="{!_presentationModel.dataLoading}"
+						valueCommit="{_presentationModel.typeChangeHandler(event)}" /> 
 				</mx:FormItem>
 				<mx:Box horizontalGap="2" verticalGap="2" horizontalAlign="right"
 					direction="{this.width &gt; 900 ? 'horizontal' : 'vertical'}">
