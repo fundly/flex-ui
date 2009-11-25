@@ -13,7 +13,6 @@ package com.enilsson.elephantadmin.views.modules.reporting.donationwidget.model
 	import mx.controls.dataGridClasses.DataGridColumn;
 	import mx.core.Application;
 	import mx.events.DataGridEvent;
-	import mx.events.ListEvent;
 	import mx.formatters.DateFormatter;
 	import mx.rpc.events.FaultEvent;
 	import mx.rpc.events.ResultEvent;
@@ -47,14 +46,18 @@ package com.enilsson.elephantadmin.views.modules.reporting.donationwidget.model
 
 		public var cumulativePaymentsData : ArrayCollection;
 		public var typeFilter:ArrayCollection = new ArrayCollection([
-			{label:'All',data:'4'}
-			,{label:'Credit Card',data:'1'}
-			,{label:'PayPal',data:'3'}
+			{label:'All',data:FILTER_DONATION_WIDGET}
+			,{label:'Credit Card',data:FILTER_CC}
+			,{label:'PayPal',data:FILTER_PAYPAL}
 		]);
 
 		public var recentPaymentsData : ArrayCollection = new ArrayCollection();
 		
 		public var pledgeDetailsData : ArrayCollection = new ArrayCollection();
+		
+		public function DonationWidgetModel() {
+			filter = FILTER_DONATION_WIDGET;
+		}
 
 		public function setService(service:RemoteObject, contrib_service:RemoteObject):void
 		{
@@ -126,11 +129,11 @@ package com.enilsson.elephantadmin.views.modules.reporting.donationwidget.model
 				vo.export = true;
 				vo.exportHeaders = exportHeaders;
 				vo.exportFields = exportFields;
-				if(filter == 0)
+				if(filter == FILTER_DONATION_WIDGET)
 					exportTitle = 'Widget Pledges';
-				else if(filter == 1)
+				else if(filter == FILTER_CC)
 					exportTitle = 'Widget Pledges - Credit Card';
-				else if(filter == 2)
+				else if(filter == FILTER_PAYPAL)
 					exportTitle = 'Widget Pledges - PayPal';
 				vo.exportTitle = exportTitle;
 				vo.page = 0;
