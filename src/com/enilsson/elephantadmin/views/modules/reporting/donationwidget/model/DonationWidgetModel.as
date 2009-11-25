@@ -130,11 +130,11 @@ package com.enilsson.elephantadmin.views.modules.reporting.donationwidget.model
 				vo.exportHeaders = exportHeaders;
 				vo.exportFields = exportFields;
 				if(filter == FILTER_DONATION_WIDGET)
-					exportTitle = 'Widget Pledges';
+					exportTitle = 'Widget Contributions';
 				else if(filter == FILTER_CC)
-					exportTitle = 'Widget Pledges - Credit Card';
+					exportTitle = 'Widget Contributions - Credit Card';
 				else if(filter == FILTER_PAYPAL)
-					exportTitle = 'Widget Pledges - PayPal';
+					exportTitle = 'Widget Contributions - PayPal';
 				vo.exportTitle = exportTitle;
 				vo.page = 0;
 				vo.recordPerPage = 10000000000;
