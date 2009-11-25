@@ -14,10 +14,6 @@ package com.enilsson.elephanttrakker.commands
 	{
 		private var _model:ETModelLocator = ETModelLocator.getInstance();
 		
-		public function ViewStateCommand()
-		{
-		}
-
 		public function execute(event:CairngormEvent):void
 		{			
 			// cast the Cairngorm event as a ViewStateEvent

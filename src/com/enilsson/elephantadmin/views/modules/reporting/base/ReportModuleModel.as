@@ -9,10 +9,12 @@ package com.enilsson.elephantadmin.views.modules.reporting.base
 	[Bindable]
 	public class ReportModuleModel
 	{
-		public static const FILTER_NONE		: int = -1;
-		public static const FILTER_ALL		: int = 0;
-		public static const FILTER_CC 		: int = 1;
-		public static const FILTER_CHECK	: int = 2;
+		public static const FILTER_NONE				: int = -1;
+		public static const FILTER_ALL				: int = 0;
+		public static const FILTER_CC 				: int = 1;
+		public static const FILTER_CHECK			: int = 2;
+		public static const FILTER_PAYPAL			: int = 3;
+		public static const FILTER_DONATION_WIDGET	: int = 4;
 
 		public var allGroups:ArrayCollection;
 		public var userGroups:Array;

@@ -2,8 +2,9 @@
 <mx:Canvas 
 	xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:enControls="com.enilsson.controls.*"
+	xmlns:effects="com.enilsson.elephanttrakker.views.common.effects.*"
 	preinitialize="manageStoredEmails()"
-	currentState="{_model.login.loginFormState}">
+	currentState="{_model.login.loginFormState}" >
 
 	<mx:Metadata>
 		[Event(name="toggleLayout", type="flash.events.Event")]		
@@ -129,7 +130,7 @@
     <mx:transitions>
        <mx:Transition>
             <mx:Parallel targets="{[loginForm, captchaItem]}">
-                <mx:Resize duration="500" easingFunction="Bounce.easeOut"/>
+                <effects:BounceResize />
             </mx:Parallel>
         </mx:Transition>
     </mx:transitions>

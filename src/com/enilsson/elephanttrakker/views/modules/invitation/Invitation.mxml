@@ -4,9 +4,10 @@
 	clipContent="true" 
 	verticalScrollPolicy="off" horizontalScrollPolicy="off"
 	xmlns:common="com.enilsson.elephanttrakker.views.common.*"
-	xmlns:graphics="com.enilsson.graphics.*" 
+	xmlns:graphics="com.enilsson.graphics.*"
+	xmlns:effects="com.enilsson.elephanttrakker.views.common.effects.*" 
 	currentState="{_model.invitation.formState}" 
-	currentStateChange="currentState_handler(event)">
+	currentStateChange="currentState_handler(event)" >
 
 	<mx:Image source="{_model.icons.email}" top="-2" right="-3" />
 	<mx:Text id="contentTitle" styleName="contentTitle" text="RECRUIT A FUNDRAISER" top="40" right="-208" rotation="90" />
@@ -97,7 +98,7 @@
 	<mx:transitions>
 		<mx:Transition>
 			<mx:Parallel targets="{[personalMessage]}">
-				<mx:Resize duration="500" easingFunction="Bounce.easeOut"/>
+				<effects:BounceResize />
 			</mx:Parallel>
 		</mx:Transition>
 	</mx:transitions>

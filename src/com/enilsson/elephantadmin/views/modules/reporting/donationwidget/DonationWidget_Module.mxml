@@ -97,7 +97,7 @@
 		endpoint="{_presentationModel.gatewayURL}"
 		showBusyCursor="true"
 		fault="_presentationModel.handleFault(event)">
-		<mx:method name="get_all_contributions" 
+		<mx:method name="get_all_contributions_fulfilled" 
 			result="_presentationModel.generateResult(event)" /> 
 	</mx:RemoteObject>
 

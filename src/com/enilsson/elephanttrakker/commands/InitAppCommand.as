@@ -63,7 +63,7 @@ package com.enilsson.elephanttrakker.commands
 		 */		
 		private function setSiteURL():void
 		{
-			var dwc : DomainWhitelistChecker = new DomainWhitelistChecker( [ 'enilssonator.com', 'blue-swarm.com' ] );
+			var dwc : DomainWhitelistChecker = new DomainWhitelistChecker( [ 'enilssonator.com', 'blue-swarm.com', '127.0.0.1' ] );
 			// set the application's URL			
 			_model.applicationURL = Application.application.url.split(Application.application.className +".swf")[0];
 			

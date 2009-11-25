@@ -5,7 +5,7 @@
 	xmlns:graphics="com.enilsson.graphics.*" 
 	horizontalScrollPolicy="off"
 	show="init()"
-	creationComplete="init()">
+	creationComplete="init()" xmlns:effects="com.enilsson.elephanttrakker.views.common.effects.*">
 
 	<mx:Text styleName="detailsTitle" text="CHANGE MY EMAIL ADDRESS" left="30" top="20" rotation="90" />	
 	<mx:Form id="emailForm" left="30" top="20" paddingTop="0" width="270">
@@ -76,7 +76,7 @@
     <mx:transitions>
        <mx:Transition>
             <mx:Parallel targets="{[pwdMeter]}">
-                <mx:Resize duration="500" easingFunction="Bounce.easeOut"/>
+                <effects:BounceResize />
             </mx:Parallel>
         </mx:Transition>
     </mx:transitions>

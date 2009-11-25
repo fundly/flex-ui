@@ -13,7 +13,6 @@ package com.enilsson.elephantadmin.views.modules.reporting.donationwidget.model
 	import mx.controls.dataGridClasses.DataGridColumn;
 	import mx.core.Application;
 	import mx.events.DataGridEvent;
-	import mx.events.ListEvent;
 	import mx.formatters.DateFormatter;
 	import mx.rpc.events.FaultEvent;
 	import mx.rpc.events.ResultEvent;
@@ -32,7 +31,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.donationwidget.model
 		public var paymentMethodData : ArrayCollection;
 
 		// default start date is start of today
-		public var startDate:int = EDateUtil.todayToTimestamp();
+		public var startDate:int = EDateUtil.todayToTimestamp() - ONE_DAY;
 		// default end date is end of today
 		public var endDate:int = EDateUtil.todayToTimestamp();
 		public var sortArray:Array = ['pledge_date DESC'];
@@ -47,18 +46,18 @@ package com.enilsson.elephantadmin.views.modules.reporting.donationwidget.model
 
 		public var cumulativePaymentsData : ArrayCollection;
 		public var typeFilter:ArrayCollection = new ArrayCollection([
-			{label:'All',data:'4'}
-			,{label:'Credit Card',data:'1'}
-			,{label:'PayPal',data:'3'}
+			{label:'All',data:FILTER_DONATION_WIDGET}
+			,{label:'Credit Card',data:FILTER_CC}
+			,{label:'PayPal',data:FILTER_PAYPAL}
 		]);
 
-		public var recentPaymentsData : ArrayCollection = new ArrayCollection
-		([
-		]);
+		public var recentPaymentsData : ArrayCollection = new ArrayCollection();
 		
-		public var pledgeDetailsData : ArrayCollection = new ArrayCollection
-		([
-		]);
+		public var pledgeDetailsData : ArrayCollection = new ArrayCollection();
+		
+		public function DonationWidgetModel() {
+			filter = FILTER_DONATION_WIDGET;
+		}
 
 		public function setService(service:RemoteObject, contrib_service:RemoteObject):void
 		{
@@ -78,9 +77,10 @@ package com.enilsson.elephantadmin.views.modules.reporting.donationwidget.model
 			}
 		}
 
-		public function typeChangeHandler(event:ListEvent):void
+		public function typeChangeHandler(event:Event):void
 		{
-			filter = event.currentTarget.selectedItem.data;
+			if(event.currentTarget.selectedItem)
+				filter = event.currentTarget.selectedItem.data;
 		}
 
 		public function handleTotalContributionsResult( event : ResultEvent ) : void
@@ -129,12 +129,12 @@ package com.enilsson.elephantadmin.views.modules.reporting.donationwidget.model
 				vo.export = true;
 				vo.exportHeaders = exportHeaders;
 				vo.exportFields = exportFields;
-				if(filter == 0)
-					exportTitle = 'Widget Pledges';
-				else if(filter == 1)
-					exportTitle = 'Widget Pledges - Credit Card';
-				else if(filter == 2)
-					exportTitle = 'Widget Pledges - PayPal';
+				if(filter == FILTER_DONATION_WIDGET)
+					exportTitle = 'Widget Contributions';
+				else if(filter == FILTER_CC)
+					exportTitle = 'Widget Contributions - Credit Card';
+				else if(filter == FILTER_PAYPAL)
+					exportTitle = 'Widget Contributions - PayPal';
 				vo.exportTitle = exportTitle;
 				vo.page = 0;
 				vo.recordPerPage = 10000000000;
@@ -143,7 +143,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.donationwidget.model
 
 			Logger.info('SEND',ObjectUtil.toString(vo));
 
-			contrib_service.get_all_contributions(vo);
+			contrib_service.get_all_contributions_fulfilled(vo);
 		}
 
 		public function generateResult(event:ResultEvent):void

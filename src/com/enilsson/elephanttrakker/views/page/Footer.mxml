@@ -37,9 +37,10 @@
    			includeInLayout="{_model.options.legalese != null}"
    			htmlText="{_model.options.legalese}" />
    		<mx:HBox id="paidForBox" 
-   			styleName="sitePaidFor" 
+   			styleName="paidForContainer" 
    			visible="{_model.options.paid_for != null &amp;&amp; _model.siteLayoutLoaded}">
-   			<mx:Text id="sitePaidFor" 
+   			<mx:Text id="sitePaidFor"
+   				styleName="paidForText" 
    				horizontalCenter="0"
    				htmlText="{_model.options.paid_for}" />
    		</mx:HBox>

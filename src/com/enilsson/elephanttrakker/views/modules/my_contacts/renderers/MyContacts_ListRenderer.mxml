@@ -81,24 +81,6 @@
 					new SPWEvent ( SPWEvent.ADD_SHARED, params ).dispatch();					
 				else
 					new SPWEvent ( SPWEvent.ADD_EXISTING, params ).dispatch();					
-
- 				
-/*  				// clear the call logging workspace
-				_model.call_logging.reset();
-
-				// assign a contact ID to the call logging class
-				_model.call_logging.contactID = data.id;
-				
-				// assign the user_id to the call_logging
-				_model.call_logging.userID = _model.session.user_id;
-				
-				// assign the contact data to the pledge
-				_model.call_logging.initialContactData = data;				
-				_model.call_logging.initialPledgeData = data;
-				
-				// change the main view to see the call logging
-				_model.mainViewState = ETModelLocator.CALL_LOGGING_VIEW;
- */
 			}
 
 			private function rsvpContact():void

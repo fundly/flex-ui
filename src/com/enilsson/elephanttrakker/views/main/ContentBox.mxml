@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:effects="com.enilsson.elephanttrakker.views.common.effects.*"
+	styleName="contentBox" 
+	width="{DEFAULT_WIDTH}" height="{DEFAULT_HEIGHT}" 
+	clipContent="false" 
+	initialize="handleInitialize()"
+	resizeEffect="{resize}" >
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.effects.easing.Bounce;
+			import com.enilsson.elephanttrakker.events.main.ResizeContentEvent;
+		
+			public static const DEFAULT_WIDTH 	: Number = 681;
+			public static const DEFAULT_HEIGHT 	: Number = 332;
+		
+			private function handleInitialize() : void {
+				addEventListeners();
+			}
+			
+			private function addEventListeners() : void {
+				addEventListener(ResizeContentEvent.RESTORE, handleRestore );
+				addEventListener(ResizeContentEvent.RESIZE, handleResize );
+			}
+			
+			private function handleRestore( event : ResizeContentEvent ) : void {
+				width 	= DEFAULT_WIDTH;
+				height 	= DEFAULT_HEIGHT;
+			}
+			
+			private function handleResize( event : ResizeContentEvent ) : void {
+				width 	= event.width;
+				height 	= event.height;
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:Resize id="resize" duration="200" />
+	
+</mx:Canvas>
