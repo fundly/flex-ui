@@ -169,8 +169,14 @@ package com.enilsson.elephantadmin.views.modules.reporting.donationwidget.model
 					else
 						totalPledgeSum = 0;
 
-					if(vo.addData['contrib_total'])
-						totalContribSum = vo.addData['contrib_total'];
+					if(vo.addData['contrib_total']) {
+						switch(filter) {
+							case FILTER_CC:					totalContribSum = vo.addData['credit_total']; break;
+							case FILTER_PAYPAL:				totalContribSum = vo.addData['paypal_total']; break;
+							case FILTER_DONATION_WIDGET:
+							default:					 	totalContribSum = vo.addData['contrib_total']; break;
+						}
+					}
 					else
 						totalContribSum = 0;
 				} else {
