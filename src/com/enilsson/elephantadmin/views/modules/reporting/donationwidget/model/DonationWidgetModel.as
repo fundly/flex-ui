@@ -162,7 +162,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.donationwidget.model
 				}
 				gridRecords = vo.list;
 				gridTotalRecords = vo.total_records;
-				if(vo.addData)
+				if(gridTotalRecords > 0 && vo.addData)
 				{
 					if(vo.addData['pledge_total'])
 						totalPledgeSum = vo.addData['pledge_total'];
@@ -174,6 +174,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.donationwidget.model
 					else
 						totalContribSum = 0;
 				} else {
+					totalContribSum = 0;
 					totalPledgeSum = 0;
 				}
 				updateText();
