@@ -11,11 +11,11 @@ package com.enilsson.elephantadmin.vo
 		public var iCount:Number;
 		public var iFrom:Number;
 		public var sort:String;
-		public var priv:String;
+		public var priv:Boolean;
 		public var export:Boolean;
 		
 		public function SearchVO(table:String, query:String, mode:String=null, 
-			iFrom:Number=0, iCount:Number=200, sort:String=null, priv:String=null, export:Boolean=false) 
+			iFrom:Number=0, iCount:Number=200, sort:String=null, priv:Boolean=false, export:Boolean=false) 
 		{
 			this.table = table;
 			this.query = query;

@@ -161,8 +161,8 @@ package com.enilsson.elephanttrakker.commands.modules
 			// show the data loading icon
 			_model.dataLoading = true
 			
-			var s:SearchVO = new SearchVO( event.table, event.searchTerm, null, event.iFrom, event.iCount );	
-			delegate.search( s );
+			if( event.search )
+				delegate.search( event.search );
 		}
 
 		private function onResults_searchTable(data:Object):void 

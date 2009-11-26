@@ -36,6 +36,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.elephanttrakker.vo.SearchVO;
 			import com.enilsson.utils.EDateUtil;
 			import com.enilsson.utils.eNilssonUtils;
 			import com.enilsson.elephanttrakker.events.modules.my_history.MyHistorySearchEvent;
@@ -74,7 +75,8 @@
 			{
 				if(_model.debug) Logger.info('Start Search', dgFooter.searchTerm);
 				
-				new MyHistorySearchEvent( 'transactions', dgFooter.searchTerm, 0, 200).dispatch();
+				new MyHistorySearchEvent( 
+					new SearchVO('transactions', dgFooter.searchTerm) ).dispatch();
 				dgFooter.reset();
 			}
 			
