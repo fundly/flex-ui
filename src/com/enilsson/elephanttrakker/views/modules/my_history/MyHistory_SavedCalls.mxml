@@ -35,6 +35,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.elephanttrakker.vo.SearchVO;
 			import com.enilsson.elephanttrakker.events.modules.my_history.MyHistoryGetSavedCallsEvent;
 			import com.enilsson.elephanttrakker.events.modules.my_history.MyHistorySearchEvent;
 			import org.osflash.thunderbolt.Logger;
@@ -63,7 +64,9 @@
 			{
 				if(_model.debug) Logger.info('Start Search', dgFooter.searchTerm);
 				
-				new MyHistorySearchEvent( 'user_storage', dgFooter.searchTerm, 0, 200).dispatch();
+				new MyHistorySearchEvent( 
+					new SearchVO( 'user_storage', dgFooter.searchTerm )
+				).dispatch();
 				dgFooter.reset();
 			}
 			

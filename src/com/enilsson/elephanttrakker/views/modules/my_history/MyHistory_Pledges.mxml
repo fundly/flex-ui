@@ -8,6 +8,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.elephanttrakker.vo.SearchVO;
 			import com.enilsson.utils.EDateUtil;
 			import com.enilsson.elephanttrakker.events.modules.my_history.MyHistorySearchEvent;
 			import org.osflash.thunderbolt.Logger;
@@ -89,7 +90,9 @@
 				
 				isSearch = true;
 				
-				new MyHistorySearchEvent( 'pledges', dgFooter.searchTerm, 0, _model.itemsPerPage).dispatch();
+				new MyHistorySearchEvent( 
+					new SearchVO('pledges', dgFooter.searchTerm, null, 0, _model.itemsPerPage)
+				).dispatch();
 				dgFooter.reset();
 			}
 
@@ -114,10 +117,8 @@
 
 				if(isSearch)
 				{
-					new MyHistorySearchEvent( 
-						'pledges', 
-						dgFooter.searchTerm, dgFooter.selectedPage * _model.itemsPerPage, 
-						_model.itemsPerPage
+					new MyHistorySearchEvent(
+						new SearchVO( 'pledges', dgFooter.searchTerm, null, dgFooter.selectedPage * _model.itemsPerPage, _model.itemsPerPage ) 
 					).dispatch();
 				}
 				else

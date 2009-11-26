@@ -1,6 +1,7 @@
 package com.enilsson.elephanttrakker.events.modules.my_history
 {
 	import com.adobe.cairngorm.control.CairngormEvent;
+	import com.enilsson.elephanttrakker.vo.SearchVO;
 	
 	import flash.events.Event;
 
@@ -8,19 +9,12 @@ package com.enilsson.elephanttrakker.events.modules.my_history
 	{
 		static public var EVENT_SEARCH_MYHISTORY:String = 'search_myhistory';
 
-		public var table:String;
-		public var searchTerm:String;		
-		public var iFrom:int;
-		public var iCount:int;
+		public var search:SearchVO;
 		
-		public function MyHistorySearchEvent(table:String, searchTerm:String, iFrom:int=0, iCount:int=200)
+		public function MyHistorySearchEvent(search:SearchVO)
 		{
 			super( EVENT_SEARCH_MYHISTORY );
-			
-			this.table = table;
-			this.searchTerm = searchTerm
-			this.iFrom = iFrom;
-			this.iCount = iCount;
+			this.search = search;
 		}
 
 		/**
@@ -28,7 +22,7 @@ package com.enilsson.elephanttrakker.events.modules.my_history
 		 */
 		override public function clone():Event 
 		{
-			return new MyHistorySearchEvent(table, searchTerm, iFrom, iCount);
+			return new MyHistorySearchEvent(search);
 		}
 		
 		/**

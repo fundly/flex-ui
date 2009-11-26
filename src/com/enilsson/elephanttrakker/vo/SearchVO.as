@@ -15,7 +15,7 @@ package com.enilsson.elephanttrakker.vo
 		public var export:String;
 		
 		public function SearchVO(table:String, query:String, mode:String=null, 
-			iFrom:Number=0, iCount:Number=200, sort:String=null, priv:String=null, export:String=null) 
+			iFrom:Number=0, iCount:Number=200, sort:String=null, priv:String="TRUE", export:String=null) 
 		{
 			this.table = table;
 			this.query = query;
