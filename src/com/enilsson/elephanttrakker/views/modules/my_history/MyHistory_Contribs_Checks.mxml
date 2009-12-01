@@ -33,7 +33,7 @@
 				if(_model.debug) Logger.info('Start Search', dgFooter.searchTerm);
 				
 				new MyHistorySearchEvent( 
-					new SearchVO('checks', dgFooter.searchTerm ) ).dispatch();
+					new SearchVO('checks', dgFooter.searchTerm, null, 0, 200, null, true ) ).dispatch();
 				dgFooter.reset();
 			}
 			

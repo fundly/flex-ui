@@ -91,7 +91,7 @@
 				isSearch = true;
 				
 				new MyHistorySearchEvent( 
-					new SearchVO('pledges', dgFooter.searchTerm, null, 0, _model.itemsPerPage)
+					new SearchVO('pledges', dgFooter.searchTerm, null, 0, _model.itemsPerPage, null, true )
 				).dispatch();
 				dgFooter.reset();
 			}
@@ -118,7 +118,7 @@
 				if(isSearch)
 				{
 					new MyHistorySearchEvent(
-						new SearchVO( 'pledges', dgFooter.searchTerm, null, dgFooter.selectedPage * _model.itemsPerPage, _model.itemsPerPage ) 
+						new SearchVO( 'pledges', dgFooter.searchTerm, null, dgFooter.selectedPage * _model.itemsPerPage, _model.itemsPerPage, null, true ) 
 					).dispatch();
 				}
 				else

@@ -65,7 +65,7 @@
 				if(_model.debug) Logger.info('Start Search', dgFooter.searchTerm);
 				
 				new MyHistorySearchEvent( 
-					new SearchVO( 'user_storage', dgFooter.searchTerm )
+					new SearchVO( 'user_storage', dgFooter.searchTerm, null, 0, 200, null, true )
 				).dispatch();
 				dgFooter.reset();
 			}
