@@ -9,6 +9,8 @@
 		<![CDATA[
 			import com.enilsson.elephantadmin.models.EAModelLocator;
 			
+			[Bindable] private var isRemote : Boolean = ( Security.sandboxType == Security.REMOTE );
+			
 			[Bindable] private var _model:EAModelLocator = EAModelLocator.getInstance();
 			
 			private function goToHome():void
@@ -20,12 +22,25 @@
 			
 		]]>
 	</mx:Script>
+	
+	<mx:Image id="orgLogo"
+		source="{_model.orgLogo}"
+		trustContent="{isRemote}"
+		bottom="18" left="10"
+		toolTip="Visit {_model.orgName}"
+		click="navigateToURL( new URLRequest(_model.orgURL), '_blank' )" 
+		useHandCursor="true" buttonMode="true" />
+	<fx:Reflector target="{orgLogo}"
+		width="{orgLogo.width}" height="20" 
+		blurAmount="0" alpha="0.55" falloff="0.3"
+		y="{orgLogo.height + orgLogo.y + 2}"
+		x="{orgLogo.x}" />
 
 	<mx:Canvas id="appLogoBox"
 		bottom="20" right="25">
 		<mx:Image id="appLogo" 
 			source="{_model.appLogo}"
-			trustContent="true"
+			trustContent="{isRemote}"
 			click="goToHome()"
 			bottom="0" right="0"
 			useHandCursor="{_model.screenState > 0}" 
@@ -39,19 +54,6 @@
 	<mx:Label text="Admin Panel" 
 		styleName="adminPanel" height="8" 
 		bottom="{23 + appLogo.height}" right="23" />
-
-	<mx:Image id="orgLogo"
-		source="{_model.orgLogo}"
-		trustContent="true"
-		bottom="18" left="10"
-		toolTip="Visit {_model.orgName}"
-		click="navigateToURL( new URLRequest(_model.orgURL), '_blank' )" 
-		useHandCursor="true" buttonMode="true" />
-	<fx:Reflector target="{orgLogo}"
-		width="{orgLogo.width}" height="20" 
-		blurAmount="0" alpha="0.55" falloff="0.3"
-		y="{orgLogo.height + orgLogo.y + 2}"
-		x="{orgLogo.x}" />
 
 	<graphics:ActivityIndicator id="ajaxActivity" 
 		visible="{_model.dataLoading &amp;&amp; _model.screenState == EAModelLocator.MAIN_SCREEN}" 

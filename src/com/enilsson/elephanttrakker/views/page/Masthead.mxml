@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Canvas 
 		xmlns:mx="http://www.adobe.com/2006/mxml"
-		xmlns:fx="com.enilsson.effects.*" 
+		xmlns:fx="com.enilsson.effects.*"
+		xmlns:components="com.enilsson.common.components.*" 
 		width="400" height="300" 
 		verticalScrollPolicy="off">
 		
 	<mx:Image id="appLogo" 
 		source="{_model.appLogo}"
-		trustContent="true"
+		trustContent="{_isRemote}"
 		bottom="20" right="25"
 		click="goToHome()"
 		useHandCursor="{_model.screenState > 0}" 
@@ -20,7 +21,7 @@
 				
 	<mx:Image id="orgLogo"
 		source="{_model.orgLogo}"
-		trustContent="true"
+		trustContent="{_isRemote}"
 		bottom="20" left="15"
 		maxHeight="65"	
 		toolTip="Visit {_model.orgName}"
@@ -31,6 +32,8 @@
 		blurAmount="0" alpha="0.55" falloff="0.3"
 		y="{orgLogo.height + orgLogo.y + 2}"
 		x="{orgLogo.x}" />			
+
+	<components:SandboxIndicator bottom="-4" right="18" baseUrl="{_model.baseURL}" />
 
 	<mx:Text text="{_model.appInstanceID} : {_model.session.data.instance_name}"
 		visible="{_model.siteURL == ''}" includeInLayout="{_model.siteURL == ''}"
@@ -43,7 +46,9 @@
 		<![CDATA[
 			import com.enilsson.elephanttrakker.models.ETModelLocator;
 			
-			[Bindable] private var _model:ETModelLocator = ETModelLocator.getInstance();
+			[Bindable] private var _model		: ETModelLocator = ETModelLocator.getInstance();
+			[Bindable] private var _isRemote 	: Boolean = ( Security.sandboxType == Security.REMOTE );
+			
 			
 			private function goToHome():void
 			{
