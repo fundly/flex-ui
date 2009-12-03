@@ -9,6 +9,8 @@
 		<![CDATA[
 			import com.enilsson.elephantadmin.models.EAModelLocator;
 			
+			[Bindable] private var isRemote : Boolean = ( Security.sandboxType == Security.REMOTE );
+			
 			[Bindable] private var _model:EAModelLocator = EAModelLocator.getInstance();
 			
 			private function goToHome():void
@@ -25,7 +27,7 @@
 		bottom="20" right="25">
 		<mx:Image id="appLogo" 
 			source="{_model.appLogo}"
-			trustContent="true"
+			trustContent="{isRemote}"
 			click="goToHome()"
 			bottom="0" right="0"
 			useHandCursor="{_model.screenState > 0}" 
@@ -42,7 +44,7 @@
 
 	<mx:Image id="orgLogo"
 		source="{_model.orgLogo}"
-		trustContent="true"
+		trustContent="{isRemote}"
 		bottom="18" left="10"
 		toolTip="Visit {_model.orgName}"
 		click="navigateToURL( new URLRequest(_model.orgURL), '_blank' )" 
