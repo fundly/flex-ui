@@ -6,6 +6,7 @@
 	xmlns:main="com.enilsson.elephantadmin.views.main.*" 
 	xmlns:page="com.enilsson.elephantadmin.views.template.*" 
 	xmlns:details="com.enilsson.elephantadmin.views.modules.my_details.*"
+	xmlns:components="com.enilsson.common.components.*"
 	preinitialize="init()"
 	preloader="assets.preloader.BlueSwarmPreloader"
 	layout="absolute">
@@ -19,15 +20,21 @@
 		paddingRight="0" paddingBottom="0"
 		verticalGap="0">
 		<page:Masthead id="masthead" width="100%" height="90"  />	
+		
 		<mx:Canvas id="screenContainer"
 			width="100%" height="100%"
 			minWidth="600" minHeight="450"
 		 	visible="{_model.mainScreenVisible}">
+		 	
+		 	<components:SandboxIndicator top="6" right="75" baseUrl="{_model.baseURL}" />
+		 	
 		 	<views:LoginScreen id="loginScreen"
 				width="100%" height="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off"
 				addedEffect="fadeIn" removedEffect="fadeOut" />
 		</mx:Canvas>
+		
 		<page:Footer id="footer" styleName="footer" width="100%" height="26" />
+		
 	</mx:VBox>
 
 	<common:states>
@@ -35,7 +42,7 @@
 			<mx:RemoveChild target="{loginScreen}" />
 			<mx:SetProperty target="{screenContainer}" name="minWidth" value="990" />
 			<mx:SetProperty target="{screenContainer}" name="minHeight" value="600" />
-			<mx:AddChild relativeTo="{screenContainer}">
+			<mx:AddChild relativeTo="{screenContainer}" position="firstChild">
 				<views:MainScreen id="mainScreen" 
 					styleName="mainContainer"
 					width="100%" height="100%"

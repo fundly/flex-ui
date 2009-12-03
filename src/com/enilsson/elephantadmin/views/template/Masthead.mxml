@@ -3,7 +3,7 @@
 		xmlns:mx="http://www.adobe.com/2006/mxml"
 		xmlns:fx="com.enilsson.effects.*" 
 		xmlns:graphics="com.enilsson.graphics.*"
-		verticalScrollPolicy="off" xmlns:components="com.enilsson.common.components.*">
+		verticalScrollPolicy="off">
 		
 	<mx:Script>
 		<![CDATA[
@@ -54,8 +54,6 @@
 	<mx:Label text="Admin Panel" 
 		styleName="adminPanel" height="8" 
 		bottom="{23 + appLogo.height}" right="23" />
-		
-	<components:SandboxIndicator bottom="-4" right="18" baseUrl="{_model.baseURL}" />
 
 	<graphics:ActivityIndicator id="ajaxActivity" 
 		visible="{_model.dataLoading &amp;&amp; _model.screenState == EAModelLocator.MAIN_SCREEN}" 
