@@ -23,7 +23,7 @@
 					_isSandbox = false;
 				}
 				else {
-					_isSandbox = _baseUrl.search(/^https:\/\/sandbox.blue-swarm.com\/.*/) != -1;	
+					_isSandbox = _baseUrl.search(/^https:\/\/sandbox.blue-swarm.com\//) != -1;	
 				}
 			}
 			private var _baseUrl : String;

@@ -33,7 +33,7 @@
 		y="{orgLogo.height + orgLogo.y + 2}"
 		x="{orgLogo.x}" />			
 
-	<components:SandboxIndicator top="20" right="20" baseUrl="{_model.baseURL}" />
+	<components:SandboxIndicator bottom="-4" right="18" baseUrl="{_model.baseURL}" />
 
 	<mx:Text text="{_model.appInstanceID} : {_model.session.data.instance_name}"
 		visible="{_model.siteURL == ''}" includeInLayout="{_model.siteURL == ''}"
