@@ -116,19 +116,22 @@
 			public var transVStack:int = 0;
 			public var tabVStack:int = 0;
 
-			[Inspectable(type="String", enumeration="credit,check,edit")]
+			[Inspectable(type="String", enumeration="credit,check,nocontrib,edit")]
 			public function set defaultType(value:String):void
 			{
 				switch(value)
 				{
 					case "credit":
-						transVStack = 0;
+						transVStack = PledgeWorkspaceModel.CC_VIEW;
 						break;
 					case "check":
-						transVStack = 1;
+						transVStack = PledgeWorkspaceModel.CHECK_VIEW;
+						break;
+					case "nocontrib":
+						transVStack = PledgeWorkspaceModel.NO_CONTRIB_VIEW;
 						break;
 					case "edit":
-						transVStack = 2;
+						transVStack = PledgeWorkspaceModel.LIST_CONTRIBS_VIEW;
 						break;
 				}
 			}
@@ -139,10 +142,10 @@
 				switch(value)
 				{
 					case "contact":
-						tabVStack = 0;
+						tabVStack = PledgeWorkspaceModel.CONTACT_FORM_VIEW;
 						break;
 					case "pledge":
-						tabVStack = 1;
+						tabVStack = PledgeWorkspaceModel.PLEDGE_FORM_VIEW;
 						break;
 				}
 			}

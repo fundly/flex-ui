@@ -155,9 +155,9 @@
 							
 							// show either the CC or the billing address dialog depending on which one still has errors
 							if(cc.length > 0)
-								presentationModel.ccVStack = 0;
+								presentationModel.ccVStack = PledgeWorkspaceModel.CC_DETAILS_VIEW;
 							else if( presentationModel.billingData && b.length > 0) {
-								presentationModel.ccVStack = 1;
+								presentationModel.ccVStack = PledgeWorkspaceModel.BILLING_DETAILS_VIEW;
 							}
 						}
 						

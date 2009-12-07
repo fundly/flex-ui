@@ -377,7 +377,7 @@ package com.enilsson.elephanttrakker.views.modules.pledge_workspace.model
 		 */
 		public function clearBillingData ():void
 		{
-			ccVStack = 0;
+			ccVStack = CC_DETAILS_VIEW;
 			initialBillingDetails = {};
 			billingData = {};
 		}

@@ -370,7 +370,7 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 		 */
 		public function clearBillingData ():void
 		{
-			ccVStack = 0;
+			ccVStack = PledgeWorkspaceModel.CC_DETAILS_VIEW;
 			initialBillingDetails = {};
 			billingData = {};
 		}

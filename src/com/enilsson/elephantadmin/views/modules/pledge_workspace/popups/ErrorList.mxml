@@ -132,7 +132,7 @@
 							this.addChild(createErrorDescription(f.message));
 						}
 						
-						if( presentationModel.transVStack == 0 )
+						if( presentationModel.transVStack == PledgeWorkspaceModel.CC_VIEW )
 						{
 							// list the credit card form errors
 							for each ( f in cc )
@@ -155,13 +155,13 @@
 							
 							// show either the CC or the billing address dialog depending on which one still has errors
 							if(cc.length > 0)
-								presentationModel.ccVStack = 0;
+								presentationModel.ccVStack = PledgeWorkspaceModel.CC_DETAILS_VIEW;
 							else if( presentationModel.billingData && b.length > 0) {
-								presentationModel.ccVStack = 1;
+								presentationModel.ccVStack = PledgeWorkspaceModel.BILLING_DETAILS_VIEW;
 							}
 						}
 						
-						else if( presentationModel.transVStack == 1 )
+						else if( presentationModel.transVStack == PledgeWorkspaceModel.CHECK_VIEW )
 						{
 							for each ( f in ch )
 							{
@@ -171,7 +171,7 @@
 							}
 						}
 						
-						else if( presentationModel.transVStack == 2 )
+						else if( presentationModel.transVStack == PledgeWorkspaceModel.NO_CONTRIB_VIEW )
 						{
 							for each( f in nc ) 
 							{

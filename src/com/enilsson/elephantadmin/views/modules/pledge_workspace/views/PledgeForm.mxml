@@ -150,8 +150,8 @@
 			label="List of Payments"
 			visible="{presentationModel.action == PledgeWorkspaceModel.EDIT}" 
 			includeInLayout="{presentationModel.action == PledgeWorkspaceModel.EDIT}"
-			click="presentationModel.transVStack = 3"
-			enabled="{presentationModel.transVStack != 3}"
+			click="presentationModel.transVStack = PledgeWorkspaceModel.LIST_CONTRIBS_VIEW"
+			enabled="{presentationModel.transVStack != PledgeWorkspaceModel.LIST_CONTRIBS_VIEW}"
 			tabEnabled="false" />
 	
 	</mx:VBox>
