@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Label xmlns:mx="http://www.adobe.com/2006/mxml"
+	text="SANDBOX"
+	visible="{_isSandbox}"
+	includeInLayout="{_isSandbox}"
+	fontSize="16"
+	fontFamily="appFont"
+	fontWeight="bold"
+	letterSpacing="3"
+	color="#FF0000">
+	
+	<mx:filters>
+		<mx:BevelFilter distance=".5" angle="0" type="{BitmapFilterType.OUTER}" />
+	</mx:filters>
+	
+	<mx:Script>
+		<![CDATA[
+			
+			public function set baseUrl( value : String ) : void {
+				_baseUrl = value;
+				
+				if(!_baseUrl) {
+					_isSandbox = false;
+				}
+				else {
+					_isSandbox = _baseUrl.search(/^https:\/\/sandbox.blue-swarm.com\//) != -1;	
+				}
+			}
+			private var _baseUrl : String;
+			
+			[Bindable] private var _isSandbox : Boolean;
+			
+		]]>
+	</mx:Script>
+		
+</mx:Label>
