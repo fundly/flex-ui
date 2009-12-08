@@ -162,16 +162,21 @@
 				if ( ! presentationModel || ! presentationModel.options || ! presentationModel.options.workspace_agreement ) return;
 				if ( aTab ) return;
 				
-				// create the tab
-				aTab = new DynamicAgreement();
-				aTab.presentationModel = presentationModel;
-				aTab.label = 'agreement';
-				aTab.addEventListener( FlexEvent.HIDE, tabMoveHandler );
-				aTab.setStyle( "showEffect", moveLeftShow ); 
-				aTab.setStyle( "hideEffect", moveRightHide );	
-				
-				// add the tab if the viewstack is initialised
-				if( vstack ) vstack.addChild( aTab );
+				if( vstack ) {
+					
+					if(!vstack.initialized)
+						vstack.initialize();
+						
+					// create the tab and add it if the viewstack is initialised
+					aTab = new DynamicAgreement();
+					aTab.presentationModel = presentationModel;
+					aTab.label = 'agreement';
+					aTab.addEventListener( FlexEvent.HIDE, tabMoveHandler );
+					aTab.setStyle( "showEffect", moveLeftShow ); 
+					aTab.setStyle( "hideEffect", moveRightHide );				
+					
+					vstack.addChild( aTab );
+				}
 			}
 
 
