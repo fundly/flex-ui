@@ -42,15 +42,16 @@
 				
 				switch (presentationModel.transVStack )
 				{
-					case 0 :
+					case PledgeWorkspaceModel.CC_VIEW :
 						num = p.length + cc.length + ( presentationModel.billingData == null ? 0 : b.length );
 					break;
-					case 1 :
+					case PledgeWorkspaceModel.CHECK_VIEW :
 						num = p.length + ch.length;
 					break;
-					case 2 :
+					case PledgeWorkspaceModel.NO_CONTRIB_VIEW :
 						num = p.length + nc.length;
-					case 3 :
+					break;
+					case PledgeWorkspaceModel.LIST_CONTRIBS_VIEW :
 						num = p.length;
 					break;
 				}
@@ -78,7 +79,7 @@
 				
 				switch( presentationModel.vindex )
 				{
-					case 0 :
+					case PledgeWorkspaceModel.CONTACT_FORM_VIEW :
 						title = new Text();
 						title.styleName = 'epTitle';
 						title.percentWidth = 100;
@@ -116,7 +117,7 @@
 						this.addChild(otherTabs);
 					break;
 					
-					case 1 :
+					case PledgeWorkspaceModel.PLEDGE_FORM_VIEW :
 						title = new Text();
 						title.styleName = 'epTitle';
 						title.percentWidth = 100;
@@ -214,7 +215,7 @@
 						this.addChild(otherTabs);
 					break;
 					
-					case 2 :
+					case PledgeWorkspaceModel.AGREEMENT_FORM_VIEW :
 						title = new Text();
 						title.styleName = 'epTitle';
 						title.percentWidth = 100;

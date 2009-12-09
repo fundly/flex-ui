@@ -40,6 +40,7 @@ package com.enilsson.elephanttrakker.views.modules.pledge_workspace.model
 		
 		public static const CONTACT_FORM_VIEW	: int = 0;
 		public static const PLEDGE_FORM_VIEW	: int = 1;
+		public static const AGREEMENT_FORM_VIEW	: int = 2;
 		
 		public static const CC_DETAILS_VIEW			: int = 0;
 		public static const BILLING_DETAILS_VIEW	: int = 1;
