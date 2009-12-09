@@ -25,7 +25,7 @@
 					
 			public function init():void 
 			{
-				if (data == null) return;
+				if ( !data) return;
 					
 				cbDataProvider = new ArrayCollection();
 				cbDataProvider.addItem({ 'label' : '[-- IGNORE --]', 'data' : '' });
@@ -33,35 +33,35 @@
 				var i:int = 0;
 				var selected:int = -1;
 
-				for each ( var field:Object in _model.struktorLayout.contacts.fields) 
-				{				
-					// only show the fields listed as display
-					if( field.hasOwnProperty('display') )
-						if ( field.display === false ) continue;
-					
-					// dont show anything but group 1 fields.	
-					/* if( field.hasOwnProperty('group') )
-						if ( field.group != 1 ) continue; */						
-					
-					cbDataProvider.addItem( field );
-					
-					// try to find a associated field
-					if ((_model.my_contacts.headerFirst) && (selected == -1))  
-					{
-						i++;						
-						var columnHeader:String = _model.my_contacts.firstRow[data.dataField];
-						columnHeader = columnHeader.toLowerCase();
+				if ( _model.struktorLayout.contacts && _model.struktorLayout.contacts.fields ) {
+					for each ( var field:Object in _model.struktorLayout.contacts.fields) 
+					{				
+						// only show the fields listed as display
+						if( field.hasOwnProperty('display') )
+							if ( field.display === false ) continue;
 						
-						if ( columnHeader == 'id' ) 
-							selected = 0;
-						else if ( String(field.label).toLowerCase().indexOf(columnHeader) != -1 ) 
-							selected = i;
+						cbDataProvider.addItem( field );
+						
+						// try to find a associated field
+						if ( _model.my_contacts.firstRow && _model.my_contacts.headerFirst && selected == -1 )  
+						{
+							i++;						
+							var columnHeader:String = _model.my_contacts.firstRow[data.dataField];
+							columnHeader = columnHeader.toLowerCase();
+							
+							if ( columnHeader == 'id' ) 
+								selected = 0;
+							else if ( String(field.label).toLowerCase().indexOf(columnHeader) != -1 ) 
+								selected = i;
+						}
 					}
-				}
-				
+				}				
 				cbDataProvider.refresh();
 				combo.selectedIndex = selected;
-				_model.my_contacts.columnHeaderCombos[data.dataField] = combo;
+				
+				if( _model.my_contacts.columnHeaderCombos )
+					_model.my_contacts.columnHeaderCombos[data.dataField] = combo;
+					
 				setValue(null);
 			}
 			

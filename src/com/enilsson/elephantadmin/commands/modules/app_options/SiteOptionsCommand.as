@@ -24,7 +24,8 @@ package com.enilsson.elephantadmin.commands.modules.app_options
 	
 	public class SiteOptionsCommand implements ICommand
 	{
-		private static const SITE_OPTIONS : String = "site_options";
+		private static const SITE_OPTIONS 	: String = "site_options";
+		private static const ORDER 			: String = SITE_OPTIONS + ".option_title ASC";
 		
 		private var _model : EAModelLocator = EAModelLocator.getInstance();
 		private var _event : Event;
@@ -52,7 +53,7 @@ package com.enilsson.elephantadmin.commands.modules.app_options
 			var responder	: Responder = new Responder(handleGetSiteOptionsResult, handleGetSiteOptionsFault);
 			var delegate  	: RecordsDelegate = new RecordsDelegate(responder);
 			
-			var recordsVO 	: RecordsVO = new RecordsVO(SITE_OPTIONS);
+			var recordsVO 	: RecordsVO = new RecordsVO(SITE_OPTIONS, null, ORDER);
 			
 			delegate.getRecords(recordsVO);
 			

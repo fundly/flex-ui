@@ -8,7 +8,6 @@
 	<mx:HBox width="100%" height="100%">
 		<view:OptionsListPanel id="optionsList" 
 			height="100%" width="280"
-			selectedIndex="{_pm.selectedIndex}"
 			selectedItem="{_pm.selectedSiteOption}"
 			itemClick="itemClickHandler(event)"
 			dataProvider="{_pm.siteOptions}"
@@ -16,7 +15,6 @@
 		<view:OptionEditorPanel id="optionsEditor" 
 			height="100%" width="100%"
 			pm="{_pm.optionsEditorPM}"
-			selectedIndex="{optionsList.selectedIndex}"
 			siteOption="{_pm.selectedSiteOption}" />
 	</mx:HBox>
 	
@@ -33,14 +31,12 @@
 			override protected function init():void 
 			{
 				super.init();
-
 				_pm.loadSiteOptions();
 			}
 			
 			private function itemClickHandler ( event:ListEvent ):void
 			{
 				_pm.selectedSiteOption = SiteOption(event.itemRenderer.data)
-				optionsEditor.selectedIndex = event.rowIndex;
 			}
 			
 			private function dataAddedHandler ( event:Event ):void

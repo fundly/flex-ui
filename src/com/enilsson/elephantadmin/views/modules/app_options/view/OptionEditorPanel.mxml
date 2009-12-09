@@ -7,18 +7,19 @@
 	layout="absolute"
 	title="{_pm.editorTitle}">
 	
-	<mx:ViewStack width="100%" height="100%"
-		selectedIndex="{selectedIndex}">
-		<option_views:Options_AgentsAgreement pm="{_pm}" />
-		<option_views:Options_PrivacyStatement pm="{_pm}" />
-		<option_views:Options_WorkplaceAgreement pm="{_pm}" />
-		<option_views:Options_PledgeSuccess pm="{_pm}" />
-		<option_views:Options_PledgeSuccessCheck pm="{_pm}" />
-		<option_views:Options_RSSFeed pm="{_pm}" />
-		<option_views:Options_Legalese pm="{_pm}" />
-		<option_views:Options_PaidFor pm="{_pm}" />
-		<option_views:Options_DownlineRequest pm="{_pm}" />
-		<option_views:Options_ContactsRequest pm="{_pm}" />
+	<mx:ViewStack id="optionsVStack"
+		 width="100%" height="100%" selectedIndex="-1">
+		<option_views:Options_AgentsAgreement name="agents_agreement" pm="{_pm}" />
+		<option_views:Options_PrivacyStatement name="privacy_statement" pm="{_pm}" />
+		<option_views:Options_WorkplaceAgreement name="workspace_agreement" pm="{_pm}" />
+		<option_views:Options_PledgeSuccess name="success_cc" pm="{_pm}" />
+		<option_views:Options_PledgeSuccess name="success_check" pm="{_pm}" />
+		<option_views:Options_PledgeSuccess name="success_none" pm="{_pm}" />
+		<option_views:Options_RSSFeed name="rss_feed" pm="{_pm}" />
+		<option_views:Options_Legalese name="legalese" pm="{_pm}" />
+		<option_views:Options_PaidFor name="paid_for" pm="{_pm}" />
+		<option_views:Options_DownlineRequest name="downline_request" pm="{_pm}" />
+		<option_views:Options_ContactsRequest name="contacts_request" pm="{_pm}" />
 	</mx:ViewStack>
 
 	<common:ModuleControlBar id="moduleControlBar" 
@@ -38,18 +39,34 @@
 		
 	<mx:Script>
 		<![CDATA[
+			import mx.core.Container;
 			import com.enilsson.elephantadmin.views.modules.app_options.model.SiteOption;
 			import com.enilsson.elephantadmin.views.modules.app_options.model.pm.OptionsEditorPM;
 			
-			[Bindable] public function get selectedIndex():int { return _selectedIndex; }
-			private var _selectedIndex:int = 0;
-			public function set selectedIndex( value:int ) : void { _selectedIndex = value; }
-			
 			[Bindable] public function get siteOption() : SiteOption { return _pm.siteOption; }
-			public function set siteOption( value : SiteOption ) : void { _pm.siteOption = value; }
+			public function set siteOption( value : SiteOption ) : void { 
+				_pm.siteOption = value; 
+				_siteOptionChanged = true;
+				invalidateProperties();
+			}
+			private var _siteOptionChanged : Boolean = false;
 			
 			public function set pm( value : OptionsEditorPM ) : void { _pm = value; } 
 			[Bindable] private var _pm : OptionsEditorPM;
+			
+			
+			override protected function commitProperties():void {
+				super.commitProperties();
+				
+				if(_siteOptionChanged) {
+					_siteOptionChanged = false;
+					
+					if(siteOption)
+						optionsVStack.selectedChild = optionsVStack.getChildByName( siteOption.name ) as Container;
+					else
+						optionsVStack.selectedChild = null;	
+				}
+			}
 		]]>
 	</mx:Script>
 	
