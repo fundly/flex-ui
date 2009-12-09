@@ -514,13 +514,13 @@
 				
 				switch(event.newIndex)
 				{
-					case 0 :
+					case PledgeWorkspaceModel.CC_VIEW :
 						presentationModel.transactionData = ccForm.formVariables;
 					break;
-					case 1 :
+					case PledgeWorkspaceModel.CHECK_VIEW :
 						presentationModel.checkData = checkForm.formVariables;
 					break;
-					case 2 :
+					case PledgeWorkspaceModel.NO_CONTRIB_VIEW :
 						presentationModel.transactionData = null;
 						presentationModel.checkData = null;
 					break;

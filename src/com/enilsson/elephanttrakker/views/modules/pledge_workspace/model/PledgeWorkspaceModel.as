@@ -377,7 +377,7 @@ package com.enilsson.elephanttrakker.views.modules.pledge_workspace.model
 		 */
 		public function clearBillingData ():void
 		{
-			ccVStack = CC_DETAILS_VIEW;
+			ccVStack = PledgeWorkspaceModel.CC_DETAILS_VIEW;
 			initialBillingDetails = {};
 			billingData = {};
 		}
@@ -449,12 +449,12 @@ package com.enilsson.elephanttrakker.views.modules.pledge_workspace.model
 		/**
 		 * List of the error fields for each form
 		 */
-		public var contactsErrors:Array;
-		public var pledgeErrors:Array;
-		public var ccErrors:Array;
-		public var checkErrors:Array;
-		public var billingErrors:Array;
-		public var noContribErrors:Array;
+		public var contactsErrors	:Array = [];
+		public var pledgeErrors		:Array = [];
+		public var ccErrors			:Array = [];
+		public var checkErrors		:Array = [];
+		public var billingErrors	:Array = [];
+		public var noContribErrors	:Array = [];
 
 		/**
 		 * Flag to initiate a reset on the agreement initials boxes

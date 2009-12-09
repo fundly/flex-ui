@@ -242,6 +242,7 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 		 * Get and set the initial contact data, and push any billing details if necessary
 		 */
 		private var _initialContactData:Object;
+		[Bindable(event="initialContactDataChanged")]
 		public function set initialContactData ( value:Object ):void
 		{
 			_initialContactData = value;	
@@ -442,12 +443,12 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 		/**
 		 * List of the error fields for each form
 		 */
-		public var contactsErrors:Array;
-		public var pledgeErrors:Array;
-		public var ccErrors:Array;
-		public var checkErrors:Array;
-		public var billingErrors:Array;
-		public var noContribErrors:Array;
+		public var contactsErrors	:Array = [];
+		public var pledgeErrors		:Array = [];
+		public var ccErrors			:Array = [];
+		public var checkErrors		:Array = [];
+		public var billingErrors	:Array = [];
+		public var noContribErrors	:Array = [];
 
 		/**
 		 * Flag to initiate a reset on the agreement initials boxes
@@ -590,10 +591,10 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 					vo.paymentType = 'check';
 				break;
 				case NO_CONTRIB_VIEW :
-					vo.check = null;
 					vo.transaction = null;
+					vo.check = null;
 					vo.paymentType = 'none';
-				break;			
+				break;		
 			}
 			
 			// make some action dependant changes to the VO
@@ -634,8 +635,8 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 		{
 			action = action;	
 			
-			pledgeID = 0;
-			contactID = 0;
+			pledgeID = undefined;
+			contactID = undefined;
 			formProcessing = false;
 			showErrorList = false;
 			showDupBox = false;

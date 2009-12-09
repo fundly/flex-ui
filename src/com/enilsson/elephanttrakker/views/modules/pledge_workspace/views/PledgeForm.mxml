@@ -5,6 +5,7 @@
 	xmlns:views="com.enilsson.elephanttrakker.views.modules.pledge_workspace.views.*"
 	xmlns:controls="com.enilsson.controls.*"	
 	show="init()"
+	hide="TooltipUtil.hideTooltip()"
 	height="100%" width="100%" 
 	verticalScrollPolicy="off">	
 	
@@ -42,8 +43,8 @@
 				horizontalScrollPolicy="off">
 				<mx:ViewStack id="ccBillingVStack"
 					selectedIndex="{presentationModel.ccVStack}"
+					change="TooltipUtil.hideTooltip()"
 					width="330" height="100%"
-					change="TooltipUtil.hideTooltip();"
 					top="0" horizontalCenter="-8">
 					<struktorForm:StruktorForm id="ccForm" 
 						styleName="processingForm" 
@@ -137,6 +138,7 @@
 		
 		<mx:LinkBar id="transactionLinkBar" 
 			styleName="transactionLinkBar" 
+			linkButtonStyleName="transactionLinkButton"
 			dataProvider="{addLabels}"
 			visible="{presentationModel.action != PledgeWorkspaceModel.EDIT}"
 			includeInLayout="{presentationModel.action != PledgeWorkspaceModel.EDIT}"			 
@@ -196,8 +198,6 @@
 			import mx.core.UIComponent;
 			import mx.managers.ToolTipManager;
 			import mx.core.IToolTip;
-			import com.enilsson.elephanttrakker.views.main.ContentBox;
-			import com.enilsson.elephanttrakker.events.main.ResizeContentEvent;
 			import com.enilsson.elephanttrakker.views.modules.pledge_workspace.events.PWEvent;
 			import com.enilsson.elephanttrakker.views.modules.pledge_workspace.model.PledgeWorkspaceModel;
 			import mx.containers.FormItem;
@@ -472,7 +472,7 @@
 			{
 				if(presentationModel.debug) Logger.info('Edit Click', event.label, event.index, presentationModel.action);
 				
-				TooltipUtil.hideTooltip();				
+				TooltipUtil.hideTooltip();
 				
 				switch(presentationModel.action)	
 				{	
@@ -513,13 +513,13 @@
 				
 				switch(event.newIndex)
 				{
-					case 0 :
+					case PledgeWorkspaceModel.CC_VIEW :
 						presentationModel.transactionData = ccForm.formVariables;
 					break;
-					case 1 :
+					case PledgeWorkspaceModel.CHECK_VIEW :
 						presentationModel.checkData = checkForm.formVariables;
 					break;
-					case 2 :
+					case PledgeWorkspaceModel.NO_CONTRIB_VIEW :
 						presentationModel.transactionData = null;
 						presentationModel.checkData = null;
 					break;
