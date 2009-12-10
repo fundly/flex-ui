@@ -171,11 +171,8 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 
 			if(debug) Logger.info( 'workspaceChangeHandler: Start', pwVO.action );
 
-			// set the action
-			action = pwVO.action;
-
 			// reset everything
-			reset();
+			reset(pwVO.action);
 			
 			var ipd : Object = {};
 			// do some specific tasks based on the action
@@ -634,7 +631,7 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 		 */
 		public function reset( action:String = ADD_NEW ):void
 		{
-			action = action;	
+			this.action = action;	
 			
 			pledgeID = undefined;
 			contactID = undefined;
