@@ -7,6 +7,7 @@
 	xmlns:common="com.enilsson.elephanttrakker.views.common.*"
 	preinitialize="initialiseHandler()"
 	show="showHandler()"
+	hide="TooltipUtil.hideTooltip()"
 	verticalScrollPolicy="off" horizontalScrollPolicy="off">
 
 	<mx:Image source="{presentationModel.icons.pledge}" top="0" right="0" />
@@ -28,9 +29,8 @@
 		
 	<mx:ViewStack id="vstack" 
 		creationPolicy="all"  
-		width="630" height="242" 
-		top="40" left="5" 
-		change="_IndexChange = event" 
+		top="40" left="0" bottom="40" right="36" 
+		change="_IndexChange = event; TooltipUtil.hideTooltip();" 
 		childAdd="presentationModel.numTabs = event.currentTarget.numChildren"
 		selectedIndex="{presentationModel.vindex}">
 		<views:ContactForm
@@ -106,6 +106,7 @@
 
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.common.utils.TooltipUtil;
 			import org.osflash.thunderbolt.Logger;
 			import com.enilsson.elephanttrakker.views.modules.pledge_workspace.views.DynamicAgreement;
 			import mx.events.FlexEvent;
@@ -131,7 +132,7 @@
 			 */
 			public function set runInit(value:Boolean):void
 			{				
-				if(value && presentationModel.mainViewState == ETModelLocator.CALL_LOGGING_VIEW)
+				if(value && presentationModel.mainViewState == ETModelLocator.PLEDGE_WORKSPACE_VIEW)
 					showHandler();
 			}
 			
@@ -150,7 +151,7 @@
 				// move the vstack back the first page
 				presentationModel.init();	
 			}
-
+			
 			/**
 			 * Listen for the site layout loading then build the agreement tab if need be
 			 */
@@ -158,19 +159,24 @@
 			{
 				// dont build anything if the layout isnt loaded or there is no agreement or it has already been built
 				if ( !value ) return;
-				if ( presentationModel.options.workspace_agreement == null ) return;
+				if ( ! presentationModel || ! presentationModel.options || ! presentationModel.options.workspace_agreement ) return;
 				if ( aTab ) return;
 				
-				// create the tab
-				aTab = new DynamicAgreement();
-				aTab.presentationModel = presentationModel;
-				aTab.label = 'agreement';
-				aTab.addEventListener( FlexEvent.HIDE, tabMoveHandler );
-				aTab.setStyle( "showEffect", moveLeftShow ); 
-				aTab.setStyle( "hideEffect", moveRightHide );	
-				
-				// add the tab if the viewstack is initialised
-				if( vstack ) vstack.addChild( aTab );
+				if( vstack ) {
+					
+					if(!vstack.initialized)
+						vstack.initialize();
+						
+					// create the tab and add it if the viewstack is initialised
+					aTab = new DynamicAgreement();
+					aTab.presentationModel = presentationModel;
+					aTab.label = 'agreement';
+					aTab.addEventListener( FlexEvent.HIDE, tabMoveHandler );
+					aTab.setStyle( "showEffect", moveLeftShow ); 
+					aTab.setStyle( "hideEffect", moveRightHide );				
+					
+					vstack.addChild( aTab );
+				}
 			}
 
 

@@ -4,7 +4,6 @@
 	xmlns:struktorForm="com.enilsson.utils.struktorForm.*"
 	xmlns:graphics="com.enilsson.graphics.*"
 	show="init()"
-	hide="hideAction()"
 	width="100%" 
 	verticalScrollPolicy="off" 
 	horizontalScrollPolicy="off">
@@ -16,9 +15,9 @@
 		selectedGroups="{[1]}" 
 		layoutProvider="{presentationModel.pledgeLayout}"
 		dataProvider="{presentationModel.initialContactData}"
-		debugMode="false" validateOnKeyPress="false" 
+		validateOnKeyPress="{true}" 
 		numColumns="2"
-		isValidChanged="this.isValid = true;" 
+		isValidChanged="setIsValid()"
 		formBuildComplete="formBuildCompleteAction(event)"			
 		groupLabels="false" />
 
@@ -26,17 +25,11 @@
 	<mx:Binding source="contactDetails.fieldNames" destination="presentationModel.contactsFields" />
 	<mx:Binding source="contactDetails.invalidFields" destination="presentationModel.contactsErrors" />
 	
-	<mx:Metadata>
-		[Event(name="isValidChanged", type="flash.events.Event")]
-	</mx:Metadata>
-	
 	<mx:Script>
 		<![CDATA[
 			import mx.controls.TextInput;
 			import com.enilsson.elephanttrakker.views.modules.pledge_workspace.model.PledgeWorkspaceModel;
 			import com.enilsson.elephanttrakker.events.session.PingEvent;
-			import mx.managers.ToolTipManager;
-			import mx.core.IToolTip;
 			import mx.utils.ObjectUtil;
 			import org.osflash.thunderbolt.Logger;
 			
@@ -49,11 +42,11 @@
 			/**
 			 * Public functions to announce that this tab is valid (or not)
 			 */
-			public function set isValid(value:Boolean):void
+			private function setIsValid():void
 			{
 				if(contactDetails.numChildren == 0)
 				{
-					presentationModel.contactDetailsValid = false;
+					_isValid = presentationModel.contactDetailsValid = false;
 					return;
 				}
 				
@@ -62,14 +55,6 @@
 				presentationModel.workspaceValid = _isValid;
 				
 				if(presentationModel.debug) Logger.info('ContactDetails Status', _isValid);
-				
-				dispatchEvent( new Event('isValidChanged') );
-			}
-			
-			[Bindable(event="isValidChanged")]
-			public function get isValid():Boolean
-			{
-				return _isValid;
 			}
 						
 			/**
@@ -79,30 +64,13 @@
 			{
 				// ping the server to make sure that all is well
 				new PingEvent().dispatch();
-
- 				if(presentationModel.vindex >= presentationModel.prevVIndex)
-					firstField.setFocus();
-				else 
-				{
-					if(presentationModel.tabBackward)
-					{
-						lastField.setFocus();
-						presentationModel.tabBackward = false;
-					}
-				}
+				
+				if( presentationModel.tabBackward && lastField ) {
+					lastField.setFocus();
+					presentationModel.tabBackward = false;
+				}				
 			}
 			
-			/**
-			 * Hide any error tips when the form is hidden (ie the user moves to a new tab)
-			 */
-			private function hideAction():void
-			{
-				var curTT:IToolTip = ToolTipManager.currentToolTip;
-				
-				if(curTT)
-					ToolTipManager.destroyToolTip(curTT);
-			}
-		
 			/**
 			 * Complete some actions once the Struktor forms complete building
 			 */
@@ -119,14 +87,14 @@
 				// assign an event handler to the last field to cope with tabbing to the next page						
 				lastField.addEventListener(FocusEvent.KEY_FOCUS_CHANGE, function(evt:FocusEvent):void {
 					if (!evt.shiftKey && evt.keyCode == 9) {
-						presentationModel.vindex++;
 						evt.preventDefault();
+						presentationModel.vindex++;						
 					}
 				});	
 															
 				// validate the form if the action is edit
 				if(presentationModel.action == PledgeWorkspaceModel.EDIT)
-					isValid = true;
+					setIsValid();
 				
 				// send the form variables to the model to begin the process
 				presentationModel.contactData = contactDetails.formVariables;

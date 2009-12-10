@@ -205,11 +205,13 @@ package com.enilsson.elephanttrakker.models
 		/**
 		 * Variable and constants to define the view state of the main screen
 		 */
-		[Bindable] public var mainViewState:int = -1;
+		[Bindable]
+		public function get mainViewState() : int { return _mainViewState; }
+		public function set mainViewState( value : int ) : void { _mainViewState = value; }
+		private var _mainViewState : int = -1;
 
 		public var viewStateList:Array = [
 			'overview', 
-			'pledge_processing', 
 			'email', 
 			'my_contacts', 
 			'events', 
@@ -224,7 +226,6 @@ package com.enilsson.elephanttrakker.models
 		];
 		public var viewStateNames:Array = [
 			'Overview', 
-			'Pledge Processing', 
 			'Email', 
 			'My Contacts', 
 			'Events', 
@@ -240,25 +241,23 @@ package com.enilsson.elephanttrakker.models
 		
 		public static const NO_VIEW:int = -1;
 		public static const OVERVIEW_VIEW:int = 0;
-		public static const CALL_LOGGING_VIEW:int = 1;
-		public static const EMAIL_VIEW:int = 2;
-		public static const MY_CONTACTS_VIEW:int = 3;
-		public static const EVENTS_VIEW:int = 4;
-		public static const RESOURCES_VIEW:int = 5;
-		public static const MY_HISTORY_VIEW:int = 6;
-		public static const DOWNLINE_VIEW:int = 7;
-		public static const MY_DETAILS_VIEW:int = 8;
-		public static const CALLS_REMINDERS_VIEW:int = 9;
-		public static const MESSAGE_CENTER_VIEW:int = 10;
-		public static const INVITATION_VIEW:int = 11;
-		public static const PLEDGE_WORKSPACE_VIEW:int = 12;
+		public static const EMAIL_VIEW:int = 1;
+		public static const MY_CONTACTS_VIEW:int = 2;
+		public static const EVENTS_VIEW:int = 3;
+		public static const RESOURCES_VIEW:int = 4;
+		public static const MY_HISTORY_VIEW:int = 5;
+		public static const DOWNLINE_VIEW:int = 6;
+		public static const MY_DETAILS_VIEW:int = 7;
+		public static const CALLS_REMINDERS_VIEW:int = 8;
+		public static const MESSAGE_CENTER_VIEW:int = 9;
+		public static const INVITATION_VIEW:int = 10;
+		public static const PLEDGE_WORKSPACE_VIEW:int = 11;
 
 		/**
 		 * Class variables that hold the information for the view modules
 		 */
 		[Bindable] public var login:LoginViewClass = new LoginViewClass();
 		[Bindable] public var overview:OverviewViewClass = new OverviewViewClass();
-		[Bindable] public var call_logging:CallLoggingViewClass = new CallLoggingViewClass();
 		[Bindable] public var my_contacts:MyContactsViewClass = new MyContactsViewClass();
 		[Bindable] public var resources:ResourceViewClass = new ResourceViewClass();
 		[Bindable] public var my_history:MyHistoryViewClass = new MyHistoryViewClass();
@@ -334,7 +333,6 @@ package com.enilsson.elephanttrakker.models
 			// reset each of the module view classes
 			login = new LoginViewClass();
 			overview = new OverviewViewClass();
-			call_logging = new CallLoggingViewClass();
 			my_contacts = new MyContactsViewClass();
 			resources = new ResourceViewClass();
 			my_history = new MyHistoryViewClass();
@@ -347,7 +345,6 @@ package com.enilsson.elephanttrakker.models
 			invitation = new InvitationViewClass();
 			firstlogin = new FirstLoginViewClass();
 
-			call_logging.reset();
 			pledgeWorkspace = new PledgeWorkspaceVO();
 
 			// change the browser info to the login screen

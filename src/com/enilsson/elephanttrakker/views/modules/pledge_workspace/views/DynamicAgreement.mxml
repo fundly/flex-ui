@@ -12,6 +12,8 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.managers.ToolTipManager;
+			import mx.core.IToolTip;
 			import com.enilsson.elephanttrakker.views.modules.pledge_workspace.model.PledgeWorkspaceModel;
 			import caurina.transitions.Tweener;
 			import mx.events.ValidationResultEvent;
@@ -61,6 +63,7 @@
 			{
 				if( !value ) return;
 				
+				isValid = false;
 				buildAgreement( 'reset initials' );
 				presentationModel.resetInitials = !value;
 			}
@@ -252,8 +255,7 @@
 					time: 0.4, 
 					transition: 'linear' 
 				});
-			}		
-			
+			}
 		]]>
 	</mx:Script>
 	

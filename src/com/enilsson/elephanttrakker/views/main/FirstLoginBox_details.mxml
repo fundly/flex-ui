@@ -6,7 +6,7 @@
 	xmlns:struktorForm="com.enilsson.utils.struktorForm.*" 
 	xmlns:common="com.enilsson.elephanttrakker.views.common.*" 
 	xmlns:graphics="com.enilsson.graphics.*"
-	enabled="false">
+	enabled="false" xmlns:effects="com.enilsson.elephanttrakker.views.common.effects.*">
 		
 	<mx:Canvas top="0" left="0" width="100%" height="37" backgroundColor="#999999" color="#ffffff">
 		<mx:Image source="{_model.icons.singleUser}" verticalCenter="0" left="10" />
@@ -106,7 +106,7 @@
     <mx:transitions>
        <mx:Transition>
             <mx:Parallel targets="{[pwdMeter]}">
-                <mx:Resize duration="500" easingFunction="Bounce.easeOut"/>
+                <effects:BounceResize />
             </mx:Parallel>
         </mx:Transition>
     </mx:transitions>
@@ -124,8 +124,6 @@
 			import com.enilsson.elephanttrakker.events.session.EndSessionEvent;
 			import com.enilsson.elephanttrakker.events.modules.first_login.FirstLoginEvent;
 			import com.enilsson.elephanttrakker.events.modules.my_details.MyDetailsEvent;
-			import com.enilsson.elephanttrakker.views.modules.call_logging.renderers.*;
-			import com.enilsson.elephanttrakker.events.modules.call_logging.CallLoggingAutoCompleteEvent;
 			import com.enilsson.elephanttrakker.events.session.PingEvent;
 			import mx.utils.ObjectUtil;
 			import org.osflash.thunderbolt.Logger;

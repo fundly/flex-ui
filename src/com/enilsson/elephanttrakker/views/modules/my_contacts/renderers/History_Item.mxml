@@ -7,26 +7,15 @@
 	
 	<mx:Script>
 		<![CDATA[
-			import com.enilsson.elephanttrakker.models.ETModelLocator;
+			import com.enilsson.elephanttrakker.views.modules.pledge_workspace.events.SPWEvent;
+			import com.enilsson.elephanttrakker.views.modules.pledge_workspace.model.PledgeWorkspaceVO;
 		
-			[Bindable] private var _model:ETModelLocator = ETModelLocator.getInstance();
-			
-
 			private function editAction(data:Object):void
 			{
-				// clear the call logging workspace
-				_model.call_logging.reset();
+				var vo : PledgeWorkspaceVO = new PledgeWorkspaceVO();
+				vo.pledgeID = data.id;
 				
-				// assign the contact data to the pledge
-				_model.call_logging.load_pledge_id = data.id;
-				_model.call_logging.tr_usersValue = 0;
-				_model.call_logging.eventsValue = 0;
-				
-				// set the transaction vstack to the payments list
-				_model.call_logging.transVStack = 2;
-				
-				// change the main view to see the call logging
-				_model.mainViewState = ETModelLocator.CALL_LOGGING_VIEW;
+				new SPWEvent ( SPWEvent.EDIT, vo ).dispatch();
 			}
 		]]>
 	</mx:Script>

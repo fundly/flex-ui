@@ -17,11 +17,11 @@
 		<mx:Button styleName="addBtn" height="15"
 			label="add credit card" 
 			toolTip="Add another credit card payment to this pledge"
-			click="presentationModel.transVStack = 0" />		
+			click="presentationModel.transVStack = PledgeWorkspaceModel.CC_VIEW" />		
 		<mx:Button styleName="addBtn" height="15"
 			label="add check" 
 			toolTip="Add another check payment to this pledge"
-			click="presentationModel.transVStack = 1" />
+			click="presentationModel.transVStack = PledgeWorkspaceModel.CHECK_VIEW" />
 	</mx:HBox>	
 
 	<mx:Script>

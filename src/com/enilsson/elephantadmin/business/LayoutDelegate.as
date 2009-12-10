@@ -34,13 +34,21 @@ package com.enilsson.elephantadmin.business
 		
 		public function getLayoutSchema(layout:LayoutVO):void
 		{
-			var token:AsyncToken = service.fetch_layout_schema(layout.table_name);
+			var token:AsyncToken;
+			if(layout)
+				token = service.fetch_layout_schema(layout.table_name);
+			else
+				token = service.fetch_layout_schema();
 			token.addResponder(responder);
 		}		
 		
 		public function getRelations(layout:LayoutVO):void
 		{
-			var token:AsyncToken = service.fetch_relations(layout.table_name);
+			var token:AsyncToken;
+			if(layout)
+				token = service.fetch_relations(layout.table_name);
+			else
+				token = service.fetch_relations();
 			token.addResponder(responder);
 		}				
 		

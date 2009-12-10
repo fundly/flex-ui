@@ -50,10 +50,22 @@
 			
 			private function init():void
 			{
-				if ( presentationModel.vo.paymentType == 'check' )
-					titleText.htmlText = presentationModel.options.success_check;
-				else
-					titleText.htmlText = presentationModel.options.success_cc;
+				var paymentType : String = presentationModel.vo.paymentType;
+				
+				switch( paymentType ) {
+					case 'check':
+						titleText.htmlText = presentationModel.options.success_check;
+					break;
+					case 'credit card':
+						titleText.htmlText = presentationModel.options.success_cc;
+					break;	
+					case 'none':
+						// temporary fix until success_none has been added to site_options						
+						presentationModel.options.success_none = presentationModel.options.success_check;
+						
+						titleText.htmlText = presentationModel.options.success_none;
+					break;
+				}
 				
 				// if this pledge was processed from a saved one, then removed the saved pledge
 				if( presentationModel.savedID )

@@ -18,6 +18,14 @@ package com.enilsson.elephantadmin.vo
 		[Bindable] public var primary_key:String;
 		[Bindable] public var table:String;
 		[Bindable] public var title:String;
-						
+		
+		public function get fieldNames():Array
+		{
+			var f:Array = new Array();
+			for each ( var field:Object in fields )
+				f.push( field.fieldname );
+			
+			return f;
+		}			
 	}
 }
