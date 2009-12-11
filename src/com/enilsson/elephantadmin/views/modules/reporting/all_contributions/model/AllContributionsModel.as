@@ -45,11 +45,11 @@ package com.enilsson.elephantadmin.views.modules.reporting.all_contributions.mod
 			{'label':'All','data':'0'}
 		]);
 		public var dateTypeFilter:ArrayCollection = new ArrayCollection([
-			{'label':'Pledge Date','data':'0'}
-			,{'label':'Fulfilled Date','data':'1'}
+			{'label':'Fulfilled Date','data':FILTER_FULFILLED_DATE},
+			{'label':'Pledge Date','data':FILTER_PLEDGE_DATE}
 		]);
 
-		public var dateType:int = 0;
+		public var dateType:int = FILTER_FULFILLED_DATE;
 		// default start date is start of today
 		public var startDate:Date = new Date(new Date().getFullYear(),new Date().getMonth(),new Date().getDate());
 		// default end date is end of today
