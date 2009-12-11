@@ -9,6 +9,7 @@
 
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.elephantadmin.vo.SidVO;
 			import mx.formatters.DateFormatter;
 			import com.enilsson.elephantadmin.vo.EmailVO;
 			import mx.utils.ObjectUtil;
@@ -29,9 +30,39 @@
 			override protected function init():void
 			{
 				super.init();
+				
+				var sid:SidVO = _model.sid;
+			
+				if(sid)
+				{
+					if(sid.table_name == 'email_log')
+					{
+						_model.sid = null;
+						
+						var whereObj : Object = {
+							 1: { 
+							 	what:"id",
+							 	val: sid.data.id,
+							 	op: "="
+							 }
+						};
+						
+						// load the email log information for the selected email
+						new EmailEvent(
+							EmailEvent.EMAIL_LOG_RECORDS, 
+							{
+								recordsVO : new RecordsVO(
+									'email_log(user_id<fname:lname:_fid>)', 
+									whereObj)
+							}).dispatch();
+					}
+				}
+				else
+				{
+					// get default list
+					clearSearch();
+				}
 
-				// get default list
-				clearSearch();
 				// reset the data changed flag
 				_model.dataChanged = false;
 			}

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:DataGridItemRenderer xmlns:mx="http://www.adobe.com/2006/mxml">
+	<mx:Script>
+		<![CDATA[
+			private static const ERROR_COLOR 				: Number = 0xFF0000;
+			private static const DEFAULT_BORDER_COLOR 		: Number = 0;
+			private static const DEFAULT_BACKGROUND_COLOR	: Number = 0xFFFFFF;
+		
+			override public function set data( value : Object ) : void {
+				super.data = value;
+				
+				if( value && value.hasOwnProperty('errorString') && String(value.errorString).length > 0 ) {
+//					opaqueBackground = ERROR_COLOR;
+//					background 		= true;
+//					backgroundColor = ERROR_COLOR;
+//					border		 	= true;
+//					borderColor 	= ERROR_COLOR;
+				}
+				else {
+//					opaqueBackground = DEFAULT_BACKGROUND_COLOR;
+//					background		= false;
+//					backgroundColor	= DEFAULT_BACKGROUND_COLOR;
+//					border			= false;
+//					borderColor		= DEFAULT_BORDER_COLOR;
+				}
+			}
+		]]>
+	</mx:Script>
+</mx:DataGridItemRenderer>

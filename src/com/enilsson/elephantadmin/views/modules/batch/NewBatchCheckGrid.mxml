@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:DataGrid width="100%" height="100%" dragEnabled="true" dropEnabled="true" itemRenderer="com.enilsson.elephantadmin.views.modules.batch.renderers.CheckGridRenderer"
-	xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:common="com.enilsson.elephantadmin.views.common.*" 
+<mx:DataGrid width="100%" height="100%" 
+	dragEnabled="true" dropEnabled="true"
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:common="com.enilsson.elephantadmin.views.common.*"
 	allowMultipleSelection="true">
 	
 	<mx:columns>
@@ -72,6 +74,8 @@
 	<mx:CurrencyFormatter id="cf" currencySymbol="$" precision="0" />
 	<mx:Script>
 		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.core.FlexSprite;
 			import com.enilsson.elephantadmin.events.modules.batch.BatchListEvent;
 			import mx.managers.DragManager;
 			import mx.core.DragSource;
@@ -80,6 +84,37 @@
 			import mx.controls.dataGridClasses.DataGridColumn;
 			import com.enilsson.utils.EDateUtil;
 			import mx.utils.ObjectUtil;
+			
+			private var errorHighlights : FlexSprite;
+			
+			override public function set dataProvider(value:Object):void {
+				super.dataProvider = value;
+				drawErrorHighlights();				
+			}
+			
+			private function drawErrorHighlights() : void {
+				
+				var items 	: Array = listContent.listItems;							
+				var info 	: Array = listContent.rowInfo;
+				var actualRow : int = verticalScrollPosition;
+				var errorColor : Number = 0xFF0000;
+				
+				
+				for ( var i:int = 0; i < items.length; i++ ) {
+					var item : Object = items[i];
+					if(item && item.errorString && String(item.errorString).length > 0) {
+						
+						// add a sprite for the errors if it doesn't exist yet.
+						if(!errorHighlights) {
+							errorHighlights = new FlexSprite();
+							errorHighlights.name = "errorHighlights";
+							addChild( errorHighlights );
+						}						
+						
+						drawRowBackground( errorHighlights, i, info[i].y, info[i].height, errorColor, actualRow);
+					}
+				}
+			}
 
 			override protected function dragDropHandler(event:DragEvent):void
 			{

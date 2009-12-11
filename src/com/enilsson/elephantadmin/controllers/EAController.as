@@ -5,7 +5,6 @@ package com.enilsson.elephantadmin.controllers
 	import com.enilsson.elephantadmin.commands.modules.*;
 	import com.enilsson.elephantadmin.commands.modules.app_options.*;
 	import com.enilsson.elephantadmin.commands.modules.batch.*;
-	import com.enilsson.elephantadmin.commands.modules.customreporting.*;
 	import com.enilsson.elephantadmin.commands.popups.*;
 	import com.enilsson.elephantadmin.events.*;
 	import com.enilsson.elephantadmin.events.login.*;
@@ -13,7 +12,6 @@ package com.enilsson.elephantadmin.controllers
 	import com.enilsson.elephantadmin.events.modules.*;
 	import com.enilsson.elephantadmin.events.modules.app_options.*;
 	import com.enilsson.elephantadmin.events.modules.batch.*;
-	import com.enilsson.elephantadmin.events.modules.customreporting.*;
 	import com.enilsson.elephantadmin.events.popups.*;
 	import com.enilsson.elephantadmin.events.session.*;
 	import com.enilsson.elephantadmin.views.modules.pledge_workspace.commands.*;
@@ -238,14 +236,6 @@ package com.enilsson.elephantadmin.controllers
 			// site options
 			this.addCommand(SiteOptionsEvent.GET_SITE_OPTIONS, SiteOptionsCommand );
 			this.addCommand(SaveSiteOptionEvent.SAVE_SITE_OPTION, SiteOptionsCommand );
-
-			// custom reporting module
-			this.addCommand(CustomReportingEvent.GET_REPORTS, CustomReportingCommand );
-			this.addCommand(CustomReportingEvent.GET_RELATIONS, CustomReportingCommand );
-			this.addCommand(CustomReportingEvent.GET_SCHEMA, CustomReportingCommand );
-			this.addCommand(CustomReportingEvent.SAVE_REPORT, CustomReportingCommand );
-			this.addCommand(CustomReportingEvent.EXPORT_REPORT, CustomReportingCommand );
-			this.addCommand(CustomReportingEvent.LOAD_REPORT, CustomReportingCommand );
 
  			/**
  			 * Pledge Workspace events

@@ -2,110 +2,15 @@
 <common:LabeledContainer
 	xmlns:mx="http://www.adobe.com/2006/mxml" 
 	xmlns:common="com.enilsson.elephantadmin.views.common.*" 
-	xmlns:ns="com.enilsson.elephantadmin.views.modules.reporting.*"
 	verticalScrollPolicy="off" horizontalScrollPolicy="off"
-	label="{_model.viewStateNames.getItemAt(moduleID)}"
-	currentState="{_presentationModel.currentState}"
-	show="_presentationModel.showHandler()"
-	xmlns:ns1="com.enilsson.elephantadmin.views.manage_record_base.*" xmlns:ns2="com.enilsson.elephantadmin.views.modules.custom_reporting.*">
-
-	<mx:Canvas id="reportSideBar" x="0"
-			width="270" height="100%">
-			<mx:HBox id="header" width="240" height="35" verticalAlign="middle" paddingLeft="5"
-				styleName="controlBar">
-				<mx:Button width="80" label="New" color="#000000"
-					enabled="{!_presentationModel.dataLoading}" />
-			</mx:HBox>
-			<mx:List id="reportList"
-				height="100%" width="240" top="35"
-				alternatingItemColors="[#e0e0e0, #e7e7e7]"
-				dataProvider="{_model.customReporting.reportList}"
-				itemRenderer="com.enilsson.elephantadmin.views.modules.custom_reporting.renderers.CustomReportListRenderer"
-				change="listChangeHandler(event)" />
-			<ns1:ModuleGrip id="reportGrip"
-				height="100%" width="30" right="0"
-				styleName="grip" currentState="on"
-				label="REPORTS LIST"
-				icon="@Embed('/assets/images/admin_panel/magnifier_small.png')"
-				toolTip='Show the reports list'
-				mouseChildren="false"
-				click="gripClickHandler(event)"/>
-	</mx:Canvas>
-	<ns2:CustomReportingDetail id="main"
-			width="100%" height="100%" paddingLeft="5"
-			presentationModel="{_presentationModel.detailModel}"
-			left="{reportSideBar.x + reportSideBar.width + 5}"/>
-	<common:states>
-		<mx:State name="{COLLAPSE_LIST}">
-			<mx:SetProperty target="{reportSideBar}" name="x" value="-240"/>
-		</mx:State>
-	</common:states>
-
-	<common:transitions>
-		<mx:Transition fromState="*" toState="*">
-			<mx:effect>
-				<mx:Move target="{reportList}" duration="600"/>
-			</mx:effect>
-		</mx:Transition>
-	</common:transitions>
+	label="{_model.viewStateNames.getItemAt(moduleID)}">
 
 	<mx:Script>
 		<![CDATA[
-			import com.enilsson.elephantadmin.views.modules.custom_reporting.model.CustomReportingModel;
-			import mx.controls.Alert;
-			import mx.events.ListEvent;
 			import com.enilsson.elephantadmin.models.EAModelLocator;
-			import com.adobe.cairngorm.control.CairngormEventDispatcher;
-			import mx.utils.ObjectUtil;
-			import org.osflash.thunderbolt.Logger;
-			import mx.collections.ArrayCollection;
 
 			[Bindable] private var _model:EAModelLocator = EAModelLocator.getInstance();
-			private const COLLAPSE_LIST:String = "collapseList";
-
-
-			public function set presentationModel( value : CustomReportingModel ) : void 
-			{
-				if(value && value != _presentationModel)
-					_presentationModel = value;
-			}
-			[Bindable] protected var _presentationModel:CustomReportingModel;
-
-			override protected function init():void {
-				super.init();
-			}
-			
-			override public function set currentState(value:String):void
-			{
-				_presentationModel.currentState = value;
-			}
-
-			/**
-			 * Run an action when the list items are clicked
-			 */
-			private function listChangeHandler(event:ListEvent):void
-			{
-				_presentationModel.loadReport(List(event.currentTarget).selectedItem.id);
-			}
-
-			/**
-			 * Function to handle the loading and unloading of the various application modules
-			 */
-
-			private function gripClickHandler(event:Event):void
-			{
-				if(currentState != COLLAPSE_LIST)
-				{
-					setCurrentState(COLLAPSE_LIST);
-					reportGrip.currentState = 'off';
-				}
-				else
-				{
-					setCurrentState("");
-					reportGrip.currentState = 'on';
-				}
-			}
-		
 		]]>
 	</mx:Script>
+
 </common:LabeledContainer>
