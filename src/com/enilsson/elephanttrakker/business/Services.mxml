@@ -55,18 +55,39 @@
 					case 'Client.Error.MessageSend' :
 					case 'Client.Error.DeliveryInDoubt' :
 					case 'Channel.Call.Failed':
+					
+						var title : String;
+						var message : String;
+						var reset : Boolean;
+					
+						if( event.fault.faultDetail.search("NetConnection.Call.BadVersion") != -1 || 
+							event.fault.faultDetail.search("Channel disconnected") != -1 ) 
+						{
+							title = 'Your session has expired';
+							message = 'Sorry, it looks like your session has expired. Please log in again.';
+							reset = true;
+						}
+						else {
+							title = 'Sorry, your request could not be sent';
+							message = 'Ooops, it seems like there was a problem sending your last request. Please make sure your internet connection is working correctly and try again.';							
+						}
 						
 						if(!_alert)
 						{
 							_alert =Alert.show(	
-								'Ooops, it seems like there was a problem sending your last request. Please make sure your internet connection is working correctly and try again.',	
-								'Sorry, your request could not be sent', 
+								message,	
+								title,
 								0, 
 								null,
 								handleClose,
 								Icons.ALERT
 							);
+							
+							if(reset) {
+								_model.reset();
+							}
 						}
+						
 					break;
 					case 'Client.Error.RequestTimeout' :
 						if(!_alert)

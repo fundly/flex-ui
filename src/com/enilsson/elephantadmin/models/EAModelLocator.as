@@ -77,7 +77,7 @@ package com.enilsson.elephantadmin.models
 		[Bindable] public var appLogo : String;
 		
 		// urls to define the gateway and the path the S3 bucket
-		[Bindable] public var gatewayURL : String = null;
+		[Bindable] public var gatewayURL : String = '';
 		[Bindable] public var gatewayBaseURL : String = '';
 		[Bindable] public var s3URL : String = 'https://trakker.s3.amazonaws.com/';
 		
@@ -384,15 +384,15 @@ package com.enilsson.elephantadmin.models
 		public function reset() : void
 		{
 			runInit = false;
-			
+
 			// set the main screen back to the login
 			screenState = LOGIN_SCREEN;
 			mainScreenVisible = true;
 			mainViewState = NO_VIEW;
 			
 			// reset some of the model variables
+			gatewayURL = gatewayBaseURL;
 			session = null;
-			gatewayURL = null;
 			siteLayoutLoaded = false;
 			dataLoading = false;
 			
@@ -424,12 +424,6 @@ package com.enilsson.elephantadmin.models
 			// change the browser info to the login screen
 			SWFAddress.setValue('login');
 			SWFAddress.setTitle(appName + ' - Login');
-			
-			// remove any moduleFWD references from the LSO
-			eNilssonUtils.flashCookie('module_fwd');
-			
-			// remove the gatewayUrl from the LSO
-			eNilssonUtils.clearCookie('gatewayURL');
 		}
 	}
 }
