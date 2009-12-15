@@ -19,7 +19,6 @@
 			import mx.events.ListEvent;
 			import org.un.cava.birdeye.ravis.graphLayout.layout.HierarchicalLayouter;
 			import com.enilsson.elephanttrakker.events.modules.my_downline.GetDownlineEvent;
-			import com.enilsson.elephanttrakker.events.session.PingEvent;
 			import com.enilsson.elephanttrakker.models.ETModelLocator;
 			
 			import org.un.cava.birdeye.ravis.graphLayout.layout.ConcentricRadialLayouter;

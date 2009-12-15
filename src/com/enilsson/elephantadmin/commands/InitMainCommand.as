@@ -159,12 +159,6 @@ package com.enilsson.elephantadmin.commands
 
 		private function onFault_sessionCheck(data:Object):void
 		{
-			// show the main screen
-			_model.mainScreenVisible = true;
-			
-			// hide the loading icon
-			_model.dataLoading = true;
-			
 			// remove the gURL from the cookie and save the attempted fragment
 			var f : String = SWFAddress.getValue().split("/")[1];
 			eNilssonUtils.clearCookie('gatewayURL');
@@ -172,57 +166,9 @@ package com.enilsson.elephantadmin.commands
 			eNilssonUtils.writeCookie('module_fwd', f);
 			
 			if(_model.debug)
-				Logger.info('Session Fault', ObjectUtil.toString(data.fault)) 
-
-		 	if(data.fault.faultCode){
-		 		switch(data.fault.faultCode)
-		 		{
-		 			case 'AMFPHP_AUTHENTICATE_ERROR' :
-						// check to see if the session is invalid or the user doesnt have sufficient rights
-						if(data.fault.faultString.indexOf('You do not have permission to login to the admin.') == 0)
-						{
-							// if this is a login then show the login error box
-							if(_model.isLoggingIn)
-							{
-								if(_model.debug) Logger.info('User does NOT have sufficient rights');
-							
-								_model.login.loginProcessing = false;
-								_model.login.loginErrorMessage = 'You do not have sufficient permission to proceed!';
-								_model.login.loginFormState = 'ClearPassword';
-								_model.login.loginErrorVisible = true;
-								_model.login.loginErrorStyle = 'errorBox';
-							} 
-							// if it is page refresh then show the Alert box
-							else
-							{
-								Alert.show(	
-									'You do not have sufficient permission to proceed with the ' + _model.appName + ' Admin Panel!',
-									'Insufficient system priveledges', 
-									0, 
-									null,
-									handleClose,
-									Icons.ALERT
-								);
-							}
-						}
-						else if(_model.session)
-						{
-							logout();
-							Alert.show(	
-								'Your ' + _model.appName + ' session has expired, please login to continue!',
-								'Session timeout', 
-								0, 
-								null,
-								null,
-								Icons.ALERT
-							);
-						}
-					break;
-					default:
-						logout();
-					break;
-		 		}
-		 	}			
+				Logger.info('Session Fault', ObjectUtil.toString(data.fault)); 
+				
+			logout();
 		}
 		
 		private function handleClose( e : CloseEvent ) : void

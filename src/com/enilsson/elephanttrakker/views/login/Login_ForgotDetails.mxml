@@ -43,12 +43,11 @@
 	</mx:Script>
 	
 	<mx:Move id="errorBoxShow" yTo="43" duration="500" />	
-	<mx:Move id="errorBoxHide" yTo="140" duration="500" />	
 	
 	<mx:Canvas id="forgotErrorBox" 
 		styleName="{_model.login.forgetErrorStyle}"
 		visible="{_model.login.forgetErrorVisible}" 
-		showEffect="errorBoxShow" hideEffect="errorBoxHide" 
+		showEffect="errorBoxShow"
 		y="130" horizontalCenter="0" 
 		height="100" width="340">
 		<mx:Text id="forgotErrorMsg" 

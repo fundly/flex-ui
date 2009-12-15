@@ -19,9 +19,9 @@ package com.enilsson.elephanttrakker.commands
 	import flash.xml.XMLDocument;
 	
 	import mx.collections.ArrayCollection;
-	import mx.events.CloseEvent;
 	import mx.managers.PopUpManager;
 	import mx.rpc.IResponder;
+	import mx.rpc.events.FaultEvent;
 	import mx.rpc.xml.SimpleXMLDecoder;
 	import mx.utils.ObjectProxy;
 	import mx.utils.ObjectUtil;
@@ -100,12 +100,6 @@ package com.enilsson.elephanttrakker.commands
 			_model.reset();
  		}	
 		
-		private function handleClose(e:CloseEvent):void
-		{
-			_model.reset();
-		}
-
-
 		/**
 		 * Get the site layout once the session is verified
 		 */
@@ -295,8 +289,11 @@ package com.enilsson.elephanttrakker.commands
 			_model.rssData = dp;
 		}
 		
-		private function onFault_getRSS(event:Object):void
+		private function onFault_getRSS(event:FaultEvent):void
 		{
+			event.preventDefault();
+			event.stopImmediatePropagation();
+			
 			if(_model.debug) Logger.info('Fail RSS', ObjectUtil.toString(event));
 			
 			var dp:ArrayCollection = new ArrayCollection();

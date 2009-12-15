@@ -164,16 +164,15 @@
     </mx:states>
 
 	<mx:Move id="errorBoxShow" yFrom="140" yTo="43" duration="500" />	
-	<mx:Move id="errorBoxHide" yFrom="43" yTo="140" duration="200" />	
 
 	<mx:EmailValidator source="{email}" property="text"
 		trigger="{email}" triggerEvent="{FocusEvent.FOCUS_OUT}" 
 		invalid="loginBtn.enabled = false"
 		valid="loginBtn.enabled = true" />	
-	
-	<mx:Canvas id="loginErrorBox" styleName="errorBox" 
+
+	<mx:Canvas id="loginErrorBox" styleName="errorBox"
+		showEffect="errorBoxShow"
 		visible="{_model.login.loginErrorVisible}" 
-		showEffect="errorBoxShow" hideEffect="errorBoxHide" 
 		y="130" horizontalCenter="0" height="100" width="340">
 		<mx:Text id="loginErrorMsg" styleName="errorMsg"
 			text="{_model.login.loginErrorMessage}"

@@ -39,8 +39,6 @@
 						}
 					break;
 					case 'AMFPHP_INEXISTANT_METHOD' :
-						_model.reset();
-						
 						if(!_alert)
 						{
 							_alert = Alert.show(	
@@ -56,14 +54,27 @@
 					break;
 					case 'Client.Error.MessageSend' :
 					case 'Client.Error.DeliveryInDoubt' :
-						_model.reset();
+					case 'Channel.Call.Failed':
 						
 						if(!_alert)
 						{
 							_alert =Alert.show(	
-								'Your ' + _model.appName + ' session is not authenticated, please login to continue!',
-								'Session authentication error', 
+								'Ooops, it seems like there was a problem sending your last request. Please make sure your internet connection is working correctly and try again.',	
+								'Sorry, your request could not be sent', 
 								0, 
+								null,
+								handleClose,
+								Icons.ALERT
+							);
+						}
+					break;
+					case 'Client.Error.RequestTimeout' :
+						if(!_alert)
+						{
+							_alert =Alert.show(	
+								'Unfortunately your request timed out. Please try to submit it again. Sorry for the inconvenience.',
+								'Request timeout',
+								0,
 								null,
 								handleClose,
 								Icons.ALERT

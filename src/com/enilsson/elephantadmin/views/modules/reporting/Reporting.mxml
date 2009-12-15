@@ -74,7 +74,6 @@
 			import com.enilsson.elephantadmin.vo.RecordsVO;
 			import org.osflash.thunderbolt.Logger;
 			import com.enilsson.elephantadmin.events.modules.ReportingEvent;
-			import com.enilsson.elephantadmin.events.session.PingEvent;
 			import mx.collections.ArrayCollection;
 			import com.enilsson.elephantadmin.interfaces.IReportModule;
 			import mx.modules.Module;

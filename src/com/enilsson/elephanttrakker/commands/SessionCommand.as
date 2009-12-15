@@ -13,6 +13,8 @@ package com.enilsson.elephanttrakker.commands
 	
 	import mx.controls.Alert;
 	import mx.rpc.IResponder;
+	import mx.rpc.events.FaultEvent;
+	import mx.rpc.events.ResultEvent;
 	import mx.utils.Base64Encoder;
 	import mx.utils.ObjectUtil;
 	
@@ -22,7 +24,6 @@ package com.enilsson.elephanttrakker.commands
 	{
 		private var _model:ETModelLocator = ETModelLocator.getInstance();
 		
-
 		/**
 		  * Execute() method required by the ICommand interface.
 		  * Allows events to be delegated to a command instance for processing
@@ -45,9 +46,6 @@ package com.enilsson.elephanttrakker.commands
 				break;
 				case SessionEvent.GET_SESSION_INFO :
 					getSessionInfo(event as SessionEvent);
-				break;
-				case SessionFailEvent.EVENT_SESSION_FAIL :
-					sessionFail(event as SessionFailEvent);
 				break;
 			}
 		}
@@ -107,11 +105,12 @@ package com.enilsson.elephanttrakker.commands
 			getDelegate(handlers).ping();
 		}	
 		
-		private function onResult_ping(data:Object):void
+		private function onResult_ping(event:ResultEvent):void
 		{
-			if(_model.debug) Logger.info('Ping Success', ObjectUtil.toString(data.result));
+			if(_model.debug) Logger.info('Ping Success', ObjectUtil.toString(event.result));
+			
 
-			if(parseInt(data.result) == 0 && _model.session)
+			if(parseInt(event.result.toString()) == 0 && _model.session)
 			{	
 				_model.reset();
 				
@@ -132,25 +131,12 @@ package com.enilsson.elephanttrakker.commands
 			this.nextEvent = null;
 		}
 		
-		private function onFault_ping(data:Object):void
+		private function onFault_ping(event:FaultEvent):void
 		{
-			if(_model.debug) Logger.info('Ping Fail', ObjectUtil.toString(data));
+			event.preventDefault();
+			event.stopImmediatePropagation();
 			
-			_model
-			
-			if(_model.session)
-			{
-				_model.reset();
-			
-				Alert.show(	
-					'Your ' + _model.appName + ' session has expired, please login to continue!',
-					'Session timeout', 
-					0, 
-					null,
-					null,
-					_model.icons.alert
-				);
-			}			
+			if(_model.debug) Logger.info('Ping Fail', ObjectUtil.toString(event.fault));
 		}
 		
 		
@@ -234,16 +220,5 @@ package com.enilsson.elephanttrakker.commands
 		{
 			if(_model.debug) Logger.info('getSessionInfo Failed');
 		}	
-
-
-
-		/**
-		 * Handler for the session fail event
-		 */
-		private function sessionFail(event:SessionFailEvent):void
-		{
-			//sessionFailHandler( event.faultCode );
-		}
-
 	}
 }

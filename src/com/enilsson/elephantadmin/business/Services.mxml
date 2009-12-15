@@ -5,6 +5,7 @@
 
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.elephantadmin.vo.ErrorVO;
 			import com.enilsson.elephantadmin.models.Icons;
 			import mx.events.CloseEvent;
 			import mx.utils.ObjectUtil;
@@ -18,24 +19,96 @@
 			
 			private function handleFault( event : FaultEvent ) : void 
 			{
-				if(_model.debug) Logger.info("handleFault", ObjectUtil.toString(event.fault));
+				if(_model.debug) Logger.info('Global Fault Handler', _model.session == null, ObjectUtil.toString(event.fault));
 				
-				if(	event.fault.faultCode == "Client.Error.MessageSend" ||
-					event.fault.faultCode == "Client.Error.DeliveryInDoubt"  )
+				switch ( event.fault.faultCode )
 				{
-					_model.reset(); 
+		 			case 'AMFPHP_AUTHENTICATE_ERROR' :
+		 				
+		 				if(_model.session)
+							_model.reset();
+						
+						if(event.fault.faultString.indexOf('You do not have permission to login to the admin.') == 0)
+						{
+							// if this is a login then show the login error box
+							if(_model.isLoggingIn)
+							{
+								if(_model.debug) Logger.info('User does NOT have sufficient rights');
+							
+								_model.login.loginProcessing = false;
+								_model.login.loginErrorMessage = 'You do not have sufficient permission to proceed!';
+								_model.login.loginFormState = 'ClearPassword';
+								_model.login.loginErrorVisible = true;
+								_model.login.loginErrorStyle = 'errorBox';
+							} 
+							// if it is page refresh then show the Alert box
+							else if(!_alert)
+							{
+								_alert = Alert.show(	
+									'You do not have sufficient permission to proceed with the ' + _model.appName + ' Admin Panel!',
+									'Insufficient system priveledges', 
+									0, 
+									null,
+									handleClose,
+									Icons.ALERT
+								);
+							}
+						}						
+						else if(!_alert)
+						{
+							_alert = Alert.show(	
+								'Your ' + _model.appName + ' session has expired, please login to continue!',
+								'Session timeout', 
+								0, 
+								null,
+								handleClose,
+								Icons.ALERT
+							);
+						}
+					break;
+					case 'AMFPHP_INEXISTANT_METHOD' :
+						if(!_alert)
+						{
+							_alert = Alert.show(	
+								'There has been an internal error with ' + _model.appName + ', please contact support!',
+								'Internal Error', 
+								0, 
+								null,
+								handleClose,
+								Icons.ALERT
+							);
+						}
 					
-					if(!_alert)
-					{
-						_alert = Alert.show(	
-							'Your ' + _model.appName + ' session is not authenticated, please login to continue!',
-							'Session authentication error', 
-							0, 
-							null,
-							handleClose,
-							Icons.ALERT
-						);
-					}
+					break;
+					case 'Client.Error.MessageSend' :
+					case 'Client.Error.DeliveryInDoubt' :
+					case 'Channel.Call.Failed':
+						
+						if(!_alert)
+						{
+							_alert =Alert.show(	
+								'Ooops, it seems like there was a problem sending your last request. Please make sure your internet connection is working correctly and try again.',	
+								'Sorry, your request could not be sent', 
+								0, 
+								null,
+								handleClose,
+								Icons.ALERT
+							);
+						}
+					break;
+					case 'Client.Error.RequestTimeout' :
+						if(!_alert)
+						{
+							_alert =Alert.show(	
+								'Unfortunately your request timed out. Please try to submit it again. Sorry for the inconvenience.',
+								'Request timeout',
+								0,
+								null,
+								handleClose,
+								Icons.ALERT
+							);
+						}
+					break;
 				}
 			}
 			

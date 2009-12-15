@@ -10,6 +10,7 @@ package com.enilsson.elephanttrakker.commands.modules
 	
 	import mx.collections.ArrayCollection;
 	import mx.rpc.IResponder;
+	import mx.rpc.events.FaultEvent;
 	import mx.utils.ObjectUtil;
 	
 	import org.osflash.thunderbolt.Logger;
@@ -233,9 +234,12 @@ package com.enilsson.elephanttrakker.commands.modules
 			_model.dataLoading = false;
 		}	
 		
-		private function onFault_getUnreadMessages(data:Object):void
+		private function onFault_getUnreadMessages(event:FaultEvent):void
 		{
-			if(_model.debug) Logger.info('Get Unread Messages Fault', ObjectUtil.toString(data.fault));	
+			event.preventDefault();
+			event.stopImmediatePropagation();
+			
+			if(_model.debug) Logger.info('Get Unread Messages Fault', ObjectUtil.toString(event.fault));	
 			
 			_model.dataLoading = false;			
 		}

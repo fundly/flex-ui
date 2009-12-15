@@ -20,7 +20,6 @@
 			import mx.utils.ObjectUtil;
 			import mx.collections.ArrayCollection;
 		
-			import com.enilsson.elephantadmin.events.session.PingEvent;
 			import com.enilsson.elephantadmin.models.EAModelLocator;
 			
 			import org.osflash.thunderbolt.Logger;

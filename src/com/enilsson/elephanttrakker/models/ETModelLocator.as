@@ -2,7 +2,7 @@ package com.enilsson.elephanttrakker.models
 {
 	import com.adobe.cairngorm.model.ModelLocator;
 	import com.asual.swfaddress.SWFAddress;
-	import com.enilsson.elephantadmin.utils.DispatchingTimer;
+	import com.enilsson.common.utils.DispatchingTimer;
 	import com.enilsson.elephanttrakker.events.GetVersionEvent;
 	import com.enilsson.elephanttrakker.events.session.PingEvent;
 	import com.enilsson.elephanttrakker.models.viewclasses.*;
@@ -87,11 +87,10 @@ package com.enilsson.elephanttrakker.models
 		public function set session( value : SessionVO ) : void
 		{
 			_session = value;
+			_pingTimer.stop();
 			
-			if(_session != null)
-				startPingTimer();
-			else
-				stopPingTimer();
+			if(_session != null) 
+				_pingTimer.start();
 		}
 		private var _session : SessionVO;
 		public function get session() : SessionVO { return _session; }
@@ -104,24 +103,12 @@ package com.enilsson.elephanttrakker.models
 		/**
 		 * Timer variables, both sys ping and version check
 		 */
-		private static const PING_DURATION : uint = 3;
-		private static var _pingTimer : DispatchingTimer = new DispatchingTimer(new PingEvent(), PING_DURATION * 1000 * 60);
+		private static const MINUTE : Number = 1000 * 60;
+		private static const DEFAULT_PING_DELAY : uint = 3 * MINUTE; // the duration between pings in minutes
+		private static var _pingTimer : DispatchingTimer = new DispatchingTimer( new PingEvent(), DEFAULT_PING_DELAY );
 		
-		private static const CHECK_UPDATE_DURATION : uint = 60; // the duration between update checks in seconds
-		private static var _checkForUpdateTimer : DispatchingTimer = new DispatchingTimer(new GetVersionEvent(), CHECK_UPDATE_DURATION * 1000 * 60);
-		
-		private function startPingTimer() : void 
-		{
-			if(_pingTimer.running)
-				_pingTimer.restart();
-			else
-				_pingTimer.start();
-		}		
-		private function stopPingTimer() : void 
-		{ 
-			if(_pingTimer.running)
-				_pingTimer.stop();	
-		}
+		private static const DEFAULT_CHECK_UPDATE_DELAY : uint = 60 * MINUTE; // the duration between update checks in minutes
+		private static var _checkForUpdateTimer : DispatchingTimer = new DispatchingTimer(new GetVersionEvent(), DEFAULT_CHECK_UPDATE_DELAY);
 
 
 		/**
@@ -318,7 +305,7 @@ package com.enilsson.elephanttrakker.models
 
 			// clear any residual gateway cookie
 			eNilssonUtils.clearCookie('gatewayURL');
-
+			
 			// reset some of the model variables
 			gatewayURL = null;
 			session = null;
