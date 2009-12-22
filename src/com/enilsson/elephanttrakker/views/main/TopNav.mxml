@@ -35,6 +35,7 @@
 					imgBtn.toolTip = item.name;
 					imgBtn.useHandCursor = true;
 					imgBtn.buttonMode = true;
+					imgBtn.tabEnabled = false;
 					imgBtn.x = i * Math.round(615/(linkCount-1)) + 25;
 					imgBtn.y = -50;
 					imgBtn.height = 40;
