@@ -24,7 +24,8 @@
 		<mx:Button id="newsBtn" 
 			styleName="bnMailTo" 
 			toolTip="Email this story to a friend"   
-			useHandCursor="true" buttonMode="true" 
+			useHandCursor="true" buttonMode="true"
+			tabEnabled="false"
 			visible="{!rssList.visible}"
 			/>
 		<mx:List id="rssList" styleName="rssFeed" 

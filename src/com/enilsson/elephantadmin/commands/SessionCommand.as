@@ -12,6 +12,8 @@ package com.enilsson.elephantadmin.commands
 	
 	import mx.controls.Alert;
 	import mx.rpc.IResponder;
+	import mx.rpc.events.FaultEvent;
+	import mx.rpc.events.ResultEvent;
 	import mx.utils.Base64Encoder;
 	import mx.utils.ObjectUtil;
 	
@@ -109,11 +111,11 @@ package com.enilsson.elephantadmin.commands
 			getDelegate(handlers).ping();
 		}
 		
-		private function onResult_ping(data:Object):void
+		private function onResult_ping(event:ResultEvent):void
 		{
-			if(_model.debug) Logger.info('Ping Success', ObjectUtil.toString(data.result));
-
-			if(parseInt(data.result) == 0 && _model.session)
+			if(_model.debug) Logger.info('Ping Success', ObjectUtil.toString(event.result));
+			
+			if(parseInt(event.result.toString()) == 0 && _model.session)
 			{	
 				_model.reset();
 				
@@ -128,23 +130,11 @@ package com.enilsson.elephantadmin.commands
 			}			
 		}
 
-		private function onFault_ping(data:Object):void
-		{
-			if(_model.debug) Logger.info('Ping Fail', ObjectUtil.toString(data));
-				
-			if(_model.session)
-			{
-				_model.reset();
+		private function onFault_ping(event:FaultEvent):void {
+			event.preventDefault();
+			event.stopImmediatePropagation();
 			
-				Alert.show(	
-					'Your ' + _model.appName + ' session has expired, please login to continue!',
-					'Session timeout', 
-					0, 
-					null,
-					null,
-					Icons.ALERT
-				);
-			}
+			if(_model.debug) Logger.info('Ping Fail', ObjectUtil.toString(event));
 		}
 				
 				
@@ -244,8 +234,7 @@ package com.enilsson.elephantadmin.commands
 		}
 		private function onResult_sessionWheel(data:Object):void
 		{
-			//if(_model.debug) 
-			Logger.info('sessionWheel Success', ObjectUtil.toString(data.result));
+			if(_model.debug) Logger.info('sessionWheel Success', ObjectUtil.toString(data.result));
 			
 			var base64encode:Base64Encoder = new Base64Encoder();
 			base64encode.encode(_model.gatewayURL);
@@ -254,8 +243,7 @@ package com.enilsson.elephantadmin.commands
 		}
 		private function onFault_sessionWheel(data:Object):void
 		{
-			//if(_model.debug)
-			Logger.info('sessionWheel Fail', ObjectUtil.toString(data.fault));
+			if(_model.debug) Logger.info('sessionWheel Fail', ObjectUtil.toString(data.fault));
 
 			Alert.show('There was a problem launching this proxy login', 'Login error');
 		}	

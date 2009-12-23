@@ -264,7 +264,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.dailyincome.model
 		private function generateFault(event:FaultEvent):void
 		{
 			dataLoading = false;
-			Alert.show("Internet connection error please try again soon (" + event.fault + ")", "Error", 0, Application.application.root, function():void {	return;	});
+			Alert.show("There was an error while trying to complete your request, please try again soon.", "Error", 0, Application.application.root, function():void {	return;	});
 		}
 					
 		override public function newPage(event:Event):void

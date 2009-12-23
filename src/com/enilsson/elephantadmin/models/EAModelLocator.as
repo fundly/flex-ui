@@ -2,10 +2,10 @@ package com.enilsson.elephantadmin.models
 {
 	import com.adobe.cairngorm.model.ModelLocator;
 	import com.asual.swfaddress.SWFAddress;
+	import com.enilsson.common.utils.DispatchingTimer;
 	import com.enilsson.elephantadmin.events.GetVersionEvent;
 	import com.enilsson.elephantadmin.events.session.PingEvent;
 	import com.enilsson.elephantadmin.models.viewclasses.*;
-	import com.enilsson.elephantadmin.utils.DispatchingTimer;
 	import com.enilsson.elephantadmin.views.modules.app_options.model.AppOptionsModel;
 	import com.enilsson.elephantadmin.views.modules.pledge_workspace.model.PledgeWorkspaceVO;
 	import com.enilsson.elephantadmin.vo.*;
@@ -77,7 +77,7 @@ package com.enilsson.elephantadmin.models
 		[Bindable] public var appLogo : String;
 		
 		// urls to define the gateway and the path the S3 bucket
-		[Bindable] public var gatewayURL : String = null;
+		[Bindable] public var gatewayURL : String = '';
 		[Bindable] public var gatewayBaseURL : String = '';
 		[Bindable] public var s3URL : String = 'https://trakker.s3.amazonaws.com/';
 		
@@ -88,13 +88,10 @@ package com.enilsson.elephantadmin.models
 		public function set session( value : SessionVO ) : void
 		{
 			_session = value;
+			_pingTimer.stop();
 			
-			if(_session != null) {
-				startPingTimer();
-			}
-			else {
-				stopPingTimer();
-			}
+			if(_session != null)
+				_pingTimer.start();
 		}
 		public function get session() : SessionVO
 		{
@@ -110,27 +107,17 @@ package com.enilsson.elephantadmin.models
 		
 		[Bindable] public var supportDescription:String = '';
 		
+		
 		/**
-		 * Timer variables
+		 * Timer variables, both sys ping and version check
 		 */
-		private static const PING_DURATION : uint = 3;
-		private static var _pingTimer : DispatchingTimer = new DispatchingTimer(new PingEvent(), PING_DURATION * 1000 * 60);
+		private static const MINUTE : Number = 1000 * 60;
 		
-		private static const CHECK_UPDATE_DURATION : uint = 60; // the duration between update checks in seconds
-		private static var _checkForUpdateTimer : DispatchingTimer = new DispatchingTimer(new GetVersionEvent(), CHECK_UPDATE_DURATION * 1000 * 60);
+		private static const DEFAULT_PING_DELAY : Number = 3 * MINUTE; // the duration between pings in minutes
+		private static var _pingTimer : DispatchingTimer = new DispatchingTimer( new PingEvent(), DEFAULT_PING_DELAY );
 		
-		private function startPingTimer() : void 
-		{
-			if(_pingTimer.running)
-				_pingTimer.restart();
-			else
-				_pingTimer.start();
-		}		
-		private function stopPingTimer() : void 
-		{
-			if(_pingTimer.running)
-				_pingTimer.stop();
-		}
+		private static const DEFAULT_CHECK_UPDATE_DELAY : uint = 60 * MINUTE; // the duration between update checks in minutes
+		private static var _checkForUpdateTimer : DispatchingTimer = new DispatchingTimer(new GetVersionEvent(), DEFAULT_CHECK_UPDATE_DELAY );
 		
 		
 		/**
@@ -397,15 +384,15 @@ package com.enilsson.elephantadmin.models
 		public function reset() : void
 		{
 			runInit = false;
-			
+
 			// set the main screen back to the login
 			screenState = LOGIN_SCREEN;
 			mainScreenVisible = true;
 			mainViewState = NO_VIEW;
 			
 			// reset some of the model variables
+			gatewayURL = gatewayBaseURL;
 			session = null;
-			gatewayURL = null;
 			siteLayoutLoaded = false;
 			dataLoading = false;
 			
@@ -437,12 +424,6 @@ package com.enilsson.elephantadmin.models
 			// change the browser info to the login screen
 			SWFAddress.setValue('login');
 			SWFAddress.setTitle(appName + ' - Login');
-			
-			// remove any moduleFWD references from the LSO
-			eNilssonUtils.flashCookie('module_fwd');
-			
-			// remove the gatewayUrl from the LSO
-			eNilssonUtils.clearCookie('gatewayURL');
 		}
 	}
 }

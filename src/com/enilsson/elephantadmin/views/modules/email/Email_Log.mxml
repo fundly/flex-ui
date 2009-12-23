@@ -16,7 +16,6 @@
 			import mx.collections.ArrayCollection;
 			import com.enilsson.graphics.enDropShadows;
 
-			import com.enilsson.elephantadmin.events.session.PingEvent;
 			import com.enilsson.elephantadmin.models.EAModelLocator;
 			import com.enilsson.elephantadmin.events.modules.EmailEvent;
 			import com.enilsson.elephantadmin.vo.RecordsVO;

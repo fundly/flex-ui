@@ -135,6 +135,7 @@
 		rowCount="{_model.userInfoLayout.length}"
 		itemClick="userLinksClickHandler(event)" 
 		useHandCursor="true" buttonMode="true"
+		tabEnabled="false"
 		labelField="name" 
 		iconFunction="listIconFn" />
 	<common:AlertCircle	

@@ -8,7 +8,6 @@ package com.enilsson.elephantadmin.commands.modules
 	import com.enilsson.elephantadmin.business.RecordsDelegate;
 	import com.enilsson.elephantadmin.business.SearchDelegate;
 	import com.enilsson.elephantadmin.events.modules.ChecksEvent;
-	import com.enilsson.elephantadmin.events.session.SessionFailEvent;
 	import com.enilsson.elephantadmin.models.EAModelLocator;
 	import com.enilsson.elephantadmin.vo.BatchRecordVO;
 	import com.enilsson.elephantadmin.vo.ErrorVO;
@@ -249,11 +248,6 @@ package com.enilsson.elephantadmin.commands.modules
 			
 			// hide the processing indicator
 			_model[_moduleName].formProcessing = false;
-			
-			// run the session fail event
-			this.nextEvent = new SessionFailEvent( event.faultCode );
-			this.executeNextCommand();
-			this.nextEvent = null;
 		}	
 
 
@@ -307,11 +301,6 @@ package com.enilsson.elephantadmin.commands.modules
 			
 			// hide the processing indicator
 			_model[_moduleName].formProcessing = false;
-			
-			// run the session fail event
-			this.nextEvent = new SessionFailEvent( event.fault.faultCode );
-			this.executeNextCommand();
-			this.nextEvent = null;
 		}	
 
 
@@ -374,12 +363,6 @@ package com.enilsson.elephantadmin.commands.modules
 								'errorBox', 
 								true 
 							);
-				break;
-				default:
-					// run the session fail event
-					this.nextEvent = new SessionFailEvent( event.fault.faultCode );
-					this.executeNextCommand();
-					this.nextEvent = null;
 				break;
 			}
 		}

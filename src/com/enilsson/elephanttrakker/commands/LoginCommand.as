@@ -10,6 +10,7 @@ package com.enilsson.elephanttrakker.commands
 	import flash.utils.ByteArray;
 	
 	import mx.rpc.IResponder;
+	import mx.rpc.events.FaultEvent;
 	import mx.utils.Base64Decoder;
 	import mx.utils.ObjectUtil;
 	
@@ -143,8 +144,11 @@ package com.enilsson.elephanttrakker.commands
 			}			
 		}
 		
-		public function onFault_login(event:Object):void
+		public function onFault_login(event:FaultEvent):void
 		{
+			event.preventDefault();
+			event.stopImmediatePropagation();
+			
 			if(_model.debug) Logger.info('Fault Login Event', ObjectUtil.toString(event));
 			
 			_model.login.ieDebug += '<br>--Fail login--<br>';
@@ -189,8 +193,11 @@ package com.enilsson.elephanttrakker.commands
 			}	
 		}
 		
-		public function onFault_forgot(event:Object):void
+		public function onFault_forgot(event:FaultEvent):void
 		{
+			event.preventDefault();
+			event.stopImmediatePropagation();
+			
 			//if(_model.debug) 
 			Logger.info('Forget details Event', ObjectUtil.toString(event));
 			

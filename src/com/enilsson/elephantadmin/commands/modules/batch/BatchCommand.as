@@ -398,8 +398,6 @@ package com.enilsson.elephantadmin.commands.modules.batch
 			
 			mainModel.dataLoading = false;
 			mainModel.batch.newBatchSaving = false;
-
-			Alert.show(event.fault.faultString, event.fault.faultCode );
 		}
 
 		/**
@@ -471,9 +469,6 @@ package com.enilsson.elephantadmin.commands.modules.batch
 
 			mainModel.batch.batchListLoading = false;
 			mainModel.dataLoading = false;
-			
-			Alert.show(event.fault.faultString, event.fault.faultCode );
 		}
-
 	}
 }

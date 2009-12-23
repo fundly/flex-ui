@@ -116,7 +116,6 @@
 			import com.enilsson.elephantadmin.vo.RecordsVO;
 			import com.enilsson.elephantadmin.vo.RecordVO;
 			import com.enilsson.elephantadmin.events.modules.BrowseEvent;
-			import com.enilsson.elephantadmin.events.session.PingEvent;
 			import org.osflash.thunderbolt.Logger;
 			import com.enilsson.elephantadmin.models.EAModelLocator;
 			

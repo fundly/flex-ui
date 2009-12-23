@@ -21,7 +21,6 @@
 			import com.enilsson.elephantadmin.vo.RecordsVO;
 			import com.enilsson.elephantadmin.vo.SearchVO;
 			import com.enilsson.elephantadmin.events.modules.ResourcesEvent;
-			import com.enilsson.elephantadmin.events.session.PingEvent;
 			import mx.collections.ArrayCollection;
 			import com.enilsson.elephantadmin.models.EAModelLocator;
 			import com.enilsson.graphics.enDropShadows;

@@ -13,7 +13,6 @@
 			import com.enilsson.elephantadmin.events.modules.RecordEvent;
 			import mx.events.CloseEvent;
 			import mx.controls.Alert;
-			import com.enilsson.elephantadmin.events.session.PingEvent;
 			import org.osflash.thunderbolt.Logger;
 			import com.enilsson.elephantadmin.models.EAModelLocator;
 			import com.enilsson.graphics.enDropShadows;

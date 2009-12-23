@@ -96,35 +96,10 @@
 
 	<mx:Script>
 		<![CDATA[
-			import com.enilsson.elephanttrakker.views.modules.pledge_workspace.model.PledgeWorkspaceModel;
-			import com.enilsson.elephanttrakker.events.GetVersionEvent;
-			import mx.utils.ObjectUtil;
-			import com.enilsson.elephanttrakker.events.session.SessionEvent;
 			import com.enilsson.elephanttrakker.events.main.ViewStateEvent;
-			import com.enilsson.elephanttrakker.events.session.PingEvent;
-			import com.enilsson.elephanttrakker.events.session.SessionCheckEvent;
-			import com.enilsson.elephanttrakker.events.InitMainEvent;
 			import com.enilsson.elephanttrakker.models.ETModelLocator;
 			
-			import org.osflash.thunderbolt.Logger;			
-			
 			[Bindable] private var _model:ETModelLocator = ETModelLocator.getInstance();
-			
-			/**
-			 * Handler to check the session
-			 */
-			private function pingServer(e:TimerEvent):void 
-			{
-				new PingEvent().dispatch();
-			}
-			
-			/**
-			 * Handler to check for version
-			 */
-			private function checkVersion(e:TimerEvent) : void 
-			{
-				new GetVersionEvent().dispatch();	
-			}
 		]]>
 	</mx:Script>	
 

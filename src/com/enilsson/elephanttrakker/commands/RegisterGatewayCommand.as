@@ -10,6 +10,7 @@ package com.enilsson.elephanttrakker.commands
 	import com.enilsson.utils.eNilssonUtils;
 	
 	import mx.rpc.IResponder;
+	import mx.rpc.events.FaultEvent;
 	import mx.utils.ObjectUtil;
 	
 	import org.osflash.thunderbolt.Logger;
@@ -44,6 +45,12 @@ package com.enilsson.elephanttrakker.commands
 		
 		public function fault(event:Object):void
 		{
+			var e : FaultEvent = event as FaultEvent;
+			if(e) {	
+				e.preventDefault();
+				e.stopImmediatePropagation();
+			}
+			
 			if(_model.debug) Logger.info('Fault Random Gateway Event', ObjectUtil.toString(event));
 			
 			_model.login.ieDebug = ObjectUtil.toString(event);
