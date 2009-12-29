@@ -149,6 +149,11 @@
 						break;
 				}
 			}
+			
+			public function reset() : void {
+				if(presentationModel) 
+					presentationModel.reset();
+			}
 
 
 			private function initialiseHandler():void

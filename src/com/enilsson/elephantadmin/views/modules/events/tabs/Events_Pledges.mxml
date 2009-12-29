@@ -161,8 +161,6 @@
 				popup.addEventListener(Event.CLOSE, function (event:Event):void
 				{
 					PopUpManager.removePopUp(PWPopupContainer(event.currentTarget));
-					// refresh the check list to display new check if any
-				//	_presentationModel.getPledges();
 				});
 			}
 

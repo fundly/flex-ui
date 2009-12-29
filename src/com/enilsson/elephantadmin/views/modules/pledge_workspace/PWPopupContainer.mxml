@@ -6,7 +6,8 @@
 	xmlns:ns="com.enilsson.elephantadmin.views.modules.pledge_workspace.*"
 	xmlns:graphics="com.enilsson.graphics.*" 
 	xmlns:common="com.enilsson.elephantadmin.views.common.*"
-	width="674" height="410">
+	width="674" height="410"
+	remove="handleRemove()">
 	<mx:Canvas left="0" top="10" 
 		styleName="popupContent" 
 		verticalScrollPolicy="off" horizontalScrollPolicy="off"
@@ -44,7 +45,11 @@
 		
 			private function closeComponent():void
 			{
-				dispatchEvent(new Event(Event.CLOSE));
+				dispatchEvent(new Event(Event.CLOSE));				
+			}
+			
+			private function handleRemove() : void { 
+				pws.reset();
 			}
 
 		]]>

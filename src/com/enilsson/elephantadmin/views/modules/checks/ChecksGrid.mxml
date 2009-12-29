@@ -107,6 +107,8 @@
 
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.elephantadmin.views.modules.pledge_workspace.model.PledgeWorkspaceModel;
+			import com.enilsson.elephantadmin.views.modules.pledge_workspace.model.PledgeWorkspaceVO;
 			import com.enilsson.elephantadmin.views.modules.pledge_workspace.PWPopupContainer;
 			import mx.messaging.AbstractConsumer;
 			import mx.controls.Alert;
@@ -426,6 +428,12 @@
 			public function popupPledgeWorkspace():void
 			{
 				var popup:PWPopupContainer = new PWPopupContainer();
+				
+				// set workspace variables
+				var vo:PledgeWorkspaceVO = new PledgeWorkspaceVO();
+				vo.action = PledgeWorkspaceModel.ADD_NEW;
+				EAModelLocator.getInstance().pledgeWorkspace = vo;
+				
 				PopUpManager.addPopUp(popup, DisplayObject(Application.application), true);
 				popup.addEventListener(Event.CLOSE, function (event:Event):void
 				{

@@ -9,7 +9,6 @@ package com.enilsson.elephantadmin.models
 	import com.enilsson.elephantadmin.views.modules.app_options.model.AppOptionsModel;
 	import com.enilsson.elephantadmin.views.modules.pledge_workspace.model.PledgeWorkspaceVO;
 	import com.enilsson.elephantadmin.vo.*;
-	import com.enilsson.utils.eNilssonUtils;
 	
 	import flash.display.DisplayObject;
 	import flash.utils.ByteArray;
@@ -412,6 +411,7 @@ package com.enilsson.elephantadmin.models
 			transactions = new TransactionsViewClass();
 			transactions_failed = new TransactionsFailedViewClass();
 			batch = new BatchViewClass();
+			pledgeWorkspace = new PledgeWorkspaceVO();
 
 			// email submodules
 			email_log = new EmailLogViewClass();
