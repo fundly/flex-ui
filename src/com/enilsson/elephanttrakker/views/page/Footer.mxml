@@ -10,7 +10,8 @@
 		styleName="siteLinks" 
 		itemClick="siteLinksNav(event)"
 		show="setListLinks()" 
-		visible="{_model.screenState == ETModelLocator.MAIN_SCREEN &amp;&amp; _model.siteLayoutLoaded}" />
+		visible="{_model.screenState == ETModelLocator.MAIN_SCREEN &amp;&amp; _model.siteLayoutLoaded}" 
+		childAdd="InteractiveObject(event.relatedObject).tabEnabled = false" />
 	<mx:Label id="versionLabel" styleName="versionLabel"
 		visible="{_model.revision != ''}" text="{versionText()}" />
    	<mx:Text text="©" styleName="copyRightSymbol" />

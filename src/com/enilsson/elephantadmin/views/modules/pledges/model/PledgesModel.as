@@ -7,6 +7,7 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 	import com.enilsson.elephantadmin.models.EAModelLocator;
 	import com.enilsson.elephantadmin.views.manage_record_base.model.RecordModel;
 	import com.enilsson.elephantadmin.views.modules.pledge_workspace.PWPopupContainer;
+	import com.enilsson.elephantadmin.views.modules.pledge_workspace.model.PledgeWorkspaceModel;
 	import com.enilsson.elephantadmin.views.modules.pledge_workspace.model.PledgeWorkspaceVO;
 	import com.enilsson.elephantadmin.views.modules.pledges.popups.Pledges_AddRefund;
 	import com.enilsson.elephantadmin.views.modules.pledges.renderers.FID_Item;
@@ -57,7 +58,7 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 
 			// set workspace variables
 			var vo:PledgeWorkspaceVO = new PledgeWorkspaceVO();
-			vo.action = 'pledgeworkspace_addnew';
+			vo.action = PledgeWorkspaceModel.ADD_NEW;
 			EAModelLocator.getInstance().pledgeWorkspace = vo;
 			
 			PopUpManager.addPopUp(popup, DisplayObject(Application.application), true);
