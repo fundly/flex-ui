@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:List xmlns:mx="http://www.adobe.com/2006/mxml" 
+	paddingRight="10" paddingLeft="10"
+	borderStyle="none" 
+	useRollOver="false"
+	rowHeight="45"
+	selectionColor="0xffffff">
+	<mx:itemRenderer>
+		<mx:Component>
+			<controls:FundraiserStatisticsRenderer paddingTop="5" paddingBottom="5"
+			 	xmlns:controls="com.enilsson.elephanttrakker.modules.compgraphs.views.topfundraisers.controls.*"/>	
+		</mx:Component>		
+	</mx:itemRenderer>
+</mx:List>
