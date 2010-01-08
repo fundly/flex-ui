@@ -3,41 +3,55 @@
 	xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:views="com.enilsson.elephanttrakker.views.*"
 	xmlns:page="com.enilsson.elephanttrakker.views.page.*" 
-	preinitialize="init()" 
+	initialize="init()"
 	preloader="assets.preloader.BlueSwarmPreloader"
 	layout="absolute" 
-	horizontalScrollPolicy="off">
+	horizontalScrollPolicy="off"
+	currentState="{_model.screenState == 0 ? 'login' : 'main'}">
 
 	<control:ETcontroller xmlns:control="com.enilsson.elephanttrakker.controllers.*" />
 	<business:Services id="services" xmlns:business="com.enilsson.elephanttrakker.business.*" />
 	
+	
 	<page:Masthead width="100%" height="92" />
-	<mx:ViewStack id="mainContainer"
+		
+	<mx:Canvas id="mainContainer" 
 		styleName="contentContainer" 
-		selectedIndex="{_model.screenState}" 
 		visible="{_model.mainScreenVisible}"
 		width="100%" height="475" 
-		horizontalCenter="0" top="90">
-		<views:Login id="loginScreen"
-			width="100%" height="100%" 
-			showEffect="fadeIn" hideEffect="fadeOut" />
-		<views:Main id="mainScreen" 
-			styleName="mainContainer"
-			width="100%" height="100%"
-			showEffect="fadeIn" hideEffect="fadeOut" />				
-	</mx:ViewStack>
+		horizontalCenter="0" top="90" />
+	
 	<page:Footer id="footer" styleName="footer" width="100%" horizontalCenter="0" top="565" />
+	
+	<mx:Fade id="fadeIn" alphaFrom="0" alphaTo="1" duration="2000" />
+	<mx:Fade id="fadeOut" alphaFrom="1" alphaTo="0" duration="2000" />
 
-	<mx:Fade id="fadeOut" alphaFrom="1" alphaTo="0" duration="500" />
-	<mx:Fade id="fadeIn" alphaFrom="0" alphaTo="1" duration="500" />
 
 	<mx:Style source="/assets/css/et_styles.css" />
 	<mx:Style source="/assets/skins/flex_skins.css" />
 	<mx:Style source="/assets/css/modules/overview.css" />
 	<mx:Style source="/assets/css/modules/my_contacts.css" />
 	<mx:Style source="/assets/css/modules/pledge_workspace.css" />
-	<mx:Style source="/assets/css/modules/first_login.css" />		
-	 
+	<mx:Style source="/assets/css/modules/first_login.css" />
+
+	<mx:states>
+		<mx:State name="login">
+			<mx:AddChild relativeTo="{mainContainer}">
+				<views:Login id="loginScreen"
+					width="100%" height="100%"
+					addedEffect="{fadeIn}" removedEffect="{fadeOut}" />
+			</mx:AddChild>
+		</mx:State>
+		<mx:State name="main">
+			<mx:AddChild relativeTo="{mainContainer}">
+				<views:Main id="mainScreen" 
+					styleName="mainContainer"
+					width="100%" height="100%"
+					addedEffect="{fadeIn}" removedEffect="{fadeOut}" />
+			</mx:AddChild>
+		</mx:State>
+	</mx:states>
+	
 	<mx:Script>
 		<![CDATA[
 			import com.enilsson.elephanttrakker.events.GetVersionEvent;
@@ -45,23 +59,36 @@
 			import com.enilsson.elephanttrakker.events.InitAppEvent;
 			import com.enilsson.elephanttrakker.models.ETModelLocator;
 
-			import mx.controls.Alert;			
-			
-			public var al:Alert;
 			
 			[Bindable] public var _model:ETModelLocator = ETModelLocator.getInstance();
+			
+			
+			// embedding the fonts here instead of specifying them inside the CSS. Otherwise the embedded fonts won't work on the charts
+			// when using RSLs
+			[Embed(source='assets/fonts/Lucida_Grande.ttf', fontFamily='appFont', advancedAntiAliasing='true', unicodeRange='U+0021-U+007F')]
+			private var font1 : Class;
+			[Embed(source='assets/fonts/Lucida_Grande_Bold.ttf', fontFamily='appFont', fontWeight='bold', advancedAntiAliasing='true', unicodeRange='U+0021-U+007F')]
+			private var font2 : Class;
+			[Embed(source='assets/fonts/slkscr.ttf', fontFamily='silkScreen', advancedAntiAliasing='true', unicodeRange='U+0021-U+007F')]
+			private var font3 : Class;
+			
 			
 			private function init():void
 			{
 				// some debugging
 				if(_model.debug) Logger.info('Pre Init - Main App');
 				
+				Font.registerFont(font1);
+				Font.registerFont(font2);
+				Font.registerFont(font3);	
+				
 				// fire the first event.... oooh exciting!
 				new InitAppEvent().dispatch();	
 						
 				// set this screen as a model variable
-				_model.mainScreen = this;							
+				_model.mainScreen = this;
 			}
+			
 		]]>
 	</mx:Script>
 	
