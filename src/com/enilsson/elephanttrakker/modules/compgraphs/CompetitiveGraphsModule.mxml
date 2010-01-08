@@ -11,22 +11,6 @@
 		]]>
 	</mx:Script>
 	
-	<!--<mx:Style>
-		@font-face {
-		    src: url("/assets/fonts/Lucida_Grande.ttf");
-		    fontFamily: moduleFont;
-		    advancedAntiAliasing: true;
-		    unicode-range:U+0021-U+007F;
-		}
-		@font-face {
-		    src: url("/assets/fonts/Lucida_Grande_Bold.ttf");
-		    fontFamily: moduleFont;
-		    fontWeight: bold;
-		    advancedAntiAliasing: true;
-		    unicode-range:U+0021-U+007F;
-		}
-	</mx:Style>-->
-	
 	<business:Services id="services" 
 		instanceId="{instanceId}" 
 		gatewayUrl="{gatewayUrl}"
