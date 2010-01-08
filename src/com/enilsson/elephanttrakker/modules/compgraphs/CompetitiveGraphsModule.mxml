@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" layout="horizontal"
+	xmlns:events="com.enilsson.common.events.*">
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephanttrakker.modules.compgraphs.events.Events;
+			import com.enilsson.elephanttrakker.modules.compgraphs.business.DelegateFactory;
+			
+			[Bindable] public var instanceId : int;
+			[Bindable] public var gatewayUrl : String;
+		]]>
+	</mx:Script>
+	
+	<!--<mx:Style>
+		@font-face {
+		    src: url("/assets/fonts/Lucida_Grande.ttf");
+		    fontFamily: moduleFont;
+		    advancedAntiAliasing: true;
+		    unicode-range:U+0021-U+007F;
+		}
+		@font-face {
+		    src: url("/assets/fonts/Lucida_Grande_Bold.ttf");
+		    fontFamily: moduleFont;
+		    fontWeight: bold;
+		    advancedAntiAliasing: true;
+		    unicode-range:U+0021-U+007F;
+		}
+	</mx:Style>-->
+	
+	<business:Services id="services" 
+		instanceId="{instanceId}" 
+		gatewayUrl="{gatewayUrl}"
+		xmlns:business="com.enilsson.elephanttrakker.modules.compgraphs.business.*" />
+	
+	<controllers:CompGraphsController id="controller" 
+		delegate="{ DelegateFactory.create( DelegateFactory.COMPGRAPH, services ) }" 
+		xmlns:controllers="com.enilsson.elephanttrakker.modules.compgraphs.controllers.*" />
+	
+	<mx:Array id="mappings">
+		<events:EventMapping type="{Events.GET_FUNDRAISER_STATS}" handler="{controller.getFundraiserStats}" />
+		<events:EventMapping type="{Events.GET_GROUP_STATS}" handler="{controller.getGroupStats}" />
+	</mx:Array>
+
+	<events:EventMap dispatcher="{this}" mappings="{mappings}" /> 
+	
+	<views:MainView width="100%" height="100%"
+		xmlns:views="com.enilsson.elephanttrakker.modules.compgraphs.views.*"/>
+			
+</mx:Module>

@@ -3,7 +3,8 @@
 	xmlns:mx="http://www.adobe.com/2006/mxml"
 	show="init()"
 	verticalScrollPolicy="off" horizontalScrollPolicy="off"
-	xmlns:ns="com.enilsson.elephanttrakker.views.modules.my_history.*" xmlns:common="com.enilsson.elephanttrakker.views.common.*">
+	xmlns:myhistory="com.enilsson.elephanttrakker.views.modules.my_history.*" 
+	xmlns:common="com.enilsson.elephanttrakker.views.common.*">
 
 
 	<mx:Image source="{_model.icons.myHistory}" top="0" right="-3" />
@@ -22,16 +23,21 @@
 		selectedIndex="{_model.my_history.vStackViewState}"
 		width="634" height="292" 
 		top="30" left="0">
-		<ns:MyHistory_QuikStats id="quickstats" label="Quick Stats" 
+		
+		<compgraphs:CompetitiveGraphsModule id="compGraphs" label="Graphs" 
+			width="100%" height="100%" 
+			instanceId="{_model.appInstanceID}" gatewayUrl="{_model.gatewayURL}"
+			xmlns:compgraphs="com.enilsson.elephanttrakker.modules.compgraphs.*" />
+		<myhistory:MyHistory_Pledges id="pledges" label="Pledges"
 			showEffect="moveLeftShow" hideEffect="moveRightHide" />		
-		<ns:MyHistory_Pledges id="pledges" label="Pledges"
-			showEffect="moveLeftShow" hideEffect="moveRightHide" />		
-		<ns:MyHistory_Contribs id="contribs" label="Contributions" 
+		<myhistory:MyHistory_Contribs id="contribs" label="Contributions" 
 			showEffect="moveLeftShow" hideEffect="moveRightHide" />
-		<ns:MyHistory_SavedCalls id="savedcalls" label="Saved Pledges" 
+		<myhistory:MyHistory_SavedCalls id="savedcalls" label="Saved Pledges" 
 			showEffect="moveLeftShow" hideEffect="moveRightHide" />
-		<ns:MyHistory_Export id="export" label="Export" 
+		<myhistory:MyHistory_Export id="export" label="Export" 
 			showEffect="moveLeftShow" hideEffect="moveRightHide" />
+		<myhistory:MyHistory_QuikStats id="quickstats" label="Quick Stats" 
+			showEffect="moveLeftShow" hideEffect="moveRightHide" />			
 	</mx:ViewStack>
 
 	<common:ErrorMsgBox id="callLoggingErrorBox"
