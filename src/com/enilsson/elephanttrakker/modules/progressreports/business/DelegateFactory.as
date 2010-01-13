@@ -14,7 +14,7 @@ package com.enilsson.elephanttrakker.modules.progressreports.business
 					d = new ProgressReportsDelegate( services.progressReportsService );
 				break;
 				case PROGRESS_REPORT_MOCK:
-					d = new ProgressReportsMockDelegate();
+//					d = new ProgressReportsMockDelegate();
 				break;
 			}
 			

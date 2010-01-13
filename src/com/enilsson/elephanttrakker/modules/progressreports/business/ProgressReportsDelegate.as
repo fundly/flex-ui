@@ -8,8 +8,16 @@ package com.enilsson.elephanttrakker.modules.progressreports.business
 			_service = service;
 		}
 			
-		public function getFundraiserStats() : AsyncToken {
-			return _service.fundraiser_competition();
+		public function getTopFundraisers() : AsyncToken {
+			return _service.top_fundraisers();
+		}
+		
+		public function getTopFundraisersByDownlineContributions() : AsyncToken {
+			return _service.top_fundraisers_downline_contributions();
+		}
+		
+		public function getTopFundraisersByDownlineUsers() : AsyncToken {
+			return _service.top_fundraisers_downline_users();
 		}
 		
 		public function getGroupStats() : AsyncToken {
@@ -17,6 +25,5 @@ package com.enilsson.elephanttrakker.modules.progressreports.business
 		}
 		
 		private var _service : Object;
-		
 	}
 }

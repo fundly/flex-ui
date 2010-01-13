@@ -6,18 +6,18 @@
 	<mx:FormItem 
 		label="Show Top 25 fundraisers by"
 		horizontalGap="-10" 
-		fontWeight="bold" fontSize="10" 
+		fontSize="11"
 		paddingLeft="10" paddingTop="10" paddingBottom="7">
 		<mx:ComboBox 
 			dataProvider="{TopFundraisersPm.OPTIONS}"
 			change="_pm.handleOptionChange(event)" 
-			fontSize="10" />
+			fontSize="11" />
 	</mx:FormItem>
 	
 	<mx:HRule width="100%" />
 
 	<controls:TopFundraiserList
-		width="100%" height="100%" 
+		width="100%" height="100%"
 		dataProvider="{_pm.fundraisersWithIcons}" />
 	
 	<mx:Script>

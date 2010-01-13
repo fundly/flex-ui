@@ -5,7 +5,7 @@
 	rowHeight="60"
 	selectionColor="0xffffff"
 	itemsChangeEffect="{listEffect}"
-	itemRenderer="com.enilsson.elephanttrakker.modules.progressreports.topfundraisers.controls.FundraiserStatisticsRenderer">
+	itemRenderer="com.enilsson.elephanttrakker.modules.progressreports.topfundraisers.controls.FundraiserStatsRenderer">
 
 	<mx:DefaultListEffect id="listEffect" 
 		suspendBackgroundProcessing="true"  

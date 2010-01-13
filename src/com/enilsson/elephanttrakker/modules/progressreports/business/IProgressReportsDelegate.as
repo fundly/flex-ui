@@ -4,7 +4,10 @@ package com.enilsson.elephanttrakker.modules.progressreports.business
 	
 	public interface IProgressReportsDelegate
 	{
-		function getFundraiserStats() : AsyncToken;
+		function getTopFundraisers() : AsyncToken;
+		function getTopFundraisersByDownlineContributions() : AsyncToken;
+		function getTopFundraisersByDownlineUsers() : AsyncToken;
+		
 		function getGroupStats() : AsyncToken;
 	}
 }

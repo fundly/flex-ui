@@ -6,46 +6,50 @@ package com.enilsson.elephanttrakker.modules.progressreports.controllers
 	import com.enilsson.common.utils.GenericResponder;
 	import com.enilsson.elephanttrakker.modules.progressreports.business.IProgressReportsDelegate;
 	
-	import flash.events.Event;
-	
 	import mx.rpc.AsyncToken;
 	import mx.rpc.events.FaultEvent;
 	import mx.rpc.events.ResultEvent;
 	
 	public class ProgressReportsController
 	{
-		public function getFundraiserStats( event : Event ) : void {
-			if( _delegate == null || event == null ) return;
-
-			var t : AsyncToken = _delegate.getFundraiserStats();
-			t.addResponder( new GenericResponder( handleGetFundraiserStatsResult, handleGetFundraiserStatsFault ) );
-			_tokenEventDict.add( t, event );
+		public function getGroupStats( event : GetEvent ) : void {
+			if( _delegate && event )
+				executeGet( event, _delegate.getGroupStats );
 		}
-		public function handleGetFundraiserStatsResult( result : ResultEvent ) : void {
+		
+		public function getTopFundraisers( event : GetEvent ) : void {
+			if( _delegate && event )
+				executeGet( event, _delegate.getTopFundraisers );
+		}
+		
+		public function getTopFundraisersByDownlineContributions( event : GetEvent ) : void {
+			if( _delegate && event )
+				executeGet( event, _delegate.getTopFundraisersByDownlineContributions );
+		}
+		
+		public function getTopFundraisersByDownlineUsers( event : GetEvent ) : void {
+			if( _delegate && event )
+				executeGet( event, _delegate.getTopFundraisersByDownlineUsers );
+		}
+		
+		
+		public function executeGet( event : GetEvent, delegateFunction : Function ) : void {
+			if( event == null || delegateFunction == null ) return;
+			
+			var t : AsyncToken = delegateFunction() as AsyncToken;
+			t.addResponder( new GenericResponder( handleGetEventResult, handleGetEventFault ) );
+			_tokenEventDict.add( t, event ); 			
+		}
+		
+		public function handleGetEventResult( result : ResultEvent ) : void {
 			var t : AsyncToken = result.token;
 			GetEventHandler.handleResult( _tokenEventDict.getItem(t) as GetEvent, result );
 			_tokenEventDict.remove(t);
 		}
-		public function handleGetFundraiserStatsFault( fault : FaultEvent ) : void {
+		public function handleGetEventFault( fault : FaultEvent ) : void {
 			_tokenEventDict.remove( fault.token );			
 		}
-		
-		
-		public function getGroupStats( event : Event ) : void {
-			if( _delegate == null || event == null ) return;
-			
-			var t : AsyncToken = _delegate.getGroupStats();
-			t.addResponder( new GenericResponder( handleGetGroupStatsResult, handleGetGroupStatsFault ) );
-			_tokenEventDict.add( t, event );
-		}
-		public function handleGetGroupStatsResult( result : ResultEvent ) : void {
-			var t : AsyncToken = result.token;
-			GetEventHandler.handleResult( _tokenEventDict.getItem(t) as GetEvent, result );
-			_tokenEventDict.remove(t);
-		}
-		public function handleGetGroupStatsFault( fault : FaultEvent ) : void {
-			_tokenEventDict.remove( fault.token );
-		}
+
 
 
 		private var _tokenEventDict : DictionaryUtil = new DictionaryUtil();

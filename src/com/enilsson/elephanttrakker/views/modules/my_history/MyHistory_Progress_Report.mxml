@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TabNavigator xmlns:mx="http://www.adobe.com/2006/mxml">
+	
+	<myhistory:MyHistory_QuikStats
+		label="Quick Stats"
+		xmlns:myhistory="com.enilsson.elephanttrakker.views.modules.my_history.*"  />
+
+
+<!--	<mx:ModuleLoader id="topFundraiser" label="Top 25" />
+	<mx:ModuleLoader id="" label="Group Performance" />-->
+	
+	<modules:TopFundraisersModule 
+		label="Top 25"
+		instanceId="{_model.appInstanceID}" gatewayUrl="{_model.gatewayURL}"
+		xmlns:modules="com.enilsson.elephanttrakker.modules.*" />
+	<modules:GroupPerformanceModule
+		label="Group Performance"
+		instanceId="{_model.appInstanceID}" gatewayUrl="{_model.gatewayURL}"
+		xmlns:modules="com.enilsson.elephanttrakker.modules.*" />
+		
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephanttrakker.models.ETModelLocator;
+			
+			[Bindable] private var _model : ETModelLocator = ETModelLocator.getInstance();
+		]]>
+	</mx:Script>
+					
+</mx:TabNavigator>

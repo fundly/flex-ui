@@ -4,12 +4,14 @@
 	<mx:RemoteObject id="progressReportsService"
 		destination="amfphp"
 		endpoint="{gatewayUrl}"
-		source="plugins.{instanceId}.comp_graphs"
+		source="plugins.{instanceId}.progress_reports"
 		showBusyCursor="true"
 		result="handleResult(event)"
 		fault="handleFault(event)">
-		<mx:method name="fundraiser_competition" />
 		<mx:method name="group_competition" />
+		<mx:method name="top_fundraisers" />
+		<mx:method name="top_fundraisers_downline_contributions" />
+		<mx:method name="top_fundraisers_downline_users" />
 	</mx:RemoteObject>
 		
 	<mx:Script>

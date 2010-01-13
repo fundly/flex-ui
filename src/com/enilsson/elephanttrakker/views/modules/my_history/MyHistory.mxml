@@ -24,10 +24,8 @@
 		width="634" height="292" 
 		top="30" left="0">
 		
-		<compgraphs:CompetitiveGraphsModule id="compGraphs" label="Graphs" 
-			width="100%" height="100%" 
-			instanceId="{_model.appInstanceID}" gatewayUrl="{_model.gatewayURL}"
-			xmlns:compgraphs="com.enilsson.elephanttrakker.modules.compgraphs.*" />
+		<myhistory:MyHistory_Progress_Report label="Progress Report"
+			showEffect="moveLeftShow" hideEffect="moveRightHide" />			
 		<myhistory:MyHistory_Pledges id="pledges" label="Pledges"
 			showEffect="moveLeftShow" hideEffect="moveRightHide" />		
 		<myhistory:MyHistory_Contribs id="contribs" label="Contributions" 
@@ -36,8 +34,6 @@
 			showEffect="moveLeftShow" hideEffect="moveRightHide" />
 		<myhistory:MyHistory_Export id="export" label="Export" 
 			showEffect="moveLeftShow" hideEffect="moveRightHide" />
-		<myhistory:MyHistory_QuikStats id="quickstats" label="Quick Stats" 
-			showEffect="moveLeftShow" hideEffect="moveRightHide" />			
 	</mx:ViewStack>
 
 	<common:ErrorMsgBox id="callLoggingErrorBox"
@@ -81,8 +77,8 @@
 					
 				// if an update of the currently visible view stack child is necessary, run the child's init function so its
 				// data gets updated.
-				if( _model.my_history.initQuickStats && historyVS.selectedChild == quickstats )
-					quickstats.init();
+//				if( _model.my_history.initQuickStats && historyVS.selectedChild == quickstats )
+//					quickstats.init();
 				else if( _model.my_history.initPledges && historyVS.selectedChild == pledges )
 					pledges.init();
 				else if(_model.my_history.initContributions && historyVS.selectedChild == contribs )

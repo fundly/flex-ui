@@ -13,7 +13,9 @@
 		xmlns:controllers="com.enilsson.elephanttrakker.modules.progressreports.controllers.*" />
 	
 	<mx:Array id="mappings">
-		<events:EventMapping type="{Events.GET_FUNDRAISER_STATS}" handler="{controller.getFundraiserStats}" />
+		<events:EventMapping type="{Events.GET_TOP_FUNDRAISERS}" handler="{controller.getTopFundraisers}" />
+		<events:EventMapping type="{Events.GET_TOP_FUNDRAISERS_DOWNLINE_CONTRIBS}" handler="{controller.getTopFundraisersByDownlineContributions}" />
+		<events:EventMapping type="{Events.GET_TOP_FUNDRAISERS_DOWNLINE_USERS}" handler="{controller.getTopFundraisersByDownlineUsers}" />
 	</mx:Array>
 
 	<events:EventMap dispatcher="{this}" mappings="{mappings}" /> 

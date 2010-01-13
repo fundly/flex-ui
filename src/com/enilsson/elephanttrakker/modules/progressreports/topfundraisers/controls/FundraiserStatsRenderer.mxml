@@ -10,11 +10,11 @@
 		verticalCenter="0">
 		
 		<mx:Image 
-			source="{_wrapper.icon}" 
-			 filters="{[iconBevel, glow]}" />
+			source="{icon}" 
+			filters="{[iconBevel, glow]}" />
 			 
 		<mx:Label
-			text="{_wrapper.position}" 
+			text="{position}" 
 			left="9" top="4"
 			fontSize="20" color="#FFFFFF"
 			filters="{[fontBevel]}" />
@@ -27,12 +27,12 @@
 		
 		<mx:Label
 			horizontalCenter="0"  
-			text="{_stats.fullname} ({_stats.fid})" 
+			text="{line1}" 
 			fontSize="14" filters="{[fontBevel,glow]}"  />
 			
 		<mx:Label
 			top="20" horizontalCenter="0"
-			text="{cf.format(_stats.total_contributed)}"			  
+			text="{line2}"			  
 			fontSize="12" 
 			filters="{[fontBevel,glow]}" />	
 			
@@ -61,10 +61,13 @@
 			override public function set data( value : Object ) : void {
 				super.data = value;
 				
-				_wrapper = data as FundraiserStatsWrapper;
+				var wrapper : FundraiserStatsWrapper = data as FundraiserStatsWrapper;
 				
-				if(_wrapper && _wrapper.data)
-					_stats = _wrapper.data as FundraiserStatistics;
+				if(wrapper && wrapper.data) {
+					position = wrapper.position;
+					icon = wrapper.icon;
+					stats = wrapper.data as FundraiserStatistics;
+				}
 			}
 			
 			
@@ -74,6 +77,7 @@
 				
 				super.updateDisplayList(w, h);
 			}
+			
 			
 			private function drawBackground( w : Number, h : Number ) : void {
 				var g : Graphics = graphics;
@@ -102,9 +106,32 @@
 				g.endFill();
 				
 			}
+				
+			[Bindable] protected var position 	: int;
 			
-			[Bindable] private var _wrapper : FundraiserStatsWrapper;
-			[Bindable] private var _stats : FundraiserStatistics;
+			[Bindable] protected var line1		: String;
+			[Bindable] protected var line2		: String;
+			
+			protected function set stats( val : FundraiserStatistics ) : void {
+				_stats = val;
+				
+				if(_stats) {
+					
+					var inDownline : int = _stats.users_in_downline;
+					
+					line1 =	_stats.fullname + " (" + _stats.fid + ")";
+					
+					if( inDownline > 0 )
+						line2 = inDownline + " Downline member" + (inDownline > 0 ? "s" : "");
+					else if( _stats.total_contributed  > 0 )
+						line2 = cf.format( _stats.total_contributed ); 
+					else				
+						line2 = "";
+						 
+				}
+			}			
+			[Bindable] private var _stats : FundraiserStatistics;			
+			
 			
 			private static const PADDING_LEFT 	: Number = 10;
 			private static const PADDING_RIGHT 	: Number = 10;
