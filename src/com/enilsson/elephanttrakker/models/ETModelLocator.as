@@ -50,8 +50,6 @@ package com.enilsson.elephanttrakker.models
 				var bytes:ByteArray = new VersionFile() as ByteArray;
         		var versionXML:XML 	= new XML(bytes.readUTFBytes(bytes.length));
         		
-        		var regX:RegExp = /[a-zA-Z]/gi;
-        		
         		version = versionXML.version;
         		revision = versionXML.revision;
 			}
@@ -183,10 +181,11 @@ package com.enilsson.elephanttrakker.models
 		/**
 		 * Variable and constants to define the view state of the screens (login or main)
 		 */
-		[Bindable] public var screenState:uint = 0;
-
 		public static const LOGIN_SCREEN:uint = 0;
 		public static const MAIN_SCREEN:uint = 1;
+		
+		[Bindable] public var screenState:uint = LOGIN_SCREEN;
+	
 
 
 		/**
@@ -307,7 +306,7 @@ package com.enilsson.elephanttrakker.models
 			eNilssonUtils.clearCookie('gatewayURL');
 			
 			// reset some of the model variables
-			gatewayURL = gatewayBaseURL;
+			gatewayURL = null;
 			session = null;
 			runInit = false;
 			siteLayoutLoaded = false;
