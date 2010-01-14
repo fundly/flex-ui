@@ -122,11 +122,9 @@
 					line1 =	_stats.fullname + " (" + _stats.fid + ")";
 					
 					if( inDownline > 0 )
-						line2 = inDownline + " Downline member" + (inDownline > 0 ? "s" : "");
-					else if( _stats.total_contributed  > 0 )
+						line2 = inDownline + " Downline member" + (inDownline > 1 ? "s" : "");
+					else
 						line2 = cf.format( _stats.total_contributed ); 
-					else				
-						line2 = "";
 						 
 				}
 			}			
