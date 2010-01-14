@@ -6,25 +6,35 @@
 	initialize="init()"
 	preloader="assets.preloader.BlueSwarmPreloader"
 	layout="absolute" 
-	horizontalScrollPolicy="off"
-	currentState="{_model.screenState == 0 ? 'login' : 'main'}">
+	horizontalScrollPolicy="off">
 
 	<control:ETcontroller xmlns:control="com.enilsson.elephanttrakker.controllers.*" />
 	<business:Services id="services" xmlns:business="com.enilsson.elephanttrakker.business.*" />
 	
-	
 	<page:Masthead width="100%" height="92" />
-		
+			
 	<mx:Canvas id="mainContainer" 
 		styleName="contentContainer" 
 		visible="{_model.mainScreenVisible}"
 		width="100%" height="475" 
-		horizontalCenter="0" top="90" />
+		horizontalCenter="0" top="90">
+		
+		<views:Login id="loginScreen"
+			width="100%" height="100%"
+			addedEffect="fadeIn" />
+			
+		<views:Main id="mainScreen" 
+			styleName="mainContainer"
+			width="100%" height="100%"
+			visible="{_model.screenState != 0}"
+			showEffect="fadeIn" 
+			hideEffect="fadeOut" />
+	</mx:Canvas>
 	
 	<page:Footer id="footer" styleName="footer" width="100%" horizontalCenter="0" top="565" />
 	
-	<mx:Fade id="fadeIn" alphaFrom="0" alphaTo="1" duration="2000" />
-	<mx:Fade id="fadeOut" alphaFrom="1" alphaTo="0" duration="2000" />
+	<mx:Fade id="fadeIn" alphaFrom="0" alphaTo="1" duration="1000" />
+	<mx:Fade id="fadeOut" alphaFrom="1" alphaTo="0" duration="1000" />
 
 
 	<mx:Style source="/assets/css/et_styles.css" />
@@ -34,24 +44,6 @@
 	<mx:Style source="/assets/css/modules/pledge_workspace.css" />
 	<mx:Style source="/assets/css/modules/first_login.css" />
 
-	<mx:states>
-		<mx:State name="login">
-			<mx:AddChild relativeTo="{mainContainer}">
-				<views:Login id="loginScreen"
-					width="100%" height="100%"
-					addedEffect="{fadeIn}" removedEffect="{fadeOut}" />
-			</mx:AddChild>
-		</mx:State>
-		<mx:State name="main">
-			<mx:AddChild relativeTo="{mainContainer}">
-				<views:Main id="mainScreen" 
-					styleName="mainContainer"
-					width="100%" height="100%"
-					addedEffect="{fadeIn}" removedEffect="{fadeOut}" />
-			</mx:AddChild>
-		</mx:State>
-	</mx:states>
-	
 	<mx:Script>
 		<![CDATA[
 			import com.enilsson.elephanttrakker.events.GetVersionEvent;
