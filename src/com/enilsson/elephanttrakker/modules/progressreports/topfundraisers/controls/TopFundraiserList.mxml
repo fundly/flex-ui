@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:List xmlns:mx="http://www.adobe.com/2006/mxml"
+	borderStyle="none" 
+	useRollOver="false"
+	rowHeight="60"
+	selectionColor="0xffffff"
+	itemsChangeEffect="{listEffect}"
+	itemRenderer="com.enilsson.elephanttrakker.modules.progressreports.topfundraisers.controls.FundraiserStatsRenderer">
+
+	<mx:DefaultListEffect id="listEffect" 
+		suspendBackgroundProcessing="true"  
+		growDuration="0" shrinkDuration="0"
+		effectStart="removeFilters()" />
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.core.UIComponent;
+			
+			// remove any filters before playing the listEffect
+			private function removeFilters() : void {				
+				for each( var renderers : Array in listItems ) {
+					if(renderers) {
+						for each( var renderer : UIComponent in renderers) {
+							if(renderer)
+								renderer.filters = null;		
+						}
+					}
+				}								
+			}
+			
+		]]>
+	</mx:Script>
+	
+</mx:List>

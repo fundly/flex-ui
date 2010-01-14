@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" 
+	layout="absolute"
+	width="100%" height="100%"
+	implements="com.enilsson.elephanttrakker.modules.progressreports.IProgressReportModule"
+	xmlns:events="com.enilsson.common.events.*">
+
+	<business:Services id="services" 
+		instanceId="{instanceId}" 
+		gatewayUrl="{gatewayUrl}"
+		xmlns:business="com.enilsson.elephanttrakker.modules.progressreports.business.*" />
+	
+	<controllers:ProgressReportsController id="controller" 
+		delegate="{ DelegateFactory.create( DelegateFactory.PROGRESS_REPORT, services ) }" 
+		xmlns:controllers="com.enilsson.elephanttrakker.modules.progressreports.controllers.*" />
+	
+	<mx:Array id="mappings">
+		<events:EventMapping type="{Events.GET_TOP_FUNDRAISERS}" handler="{controller.getTopFundraisers}" />
+		<events:EventMapping type="{Events.GET_TOP_FUNDRAISERS_DOWNLINE_CONTRIBS}" handler="{controller.getTopFundraisersByDownlineContributions}" />
+		<events:EventMapping type="{Events.GET_TOP_FUNDRAISERS_DOWNLINE_USERS}" handler="{controller.getTopFundraisersByDownlineUsers}" />
+	</mx:Array>
+
+	<events:EventMap dispatcher="{this}" mappings="{mappings}" /> 
+	
+	<views:TopFundraisersView width="100%" height="100%"
+		xmlns:views="com.enilsson.elephanttrakker.modules.progressreports.topfundraisers.views.*"/>
+		
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephanttrakker.modules.progressreports.events.Events;
+			import com.enilsson.elephanttrakker.modules.progressreports.business.DelegateFactory;
+			
+			[Bindable]
+			public function get instanceId() : int { return _instanceId; }
+			public function set instanceId( val : int ) : void { _instanceId = val; }
+			private var _instanceId : int;
+			
+			[Bindable]
+			public function get gatewayUrl() : String { return _gatewayUrl; }
+			public function set gatewayUrl( val : String ) : void { _gatewayUrl = val; }
+			private var _gatewayUrl : String;
+		]]>
+	</mx:Script>
+	
+</mx:Module>

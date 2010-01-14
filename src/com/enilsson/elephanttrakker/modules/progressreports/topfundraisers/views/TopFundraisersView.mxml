@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" 
+	initialize="handleInitialize()" 
+	xmlns:controls="com.enilsson.elephanttrakker.modules.progressreports.topfundraisers.controls.*">
+
+	<mx:FormItem 
+		label="Show Top 25 fundraisers by"
+		horizontalGap="-10" 
+		fontSize="11"
+		paddingLeft="10" paddingTop="10" paddingBottom="7">
+		<mx:ComboBox 
+			dataProvider="{TopFundraisersPm.OPTIONS}"
+			change="_pm.handleOptionChange(event)" 
+			fontSize="11" />
+	</mx:FormItem>
+	
+	<mx:HRule width="100%" />
+
+	<controls:TopFundraiserList
+		width="100%" height="100%"
+		dataProvider="{_pm.fundraisersWithIcons}" />
+	
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephanttrakker.modules.progressreports.topfundraisers.pm.TopFundraisersPm;
+			
+			private function handleInitialize() : void {
+				_pm = new TopFundraisersPm( this );
+			}
+						
+			[Bindable] private var _pm : TopFundraisersPm;
+		]]>
+	</mx:Script>
+	
+</mx:VBox>
