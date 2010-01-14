@@ -2,27 +2,42 @@
 <mx:TabNavigator xmlns:mx="http://www.adobe.com/2006/mxml">
 	
 	<myhistory:MyHistory_QuikStats
-		label="Quick Stats"
+		label="My Stats"
+		width="100%" height="100%"
 		xmlns:myhistory="com.enilsson.elephanttrakker.views.modules.my_history.*"  />
 
-
-<!--	<mx:ModuleLoader id="topFundraiser" label="Top 25" />
-	<mx:ModuleLoader id="" label="Group Performance" />-->
-	
-	<modules:TopFundraisersModule 
-		label="Top 25"
-		instanceId="{_model.appInstanceID}" gatewayUrl="{_model.gatewayURL}"
-		xmlns:modules="com.enilsson.elephanttrakker.modules.*" />
-	<modules:GroupPerformanceModule
+	<mx:ModuleLoader
+		label="Top 25" 
+		width="100%" height="100%"
+		ready="handleReady(event)"
+		applicationDomain="{ApplicationDomain.currentDomain}"
+		url="com/enilsson/elephanttrakker/modules/TopFundraisersModule.swf?t={new Date().getTime()}" />
+		
+	<mx:ModuleLoader id="groupPerformanceModule"
 		label="Group Performance"
-		instanceId="{_model.appInstanceID}" gatewayUrl="{_model.gatewayURL}"
-		xmlns:modules="com.enilsson.elephanttrakker.modules.*" />
+		width="100%" height="100%"
+		applicationDomain="{ApplicationDomain.currentDomain}"
+		url="com/enilsson/elephanttrakker/modules/GroupPerformanceModule.swf?t={new Date().getTime()}"
+		ready="handleReady(event)" />
 		
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.elephanttrakker.modules.progressreports.IProgressReportModule;
+			import mx.events.ModuleEvent;
 			import com.enilsson.elephanttrakker.models.ETModelLocator;
 			
 			[Bindable] private var _model : ETModelLocator = ETModelLocator.getInstance();
+			
+			private function handleReady( event : ModuleEvent ) : void {
+				
+				var module : IProgressReportModule = event.currentTarget.child as IProgressReportModule;
+
+				if(module) {
+					
+					module.gatewayUrl = _model.gatewayURL;
+					module.instanceId = _model.appInstanceID;
+				}
+			}
 		]]>
 	</mx:Script>
 					

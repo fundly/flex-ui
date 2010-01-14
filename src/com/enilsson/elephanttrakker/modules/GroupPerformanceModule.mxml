@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" 
 	layout="absolute"
+	width="100%" height="100%"
+	implements="com.enilsson.elephanttrakker.modules.progressreports.IProgressReportModule"
 	xmlns:events="com.enilsson.common.events.*">
 	
 	<business:Services id="services" 
@@ -26,8 +28,15 @@
 			import com.enilsson.elephanttrakker.modules.progressreports.events.Events;
 			import com.enilsson.elephanttrakker.modules.progressreports.business.DelegateFactory;
 			
-			[Bindable] public var instanceId : int;
-			[Bindable] public var gatewayUrl : String;
+			[Bindable]
+			public function get instanceId() : int { return _instanceId; }
+			public function set instanceId( val : int ) : void { _instanceId = val; }
+			private var _instanceId : int;
+			
+			[Bindable]
+			public function get gatewayUrl() : String { return _gatewayUrl; }
+			public function set gatewayUrl( val : String ) : void { _gatewayUrl = val; }
+			private var _gatewayUrl : String;
 		]]>
 	</mx:Script>
 			
