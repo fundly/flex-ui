@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:TabNavigator xmlns:mx="http://www.adobe.com/2006/mxml"
-	creationPolicy="all">
+	creationPolicy="auto">
 	
 	<myhistory:MyHistory_QuikStats id="myStats"
 		label="My Stats"
@@ -15,7 +15,7 @@
 		ready="handleReady(event)"
 		applicationDomain="{ApplicationDomain.currentDomain}"
 		show="handleModuleShow( event )"
-		url="com/enilsson/elephanttrakker/modules/TopFundraisersModule.swf?t={new Date().getTime()}" />
+		url="{MODULES_PATH}/TopFundraisersModule.swf?t={new Date().getTime()}" />
 		
 	<mx:ModuleLoader
 		name="groupperformance"
@@ -24,14 +24,13 @@
 		ready="handleReady(event)"
 		applicationDomain="{ApplicationDomain.currentDomain}"
 		show="handleModuleShow( event )"
-		url="com/enilsson/elephanttrakker/modules/GroupPerformanceModule.swf?t={new Date().getTime()}" />
+		url="{MODULES_PATH}/GroupPerformanceModule.swf?t={new Date().getTime()}" />
 		
 	<mx:Binding source="_model.options.modules_config" destination="modulesConfig" />
 		
 	<mx:Script>
 		<![CDATA[
 			import mx.events.ChildExistenceChangedEvent;
-			import mx.events.CollectionEvent;
 			import mx.controls.Button;
 			import mx.modules.ModuleLoader;
 			import mx.binding.utils.BindingUtils;
@@ -46,6 +45,7 @@
 				if( _parseModules ) {
 					_parseModules = false;
 					parseModulesConfig();
+					setTabsVisible();
 				}			
 			}
 			
@@ -84,13 +84,21 @@
 						b.visible = b.includeInLayout = visible;
 						
 						if(b.selected && !b.visible)
-							tabBar.selectedIndex = 0;
+							tabBar.selectedIndex = getChildIndex( myStats );
 					}
 				}
 			}
 			
-			private var _parseModules : Boolean;			
-
+			private function setTabsVisible() : void {
+				var visibleTabs : int = 0;
+				for( var i :int = 0; i < tabBar.numChildren; i++ ) {
+					if( tabBar.getChildAt( i ).visible )
+						visibleTabs++;	
+				}
+				
+				setStyle("tabHeight", ( visibleTabs > 1 ? NaN : 0 ) );
+			}
+			
 			private function set modulesConfig( val : XML ) : void {
 				_modulesConfig = val;
 				_parseModules = true;
@@ -106,9 +114,13 @@
 				
 				if(module) {
 					loader.enabled = true;
+					
 					BindingUtils.bindProperty( module, "gatewayUrl", _model, "gatewayURL" );
 					BindingUtils.bindProperty( module, "instanceId", _model, "appInstanceID" );
+					
+					module.update();					
 				}
+				
 			}
 			
 			private function handleModuleShow( event : Event ) : void {
@@ -119,7 +131,9 @@
 			
 			[Bindable] private var _model : ETModelLocator = ETModelLocator.getInstance();
 			
-			private var _loaders : Object = {};
+			private var _parseModules : Boolean;			
+			
+			private static const MODULES_PATH : String = ( Security.sandboxType == Security.REMOTE ? "modules" : "com/enilsson/elephanttrakker/modules" );
 			
 		]]>
 	</mx:Script>

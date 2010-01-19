@@ -40,8 +40,19 @@
 			private var _gatewayUrl : String;
 			
 			public function update() : void {
-				groupPerformanceView.update();
+				_update = true;
+				invalidateProperties();
 			}
+			
+			override protected function commitProperties() : void {
+				super.commitProperties();
+				if(_update) {
+					_update = false;
+					groupPerformanceView.update();
+				}
+			}
+			
+			private var _update : Boolean;
 		]]>
 	</mx:Script>
 			
