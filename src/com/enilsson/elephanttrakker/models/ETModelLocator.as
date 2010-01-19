@@ -306,7 +306,7 @@ package com.enilsson.elephanttrakker.models
 			eNilssonUtils.clearCookie('gatewayURL');
 			
 			// reset some of the model variables
-			gatewayURL = null;
+			gatewayURL = gatewayBaseURL;
 			session = null;
 			runInit = false;
 			siteLayoutLoaded = false;
