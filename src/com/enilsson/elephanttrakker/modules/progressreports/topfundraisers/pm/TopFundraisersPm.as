@@ -23,7 +23,6 @@ package com.enilsson.elephanttrakker.modules.progressreports.topfundraisers.pm
 			
 		public var selectedOption		: Object = OPTIONS.getItemAt(0);
 		public var fundraisersWithIcons : ArrayCollection = new ArrayCollection();
-		
 				
 		
 		public function set topFundraisers( val :ArrayCollection ) : void { 
@@ -57,20 +56,20 @@ package com.enilsson.elephanttrakker.modules.progressreports.topfundraisers.pm
 			var item : Object = event.currentTarget.selectedItem;
 			if(item) {
 				selectedOption = item;
-				dispatchGetEvent( selectedOption.eventType );
+				updateFundraisers();
 			}
 			else {
 				event.currentTarget.selectedItem = selectedOption;
 			}
 		}
 		
-		
-		public function TopFundraisersPm( dispatcher : IEventDispatcher ) {
-			_dispatcher = dispatcher;
+		public function updateFundraisers() : void {
 			dispatchGetEvent( selectedOption.eventType );
 		}
 		
-		
+		public function TopFundraisersPm( dispatcher : IEventDispatcher ) {
+			_dispatcher = dispatcher;
+		}
 		
 		private function dispatchGetEvent( eventType : String ) : void {
 			var e : GetEvent = new GetEvent( eventType, this, "topFundraisers" );

@@ -27,6 +27,10 @@
 			private function handleInitialize() : void {
 				_pm = new TopFundraisersPm( this );
 			}
+			
+			public function update() : void {
+				_pm.updateFundraisers();
+			}
 						
 			[Bindable] private var _pm : TopFundraisersPm;
 		]]>

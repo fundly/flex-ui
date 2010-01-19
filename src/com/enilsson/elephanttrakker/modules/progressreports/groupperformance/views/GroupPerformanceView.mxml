@@ -29,6 +29,10 @@
 			private function handleInitialize() : void {
 				_pm = new GroupPerformancePm( this );
 			}
+			
+			public function update() : void {
+				_pm.updateGroupStats();
+			}
 		
 			[Bindable] private var _pm : GroupPerformancePm;
 		]]>
