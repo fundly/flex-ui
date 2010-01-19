@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:TabNavigator xmlns:mx="http://www.adobe.com/2006/mxml"
-	creationPolicy="auto">
+	creationPolicy="all">
 	
 	<myhistory:MyHistory_QuikStats id="myStats"
 		label="My Stats"
@@ -117,8 +117,6 @@
 					
 					BindingUtils.bindProperty( module, "gatewayUrl", _model, "gatewayURL" );
 					BindingUtils.bindProperty( module, "instanceId", _model, "appInstanceID" );
-					
-					module.update();					
 				}
 				
 			}
