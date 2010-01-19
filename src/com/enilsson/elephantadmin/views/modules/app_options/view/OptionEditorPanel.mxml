@@ -20,6 +20,7 @@
 		<option_views:Options_PaidFor name="paid_for" pm="{_pm}" />
 		<option_views:Options_DownlineRequest name="downline_request" pm="{_pm}" />
 		<option_views:Options_ContactsRequest name="contacts_request" pm="{_pm}" />
+		<option_views:Options_ProgressReports name="modules_config" pm="{_pm}" />
 	</mx:ViewStack>
 
 	<common:ModuleControlBar id="moduleControlBar" 
