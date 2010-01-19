@@ -1,7 +1,5 @@
 package com.enilsson.elephanttrakker.vo
 {
-	import com.enilsson.utils.eNilssonUtils;
-	
 	[Bindable]
 	public class AppOptionsVO
 	{
@@ -11,11 +9,17 @@ package com.enilsson.elephanttrakker.vo
 			
 			for each ( var item:Object in data )
 			{
-				if ( item.option_name == 'workspace_agreement' )
-					workspace_agreement = new XML( item.option_value )
-				else
-					this[item.option_name] = item.option_value;
-			}				
+				switch( item.option_name ) {
+					
+					case 'workspace_agreement':
+					case 'modules_config':
+						this[item.option_name] = new XML( item.option_value )
+					break;
+					default:
+						this[item.option_name] = item.option_value;
+					break;
+				}
+			}
 		}
 		
 		public var agents_agreement:String;
@@ -29,6 +33,6 @@ package com.enilsson.elephanttrakker.vo
 		public var downline_request:String;
 		public var contacts_request:String;
 		public var workspace_agreement:XML;
-
+		public var modules_config:XML;
 	}
 }
