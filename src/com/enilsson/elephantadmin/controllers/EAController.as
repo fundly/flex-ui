@@ -236,6 +236,7 @@ package com.enilsson.elephantadmin.controllers
 			// site options
 			this.addCommand(SiteOptionsEvent.GET_SITE_OPTIONS, SiteOptionsCommand );
 			this.addCommand(SaveSiteOptionEvent.SAVE_SITE_OPTION, SiteOptionsCommand );
+			this.addCommand(GetUsersEvent.GET_USERS, GetUsersCommand );
 
  			/**
  			 * Pledge Workspace events
