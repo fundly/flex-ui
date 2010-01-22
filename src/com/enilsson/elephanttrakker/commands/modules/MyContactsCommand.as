@@ -319,10 +319,6 @@ package com.enilsson.elephanttrakker.commands.modules
 				case '99' :
 					_model.my_contacts.resetPopupContactForm();
 					
-					if( data.result.hasOwnProperty('id'))
-					{
-						
-					}
 					_model.my_contacts.errorVO = new ErrorVO('That contact was successfully edited', 'successBox', true );
 					_model.my_contacts.onClose = function():void {
 						_model.my_contacts.isSubmitting = false;

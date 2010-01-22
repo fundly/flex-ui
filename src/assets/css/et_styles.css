@@ -11,27 +11,6 @@ Application {
 	color:#333333;
 }
 
-/*-- Fonts --*/
-@font-face {
-    src: url("../fonts/Lucida_Grande.ttf");
-    fontFamily: appFont;
-    advancedAntiAliasing: true;
-    unicode-range:U+0021-U+007F;
-}
-@font-face {
-    src: url("../fonts/Lucida_Grande_Bold.ttf");
-    fontFamily: appFont;
-    fontWeight: bold;
-    advancedAntiAliasing: true;
-    unicode-range:U+0021-U+007F;
-}
-@font-face {
-    src: url("../fonts/slkscr.ttf"); 
-    fontFamily: silkScreen;
-    advancedAntiAliasing: true;
-    unicode-range:U+0021-U+007F;
-}
-/*-- End Fonts --*/
 
 /*-- Main Container Styles --*/
 .contentContainer {

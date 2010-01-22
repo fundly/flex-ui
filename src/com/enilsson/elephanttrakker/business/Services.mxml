@@ -59,13 +59,16 @@
 						var title : String;
 						var message : String;
 						var reset : Boolean;
-					
+						
 						if( event.fault.faultDetail.search("NetConnection.Call.BadVersion") != -1 || 
 							event.fault.faultDetail.search("Channel disconnected") != -1 ) 
 						{
 							title = 'Your session has expired';
 							message = 'Sorry, it looks like your session has expired. Please log in again.';
 							reset = true;
+						}
+						else if( _model.screenState == ETModelLocator.LOGIN_SCREEN) { 
+							return;
 						}
 						else {
 							title = 'Sorry, your request could not be sent';

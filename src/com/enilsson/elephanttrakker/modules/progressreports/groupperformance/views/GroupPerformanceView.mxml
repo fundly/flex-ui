@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
+	initialize="handleInitialize()">
+	
+	<controls:GroupStatsChart id="groupStatsChart"
+		xmlns:controls="com.enilsson.elephanttrakker.modules.progressreports.groupperformance.controls.*"
+		dataProvider="{_pm.groupStats}"
+		top="0" left="0"
+		width="100%" height="100%" />
+	
+	<mx:Legend
+		dataProvider="{groupStatsChart}"
+		direction="horizontal" 
+		cornerRadius="5" 
+		borderStyle="solid" 
+		borderThickness="0"		
+		fontSize="9"
+		backgroundColor="#FFFFFF" 
+		backgroundAlpha=".2"
+		filters="{[dropShadow]}"
+		top="0" right="5" /> 
+	
+	<mx:DropShadowFilter id="dropShadow" alpha=".4" />
+		
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephanttrakker.modules.progressreports.groupperformance.pm.GroupPerformancePm;
+			
+			private function handleInitialize() : void {
+				_pm = new GroupPerformancePm( this );
+			}
+			
+			public function update() : void {
+				_pm.updateGroupStats();
+			}
+		
+			[Bindable] private var _pm : GroupPerformancePm;
+		]]>
+	</mx:Script>
+	
+</mx:Canvas>

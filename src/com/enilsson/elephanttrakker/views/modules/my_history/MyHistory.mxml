@@ -3,7 +3,8 @@
 	xmlns:mx="http://www.adobe.com/2006/mxml"
 	show="init()"
 	verticalScrollPolicy="off" horizontalScrollPolicy="off"
-	xmlns:ns="com.enilsson.elephanttrakker.views.modules.my_history.*" xmlns:common="com.enilsson.elephanttrakker.views.common.*">
+	xmlns:myhistory="com.enilsson.elephanttrakker.views.modules.my_history.*" 
+	xmlns:common="com.enilsson.elephanttrakker.views.common.*">
 
 
 	<mx:Image source="{_model.icons.myHistory}" top="0" right="-3" />
@@ -22,15 +23,16 @@
 		selectedIndex="{_model.my_history.vStackViewState}"
 		width="634" height="292" 
 		top="30" left="0">
-		<ns:MyHistory_QuikStats id="quickstats" label="Quick Stats" 
+		
+		<myhistory:MyHistory_Progress_Report label="Progress Report"
+			showEffect="moveLeftShow" hideEffect="moveRightHide" />			
+		<myhistory:MyHistory_Pledges id="pledges" label="Pledges"
 			showEffect="moveLeftShow" hideEffect="moveRightHide" />		
-		<ns:MyHistory_Pledges id="pledges" label="Pledges"
-			showEffect="moveLeftShow" hideEffect="moveRightHide" />		
-		<ns:MyHistory_Contribs id="contribs" label="Contributions" 
+		<myhistory:MyHistory_Contribs id="contribs" label="Contributions" 
 			showEffect="moveLeftShow" hideEffect="moveRightHide" />
-		<ns:MyHistory_SavedCalls id="savedcalls" label="Saved Pledges" 
+		<myhistory:MyHistory_SavedCalls id="savedcalls" label="Saved Pledges" 
 			showEffect="moveLeftShow" hideEffect="moveRightHide" />
-		<ns:MyHistory_Export id="export" label="Export" 
+		<myhistory:MyHistory_Export id="export" label="Export" 
 			showEffect="moveLeftShow" hideEffect="moveRightHide" />
 	</mx:ViewStack>
 
@@ -75,8 +77,8 @@
 					
 				// if an update of the currently visible view stack child is necessary, run the child's init function so its
 				// data gets updated.
-				if( _model.my_history.initQuickStats && historyVS.selectedChild == quickstats )
-					quickstats.init();
+//				if( _model.my_history.initQuickStats && historyVS.selectedChild == quickstats )
+//					quickstats.init();
 				else if( _model.my_history.initPledges && historyVS.selectedChild == pledges )
 					pledges.init();
 				else if(_model.my_history.initContributions && historyVS.selectedChild == contribs )

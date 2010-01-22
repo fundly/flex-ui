@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Options_ProgressReportsBase
+	xmlns="com.enilsson.elephantadmin.views.modules.app_options.view.option_views.*"
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	width="100%" height="100%"
+	paddingLeft="15" paddingRight="15" 
+	paddingTop="15" paddingBottom="40"> 
+	
+	<mx:Text id="descriptionText" 
+		width="100%"
+		fontSize="14"
+		text="{pm.editingSiteOption.description}" 
+		selectable="false" />
+	
+	<mx:HBox 
+		width="100%" height="100%" 
+		paddingTop="10" paddingBottom="10"
+		paddingLeft="10" paddingRight="10"
+		horizontalGap="40">
+		
+		<mx:VBox horizontalAlign="right">
+			<mx:FormItem label="Show Group Performance Graph">
+				<mx:CheckBox
+					selected="{groupPerformanceEnabled}" 
+					change="handleGroupPerformanceChange(event)" />
+			</mx:FormItem>
+			
+			<mx:FormItem label="Show Top 25 Fundraisers">
+				<mx:CheckBox id="topFundraisersCb"
+					selected="{topFundraisersEnabled}" 
+					change="handleTopFundraisersChange(event)" />
+			</mx:FormItem>
+		</mx:VBox>
+		
+		<mx:VBox
+			width="100%" height="100%"
+			showEffect="fadeIn"
+			hideEffect="fadeOut" 
+			visible="{topFundraisersEnabled}" 
+			mouseEnabled="{topFundraisersEnabled}">
+			<mx:Label text="Fundraisers who may appear in the Top 25 List:" />
+			<components:HiddenUsersList
+				height="400"
+				itemsPerPage="{EAModelLocator(pm.domainModel).itemsPerPage}"
+				itemsTotal="{EAModelLocator(pm.domainModel).appOptions.totalUsers}"
+				dataProvider="{EAModelLocator(pm.domainModel).appOptions.currentUsers}"
+				xmlns:components="com.enilsson.elephantadmin.views.modules.app_options.view.components.*" 
+			/>
+		</mx:VBox>
+		
+	</mx:HBox>
+	
+	<mx:Fade id="fadeIn" alphaFrom="0" alphaTo="1" duration="500" />
+	<mx:Fade id="fadeOut" alphaFrom="1" alphaTo="0" duration="500" />
+	
+	<mx:Binding source="pm.editingSiteOption.value" destination="optionValue" />
+	
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephantadmin.models.EAModelLocator;
+		]]>
+	</mx:Script>
+	
+</Options_ProgressReportsBase>

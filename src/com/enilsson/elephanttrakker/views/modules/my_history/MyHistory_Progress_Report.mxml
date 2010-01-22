@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TabNavigator xmlns:mx="http://www.adobe.com/2006/mxml"
+	creationPolicy="all">
+	
+	<myhistory:MyHistory_QuikStats id="myStats"
+		label="My Stats"
+		width="100%" height="100%"
+		show="myStats.init()"
+		xmlns:myhistory="com.enilsson.elephanttrakker.views.modules.my_history.*"  />
+		
+	<mx:ModuleLoader
+		name="topfundraisers"
+		label="Top 25"
+		width="100%" height="100%"
+		ready="handleReady(event)"
+		applicationDomain="{ApplicationDomain.currentDomain}"
+		show="handleModuleShow( event )"
+		url="{MODULES_PATH}/TopFundraisersModule.swf?t={new Date().getTime()}" />
+		
+	<mx:ModuleLoader
+		name="groupperformance"
+		label="Group Performance"
+		width="100%" height="100%"
+		ready="handleReady(event)"
+		applicationDomain="{ApplicationDomain.currentDomain}"
+		show="handleModuleShow( event )"
+		url="{MODULES_PATH}/GroupPerformanceModule.swf?t={new Date().getTime()}" />
+		
+	<mx:Binding source="_model.options.modules_config" destination="modulesConfig" />
+		
+	<mx:Script>
+		<![CDATA[
+			import mx.events.ChildExistenceChangedEvent;
+			import mx.controls.Button;
+			import mx.modules.ModuleLoader;
+			import mx.binding.utils.BindingUtils;
+			import com.enilsson.elephanttrakker.modules.progressreports.IProgressReportModule;
+			import mx.events.ModuleEvent;
+			import com.enilsson.elephanttrakker.models.ETModelLocator;
+			
+			
+			override protected function commitProperties() : void {
+				super.commitProperties();
+				
+				if( _parseModules ) {
+					_parseModules = false;
+					parseModulesConfig();
+					setTabsVisible();
+				}			
+			}
+			
+			override protected function createChildren() : void {
+				super.createChildren();
+				if( tabBar ) {
+					tabBar.addEventListener( ChildExistenceChangedEvent.CHILD_ADD, handleTabBarAdd, false, 0 ,true );
+				}
+			}
+			
+			private function handleTabBarAdd( e : Event ) : void {
+				if( tabBar.numChildren == numChildren ) {
+					_parseModules = true;
+					invalidateProperties();
+				}
+			}
+			
+			
+			private function parseModulesConfig() : void {
+				if( _modulesConfig ) {
+					var l : XMLList = _modulesConfig.children();
+					
+					for( var i : int = 0; i < l.length(); i++ ) {
+						var x : XML = l[i];
+						setModuleVisible( x.name(), x.enabled == 'true' );
+					}
+				}				
+			}
+			
+			private function setModuleVisible( name : String, visible : Boolean ) : void {
+				var d : DisplayObject = getChildByName( name );
+				if(d) {
+					var i : int = getChildIndex( d );
+					var b : Button = ( tabBar.numChildren >= i+1 ) ? getTabAt( i ) : null;
+					if(b) {
+						b.visible = b.includeInLayout = visible;
+						
+						if(b.selected && !b.visible)
+							tabBar.selectedIndex = getChildIndex( myStats );
+					}
+				}
+			}
+			
+			private function setTabsVisible() : void {
+				var visibleTabs : int = 0;
+				for( var i :int = 0; i < tabBar.numChildren; i++ ) {
+					if( tabBar.getChildAt( i ).visible )
+						visibleTabs++;	
+				}
+				
+				setStyle("tabHeight", ( visibleTabs > 1 ? NaN : 0 ) );
+			}
+			
+			private function set modulesConfig( val : XML ) : void {
+				_modulesConfig = val;
+				_parseModules = true;
+				invalidateProperties();
+			}
+			private var _modulesConfig : XML;
+						
+			
+			private function handleReady( event : ModuleEvent ) : void {
+				var loader : ModuleLoader = event.currentTarget as ModuleLoader;
+				var module : IProgressReportModule = loader.child as IProgressReportModule;
+				_model.dataLoading = false;
+				
+				if(module) {
+					loader.enabled = true;
+					
+					BindingUtils.bindProperty( module, "gatewayUrl", _model, "gatewayURL" );
+					BindingUtils.bindProperty( module, "instanceId", _model, "appInstanceID" );
+				}
+				
+			}
+			
+			private function handleModuleShow( event : Event ) : void {
+				if(event.currentTarget.child) {
+					IProgressReportModule(event.currentTarget.child).update();
+				}
+			}
+			
+			[Bindable] private var _model : ETModelLocator = ETModelLocator.getInstance();
+			
+			private var _parseModules : Boolean;			
+			
+			private static const MODULES_PATH : String = ( Security.sandboxType == Security.REMOTE ? "modules" : "com/enilsson/elephanttrakker/modules" );
+			
+		]]>
+	</mx:Script>
+					
+</mx:TabNavigator>

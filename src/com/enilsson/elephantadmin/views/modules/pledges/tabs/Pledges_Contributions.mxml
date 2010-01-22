@@ -42,6 +42,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.elephantadmin.views.modules.pledge_workspace.model.PledgeWorkspaceModel;
 			import com.enilsson.elephantadmin.views.modules.pledge_workspace.model.PledgeWorkspaceVO;
 			import com.enilsson.elephantadmin.models.EAModelLocator;
 			import mx.core.Application;
@@ -71,7 +72,7 @@
 
 				// set workspace variables
 				var vo:PledgeWorkspaceVO = new PledgeWorkspaceVO();
-				vo.action = 'pledgeworkspace_edit';
+				vo.action = PledgeWorkspaceModel.EDIT;
 				vo.pledgeID = selectedRecord.id;
 				EAModelLocator.getInstance().pledgeWorkspace = vo;
 				
