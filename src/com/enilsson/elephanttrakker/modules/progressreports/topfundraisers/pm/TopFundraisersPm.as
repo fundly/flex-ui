@@ -4,7 +4,6 @@ package com.enilsson.elephanttrakker.modules.progressreports.topfundraisers.pm
 	import com.enilsson.elephanttrakker.modules.progressreports.events.Events;
 	import com.enilsson.elephanttrakker.modules.progressreports.topfundraisers.components.FundraiserStatsWrapper;
 	import com.enilsson.elephanttrakker.modules.progressreports.topfundraisers.components.RankingIconEnum;
-	import com.enilsson.elephanttrakker.modules.progressreports.topfundraisers.controls.FundraiserStatsRenderer;
 	
 	import flash.events.Event;
 	import flash.events.IEventDispatcher;
@@ -23,13 +22,13 @@ package com.enilsson.elephanttrakker.modules.progressreports.topfundraisers.pm
 			
 		public var selectedOption		: Object = OPTIONS.getItemAt(0);
 		public var fundraisersWithIcons : ArrayCollection = new ArrayCollection();
-		
 				
 		
 		public function set topFundraisers( val :ArrayCollection ) : void { 
+				
 			_topFundraisers = val;
 			
-			fundraisersWithIcons.removeAll();
+			removeAllFundraisers();
 			
 			if( _topFundraisers ) {
 				
@@ -55,26 +54,32 @@ package com.enilsson.elephanttrakker.modules.progressreports.topfundraisers.pm
 		public function handleOptionChange( event : Event ) : void {
 			
 			var item : Object = event.currentTarget.selectedItem;
-			if(item) {
+			if( item ) {
 				selectedOption = item;
-				dispatchGetEvent( selectedOption.eventType );
+				updateFundraisers();
 			}
 			else {
 				event.currentTarget.selectedItem = selectedOption;
 			}
 		}
 		
-		
-		public function TopFundraisersPm( dispatcher : IEventDispatcher ) {
-			_dispatcher = dispatcher;
+		public function updateFundraisers() : void {
+			removeAllFundraisers();
 			dispatchGetEvent( selectedOption.eventType );
 		}
 		
-		
+		public function TopFundraisersPm( dispatcher : IEventDispatcher ) {
+			_dispatcher = dispatcher;
+		}
 		
 		private function dispatchGetEvent( eventType : String ) : void {
 			var e : GetEvent = new GetEvent( eventType, this, "topFundraisers" );
 			_dispatcher.dispatchEvent( e );
+		}
+		
+		private function removeAllFundraisers() : void {
+			if( fundraisersWithIcons && fundraisersWithIcons.length > 0)
+				fundraisersWithIcons.removeAll();
 		}
 		
 		private var _dispatcher : IEventDispatcher;

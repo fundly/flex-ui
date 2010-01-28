@@ -22,7 +22,8 @@
 
 	<events:EventMap dispatcher="{this}" mappings="{mappings}" /> 
 	
-	<views:TopFundraisersView width="100%" height="100%"
+	<views:TopFundraisersView id="topFundraisersView" 
+		width="100%" height="100%"
 		xmlns:views="com.enilsson.elephanttrakker.modules.progressreports.topfundraisers.views.*"/>
 		
 	<mx:Script>
@@ -39,6 +40,21 @@
 			public function get gatewayUrl() : String { return _gatewayUrl; }
 			public function set gatewayUrl( val : String ) : void { _gatewayUrl = val; }
 			private var _gatewayUrl : String;
+			
+			public function update() : void {
+				_update = true;
+				invalidateProperties();
+			}
+			
+			override protected function commitProperties() : void {
+				super.commitProperties();
+				if(_update) {
+					_update = false;
+					topFundraisersView.update();
+				}
+			}
+			
+			private var _update : Boolean;
 		]]>
 	</mx:Script>
 	

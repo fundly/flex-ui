@@ -53,6 +53,8 @@
 		<mx:DataGridColumn width="150" dataField="email" headerText="Email" />
 		<mx:DataGridColumn width="150" dataField="occupation" headerText="Occupation"/>
 		<mx:DataGridColumn width="200" dataField="employer" headerText="Employer"/>
+		<mx:DataGridColumn width="80" dataField="employer_city" headerText="Employer City"/>
+		<mx:DataGridColumn width="80" dataField="employer_state" headerText="Employer State"/>
 		<mx:DataGridColumn width="90" dataField="contribution_type" headerText="Contribution Type"/>
 		<mx:DataGridColumn width="90" dataField="full_name" headerText="Name on Card or Account"/>
 		<mx:DataGridColumn width="60" dataField="fund_type" headerText="Fund Type"/>

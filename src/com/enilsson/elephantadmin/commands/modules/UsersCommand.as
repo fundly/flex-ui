@@ -8,7 +8,6 @@ package com.enilsson.elephantadmin.commands.modules
 	import com.enilsson.elephantadmin.business.RecordsDelegate;
 	import com.enilsson.elephantadmin.events.modules.RecordModuleEvent;
 	import com.enilsson.elephantadmin.events.modules.UsersEvent;
-	import com.enilsson.elephantadmin.events.session.SessionFailEvent;
 	import com.enilsson.elephantadmin.views.modules.users.model.UsersModel;
 	import com.enilsson.elephantadmin.vo.ErrorVO;
 	import com.enilsson.elephantadmin.vo.NewUserVO;
@@ -246,12 +245,6 @@ package com.enilsson.elephantadmin.commands.modules
 								'errorBox', 
 								true 
 							);					
-				break;
-				default:
-					// run the session fail event
-					this.nextEvent = new SessionFailEvent( event.fault.faultCode );
-					this.executeNextCommand();
-					this.nextEvent = null;
 				break;
 			}
 		}

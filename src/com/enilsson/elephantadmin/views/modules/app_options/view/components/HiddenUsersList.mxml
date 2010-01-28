@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModuleList 
+	xmlns="com.enilsson.elephantadmin.views.common.*" 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	
+	searchComboList="{SEARCH_OPTIONS}"
+	searchStart="handleSearchStart( event )"
+	indexSearch="handleIndexSearch( event )"
+	clearSearch="reset()"
+	newPage="handleNewPage( event )"
+	selectedPage="{ selectedPage / itemsPerPage }"
+	creationComplete="reset()"
+	
+	borderStyle="solid"
+	verticalGap="0"
+	paddingTop="0" paddingBottom="0" 
+	paddingLeft="0" paddingRight="0">
+	
+	<itemRenderer>
+		<mx:Component>
+			<renderers:HiddenUsersListRenderer
+				xmlns:renderers="com.enilsson.elephantadmin.views.modules.app_options.view.renderers.*" />
+		</mx:Component>
+	</itemRenderer>
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.utils.ObjectProxy;
+			import com.enilsson.elephantadmin.events.modules.app_options.GetUsersEvent;
+			import mx.collections.ArrayCollection;
+			
+			public static const SEARCH_OPTIONS : ArrayCollection = new ArrayCollection([ 
+				{label:"FIRST NAME", data:"tr_users.fname"}, 
+				{label:"LAST NAME", data:"tr_users.lname"},
+				{label:"FID", data:"tr_users._fid"}
+			]);
+			
+			private function handleSearchStart( event : Event ) : void {
+				
+			}
+			
+			private function handleIndexSearch( event : Event ) : void {
+				
+			}
+			
+			private function reset() : void {
+				header.height = 0;
+				clearSearch.visible = false;
+				new GetUsersEvent().dispatch();
+			}
+			
+			private function handleNewPage( event : Event ) : void {
+				new GetUsersEvent(selectedPage).dispatch();	
+			}
+			
+			[Bindable] private var _currentPage : int = 0; 	
+		]]>
+	</mx:Script>
+	
+</ModuleList>

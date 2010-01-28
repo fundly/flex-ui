@@ -233,8 +233,6 @@
 			import com.enilsson.elephantadmin.views.modules.app_options.model.AppOptionsModel;
 			import com.enilsson.elephantadmin.models.Icons;
 			import com.enilsson.elephantadmin.views.modules.batch.model.BatchModel;
-			import com.enilsson.elephantadmin.utils.DispatchingTimer;
-			import com.enilsson.elephantadmin.events.session.SessionFailEvent;
 			import com.enilsson.elephantadmin.events.GetVersionEvent;
 			import com.enilsson.elephantadmin.views.modules.pledges.model.PledgesModel;
 			import com.enilsson.elephantadmin.views.modules.dashboard.model.DashboardModel;
@@ -243,7 +241,6 @@
 			import mx.utils.ObjectUtil;
 			import com.enilsson.elephantadmin.events.session.SessionEvent;
 			import com.enilsson.elephantadmin.events.main.ViewStateEvent;
-			import com.enilsson.elephantadmin.events.session.PingEvent;
 			import com.enilsson.elephantadmin.models.EAModelLocator;
 
 			import org.osflash.thunderbolt.Logger;

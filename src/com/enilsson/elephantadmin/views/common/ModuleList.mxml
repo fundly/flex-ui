@@ -27,11 +27,9 @@
 			import com.enilsson.elephantadmin.models.EAModelLocator;
 			
 			[Bindable] private var _model:EAModelLocator = EAModelLocator.getInstance();
+
 			
-			[Bindable] private var _dataProvider:ArrayCollection;
-			[Bindable] private var _searchComboList:ArrayCollection;
-			
-			
+			[Bindable]
 			public function get dataProvider():ArrayCollection
 			{
 				return _dataProvider;
@@ -42,19 +40,24 @@
 				
 				setText();
 			}
+			private var _dataProvider:ArrayCollection;
 
 			public function set searchComboList(value:ArrayCollection):void
 			{
 				_searchComboList = value;
-			}			
+			}
+			[Bindable] private var _searchComboList:ArrayCollection;	
 
-			[Bindable] private var _totalRecords:Number = 0;
+
 			public function set totalRecords(value:Number):void
 			{
 				_totalRecords = value;
 			}
+			[Bindable] private var _totalRecords:Number = 0;
 			
-			[Bindable] public function get selectedIndex():int
+			
+			[Bindable] 
+			public function get selectedIndex():int
 			{
 				return moduleList.selectedIndex;
 			}
@@ -64,7 +67,7 @@
 				moduleList.selectedIndex = value;
 			}
 			
-			[Bindable] private var _itemRenderer:IFactory;
+			[Bindable]
 		    public function get itemRenderer():IFactory
 		    {
 		        return _itemRenderer;
@@ -73,8 +76,10 @@
 			{
 				_itemRenderer = value;
 			}
+			private var _itemRenderer:IFactory;
 			
-			[Bindable] private var _itemsPerPage:int = 0;
+			
+			[Bindable]
 			public function set itemsPerPage(value:int):void
 			{
 				_itemsPerPage = value;
@@ -83,9 +88,11 @@
 			public function get itemsPerPage():int
 			{
 				return _itemsPerPage;
-			}	
+			}
+			private var _itemsPerPage:int = 0;
 			
-			[Bindable] private var _itemsTotal:int = 0;			
+			
+			[Bindable]			
 			public function set itemsTotal(value:int):void
 			{
 				_itemsTotal = value;
@@ -94,7 +101,8 @@
 			public function get itemsTotal():int
 			{
 				return _itemsTotal;
-			}	
+			}
+			private var _itemsTotal:int = 0;
 			
 			public function get clickedItem():Object
 			{
@@ -111,6 +119,8 @@
 				return searchBox.searchOption;
 			}			
 
+			[Bindable]
+			[Bindable(event="newPage")]
 			public function get selectedPage():int
 			{
 				return paginator.selectedIndex;
@@ -167,11 +177,11 @@
 	<mx:HBox id="indexList" width="100%" height="100%" horizontalGap="0">
 		<mx:List id="moduleList"
 			width="100%" height="100%" 
-			dataProvider="{_dataProvider}"
-			itemRenderer="{_itemRenderer}"
+			dataProvider="{dataProvider}"
+			itemRenderer="{itemRenderer}"
 			variableRowHeight="true" 
 			alternatingItemColors="[#e0e0e0, #e7e7e7]"
-			rowCount="{_dataProvider.length}"
+			rowCount="{dataProvider.length}"
 			borderStyle="none" 
 			itemClick="listClickHandler(event)"
 			/>
@@ -179,7 +189,7 @@
 	</mx:HBox>
 		
 	<mx:Canvas id="paginationBox" 
-		visible="{_itemsTotal &gt; _itemsPerPage}"
+		visible="{itemsTotal &gt; itemsPerPage}"
 		showEffect="slideUp" hideEffect="slideDown"
 		backgroundColor="#CCCCCC"
 		height="0"
@@ -192,8 +202,8 @@
 			verticalCenter="0" horizontalCenter="0" 
 			buttonHeight="18" 
 			newPage="dispatchEvent( new Event( 'newPage', true ) );" 
-			itemsPerPage="{_itemsPerPage}" 
-			itemsTotal="{_itemsTotal}" 
+			itemsPerPage="{itemsPerPage}" 
+			itemsTotal="{itemsTotal}" 
 			/>
 		
 	</mx:Canvas>

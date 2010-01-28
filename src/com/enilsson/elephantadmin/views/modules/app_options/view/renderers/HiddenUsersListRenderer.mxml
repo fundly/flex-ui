@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+	width="100%" height="100%"
+	horizontalScrollPolicy="off"
+	toolTip="{data.fname} {data.lname} may {( cb.selected ? '' : 'not' )} appear in the Top 25">
+	
+	<mx:CheckBox id="cb"
+		selected="{data._show_stats}" change="handleChange( event )" 
+		left="5" verticalCenter="0" />
+		
+	<mx:Label
+		truncateToFit="true"
+		text="{data.fname} {data.lname} ({data._fid})" 
+		left="25" verticalCenter="0" />
+	
+	<mx:Script>
+		<![CDATA[
+			private function handleChange( event : Event ) : void {
+					
+			} 
+		]]>
+	</mx:Script>
+	
+</mx:Canvas>

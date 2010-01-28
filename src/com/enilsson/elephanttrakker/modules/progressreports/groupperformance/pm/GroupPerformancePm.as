@@ -18,9 +18,11 @@ package com.enilsson.elephanttrakker.modules.progressreports.groupperformance.pm
 		}
 		private var _groupStats : ArrayCollection;
 		
-		public function GroupPerformancePm( dispatcher : IEventDispatcher )
-		{
+		public function GroupPerformancePm( dispatcher : IEventDispatcher ) {
 			_dispatcher = dispatcher;
+		}
+		
+		public function updateGroupStats() : void {
 			requestGroupStats();
 		}
 		

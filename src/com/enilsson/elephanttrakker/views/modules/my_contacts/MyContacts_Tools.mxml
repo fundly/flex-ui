@@ -123,7 +123,7 @@
 			 */
 			private function browseFiles():void
 			{
-				new SessionEvent('get_session_info').dispatch();
+				new SessionEvent(SessionEvent.GET_SESSION_INFO).dispatch();
 				
 				resetForm();
 				var textTypes:FileFilter = new FileFilter("CSV File (.csv)", "*.csv;");

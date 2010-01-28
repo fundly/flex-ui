@@ -4,11 +4,23 @@
 
 	<import file="build-blueswarm.xml" />
 	
-	<property name="report.modules.src.dir" value="${flex.src.dir}/com/enilsson/elephantadmin/views/modules/reporting" />
-	<property name="report.modules.build.dir" value="${admin.build.dir}/report_modules/core" />
-			
 	
-	<!-- Enabled modules -->
+	<!-- client modules directory names -->
+	<property name="client.modules.src.dir" value="${flex.src.dir}/com/enilsson/elephanttrakker/modules" />
+	<property name="client.modules.build.dir" value="${client.build.dir}/modules" />
+	
+	<!-- admin reporting modules directory names -->
+	<property name="report.modules.src.dir" value="${flex.src.dir}/com/enilsson/elephantadmin/views/modules/reporting" />
+	<property name="report.modules.build.dir" value="${admin.build.dir}/report_modules/core" />	
+	
+	
+	
+	<!-- Client modules -->
+	<property name="module.groupperformance" value="GroupPerformanceModule" />
+	<property name="module.topfundraisers" value="TopFundraisersModule" />
+	
+	
+	<!-- Admin reporting modules -->
 	<property name="all_contributions.dir" value="${report.modules.src.dir}/all_contributions" />
 	<property name="module.all_contributions" value="AllContributions_Module" />
 	
@@ -35,7 +47,23 @@
 	
 	
 	<target name="init" depends="build.blueswarm.init">
+		<mkdir dir="${client.modules.build.dir}"/>
 		<mkdir dir="${report.modules.build.dir}" />
+	</target>
+	
+	
+	<target name="compile.client.modules" depends="init, export.revision, check.client.modules.uptodate" unless="client.modules.uptodate">
+		<antcall target="compile.module">
+			<param name="param.mxml" value="${client.modules.src.dir}/${module.topfundraisers}.mxml" />
+			<param name="param.swf" value="${client.modules.build.dir}/${module.topfundraisers}.swf" />
+		</antcall>
+		<antcall target="compile.module">
+			<param name="param.mxml" value="${client.modules.src.dir}/${module.groupperformance}.mxml" />
+			<param name="param.swf" value="${client.modules.build.dir}/${module.groupperformance}.swf" />
+		</antcall>
+		
+		<!-- copy the revision as a marker so that ANT knows when to rebuild -->
+		<copy file="${revision.file}" todir="${client.modules.build.dir}" overwrite="true" />
 	</target>
 		
 	<target name="compile.report.modules" depends="init, export.revision, check.report.modules.uptodate" unless="report.modules.uptodate">
@@ -84,12 +112,20 @@
 		<copy file="${revision.file}" todir="${report.modules.build.dir}" overwrite="true" />
 	</target>
 	
+	<target name="check.client.modules.uptodate">
+		<condition property="client.modules.uptodate">
+			<filesmatch file1="${revision.file}" file2="${client.modules.build.dir}/${revision.filename}" />
+		</condition>
+	</target>
+	
+	
 	<target name="check.report.modules.uptodate">
 		<condition property="report.modules.uptodate">
 			<filesmatch file1="${revision.file}" file2="${report.modules.build.dir}/${revision.filename}" />
 		</condition>
 	</target>
 	
-	<target name="compile" depends="build.blueswarm.compile, compile.report.modules" />
+	
+	<target name="compile" depends="build.blueswarm.compile, compile.client.modules, compile.report.modules" />
 
 </project>
