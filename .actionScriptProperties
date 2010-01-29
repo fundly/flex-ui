@@ -13,6 +13,7 @@
           </libraryPathEntry>
         </modifiedEntries>
       </libraryPathEntry>
+      <libraryPathEntry kind="3" linkType="1" path="/eNilssonFlexLibrary_STABLE/bin/eNilssonFlexLibrary_STABLE.swc" useDefaultLinkType="false"/>
       <libraryPathEntry kind="1" linkType="1" path="libs"/>
     </libraryPath>
     <sourceAttachmentPath/>
@@ -30,6 +31,8 @@
     <module application="src/ET_admin.mxml" destPath="com/enilsson/elephantadmin/views/modules/reporting/donationwidget/DonationWidget_Module.swf" optimize="true" sourcePath="src/com/enilsson/elephantadmin/views/modules/reporting/donationwidget/DonationWidget_Module.mxml"/>
     <module application="src/ET_admin.mxml" destPath="com/enilsson/elephantadmin/views/modules/reporting/external/netfile/NetFile_Module.swf" optimize="true" sourcePath="src/com/enilsson/elephantadmin/views/modules/reporting/external/netfile/NetFile_Module.mxml"/>
     <module application="src/ET_admin.mxml" destPath="com/enilsson/elephantadmin/views/modules/reporting/external/ocpf/OCPF_Module.swf" optimize="true" sourcePath="src/com/enilsson/elephantadmin/views/modules/reporting/external/ocpf/OCPF_Module.mxml"/>
+    <module application="src/ET_cairngorm.mxml" destPath="com/enilsson/elephanttrakker/modules/GroupPerformanceModule.swf" optimize="true" sourcePath="src/com/enilsson/elephanttrakker/modules/GroupPerformanceModule.mxml"/>
+    <module application="src/ET_cairngorm.mxml" destPath="com/enilsson/elephanttrakker/modules/TopFundraisersModule.swf" optimize="true" sourcePath="src/com/enilsson/elephanttrakker/modules/TopFundraisersModule.mxml"/>
   </modules>
   <buildCSSFiles/>
 </actionScriptProperties>
