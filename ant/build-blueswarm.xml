@@ -44,19 +44,23 @@
 			locale="en_US"
 			actionscript-file-encoding="UTF-8"
 			keep-generated-actionscript="false"
+			allow-source-path-overlap="true"
 			optimize="true"
 			static-rsls="false"
 			debug="${swf.debug}">
 		
 			<source-path path-element="${flex.src.dir}" />
 			<source-path path-element="${flex.framework.dir}" />
-			
+			<source-path path-element="${enilsson.lib}" />
+						
 			<library-path dir="${flex.framework.dir}" append="true">
 				<include name="${flex.lib.dir}" />
-               	<include name="locale/en_US" />
-			</library-path>
-			
+				<include name="locale/{locale}" />
+			</library-path>			
 			<library-path dir="${basedir}" append="true">
+				<include name="${flex.lib.dir}" />
+			</library-path>
+			<library-path dir="${enilsson.lib}" append="true">
 				<include name="${flex.lib.dir}" />
 			</library-path>
 			
@@ -91,19 +95,24 @@
 			default-background-color="0x333333"
 			actionscript-file-encoding="UTF-8"
 			keep-generated-actionscript="false"
+			allow-source-path-overlap="true"
 			optimize="true"
 			static-rsls="false"
 			debug="${swf.debug}">
 			
 			<source-path path-element="${flex.src.dir}" />
 			<source-path path-element="${flex.framework.dir}" />
+			<source-path path-element="${enilsson.lib}" />
+			<source-path path-element="${enilsson.lib}/locale/{locale}" />
 						
 			<library-path dir="${flex.framework.dir}" append="true">
 				<include name="${flex.lib.dir}" />
-				<include name="locale/en_US" />
-			</library-path>
-			
+				<include name="locale/{locale}" />
+			</library-path>			
 			<library-path dir="${basedir}" append="true">
+				<include name="${flex.lib.dir}" />
+			</library-path>
+			<library-path dir="${enilsson.lib}" append="true">
 				<include name="${flex.lib.dir}" />
 			</library-path>
 			

@@ -13,5 +13,8 @@ FLEX_HOME=${flex.sdk.home}
 # url of the runtime shared libraries
 rsl.url=https://assets.blue-swarm.com/rsls
 
+#path to enilssonFlexLibrary
+enilsson.lib=../eNilssonFlexLibrary
+
 # path to svnversion
 svnversion=/usr/local/bin/svnversion

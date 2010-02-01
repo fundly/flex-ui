@@ -95,6 +95,9 @@
 							message = 'Sorry, it looks like your session has expired. Please log in again.';
 							reset = true;
 						}
+						else if( _model.screenState == EAModelLocator.LOGIN_SCREEN) { 
+							return;
+						}
 						else {
 							title = 'Sorry, your request could not be sent';
 							message = 'Ooops, it seems like there was a problem sending your last request. Please make sure your internet connection is working correctly and try again.';							
