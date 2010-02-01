@@ -34,7 +34,7 @@
 			<mx:TextArea id="confirmationInput" 
 				text="{_xml.confirmation}" 
 				height="100" width="100%"
-				change="setXmlValue('confirmation', descriptionInput.text)"/>
+				change="setXmlValue('confirmation', confirmationInput.text)"/>
 			<mx:HBox width="100%" horizontalAlign="center">
 				<components:VariableSelector id="variableSelector"
 					dataProvider="{this.variables}"
