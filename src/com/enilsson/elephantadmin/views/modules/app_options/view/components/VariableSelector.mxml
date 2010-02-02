@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" enabled="{dataProvider.length > 0}">
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" visible="{_hasData}" includeInLayout="{_hasData}">
 
-	<mx:ComboBox id="variablesCb" minWidth="130" dataProvider="{dataProvider}" />
+	<mx:ComboBox id="variablesCb" minWidth="130" dataProvider="{_dataProvider}" />
 	
 	<mx:Button id="addButton" label="Add variable" 
 		toolTip="Add variable to text"
@@ -18,7 +18,13 @@
 			
 			public static const ADD_VARIABLE : String = "addVariable";
 						
-			[Bindable] public var dataProvider : ICollectionView;
+			[Bindable] private var _hasData : Boolean; 
+			
+			public function set dataProvider( val : ICollectionView ) : void {
+				_dataProvider = val;
+				_hasData = val && val.length > 0;	
+			}
+			[Bindable] private var _dataProvider : ICollectionView;
 			
 		]]>
 	</mx:Script>

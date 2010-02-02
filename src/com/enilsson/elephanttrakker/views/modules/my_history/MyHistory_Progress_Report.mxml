@@ -9,7 +9,7 @@
 		xmlns:myhistory="com.enilsson.elephanttrakker.views.modules.my_history.*"  />
 		
 	<mx:ModuleLoader
-		name="topfundraisers"
+		name="{TOPFUNDRAISERS}"
 		label="Top 25"
 		width="100%" height="100%"
 		ready="handleReady(event)"
@@ -18,7 +18,7 @@
 		url="{MODULES_PATH}/TopFundraisersModule.swf?t={new Date().getTime()}" />
 		
 	<mx:ModuleLoader
-		name="groupperformance"
+		name="{GROUPPERFORMANCE}"
 		label="Group Performance"
 		width="100%" height="100%"
 		ready="handleReady(event)"
@@ -65,14 +65,22 @@
 			
 			
 			private function parseModulesConfig() : void {
-				if( _modulesConfig ) {
+				if( _modulesConfig && _modulesConfig.length() > 0 ) {
 					var l : XMLList = _modulesConfig.children();
 					
 					for( var i : int = 0; i < l.length(); i++ ) {
 						var x : XML = l[i];
 						setModuleVisible( x.name(), x.enabled == 'true' );
 					}
+				}
+				else {
+					setAllModulesInvisible();
 				}				
+			}
+			
+			private function setAllModulesInvisible() : void {
+				setModuleVisible( TOPFUNDRAISERS, false );
+				setModuleVisible( GROUPPERFORMANCE, false );
 			}
 			
 			private function setModuleVisible( name : String, visible : Boolean ) : void {
@@ -130,6 +138,9 @@
 			[Bindable] private var _model : ETModelLocator = ETModelLocator.getInstance();
 			
 			private var _parseModules : Boolean;			
+			
+			private static const TOPFUNDRAISERS 	: String = "topfundraisers";
+			private static const GROUPPERFORMANCE	: String = "groupperformance";
 			
 			private static const MODULES_PATH : String = ( Security.sandboxType == Security.REMOTE ? "modules" : "com/enilsson/elephanttrakker/modules" );
 			

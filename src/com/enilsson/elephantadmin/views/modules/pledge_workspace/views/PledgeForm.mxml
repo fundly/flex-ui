@@ -16,21 +16,24 @@
 		<mx:Canvas label="No contribution details" />
 	</mx:ViewStack>
 	
-	<struktorForm:StruktorForm id="pledgeInfo" 
-		styleName="processingForm"
-		width="50%" maxHeight="240" 
-		left="0" top="5"
-		layoutProvider="{presentationModel.pledgeLayout}"
-		dataProvider="{presentationModel.initialPledgeData}"
-		isValidChanged="setIsValid()" 
-		validateOnKeyPress="true"
-		formBuildComplete="formBuildCompleteAction(event)" 
-		selectedGroups="{[2]}" 
-		groupLabels="false" />
+	<mx:Canvas id="pledgeInfoContainer" 
+		left="0" top="5" bottom="5" 
+		width="50%" maxHeight="240"
+		horizontalScrollPolicy="off">
+		<struktorForm:StruktorForm id="pledgeInfo"
+			right="{_pledgeInfoRight}"
+			styleName="processingForm"
+			layoutProvider="{presentationModel.pledgeLayout}"
+			dataProvider="{presentationModel.initialPledgeData}"
+			isValidChanged="setIsValid()" 
+			validateOnKeyPress="true"
+			formBuildComplete="formBuildCompleteAction(event)" 
+			selectedGroups="{[2]}" 
+			groupLabels="false" />
+	</mx:Canvas>
 		
 	<mx:VBox styleName="transactionsBox" 
-		width="305" height="235" 
-		top="0" right="10" 
+		width="305" top="0" right="10" bottom="5" 
 		horizontalAlign="center" 
 		horizontalScrollPolicy="off">
 		
@@ -526,6 +529,14 @@
 					break;
 				}
 			}
+			
+			override protected function updateDisplayList(w:Number, h:Number):void {
+				super.updateDisplayList( w, h );
+				
+				_pledgeInfoRight = pledgeInfoContainer.verticalScrollBar ? pledgeInfoContainer.verticalScrollBar.width : 0;
+			}
+			
+			[Bindable] private var _pledgeInfoRight : Number;
 		]]>
 	</mx:Script>
 	
