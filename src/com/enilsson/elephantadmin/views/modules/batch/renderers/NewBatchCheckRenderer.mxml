@@ -6,7 +6,7 @@
 	horizontalScrollPolicy="off" verticalScrollPolicy="off">
 	
 	<mx:DateFormatter id="df" formatString="MM/DD/YYYY" />
-	<mx:CurrencyFormatter id="cf" currencySymbol="$" precision="0" />
+	<mx:CurrencyFormatter id="cf" currencySymbol="$" precision="2" />
 
 	<mx:VBox verticalGap="0" left="0" height="100%">
 		<mx:Label text="{data.full_name}"

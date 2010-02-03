@@ -156,7 +156,7 @@
 
 	</mx:VBox>
 
-	<mx:CurrencyFormatter id="currencyFormatter" precision="0" currencySymbol="$" useNegativeSign="false" />
+	<mx:CurrencyFormatter id="currencyFormatter" precision="2" currencySymbol="$" useNegativeSign="false" />
 	<mx:DateFormatter id="dateFormatter" />
 
 	<mx:Script>

@@ -41,7 +41,7 @@
 	<mx:SeriesInterpolate id="seriesInterpolate" duration="{INTERPOLATE_DURATION}" />
 	
 	<mx:DateFormatter id="dateFormatter" formatString="LA"/>
-	<mx:CurrencyFormatter id="cf" precision="0" />
+	<mx:CurrencyFormatter id="cf" precision="2" />
 	
 	<mx:Script>
 		<![CDATA[

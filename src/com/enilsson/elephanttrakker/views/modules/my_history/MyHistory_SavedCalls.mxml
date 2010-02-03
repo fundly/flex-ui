@@ -29,7 +29,7 @@
 		itemsPerPage="{_model.itemsPerPage}" itemsTotal="{_model.my_history.numSavedCalls}" />
 
 
-	<mx:CurrencyFormatter id="currencyFormatter" precision="0" currencySymbol="$" useNegativeSign="false" />
+	<mx:CurrencyFormatter id="currencyFormatter" precision="2" currencySymbol="$" useNegativeSign="false" />
 	<mx:DateFormatter id="dateFormatter" formatString="MM/DD/YY" />
 
 	

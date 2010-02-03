@@ -5,10 +5,11 @@
 	xmlns:option_views="com.enilsson.elephantadmin.views.modules.app_options.view.option_views.*"
 	styleName="panel" 
 	layout="absolute"
-	title="{_pm.editorTitle}">
-	
+	title="{_pm.editorTitle}"
+	tabEnabled="false">
+		
 	<mx:ViewStack id="optionsVStack"
-		 width="100%" height="100%" selectedIndex="-1">
+		 width="100%" height="100%" selectedIndex="-1" tabEnabled="false">
 		<option_views:Options_AgentsAgreement name="agents_agreement" pm="{_pm}" />
 		<option_views:Options_PrivacyStatement name="privacy_statement" pm="{_pm}" />
 		<option_views:Options_WorkplaceAgreement name="workspace_agreement" pm="{_pm}" />
@@ -36,7 +37,6 @@
 		</mx:HBox>		
 	</common:ModuleControlBar>
 	
-	<mx:Binding source="this.siteOption" destination="siteOption" />
 		
 	<mx:Script>
 		<![CDATA[
@@ -65,7 +65,7 @@
 					if(siteOption)
 						optionsVStack.selectedChild = optionsVStack.getChildByName( siteOption.name ) as Container;
 					else
-						optionsVStack.selectedChild = null;	
+						optionsVStack.selectedChild = optionsVStack.getChildAt(0) as Container;	
 				}
 			}
 		]]>

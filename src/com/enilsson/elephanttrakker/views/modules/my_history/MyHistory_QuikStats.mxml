@@ -60,7 +60,7 @@
 	<mx:WipeLeft id="wipeLeft" duration="400" />
 	<mx:WipeRight id="wipeRight" duration="400" />
 	<mx:SeriesSlide id="slideIn" duration="600" direction="down"/>
-	<mx:CurrencyFormatter id="cF" precision="0" currencySymbol="$" useNegativeSign="false" />	
+	<mx:CurrencyFormatter id="cF" precision="2" currencySymbol="$" useNegativeSign="false" />	
 
 	<mx:Style>
 		.axisTitle {

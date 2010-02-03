@@ -38,7 +38,7 @@
 	</mx:VBox>
 	
 	
-	<mx:CurrencyFormatter id="cf" currencySymbol="$" precision="0" />
+	<mx:CurrencyFormatter id="cf" currencySymbol="$" precision="2" />
 	
 	<mx:Script>
 		<![CDATA[

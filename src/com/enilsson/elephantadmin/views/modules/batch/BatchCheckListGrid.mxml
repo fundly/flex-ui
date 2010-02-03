@@ -73,7 +73,7 @@
 	</states>
 
 	<DateFormatter id="df" formatString="MM/DD/YYYY" />
-	<CurrencyFormatter id="cf" currencySymbol="$" precision="0" />
+	<CurrencyFormatter id="cf" currencySymbol="$" precision="2" />
 
 	<Script>
 		<![CDATA[

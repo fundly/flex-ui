@@ -78,7 +78,7 @@
 		<mx:DataGridColumn width="100" dataField="mod_group_name" headerText="Region Name" />
 	</mx:Array>
 
-	<mx:CurrencyFormatter id="currencyFormatter" precision="0" currencySymbol="$" useNegativeSign="false" />
+	<mx:CurrencyFormatter id="currencyFormatter" precision="2" currencySymbol="$" useNegativeSign="false" />
 	<mx:DateFormatter id="dateFormatter"/>
 
 	<mx:Script>

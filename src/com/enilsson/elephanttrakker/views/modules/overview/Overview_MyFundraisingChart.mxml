@@ -203,7 +203,7 @@
 	</mx:Script>	
 	
 	<mx:SeriesSlide id="slideIn" duration="600" direction="down"/>
-	<mx:CurrencyFormatter id="cF" precision="0" currencySymbol="$" useNegativeSign="false" />
+	<mx:CurrencyFormatter id="cF" precision="2" currencySymbol="$" useNegativeSign="false" />
 
 	<mx:ApplicationControlBar styleName="overviewAppBar" width="{this.width}" height="25"	>
 		<mx:Text styleName="controlBarTitle" text="MY FUNDRAISING" />

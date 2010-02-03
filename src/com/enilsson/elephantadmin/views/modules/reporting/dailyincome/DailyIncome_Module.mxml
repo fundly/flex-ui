@@ -211,7 +211,7 @@
 	<mx:SeriesSlide id="slideIn" duration="600" direction="up"/>
 
 	<mx:CurrencyFormatter id="currencyFormatter" precision="2" currencySymbol="$" useNegativeSign="false" />
-	<mx:CurrencyFormatter id="chartCurrencyFormatter" precision="0" currencySymbol="$" useNegativeSign="false" />
+	<mx:CurrencyFormatter id="chartCurrencyFormatter" precision="2" currencySymbol="$" useNegativeSign="false" />
 	<mx:DateFormatter id="dateFormatter"/>
 	<mx:NumberValidator id="numberValidator" source="{expenditure}" property="text"/>
 

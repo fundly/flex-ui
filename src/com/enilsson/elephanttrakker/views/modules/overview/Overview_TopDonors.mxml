@@ -11,7 +11,7 @@
 		]]>
 	</mx:Script>		
 	
-	<mx:CurrencyFormatter id="cF" precision="0" currencySymbol="$" useNegativeSign="false" />	
+	<mx:CurrencyFormatter id="cF" precision="2" currencySymbol="$" useNegativeSign="false" />	
 	<mx:Fade id="fadeIn" alphaTo="1" alphaFrom="0" duration="600" />
 	
 	<mx:ApplicationControlBar styleName="overviewAppBar" width="{this.width}" height="25">

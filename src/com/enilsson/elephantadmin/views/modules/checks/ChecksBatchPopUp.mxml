@@ -63,7 +63,7 @@
 	<mx:Fade id="fadeOut" alphaTo="0" duration="300" />
 
 	<mx:CurrencyValidator id="cv" currencySymbol="$" thousandsSeparator="," decimalSeparator="." />
-	<mx:CurrencyFormatter id="currencyFormatter" precision="0" currencySymbol="$" useNegativeSign="false" />
+	<mx:CurrencyFormatter id="currencyFormatter" precision="2" currencySymbol="$" useNegativeSign="false" />
 	<mx:DateFormatter id="dateFormatter" />
 
 	<mx:Metadata>
