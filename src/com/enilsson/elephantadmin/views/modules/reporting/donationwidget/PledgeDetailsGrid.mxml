@@ -64,7 +64,7 @@
 
 	<mx:Array id="gridColumns">
 		<mx:DataGridColumn width="80" dataField="type" headerText="Payment Method" />
-		<mx:DataGridColumn width="115" dataField="amount" headerText="Contribution Amount" labelFunction="money_labelFunc" sortCompareFunction="amountCompare"/>
+		<mx:DataGridColumn width="115" dataField="amount" headerText="Contribution Amount" labelFunction="money_labelFunc" sortCompareFunction="amountCompare" textAlign="right"/>
 		<mx:DataGridColumn width="110" dataField="created_on" headerText="Created on" labelFunction="datetime_labelFunc"/>
 		<mx:DataGridColumn width="65" dataField="pledge_date" headerText="Pledge Date" labelFunction="date_labelFunc" />
 		<mx:DataGridColumn width="100" dataField="fname" headerText="First Name" />

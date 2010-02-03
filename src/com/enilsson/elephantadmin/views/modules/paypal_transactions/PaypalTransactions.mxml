@@ -50,7 +50,7 @@
 	<mx:Array id="columns">
 		<mx:DataGridColumn headerText="Name" labelFunction="nameLabel" sortCompareFunction="nameSort" width="50"/>
 		<mx:DataGridColumn headerText="Transaction ID" dataField="transactionid" width="80"/>
-		<mx:DataGridColumn headerText="Amount" labelFunction="amountLabel" sortCompareFunction="numberSort" width="50"/>
+		<mx:DataGridColumn headerText="Amount" textAlign="right" labelFunction="amountLabel" sortCompareFunction="numberSort" width="50"/>
 		<mx:DataGridColumn headerText="Date" dataField="created_on" labelFunction="date_labelFunc" sortCompareFunction="timeSort" width="100"/>
 	</mx:Array>
 

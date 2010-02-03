@@ -131,7 +131,7 @@
 				var dt:String = '';
 				
 				var cf:CurrencyFormatter = new CurrencyFormatter();
-				cf.precision = 0;
+				cf.precision = 2;
 				
 				dt += '<b><font face="Lucida Grande">' + seriesName + '</font></b><br>';
 				dt += '<font face="Lucida Grande">Month</font><font face="Lucida Grande">: ' + hitData.item.label + '</font><br>';

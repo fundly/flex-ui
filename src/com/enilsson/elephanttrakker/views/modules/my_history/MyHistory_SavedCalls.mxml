@@ -16,8 +16,8 @@
             <mx:DataGridColumn textAlign="left" dataField="address1" headerText="Address"  />
             <mx:DataGridColumn textAlign="left" dataField="city" headerText="City" />
             <mx:DataGridColumn textAlign="left" dataField="state" headerText="State" width="40"  />
-            <mx:DataGridColumn textAlign="left" dataField="pledge_amount" headerText="Amount" 
-            	width="65" fontWeight="bold" labelFunction="money_labelFunc"  /> 
+            <mx:DataGridColumn textAlign="right" dataField="pledge_amount" headerText="Amount" 
+            	width="65" fontWeight="bold" labelFunction="money_labelFunc" /> 
             <mx:DataGridColumn textAlign="left" dataField="modified_on_plain" headerText="Date" />           
             <mx:DataGridColumn textAlign="left" width="60" headerText="Actions" 
             	itemRenderer="com.enilsson.elephanttrakker.views.modules.my_history.renderers.MyHistory_SavedCallsActions" />

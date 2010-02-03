@@ -36,7 +36,8 @@
 						labelFunction="fundraiserLabel"
 						sortCompareFunction="fundraiserSort" />
 					<mx:DataGridColumn headerText="Amount" 
-						headerStyleName="dashboardHeaderElement" 
+						headerStyleName="dashboardHeaderElement"
+						textAlign="right" 
 						width="40" 
 						labelFunction="amountLabel" 
 						sortCompareFunction="amountSort" />

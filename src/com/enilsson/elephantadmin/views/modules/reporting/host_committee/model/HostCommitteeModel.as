@@ -159,7 +159,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.host_committee.model
 			{
 				var cf:CurrencyFormatter = new CurrencyFormatter();
 				cf.currencySymbol = "$";
-				cf.precision = 0;
+				cf.precision = 2;
 				cf.useNegativeSign = false;
 				exportTitle = 'Event Host Committee Report, Event: ' + eventFilter.getItemAt(eventSelectedIndex).label + 
 				', Goal: ' + cf.format(eventFilter.getItemAt(eventSelectedIndex).fundraising_goal)
@@ -440,7 +440,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.host_committee.model
 			
 			var cf:CurrencyFormatter = new CurrencyFormatter();
 			cf.currencySymbol = "$";
-			cf.precision = 0;
+			cf.precision = 2;
 			cf.useNegativeSign = false;
 
 			for each(var id:int in event.ids)

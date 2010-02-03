@@ -141,7 +141,7 @@
 		headerRelease="sortAction(event)">
 		<mx:columns>
             <mx:DataGridColumn textAlign="left" dataField="full_name" headerText="Full Name" />
-            <mx:DataGridColumn textAlign="left" dataField="amount" headerText="Amount" labelFunction="money_labelFunc" /> 
+            <mx:DataGridColumn textAlign="right" dataField="amount" headerText="Amount" labelFunction="money_labelFunc" /> 
             <mx:DataGridColumn textAlign="left" dataField="check_num" headerText="Check Number" />           
             <mx:DataGridColumn textAlign="left" dataField="created_on" headerText="Created" labelFunction="date_labelFunc" /> 
             <mx:DataGridColumn textAlign="left" dataField="entry_date" headerText="Received" labelFunction="entry_date_labelFunc" /> 

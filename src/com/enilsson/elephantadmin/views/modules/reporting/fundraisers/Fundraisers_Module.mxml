@@ -62,12 +62,12 @@
 		</mx:DataGridColumn>
 		<mx:DataGridColumn width="100" dataField="fname" headerText="First Name" />
 		<mx:DataGridColumn width="100" dataField="lname" headerText="Last Name" />
-		<mx:DataGridColumn width="90" dataField="_fundraising_goal" headerText="Fundraising Goal" labelFunction="money_labelFunc" sortCompareFunction="fundraising_goalCompare"/>
-		<mx:DataGridColumn width="90" dataField="pledge_total" headerText="Total Pledged" labelFunction="money_labelFunc" sortCompareFunction="pledge_totalCompare"/>
-		<mx:DataGridColumn width="90" dataField="contrib_total" headerText="Total Contribution" labelFunction="money_labelFunc" sortCompareFunction="contrib_totalCompare"/>
-		<mx:DataGridColumn width="90" dataField="downline_pledge" headerText="Downline Pledged" labelFunction="money_labelFunc" sortCompareFunction="downline_pledgeCompare"/>
-		<mx:DataGridColumn width="90" dataField="downline_contrib" headerText="Downline Contribution" labelFunction="money_labelFunc" sortCompareFunction="downline_contribCompare"/>
-		<mx:DataGridColumn width="90" dataField="user_contrib" headerText="Personal Contribution" labelFunction="money_labelFunc" sortCompareFunction="user_contribCompare"/>
+		<mx:DataGridColumn width="90" dataField="_fundraising_goal" headerText="Fundraising Goal" labelFunction="money_labelFunc" sortCompareFunction="fundraising_goalCompare" textAlign="right"/>
+		<mx:DataGridColumn width="90" dataField="pledge_total" headerText="Total Pledged" labelFunction="money_labelFunc" sortCompareFunction="pledge_totalCompare" textAlign="right"/>
+		<mx:DataGridColumn width="90" dataField="contrib_total" headerText="Total Contribution" labelFunction="money_labelFunc" sortCompareFunction="contrib_totalCompare" textAlign="right"/>
+		<mx:DataGridColumn width="90" dataField="downline_pledge" headerText="Downline Pledged" labelFunction="money_labelFunc" sortCompareFunction="downline_pledgeCompare" textAlign="right"/>
+		<mx:DataGridColumn width="90" dataField="downline_contrib" headerText="Downline Contribution" labelFunction="money_labelFunc" sortCompareFunction="downline_contribCompare" textAlign="right"/>
+		<mx:DataGridColumn width="90" dataField="user_contrib" headerText="Personal Contribution" labelFunction="money_labelFunc" sortCompareFunction="user_contribCompare" textAlign="right"/>
 		<mx:DataGridColumn width="80" dataField="_fid" headerText="Fundraiser ID" sortCompareFunction="fidCompare"/>
 		<mx:DataGridColumn width="100" dataField="_city" headerText="City" />
 		<mx:DataGridColumn width="35" dataField="_state" headerText="State" />

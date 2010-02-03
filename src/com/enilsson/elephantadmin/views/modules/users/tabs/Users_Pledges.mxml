@@ -56,10 +56,12 @@
 						dataField="state" />
 					<mx:DataGridColumn headerText="Pledged"
 						dataField="pledge_amount" 
-						labelFunction="amountLabel" />
+						labelFunction="amountLabel"
+						textAlign="right" />
 					<mx:DataGridColumn headerText="Contributed"
 						dataField="contrib_total" 
-						labelFunction="amountLabel" />
+						labelFunction="amountLabel"
+						textAlign="right" />
 					<mx:DataGridColumn headerText="Event" 
 						labelFunction="eventLabel" />
 					<mx:DataGridColumn headerText="Date"

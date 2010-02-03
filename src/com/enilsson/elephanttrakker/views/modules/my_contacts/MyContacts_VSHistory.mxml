@@ -29,9 +29,9 @@
 		            <mx:DataGridColumn textAlign="left" dataField="sourceCode"
 		            	dataTipField="eventName" showDataTips="true"
 		            	headerText="Event" width="45" />
-		            <mx:DataGridColumn textAlign="left" dataField="pledge_amount" 
+		            <mx:DataGridColumn textAlign="right" dataField="pledge_amount" 
 		            	headerText="Pledged" width="56" labelFunction="money_labelFunc" />
-		            <mx:DataGridColumn textAlign="left" dataField="contrib_total" 
+		            <mx:DataGridColumn textAlign="right" dataField="contrib_total" 
 		            	headerText="Contrib'd" width="56" labelFunction="money_labelFunc" />
 		            <mx:DataGridColumn textAlign="left" headerText="Actions" width="48" 
 		            	itemRenderer="com.enilsson.elephanttrakker.views.modules.my_contacts.renderers.History_Item" />

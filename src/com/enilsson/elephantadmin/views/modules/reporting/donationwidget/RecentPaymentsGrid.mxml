@@ -6,7 +6,7 @@
 		
 		<mx:DataGridColumn headerText="Name" minWidth="100" labelFunction="nameLabel">
 		</mx:DataGridColumn>		
-		<mx:DataGridColumn headerText="Amount" width="70" labelFunction="amountLabel">
+		<mx:DataGridColumn headerText="Amount" width="70" labelFunction="amountLabel" textAlign="right" >
 		</mx:DataGridColumn>
 		<mx:DataGridColumn headerText="Payment Method" width="80" dataField="payment_method">
 		</mx:DataGridColumn>

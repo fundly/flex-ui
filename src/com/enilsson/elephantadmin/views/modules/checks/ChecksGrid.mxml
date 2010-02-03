@@ -46,6 +46,7 @@
 				sortCompareFunction="amountSortCompare" 
 				labelFunction="amountLabelFunction" 
 				width="75"
+				textAlign="right"
 				dataField="checks.amount" />
 			<mx:DataGridColumn id="statusColumn" 
 				headerText="Status" 
