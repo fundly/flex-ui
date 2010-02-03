@@ -30,6 +30,7 @@
 							labelFunction="{amountLabelFunction}"
 							sortCompareFunction="{amountSortCompare}"
 							headerText="Check amount"
+							textAlign="right"
 							remoteSortField="checks.amount"/>
 						<common:SortColumn id="contactCol"
 							labelFunction="{contactNameLabelFunction}"
@@ -40,6 +41,7 @@
 							labelFunction="{pledgeAmountLabelFunction}"
 							sortCompareFunction="{pledgeAmountSortCompare}"
 							headerText="Pledge amount"
+							textAlign="right"
 							remoteSortField="checks__pledge_id.pledge_amount"/>
 						<common:SortColumn id="addressCol"
 							labelFunction="{addressLabelFunction}"
@@ -73,7 +75,7 @@
 	</states>
 
 	<DateFormatter id="df" formatString="MM/DD/YYYY" />
-	<CurrencyFormatter id="cf" currencySymbol="$" precision="0" />
+	<CurrencyFormatter id="cf" currencySymbol="$" precision="2" />
 
 	<Script>
 		<![CDATA[

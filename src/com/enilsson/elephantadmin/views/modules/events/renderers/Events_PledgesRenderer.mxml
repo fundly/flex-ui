@@ -41,7 +41,7 @@
 	</mx:VBox>
 
 
-	<mx:CurrencyFormatter id="cf" currencySymbol="$" precision="0" />
+	<mx:CurrencyFormatter id="cf" currencySymbol="$" precision="2" />
 	<mx:DateFormatter id="df" formatString="MM/DD/YY" />
 	<mx:DateFormatter id="df2" formatString="MM/DD/YY L:NN A" />
 

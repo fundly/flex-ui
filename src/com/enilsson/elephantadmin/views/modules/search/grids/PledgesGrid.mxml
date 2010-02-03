@@ -6,8 +6,8 @@
 		<mx:DataGridColumn id="cityStateColumn" labelFunction="{LabelFunctionCollection.getCityAndState}" />
 		<mx:DataGridColumn id="contributionTypeColumn" dataField="contribution_type" />
 		<mx:DataGridColumn id="fundTypeColumn" dataField="fund_type" />
-		<mx:DataGridColumn id="pledgeAmountColumn" labelFunction="{LabelFunctionCollection.getPledgeAmount}" />
-		<mx:DataGridColumn id="contribTotalColumn" labelFunction="{LabelFunctionCollection.getContribTotal}"/>
+		<mx:DataGridColumn id="pledgeAmountColumn" labelFunction="{LabelFunctionCollection.getPledgeAmount}" textAlign="right" />
+		<mx:DataGridColumn id="contribTotalColumn" labelFunction="{LabelFunctionCollection.getContribTotal}" textAlign="right"/>
 		<mx:DataGridColumn id="pledgeDateColumn" labelFunction="{LabelFunctionCollection.getPledgeDate}" />
 		<mx:DataGridColumn id="showRecordColumn" width="{SearchResultGrid.SHOW_RECORD_COLUMN_WIDTH}" 
 			itemRenderer="com.enilsson.elephantadmin.views.modules.search.renderers.MagnifierIcon" />

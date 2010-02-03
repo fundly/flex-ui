@@ -13,7 +13,7 @@
 		<mx:columns>
             <mx:DataGridColumn textAlign="left" dataField="full_name" headerText="Name on Card" />
             <mx:DataGridColumn textAlign="left" dataField="card_number" headerText="Card Number" />
-            <mx:DataGridColumn textAlign="left" headerText="Amount" dataField="amount" labelFunction="money_labelFunc"  />            
+            <mx:DataGridColumn textAlign="right" headerText="Amount" dataField="amount" labelFunction="money_labelFunc" />            
             <mx:DataGridColumn textAlign="left" headerText="Date" dataField="created_on" labelFunction="date_labelFunc" />            
             <mx:DataGridColumn textAlign="left" headerText="Time" dataField="created_on" labelFunction="time_labelFunc" />            
             <mx:DataGridColumn textAlign="left" headerText="Actions" width="50" 
@@ -29,7 +29,7 @@
 		itemsPerPage="{_model.itemsPerPage}" 
 		itemsTotal="{_model.my_history.numContribs}" />
 
-	<mx:CurrencyFormatter id="currencyFormatter" precision="0" currencySymbol="$" useNegativeSign="false" />
+	<mx:CurrencyFormatter id="currencyFormatter" precision="2" currencySymbol="$" useNegativeSign="false" />
 	<mx:DateFormatter id="dfDate" formatString="MM/DD/YY" />
 	<mx:DateFormatter id="dfTime" formatString="L:NN A" />
 

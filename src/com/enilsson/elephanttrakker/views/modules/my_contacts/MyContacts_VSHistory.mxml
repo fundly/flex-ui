@@ -29,9 +29,9 @@
 		            <mx:DataGridColumn textAlign="left" dataField="sourceCode"
 		            	dataTipField="eventName" showDataTips="true"
 		            	headerText="Event" width="45" />
-		            <mx:DataGridColumn textAlign="left" dataField="pledge_amount" 
+		            <mx:DataGridColumn textAlign="right" dataField="pledge_amount" 
 		            	headerText="Pledged" width="56" labelFunction="money_labelFunc" />
-		            <mx:DataGridColumn textAlign="left" dataField="contrib_total" 
+		            <mx:DataGridColumn textAlign="right" dataField="contrib_total" 
 		            	headerText="Contrib'd" width="56" labelFunction="money_labelFunc" />
 		            <mx:DataGridColumn textAlign="left" headerText="Actions" width="48" 
 		            	itemRenderer="com.enilsson.elephanttrakker.views.modules.my_contacts.renderers.History_Item" />
@@ -59,7 +59,7 @@
 		text="As {_model.my_contacts.contactData.fname} {_model.my_contacts.contactData.lname} is a shared contact, you will only be able to view the pledges for {_model.my_contacts.contactData.fname} that you have taken yourself. The listed Pledged amount of {cF.format(_model.my_contacts.contactData.pledge_total)} is indicative of all pledges recorded to {_model.my_contacts.contactData.fname}, not just those taken by yourself." />
 
 	
-	<mx:CurrencyFormatter id="cF" precision="0" currencySymbol="$" useNegativeSign="false" />
+	<mx:CurrencyFormatter id="cF" precision="2" currencySymbol="$" useNegativeSign="false" />
 	<mx:DateFormatter id="dateFormatter" formatString="MM/DD/YY" />
 
 	<mx:Script>

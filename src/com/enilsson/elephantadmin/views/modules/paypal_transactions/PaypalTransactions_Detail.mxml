@@ -84,7 +84,7 @@
 		currencySymbol="$"
 		decimalSeparatorFrom="."
 		decimalSeparatorTo="."
-		precision="0"
+		precision="2"
 		rounding="nearest"
 		thousandsSeparatorFrom=","
 		thousandsSeparatorTo=","

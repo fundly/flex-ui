@@ -24,7 +24,7 @@
 		]]>
 	</mx:Script>
 	
-	<mx:CurrencyFormatter id="cf" precision="0" currencySymbol="$" useNegativeSign="false" />
+	<mx:CurrencyFormatter id="cf" precision="2" currencySymbol="$" useNegativeSign="false" />
 	
 	<mx:HBox>
 		<mx:Image source="{_iconClass}" />

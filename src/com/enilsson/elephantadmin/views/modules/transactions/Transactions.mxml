@@ -41,7 +41,7 @@
 		currencySymbol="$"
 		decimalSeparatorFrom="."
 		decimalSeparatorTo="."
-		precision="0"
+		precision="2"
 		rounding="nearest"
 		thousandsSeparatorFrom=","
 		thousandsSeparatorTo=","
@@ -51,7 +51,7 @@
 
 	<mx:Array id="columns">
 		<mx:DataGridColumn headerText="Transaction ID" dataField="transactionid" width="90"/>
-		<mx:DataGridColumn headerText="Amount" labelFunction="amountLabel" sortCompareFunction="numberSort" width="50"/>
+		<mx:DataGridColumn headerText="Amount" labelFunction="amountLabel" sortCompareFunction="numberSort" width="50" textAlign="right"/>
 		<mx:DataGridColumn headerText="Name on Card" dataField="full_name" width="150" />
 		<mx:DataGridColumn headerText="Card Type" dataField="card_number_type" width="60" />
 		<mx:DataGridColumn headerText="Card Number" dataField="card_number" width="100" />

@@ -17,17 +17,17 @@
 	<mx:Array id="hostsColumns">
 		<mx:DataGridColumn width="100" dataField="fname" headerText="First Name" />
 		<mx:DataGridColumn width="100" dataField="lname" headerText="Last Name" />
-		<mx:DataGridColumn dataField="fundraising_goal" headerText="Host Goal" labelFunction="money_labelFunc" sortCompareFunction="fundraising_goalCompare"/>
-		<mx:DataGridColumn dataField="pledge_total" headerText="Total Pledged" labelFunction="money_labelFunc" sortCompareFunction="pledge_totalCompare"/>
-		<mx:DataGridColumn dataField="contrib_total" headerText="Total Contributed" labelFunction="money_labelFunc" sortCompareFunction="contrib_totalCompare"/>
-		<mx:DataGridColumn dataField="outstanding" headerText="Outstanding" labelFunction="money_labelFunc" sortCompareFunction="outstandingCompare"/>
+		<mx:DataGridColumn textAlign="right" dataField="fundraising_goal" headerText="Host Goal" labelFunction="money_labelFunc" sortCompareFunction="fundraising_goalCompare"/>
+		<mx:DataGridColumn textAlign="right" dataField="pledge_total" headerText="Total Pledged" labelFunction="money_labelFunc" sortCompareFunction="pledge_totalCompare"/>
+		<mx:DataGridColumn textAlign="right" dataField="contrib_total" headerText="Total Contributed" labelFunction="money_labelFunc" sortCompareFunction="contrib_totalCompare"/>
+		<mx:DataGridColumn textAlign="right" dataField="outstanding" headerText="Outstanding" labelFunction="money_labelFunc" sortCompareFunction="outstandingCompare"/>
 	</mx:Array>
 
 	<mx:Array id="pledgesColumns">
 		<mx:DataGridColumn width="100" dataField="fname" headerText="First Name" />
 		<mx:DataGridColumn width="100" dataField="lname" headerText="Last Name" />
-		<mx:DataGridColumn width="90" dataField="pledge_amount" headerText="Pledge Amount" labelFunction="money_labelFunc" sortCompareFunction="pledge_amountCompare"/>
-		<mx:DataGridColumn width="100" dataField="contrib_total" headerText="Total Contribution" labelFunction="money_labelFunc" sortCompareFunction="contrib_totalCompare"/>
+		<mx:DataGridColumn width="90" dataField="pledge_amount" headerText="Pledge Amount" labelFunction="money_labelFunc" sortCompareFunction="pledge_amountCompare" textAlign="right"/>
+		<mx:DataGridColumn width="100" dataField="contrib_total" headerText="Total Contribution" labelFunction="money_labelFunc" sortCompareFunction="contrib_totalCompare" textAlign="right"/>
 		<mx:DataGridColumn width="60" dataField="status" headerText="Status" />
 		<mx:DataGridColumn width="110" dataField="created_on" headerText="Created on" labelFunction="datetime_labelFunc"/>
 		<mx:DataGridColumn width="65" dataField="pledge_date" headerText="Pledge Date" labelFunction="date_labelFunc" />
@@ -156,7 +156,7 @@
 
 	</mx:VBox>
 
-	<mx:CurrencyFormatter id="currencyFormatter" precision="0" currencySymbol="$" useNegativeSign="false" />
+	<mx:CurrencyFormatter id="currencyFormatter" precision="2" currencySymbol="$" useNegativeSign="false" />
 	<mx:DateFormatter id="dateFormatter" />
 
 	<mx:Script>

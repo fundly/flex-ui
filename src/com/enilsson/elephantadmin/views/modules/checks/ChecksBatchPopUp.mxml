@@ -38,7 +38,7 @@
 				<mx:columns>
 					<mx:DataGridColumn width="40" dataField="selected" editorDataField="selected" rendererIsEditor="true" headerText="Select" sortable="false" editable="true" itemRenderer="mx.controls.CheckBox" textAlign="center"/>
 					<mx:DataGridColumn width="40" editable="false" dataField="batch_id" headerText="Batch" sortCompareFunction="batchSortCompare"/>
-					<mx:DataGridColumn width="70" editable="true" dataField="amount" headerText="Amount" labelFunction="amountLabel" sortCompareFunction="amountSortCompare">
+					<mx:DataGridColumn width="70" editable="true" dataField="amount" headerText="Amount" textAlign="right" labelFunction="amountLabel" sortCompareFunction="amountSortCompare">
 						<mx:itemEditor>
 							<mx:Component>
 								<mx:TextInput width="100%" text="{data.amount}"/>
@@ -63,7 +63,7 @@
 	<mx:Fade id="fadeOut" alphaTo="0" duration="300" />
 
 	<mx:CurrencyValidator id="cv" currencySymbol="$" thousandsSeparator="," decimalSeparator="." />
-	<mx:CurrencyFormatter id="currencyFormatter" precision="0" currencySymbol="$" useNegativeSign="false" />
+	<mx:CurrencyFormatter id="currencyFormatter" precision="2" currencySymbol="$" useNegativeSign="false" />
 	<mx:DateFormatter id="dateFormatter" />
 
 	<mx:Metadata>

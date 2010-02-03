@@ -30,6 +30,7 @@
 			labelFunction="{amountLabelFunction}"
 			sortCompareFunction="{amountSortCompare}"
 			headerText="Check amount"
+			textAlign="right"
 			remoteSortField="checks.amount"/>
 		<common:SortColumn id="contactCol"
 			labelFunction="{contactNameLabelFunction}"
@@ -40,6 +41,7 @@
 			labelFunction="{pledgeAmountLabelFunction}"
 			sortCompareFunction="{pledgeAmountSortCompare}"
 			headerText="Pledge amount"
+			textAlign="right"
 			remoteSortField="checks__pledge_id.pledge_amount"/>
 		<common:SortColumn id="addressCol"
 			labelFunction="{addressLabelFunction}"
@@ -69,7 +71,7 @@
 	</mx:columns>
 
 	<mx:DateFormatter id="df" formatString="MM/DD/YYYY" />
-	<mx:CurrencyFormatter id="cf" currencySymbol="$" precision="0" />
+	<mx:CurrencyFormatter id="cf" currencySymbol="$" precision="2" />
 	<mx:Script>
 		<![CDATA[
 			import com.enilsson.elephantadmin.events.modules.batch.BatchListEvent;

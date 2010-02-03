@@ -63,7 +63,7 @@
 
 	<mx:CurrencyFormatter id="cf" 
 		currencySymbol="$"
-		precision="0" />
+		precision="2" />
 
 	<mx:Style>
 		.refundTitle {

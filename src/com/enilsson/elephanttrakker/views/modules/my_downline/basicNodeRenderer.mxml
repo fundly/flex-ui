@@ -76,7 +76,7 @@
 		]]>
 	</mx:Script>
 	
-	<mx:CurrencyFormatter id="cf" precision="0" currencySymbol="$" useNegativeSign="false" />	
+	<mx:CurrencyFormatter id="cf" precision="2" currencySymbol="$" useNegativeSign="false" />	
 
 	<mx:Image source="{iconClass(data.data.@nodeClass)}" 
 		rollOver="createArrowPopup(data.data, event)"

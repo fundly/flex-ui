@@ -100,7 +100,7 @@
 	<mx:Move id="moveIn" xTo="-244" easingFunction="{Exponential.easeInOut}" />
 	<mx:Move id="moveOut" xTo="-562" easingFunction="{Exponential.easeInOut}" />
 	<mx:StringValidator id="validate_subject" source="{subject}" property="text" required="true" />
-	<mx:CurrencyFormatter id="currencyFormatter" precision="0" currencySymbol="$" useNegativeSign="false" />
+	<mx:CurrencyFormatter id="currencyFormatter" precision="2" currencySymbol="$" useNegativeSign="false" />
 
 
 	<mx:Style>
