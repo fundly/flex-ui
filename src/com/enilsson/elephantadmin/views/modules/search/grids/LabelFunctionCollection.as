@@ -78,7 +78,7 @@ package com.enilsson.elephantadmin.views.modules.search.grids
 		{
 			var amount : String = "0";
 			var cf:CurrencyFormatter = new CurrencyFormatter();
-			cf.precision = 0;			
+			cf.precision = 2;			
 			if(item)
 				amount = item.pledge_amount != undefined ? item.pledge_amount : "0";
 			
@@ -89,7 +89,7 @@ package com.enilsson.elephantadmin.views.modules.search.grids
 		{			
 			var total : String = "0";
 			var cf:CurrencyFormatter = new CurrencyFormatter();
-			cf.precision = 0;			
+			cf.precision = 2;			
 			if(item)
 				total = item.pledge_total != undefined ? item.pledge_total : item._pledge_total;
 				
@@ -100,7 +100,7 @@ package com.enilsson.elephantadmin.views.modules.search.grids
 		{
 			var contrib : String = "0";
 			var cf:CurrencyFormatter = new CurrencyFormatter();
-			cf.precision = 0;			
+			cf.precision = 2;			
 			if(item)
 				contrib = item.contrib_total != undefined ? item.contrib_total : item._contrib_total;
 			

@@ -21,7 +21,7 @@
 	</mx:HBox>
 
 	<mx:DateFormatter id="df" formatString="MM/DD/YY L:NNA" />
-	<mx:CurrencyFormatter id="cf" currencySymbol="$" precision="0" />
+	<mx:CurrencyFormatter id="cf" currencySymbol="$" precision="2" />
 	
 	<mx:Script>
 		<![CDATA[

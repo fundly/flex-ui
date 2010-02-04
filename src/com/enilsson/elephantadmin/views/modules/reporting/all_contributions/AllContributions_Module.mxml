@@ -37,7 +37,7 @@
 
 	<mx:Array id="gridColumns">
 		<mx:DataGridColumn width="80" dataField="type" headerText="Payment Method" />
-		<mx:DataGridColumn width="115" dataField="amount" headerText="Contribution Amount" labelFunction="money_labelFunc" sortCompareFunction="amountCompare"/>
+		<mx:DataGridColumn width="115" dataField="amount" headerText="Contribution Amount" textAlign="right" labelFunction="money_labelFunc" sortCompareFunction="amountCompare"/>
 		<mx:DataGridColumn width="110" dataField="created_on" headerText="Created on" labelFunction="datetime_labelFunc"/>
 		<mx:DataGridColumn width="65" dataField="pledge_date" headerText="Pledge Date" labelFunction="date_labelFunc" />
 		<mx:DataGridColumn width="65" dataField="entry_date" headerText="Fulfilled Date" labelFunction="date_labelFunc" />
@@ -66,7 +66,7 @@
 		<mx:DataGridColumn width="50" dataField="mod_group_id" headerText="Region ID"  sortCompareFunction="region_idCompare" />
 		<mx:DataGridColumn width="100" dataField="mod_group_name" headerText="Region Name" />
 	</mx:Array>
-	<mx:CurrencyFormatter id="currencyFormatter" precision="0" currencySymbol="$" useNegativeSign="false" />
+	<mx:CurrencyFormatter id="currencyFormatter" precision="2" currencySymbol="$" useNegativeSign="false" />
 	<mx:DateFormatter id="dateFormatter" />
 
 	<mx:Script>
@@ -106,14 +106,15 @@
 			
 			private function date_labelFunc(item:Object, column:DataGridColumn):String 
 			{
-				dateFormatter.formatString = "MM/DD/YY"
-			return dateFormatter.format(EDateUtil.dateFromTimestamp(item[column.dataField]));
+				dateFormatter.formatString = "MM/DD/YY";
+				return dateFormatter.format( EDateUtil.dateFromTimestamp(item[column.dataField]) );
 			}
 
-			private function datetime_labelFunc(item:Object, column:DataGridColumn):String 
+			private function datetime_labelFunc(item:Object, column:DataGridColumn):String
 			{
-				dateFormatter.formatString = "MM/DD/YY L:NNA"
-				return dateFormatter.format(new Date(item[column.dataField] * 1000));
+				dateFormatter.formatString = "MM/DD/YY L:NNA";
+				return dateFormatter.format( EDateUtil.dateFromTimestamp(item[column.dataField]) );
+//				return dateFormatter.format(new Date(item[column.dataField] * 1000));
 			}
 		]]>
 	</mx:Script>

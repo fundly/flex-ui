@@ -42,7 +42,7 @@
 		currencySymbol="$"
 		decimalSeparatorFrom="."
 		decimalSeparatorTo="."
-		precision="0"
+		precision="2"
 		rounding="nearest"
 		thousandsSeparatorFrom=","
 		thousandsSeparatorTo=","
@@ -53,7 +53,7 @@
 	<mx:DateFormatter id="timeFormat" formatString="LL:NNA" />
 	
 	<mx:Array id="columns">
-		<mx:DataGridColumn headerText="Amount" labelFunction="amountLabel" sortCompareFunction="numberSort" width="60"/>
+		<mx:DataGridColumn headerText="Amount" labelFunction="amountLabel" sortCompareFunction="numberSort" width="60" textAlign="right"/>
 		<mx:DataGridColumn headerText="Name on Card" dataField="full_name" />
 		<mx:DataGridColumn headerText="Card Type" dataField="card_number_type" />
 		<mx:DataGridColumn headerText="Card Number" dataField="card_number" />

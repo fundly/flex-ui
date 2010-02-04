@@ -97,7 +97,7 @@
 	<mx:Resize id="slideUp" heightTo="35" duration="1000" />
 	<mx:Resize id="slideDown" heightTo="0" duration="1000" />	
 
-	<mx:CurrencyFormatter id="cf" precision="0" />
+	<mx:CurrencyFormatter id="cf" precision="2" />
 	<mx:DateFormatter id="df" formatString="MM/DD/YY" />
 
 	<mx:Metadata>

@@ -195,7 +195,7 @@
 		]]>
 	</mx:Script>
 
-	<mx:CurrencyFormatter id="currencyFormatter" precision="0" currencySymbol="$" useNegativeSign="false" />
+	<mx:CurrencyFormatter id="currencyFormatter" precision="2" currencySymbol="$" useNegativeSign="false" />
 	<mx:DateFormatter id="dateFormatter" formatString="MM/DD/YY" />
 	<mx:DateFormatter id="df2" formatString="MMMM YYYY" />
 	
@@ -224,10 +224,10 @@
 	            	dataTipField="fullAddress" headerText="City" />
 	            <mx:DataGridColumn textAlign="left" dataField="state" headerText="State" width="50" />
 	            <mx:DataGridColumn textAlign="left" dataField="sourceCode" headerText="Event" width="50" />
-	            <mx:DataGridColumn textAlign="left" dataField="pledge_amount" 
+	            <mx:DataGridColumn textAlign="right" dataField="pledge_amount" 
 	            	headerText="Pledged" width="65" labelFunction="money_labelFunc"
-	            	itemRenderer="com.enilsson.elephanttrakker.views.modules.my_history.MyHistory_PledgesAmount"  />
-	            <mx:DataGridColumn textAlign="left" dataField="contrib_total" 
+	            	itemRenderer="com.enilsson.elephanttrakker.views.modules.my_history.MyHistory_PledgesAmount" />
+	            <mx:DataGridColumn textAlign="right" dataField="contrib_total" 
 	            	headerText="Contrib'd" width="65" labelFunction="money_labelFunc" />
 	            <mx:DataGridColumn textAlign="left" headerText="Actions" width="100" 
 	            	itemRenderer="com.enilsson.elephanttrakker.views.modules.my_history.renderers.MyHistory_PledgesActions" />

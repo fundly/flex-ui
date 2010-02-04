@@ -9,6 +9,6 @@
 	<common:LimitBar limit="{data.percentage}" label="" width="100%" />
 	<mx:Text styleName="maxOutAmt" text="{cf.format( data.limit )}" />
 	
-	<mx:CurrencyFormatter id="cf" precision="0" currencySymbol="$" />
+	<mx:CurrencyFormatter id="cf" precision="2" currencySymbol="$" />
 	
 </mx:HBox>

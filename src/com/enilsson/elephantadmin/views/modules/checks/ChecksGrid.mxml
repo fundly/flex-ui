@@ -46,6 +46,7 @@
 				sortCompareFunction="amountSortCompare" 
 				labelFunction="amountLabelFunction" 
 				width="75"
+				textAlign="right"
 				dataField="checks.amount" />
 			<mx:DataGridColumn id="statusColumn" 
 				headerText="Status" 
@@ -103,7 +104,7 @@
 	</mx:Array>
 
 	<mx:DateFormatter id="dateFormatter" formatString="MM/DD/YY" />
-	<mx:CurrencyFormatter id="currencyFormatter" precision="0" currencySymbol="$" useNegativeSign="false" />
+	<mx:CurrencyFormatter id="currencyFormatter" precision="2" currencySymbol="$" useNegativeSign="false" />
 
 	<mx:Script>
 		<![CDATA[

@@ -13,7 +13,7 @@
           </libraryPathEntry>
         </modifiedEntries>
       </libraryPathEntry>
-      <libraryPathEntry kind="3" linkType="1" path="/eNilssonFlexLibrary_STABLE/bin/eNilssonFlexLibrary_STABLE.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="3" linkType="1" path="/eNilssonFlexLibrary/bin/eNilssonFlexLibrary.swc" useDefaultLinkType="false"/>
       <libraryPathEntry kind="1" linkType="1" path="libs"/>
     </libraryPath>
     <sourceAttachmentPath/>

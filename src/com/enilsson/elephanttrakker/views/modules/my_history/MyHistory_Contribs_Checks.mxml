@@ -132,7 +132,7 @@
 		]]>
 	</mx:Script>
 
-	<mx:CurrencyFormatter id="currencyFormatter" precision="0" currencySymbol="$" useNegativeSign="false" />
+	<mx:CurrencyFormatter id="currencyFormatter" precision="2" currencySymbol="$" useNegativeSign="false" />
 	<mx:DateFormatter id="dateFormatter" formatString="MM/DD/YY" />
 	
 	<mx:DataGrid id="pledgesDG" dataProvider="{_model.my_history.checks}" 
@@ -141,7 +141,7 @@
 		headerRelease="sortAction(event)">
 		<mx:columns>
             <mx:DataGridColumn textAlign="left" dataField="full_name" headerText="Full Name" />
-            <mx:DataGridColumn textAlign="left" dataField="amount" headerText="Amount" labelFunction="money_labelFunc" /> 
+            <mx:DataGridColumn textAlign="right" dataField="amount" headerText="Amount" labelFunction="money_labelFunc" /> 
             <mx:DataGridColumn textAlign="left" dataField="check_num" headerText="Check Number" />           
             <mx:DataGridColumn textAlign="left" dataField="created_on" headerText="Created" labelFunction="date_labelFunc" /> 
             <mx:DataGridColumn textAlign="left" dataField="entry_date" headerText="Received" labelFunction="entry_date_labelFunc" /> 

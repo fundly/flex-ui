@@ -8,7 +8,7 @@
 	<mx:Spacer height="3" />
 	<mx:Text styleName="dataTipText" fontWeight="bold" text="Click graph for more" />
 	
-	<mx:CurrencyFormatter id="cf" precision="0" />
+	<mx:CurrencyFormatter id="cf" precision="2" />
 	<mx:DropShadowFilter id="ds" alpha="0.75" angle="90" distance="2" color="0x333333" />
 	
 	<mx:Script>

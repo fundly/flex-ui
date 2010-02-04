@@ -43,10 +43,12 @@
 						<mx:DataGridColumn headerText="State"
 							dataField="state" />
 						<mx:DataGridColumn headerText="Pledged"
-							dataField="pledge_amount" 
+							dataField="pledge_amount"
+							textAlign="right" 
 							labelFunction="amountLabel" />
 						<mx:DataGridColumn headerText="Contributed"
 							dataField="contrib_total" 
+							textAlign="right"
 							labelFunction="amountLabel" />
 						<mx:DataGridColumn headerText="Event" 
 							labelFunction="eventLabel" />
@@ -90,7 +92,7 @@
 		currencySymbol="$"
 		decimalSeparatorFrom="."
 		decimalSeparatorTo="."
-		precision="0"
+		precision="2"
 		rounding="nearest"
 		thousandsSeparatorFrom=","
 		thousandsSeparatorTo=","

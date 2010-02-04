@@ -3,8 +3,13 @@ package com.enilsson.elephantadmin.views.modules.reporting.base
 	[RemoteClass(alias="reporting.ReportVO")]
 	public class ReportVO
 	{
+		public var startDate:String;
+		public var endDate:String;
+		
 		public var startTime:int;
 		public var endTime:int;
+		
+		public var timezone : String;
 	
 		public var sortBy:String;
 		public var recordPerPage:int;

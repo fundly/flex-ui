@@ -18,6 +18,7 @@
 			headerText="Amount"
 			dataField="amount"
 			remoteSortField="amount"
+			textAlign="right"
 			labelFunction="amountLabelFunction"	/>
 		<common:SortColumn id="createdOnColumn" 
 			headerText="Created on"
