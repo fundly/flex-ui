@@ -82,8 +82,8 @@ package com.enilsson.elephantadmin.views.modules.reporting.all_pledges.model
 			// if no vo was passed through, get parameters from the UI
 			var vo:ReportVO = new ReportVO();
 			var sortBy:String = sortArray.join(",");
-			vo.startTime = EDateUtil.dateToTimestamp(startDate);
-			vo.endTime = EDateUtil.dateToTimestamp(endDate) + ONE_DAY;
+			vo.startTime = EDateUtil.localDateToTimestamp(startDate);
+			vo.endTime = EDateUtil.localDateToTimestamp(endDate) + ONE_DAY;
 			vo.sortBy = sortBy;
 			vo.filter = filter;
 			vo.page = gridCurrentPage;

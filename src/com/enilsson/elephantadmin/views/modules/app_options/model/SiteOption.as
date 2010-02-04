@@ -65,10 +65,10 @@ package com.enilsson.elephantadmin.views.modules.app_options.model
 				type 			= value.option_type;
 				optional 		= value.option_optional;
 				display			= value.option_display != 0;
-				createdOn		= df.format(EDateUtil.dateFromTimestamp( value.created_on ));
+				createdOn		= df.format(EDateUtil.timestampToLocalDate( value.created_on ));
 				createdById		= value.created_by_id;
 				createdBy		= value.created_by;
-				modifiedOn		= df.format(EDateUtil.dateFromTimestamp(value.modified_on));
+				modifiedOn		= df.format(EDateUtil.timestampToLocalDate(value.modified_on));
 				modifiedById	= value.modified_by_id;
 				modifiedBy		= value.modified_by;				
 				eRead			= value.mod_e_read;

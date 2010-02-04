@@ -189,7 +189,7 @@
 			 * Label function to show the date in the correct format
 			 */
 			private function date_labelFunc(item:Object, column:DataGridColumn):String {
-		  		return dateFormatter.format( EDateUtil.dateFromTimestamp( item[column.dataField] ) );
+		  		return dateFormatter.format( EDateUtil.timestampToLocalDate( item[column.dataField] ) );
 			} 
 
 		]]>

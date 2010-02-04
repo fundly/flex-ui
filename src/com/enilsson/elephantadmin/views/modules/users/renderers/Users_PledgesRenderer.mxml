@@ -21,7 +21,7 @@
 				click="new SidEvent( data.contact_id.sid ).dispatch()"
 				toolTip="Go to this contact" />
 		</mx:HBox>
-		<mx:Text text="on {df.format( EDateUtil.dateFromTimestamp(data.pledge_date) )} for Event {data.event_id.source_code}"
+		<mx:Text text="on {df.format( EDateUtil.timestampToLocalDate(data.pledge_date) )} for Event {data.event_id.source_code}"
 			width="{explicitWidth}"
 			styleName="listDesc" />
 		<mx:Text htmlText="Pledged: &lt;b&gt;{cf.format(data.pledge_amount)}&lt;/b&gt; - Contributed: &lt;b&gt;{cf.format(data.contrib_total)}&lt;/b&gt;" 

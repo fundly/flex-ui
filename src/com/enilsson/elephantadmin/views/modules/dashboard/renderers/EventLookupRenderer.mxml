@@ -10,7 +10,7 @@
 	
 	<mx:Text text="{data.source_code}" fontSize="11" fontWeight="bold" />
 	<mx:Text text="{data.name}" fontSize="9" color="#333333" width="{explicitWidth}" />
-	<mx:Text text="{data.city} {data.state} - {df.format(EDateUtil.dateFromTimestamp(data.date_time))}" 
+	<mx:Text text="{data.city} {data.state} - {df.format(EDateUtil.timestampToLocalDate(data.date_time))}" 
 		fontSize="9" color="#666666" width="{explicitWidth}" />
 	<mx:Script>
 		<![CDATA[

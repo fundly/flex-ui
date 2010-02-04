@@ -89,8 +89,8 @@ package com.enilsson.elephantadmin.views.modules.reporting.dailyincome.model
 			
 			var vo:ReportVO = new ReportVO();
 
-			vo.startTime = EDateUtil.dateToTimestamp(startDate);
-			vo.endTime = EDateUtil.dateToTimestamp(endDate) + ONE_DAY;
+			vo.startTime = EDateUtil.localDateToTimestamp(startDate);
+			vo.endTime = EDateUtil.localDateToTimestamp(endDate) + ONE_DAY;
 			vo.groupID = group;
 
 			if(exporting)
@@ -115,7 +115,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.dailyincome.model
 
 		public function addExpenditure(amount:Number):void
 		{
-			var date:int = EDateUtil.dateToTimestamp(summaryDate);
+			var date:int = EDateUtil.localDateToTimestamp(summaryDate);
 			
  			var amfService:RemoteObject = new RemoteObject('amfphp');
 			amfService.endpoint = gatewayURL;
@@ -139,7 +139,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.dailyincome.model
 			var sortBy:String = sortArray.join(",");
 
 			vo.sortBy = sortBy;
-			vo.startTime = EDateUtil.dateToTimestamp(summaryDate);
+			vo.startTime = EDateUtil.localDateToTimestamp(summaryDate);
 			vo.groupID = summaryGroup;
 
 			if(exporting)
@@ -322,7 +322,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.dailyincome.model
 
 		public function chartDateClick(event:ChartItemEvent):void
 		{
-			summaryDate = EDateUtil.dateFromTimestamp(event.hitData.item.date);
+			summaryDate = EDateUtil.timestampToLocalDate(event.hitData.item.date);
 			generateSummary();
 		}
 

@@ -129,7 +129,7 @@ package com.enilsson.elephantadmin.views.modules.search.grids
 		{
 			var df:DateFormatter = new DateFormatter();
 			df.formatString = "MM/DD/YYYY"
-			return df.format( EDateUtil.dateFromTimestamp(item.pledge_date) );
+			return df.format( EDateUtil.timestampToLocalDate(item.pledge_date) );
 		}
 
 	}

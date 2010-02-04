@@ -12,7 +12,7 @@
 	<mx:Text text="{data.modified_by ? 'Modified by ' + data.modified_by + ' - FUND' + data.modified_by_id : 'Created by ' + data.created_by + ' - FUND' + data.created_by_id}" 
 		width="{explicitWidth}" 
 		styleName="listDesc" />
-	<mx:Text text="{data.venue_name} - {data.venue_address}, {data.city} {data.state} - {df.format( EDateUtil.dateFromTimestamp(data.date_time) )}" 
+	<mx:Text text="{data.venue_name} - {data.venue_address}, {data.city} {data.state} - {df.format( EDateUtil.timestampToLocalDate(data.date_time) )}" 
 		width="{explicitWidth}" 
 		styleName="listDesc" />
 	<mx:Text htmlText="Goal: &lt;b&gt;{cf.format(data.fundraising_goal)}&lt;/b&gt; - Pledged: &lt;b&gt;{cf.format(data.pledge_total)}&lt;/b&gt; / Contributed: &lt;b&gt;{cf.format(data.contrib_total)}&lt;/b&gt;" 

@@ -86,7 +86,7 @@
 				if ( data.paymentType == 'Check' )
 				{
 					if ( data.entry_date > 0 )
-						return df.format( EDateUtil.dateFromTimestamp(data.entry_date) );
+						return df.format( EDateUtil.timestampToLocalDate(data.entry_date) );
 					else
 						return 'unfulfilled';
 				}

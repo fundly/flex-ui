@@ -26,7 +26,7 @@
 		<mx:Label text="Pledge amount: {cf.format(data.pledge_id.pledge_amount)}"
 			toolTip="Pledge amount"
 			styleName="listDesc" />
-		<mx:Label text="Pledge date: {df.format(EDateUtil.dateFromTimestamp(data.pledge_id.pledge_date))}" 
+		<mx:Label text="Pledge date: {df.format(EDateUtil.timestampToLocalDate(data.pledge_id.pledge_date))}" 
 			toolTip="Pledge date"
 			styleName="listDesc" />
 	</mx:VBox>

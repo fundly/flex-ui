@@ -238,7 +238,7 @@
 			private function date_labelFunc(item:Object, column:DataGridColumn):String 
 			{
 				dateFormatter.formatString = "MM/DD/YY"
-				return dateFormatter.format(EDateUtil.dateFromTimestamp(item[column.dataField]));
+				return dateFormatter.format(EDateUtil.timestampToLocalDate(item[column.dataField]));
 			}
 
 			private function datetime_labelFunc(item:Object, column:DataGridColumn):String 

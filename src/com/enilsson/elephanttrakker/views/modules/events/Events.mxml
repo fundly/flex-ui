@@ -180,7 +180,7 @@
 				if ( item[column.dataField] == 0 ) return '';
 				
 				// Convert UTC date to local date to display using dateformatter
-				var displayDate:Date = EDateUtil.dateFromTimestamp(item[column.dataField]);
+				var displayDate:Date = EDateUtil.timestampToLocalDate(item[column.dataField]);
 				return dateFormatter.format(displayDate);
 			}
 		]]>

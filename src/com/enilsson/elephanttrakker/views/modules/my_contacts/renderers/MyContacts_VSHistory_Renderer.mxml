@@ -11,7 +11,7 @@
 			override protected function set data(value:Object):void
 			{
 				super.data = value;
-				pledge_date_string = df.format(EDateUtil.dateFromTimestamp(data.pledge_date));
+				pledge_date_string = df.format(EDateUtil.timestampToLocalDate(data.pledge_date));
 			}
 		]]>
 	</mx:Script>

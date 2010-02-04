@@ -124,7 +124,7 @@
 			private function entry_date_labelFunc(item:Object, column:DataGridColumn):String 
 			{
 		  		if(item[column.dataField] > 0)
-			  		return dateFormatter.format( EDateUtil.dateFromTimestamp(item.entry_date) );
+			  		return dateFormatter.format( EDateUtil.timestampToLocalDate(item.entry_date) );
 			  	else
 			  		return '';
 			} 

@@ -184,7 +184,7 @@
 			 */
 			private function date_labelFunc(item:Object, column:DataGridColumn):String 
 			{
-		  		return dfDate.format( EDateUtil.dateFromTimestamp( item[column.dataField] ) );
+		  		return dfDate.format( EDateUtil.timestampToLocalDate( item[column.dataField] ) );
 			} 
 
 		]]>

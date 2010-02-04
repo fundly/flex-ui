@@ -231,7 +231,7 @@ package com.enilsson.elephantadmin.views.modules.dashboard.model
 			eventName = _selectedEvent.source_code;
 			var df:DateFormatter = new DateFormatter;
 			df.formatString = "MM/DD/YYYY";
-			eventDescription = _selectedEvent.name + " " + df.format(EDateUtil.dateFromTimestamp(_selectedEvent.date_time));
+			eventDescription = _selectedEvent.name + " " + df.format(EDateUtil.timestampToLocalDate(_selectedEvent.date_time));
 			getChartData(_selectedEvent.id);
 
 			var soName:String = "instance"+EAModelLocator.getInstance().appInstanceID;

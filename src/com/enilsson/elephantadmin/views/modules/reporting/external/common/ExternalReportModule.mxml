@@ -23,8 +23,8 @@
 							width="100" color="#000000"
 							textAlign="center"  
 							formatString="MM/DD/YYYY" 
-							selectedDate="{EDateUtil.dateFromTimestamp(_pm.startDate)}" 
-							change="_pm.startDate = EDateUtil.dateToTimestamp(event.target.selectedDate)"							
+							selectedDate="{EDateUtil.timestampToLocalDate(_pm.startDate)}" 
+							change="_pm.startDate = EDateUtil.localDateToTimestamp(event.target.selectedDate)"							
 							enabled="{_datesEnabled}" />
 					</mx:FormItem>
 					
@@ -34,8 +34,8 @@
 							width="100" color="#000000"
 							formatString="MM/DD/YYYY"
 							textAlign="center" 
-							selectedDate="{EDateUtil.dateFromTimestamp(_pm.endDate)}" 
-							change="_pm.endDate = EDateUtil.dateToTimestamp(event.target.selectedDate)"  
+							selectedDate="{EDateUtil.timestampToLocalDate(_pm.endDate)}" 
+							change="_pm.endDate = EDateUtil.localDateToTimestamp(event.target.selectedDate)"  
 							enabled="{_datesEnabled}" />
 					</mx:FormItem>
 					
