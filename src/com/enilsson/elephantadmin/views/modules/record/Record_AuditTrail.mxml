@@ -3,6 +3,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.utils.EDateUtil;
 			import com.enilsson.elephantadmin.models.EAModelLocator;
 			
 			[Bindable] private var _model:EAModelLocator = EAModelLocator.getInstance();
@@ -12,7 +13,7 @@
 			 */
 			private function date_labelFunc(item:Object, column:DataGridColumn):String 
 			{
-		  		return df.format( new Date( item[column.dataField] * 1000 ) );
+		  		return df.format( EDateUtil.timestampToLocalDate( item[column.dataField]  ) );
 			} 
 			
 			private function showArchived(data:Object):void

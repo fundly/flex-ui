@@ -26,7 +26,6 @@ package com.enilsson.elephantadmin.views.modules.reporting.all_pledges.model
 	[Bindable]
 	public class AllPledgesModel extends ReportModuleModel
 	{
-		private const ONE_DAY:int = 24 * 60 * 60;
 		public var pledgesFilter:ArrayCollection = new ArrayCollection([
 			{'label':'All','data':'0'},
 			{'label':'Fulfilled','data':'1'},
@@ -37,9 +36,9 @@ package com.enilsson.elephantadmin.views.modules.reporting.all_pledges.model
 		]);
 
 		// default start date is start of today
-		public var startDate:Date = new Date(new Date().getFullYear(),new Date().getMonth(),new Date().getDate());
+		public var startDate:Date = EDateUtil.today();
 		// default end date is end of today
-		public var endDate:Date = new Date(new Date().getFullYear(),new Date().getMonth(),new Date().getDate());
+		public var endDate:Date = EDateUtil.today();
 
 		public var sortArray:Array = ['pledge_date DESC'];
 		public var exportHeaders:Array = [];
@@ -79,11 +78,13 @@ package com.enilsson.elephantadmin.views.modules.reporting.all_pledges.model
 		{
 			super.generate();
 			
+			EDateUtil.setEndOfDay(endDate);
+			
 			// if no vo was passed through, get parameters from the UI
 			var vo:ReportVO = new ReportVO();
 			var sortBy:String = sortArray.join(",");
 			vo.startTime = EDateUtil.localDateToTimestamp(startDate);
-			vo.endTime = EDateUtil.localDateToTimestamp(endDate) + ONE_DAY;
+			vo.endTime = EDateUtil.localDateToTimestamp(endDate);
 			vo.sortBy = sortBy;
 			vo.filter = filter;
 			vo.page = gridCurrentPage;

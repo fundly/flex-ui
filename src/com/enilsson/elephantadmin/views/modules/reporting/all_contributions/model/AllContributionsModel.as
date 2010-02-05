@@ -103,7 +103,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.all_contributions.mod
 			var vo:ReportVO = new ReportVO();
 			var sortBy:String = sortArray.join(",");
 			
-			endDate.setHours(23,59,59,0);
+			EDateUtil.setEndOfDay(endDate);
 
 			vo.startTime = EDateUtil.localDateToTimestamp(startDate);
 			vo.endTime = EDateUtil.localDateToTimestamp(endDate);

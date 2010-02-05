@@ -28,6 +28,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.utils.EDateUtil;
 			import com.enilsson.elephantadmin.vo.ErrorVO;
 			import com.enilsson.utils.struktorForm.ConvertRTEText;
 			import com.enilsson.elephantadmin.views.common.IndexBar;
@@ -61,7 +62,7 @@
 
 			private function set details(data:Object):void
 			{
-				_sentDate = dateFormatter.format(new Date(data.created_on * 1000));
+				_sentDate = dateFormatter.format( EDateUtil.timestampToLocalDate( data.created_on ) );
 				_fullName = data.user_id.fname + " " + data.user_id.lname;
 				toList = data.to;
 				ccList = data.cc;

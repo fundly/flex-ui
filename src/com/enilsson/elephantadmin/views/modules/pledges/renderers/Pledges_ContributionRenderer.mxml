@@ -91,12 +91,12 @@
 						return 'unfulfilled';
 				}
 				else
-					return df.format(new Date(data.created_on * 1000));
+					return df.format( EDateUtil.timestampToLocalDate (data.created_on ));
 			}
 			
 			private function toDateString(unixTimestamp:int):String
 			{
-				var date:Date = new Date(unixTimestamp * 1000);
+				var date:Date = EDateUtil.timestampToLocalDate(unixTimestamp);
 				return df.format(date);
 			}
 			

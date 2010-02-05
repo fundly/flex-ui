@@ -56,6 +56,7 @@
 
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.utils.EDateUtil;
 			import com.enilsson.elephantadmin.vo.SidVO;
 			import com.enilsson.elephantadmin.events.modules.PaypalTransactionsEvent;
 			import mx.formatters.DateFormatter;
@@ -237,7 +238,7 @@
 						whereObj[2] = { 
 							'what' : 'paypal_transactions.created_on',
 							'op' : '>',
-							'val' : moduleGrid.fromDate.time / 1000 //start of the date range
+							'val' : EDateUtil.localDateToTimestamp(moduleGrid.fromDate) //start of the date range
 						};
 						RecordsVO(_model.paypal_transactions.lastQuery.params.recordsVO).where = whereObj;
 						_model.paypal_transactions.lastQuery.dispatch();
@@ -270,7 +271,7 @@
 						whereObj[3] = { 
 							'what' : 'paypal_transactions.created_on',
 							'op' : '<',
-							'val' : moduleGrid.toDate.time / 1000 + 24*60*60 // end of the date range
+							'val' : EDateUtil.localDateToTimestamp(moduleGrid.toDate)+ 24*60*60 // end of the date range
 						};
 						RecordsVO(_model.paypal_transactions.lastQuery.params.recordsVO).where = whereObj;
 						_model.paypal_transactions.lastQuery.dispatch();
@@ -285,7 +286,7 @@
 
 			private function date_labelFunc(item:Object, column:DataGridColumn):String 
 			{
-				return dateFormat.format( new Date( item[column.dataField] * 1000 ) );
+				return dateFormat.format( EDateUtil.timestampToLocalDate( item[column.dataField] ) );
 			}
 
 			private function amountLabel(item:Object, column:DataGridColumn):String

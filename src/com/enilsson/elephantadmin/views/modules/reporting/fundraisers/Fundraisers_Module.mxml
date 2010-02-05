@@ -162,7 +162,7 @@
 			private function datetime_labelFunc(item:Object, column:DataGridColumn):String 
 			{
 				dateFormatter.formatString = "MM/DD/YY L:NNA"
-				return dateFormatter.format(new Date(item[column.dataField] * 1000));
+				return dateFormatter.format(EDateUtil.timestampToLocalDate(item[column.dataField]));
 			}
 		]]>
 	</mx:Script>

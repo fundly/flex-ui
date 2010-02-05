@@ -45,6 +45,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.utils.EDateUtil;
 			import mx.core.ContextualClassFactory;
 			import mx.charts.AxisRenderer;
 			import mx.charts.HitData;
@@ -62,13 +63,13 @@
 
 			private function timeDataFunction (axis:CategoryAxis, item:Object):Object
 			{
-				return new Date(item.time_from * 1000);
+				return EDateUtil.timestampToLocalDate(item.time_from);
 			}
 
 			private function pledgesDataFunction(series:Series, item:Object, fieldName:String):Object
 			{
 				if(fieldName == 'xValue')
-					return new Date(item.time_from * 1000);
+					return EDateUtil.timestampToLocalDate(item.time_from);
 				if(fieldName == 'yValue')
 					return item.pledges_number;
 				else
@@ -79,7 +80,7 @@
 			{
 				var s:String;
 				s = "<B>" + data.item.pledges_number + " Pledges</B>\n";
-				s += dateFormatter.format(new Date(data.item.time_from * 1000)) + " - " + dateFormatter.format(new Date( (data.item.time_from + 3600 )* 1000)) + "\n";
+				s += dateFormatter.format(EDateUtil.timestampToLocalDate(data.item.time_from)) + " - " + dateFormatter.format(EDateUtil.timestampToLocalDate(data.item.time_from + 3600 )) + "\n";
 				s += "Total: " + cf.format(data.item.pledges_amount);
 				return s;
 			}

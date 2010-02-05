@@ -104,6 +104,7 @@
 
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.utils.EDateUtil;
 			import com.enilsson.elephantadmin.models.Icons;
 			import mx.collections.SortField;
 			import mx.collections.Sort;
@@ -209,8 +210,6 @@
 						switch(_currentFields[i].type)
 						{
 							case 'utc_date' :
-								dgCol.labelFunction = utcDateLabel;
-							break;
 							case 'date' :
 								dgCol.labelFunction = dateLabel;
 							break;
@@ -250,23 +249,12 @@
 				).dispatch();
 			}
 			
-			private function utcDateLabel( item:Object, column:DataGridColumn ):String
-			{
-				if ( item[column.dataField] == 0 )
-					return '';
-				else
-				{
-					var utcDate:Date = new Date( item[column.dataField] * 1000 );
-					return df.format( new Date( utcDate.getUTCFullYear(), utcDate.getUTCMonth(), utcDate.getUTCDate() ) );			
-				}				
-			}
-
 			private function dateLabel(item:Object, column:DataGridColumn):String
 			{
 				if ( item[column.dataField] == 0 )
 					return '';
 				else
-					return df.format( new Date( item[column.dataField] * 1000 ) );
+					return df.format( EDateUtil.timestampToLocalDate( item[column.dataField] ) );
 			}
 			
 			private function currencyLabel(item:Object, column:DataGridColumn):String

@@ -27,6 +27,7 @@
 
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.utils.EDateUtil;
 			import mx.utils.ObjectUtil;
 			import com.enilsson.elephanttrakker.events.modules.first_login.FirstLoginEvent;
 			import org.osflash.thunderbolt.Logger;
@@ -52,7 +53,7 @@
 				// update the first login time only when the box is closed. This accounts for people you try and skip the agents agreement by reloading
 				var fv:Object = { 
 					'user_id' : _model.session.user_id, 
-					'_firstlogin' : Math.round( new Date().getTime()/1000 ) 
+					'_firstlogin' : Math.round( EDateUtil.nowToTimestamp() ) 
 				};
 				
 				// dispatch event to register the login.

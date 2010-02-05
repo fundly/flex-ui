@@ -9,6 +9,7 @@
 
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.utils.EDateUtil;
 			import com.enilsson.elephantadmin.vo.SidVO;
 			import mx.formatters.DateFormatter;
 			import com.enilsson.elephantadmin.vo.EmailVO;
@@ -193,7 +194,7 @@
 						whereObj[2] = { 
 							'what' : 'email_log.created_on',
 							'op' : '>',
-							'val' : emailList.fromDate.time / 1000 //start of the date range
+							'val' : EDateUtil.localDateToTimestamp( emailList.fromDate ) //start of the date range
 						};
 						RecordsVO(_model.email_log.lastQuery.params.recordsVO).where = whereObj;
 						_model.email_log.lastQuery.dispatch();
@@ -230,7 +231,7 @@
 						whereObj[3] = { 
 							'what' : 'email_log.created_on',
 							'op' : '<',
-							'val' : emailList.toDate.time / 1000 + 24*60*60 // end of the date range
+							'val' : EDateUtil.localDateToTimestamp( emailList.toDate ) + 24*60*60 // end of the date range
 						};
 						RecordsVO(_model.email_log.lastQuery.params.recordsVO).where = whereObj;
 						_model.email_log.lastQuery.dispatch();
@@ -250,7 +251,7 @@
 			private function date_labelFunc(item:Object, column:DataGridColumn):String 
 			{
 				var today:Date = new Date();
-		  		return dateFormatter.format( new Date( item[column.dataField] * 1000 ) );
+		  		return dateFormatter.format( EDateUtil.timestampToLocalDate(  item[column.dataField] ) );
 			}
 
 			private function name_labelFunc(item:Object, column:DataGridColumn):String 

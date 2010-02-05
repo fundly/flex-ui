@@ -7,10 +7,16 @@
 				<mx:Box horizontalGap="2" verticalGap="2" horizontalAlign="right"
 					direction="{this.width &gt; 1200 ? 'horizontal' : 'vertical'}">
 				<mx:FormItem label="From:">
-					<mx:DateField id="range_start" width="100" color="#000000" formatString="MM/DD/YYYY" selectedDate="{EDateUtil.timestampToLocalDate(_presentationModel.startDate)}" change="_presentationModel.startDate = EDateUtil.localDateToTimestamp(event.target.selectedDate)" textAlign="center" enabled="{!_presentationModel.dataLoading}" />
+					<mx:DateField id="range_start" width="100" color="#000000" formatString="MM/DD/YYYY" 
+						selectedDate="{_presentationModel.startDate}" 
+						change="_presentationModel.startDate = event.target.selectedDate" 
+						textAlign="center" enabled="{!_presentationModel.dataLoading}" />
 				</mx:FormItem>
 				<mx:FormItem label="To:">
-					<mx:DateField id="range_end" width="100" color="#000000" formatString="MM/DD/YYYY" selectedDate="{EDateUtil.timestampToLocalDate(_presentationModel.endDate)}" change="_presentationModel.endDate = EDateUtil.localDateToTimestamp(event.target.selectedDate)" textAlign="center" enabled="{!_presentationModel.dataLoading}" />
+					<mx:DateField id="range_end" width="100" color="#000000" formatString="MM/DD/YYYY" 
+						selectedDate="{_presentationModel.endDate}" 
+						change="_presentationModel.endDate = event.target.selectedDate" 
+						textAlign="center" enabled="{!_presentationModel.dataLoading}" />
 				</mx:FormItem>
 				</mx:Box>
 
@@ -136,7 +142,7 @@
 			private function datetime_labelFunc(item:Object, column:DataGridColumn):String 
 			{
 				dateFormatter.formatString = "MM/DD/YY L:NNA"
-				return dateFormatter.format(new Date(item[column.dataField] * 1000));
+				return dateFormatter.format(EDateUtil.timestampToLocalDate(item[column.dataField]));
 			}
 
 		]]>

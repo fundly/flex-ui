@@ -114,7 +114,6 @@
 			{
 				dateFormatter.formatString = "MM/DD/YY L:NNA";
 				return dateFormatter.format( EDateUtil.timestampToLocalDate(item[column.dataField]) );
-//				return dateFormatter.format(new Date(item[column.dataField] * 1000));
 			}
 		]]>
 	</mx:Script>

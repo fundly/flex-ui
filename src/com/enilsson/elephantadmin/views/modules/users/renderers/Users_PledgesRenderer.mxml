@@ -57,13 +57,13 @@
 				switch(item.type)
 				{
 					case "Check":
-						label = "Contribution: " + item.type + " " + cf.format(item.amount) + " on " + df.format(new Date(item.entry_date * 1000));
+						label = "Contribution: " + item.type + " " + cf.format(item.amount) + " on " + df.format(EDateUtil.timestampToLocalDate(item.entry_date));
 						break;
 					case "Credit Card":
-						label = "Contribution: " + item.type + " " + cf.format(item.amount) + " on " + df.format(new Date(item.created_on * 1000));
+						label = "Contribution: " + item.type + " " + cf.format(item.amount) + " on " + df.format(EDateUtil.timestampToLocalDate(item.created_on));
 						break;
 					case "PayPal":
-						label = "Contribution: " + item.type + " " + cf.format(item.amount) + " on " + df.format(new Date(item.created_on * 1000));
+						label = "Contribution: " + item.type + " " + cf.format(item.amount) + " on " + df.format(EDateUtil.timestampToLocalDate(item.created_on));
 						break;
 				}
 				return label;

@@ -49,12 +49,12 @@
 							},
 							'2':{ 
 								'what' : 'pledges.pledge_date',
-								'val' : (_model.my_history.startDate.getTime())/1000,
+								'val' : EDateUtil.localDateToTimestamp(_model.my_history.startDate),
 								'op' : '>'
 							},
 							'3':{ 
 								'what' : 'pledges.pledge_date',
-								'val' : (_model.my_history.endDate.getTime())/1000,
+								'val' : EDateUtil.localDateToTimestamp(_model.my_history.endDate),
 								'op' : '<'
 							}
 						};

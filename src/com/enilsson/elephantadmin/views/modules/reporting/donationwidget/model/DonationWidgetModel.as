@@ -24,16 +24,15 @@ package com.enilsson.elephantadmin.views.modules.reporting.donationwidget.model
 	[Bindable]
 	public class DonationWidgetModel extends ReportModuleModel
 	{
-		private const ONE_DAY:int = 24 * 60 * 60;
 		private const WIDGET_USER_ID:int = -100;
 
 		public var currentState : String = "basic";
 		public var paymentMethodData : ArrayCollection;
 
 		// default start date is start of today
-		public var startDate:int = EDateUtil.todayToTimestamp() - ONE_DAY;
+		public var startDate:Date = EDateUtil.today();
 		// default end date is end of today
-		public var endDate:int = EDateUtil.todayToTimestamp();
+		public var endDate:Date = EDateUtil.today();
 		public var sortArray:Array = ['pledge_date DESC'];
 		public var exportHeaders:Array = [];
 		public var exportFields:Array = [];
@@ -110,12 +109,14 @@ package com.enilsson.elephantadmin.views.modules.reporting.donationwidget.model
 		override public function generate():void
 		{
 			super.generate();
+			
+			EDateUtil.setEndOfDay(endDate);
 
 			// if no vo was passed through, get parameters from the UI
 			var vo:ReportVO = new ReportVO();
 			var sortBy:String = sortArray.join(",");
-			vo.startTime = startDate;
-			vo.endTime = endDate + ONE_DAY;
+			vo.startTime = EDateUtil.localDateToTimestamp(startDate);
+			vo.endTime = EDateUtil.localDateToTimestamp(endDate);
 			vo.sortBy = sortBy;
 			vo.filter = filter;
 			vo.page = gridCurrentPage;

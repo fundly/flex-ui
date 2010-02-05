@@ -96,6 +96,7 @@
 
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.utils.EDateUtil;
 			import com.enilsson.elephantadmin.models.Icons;
 			import com.enilsson.elephantadmin.events.main.SidEvent;
 			import com.enilsson.elephantadmin.events.URLChangeEvent;
@@ -133,7 +134,7 @@
 			public function set dataProvider(data:Object):void
 			{
 				_name = data.pledge_id.fname + ' ' + data.pledge_id.lname;
-				_date = dateFormatter.format(new Date(data.created_on * 1000));
+				_date = dateFormatter.format(EDateUtil.timestampToLocalDate(data.created_on));
 				_amount = data.amount;
 				_detailsResponse = data.details_response;
 				_checkoutResponse = data.checkout_response;

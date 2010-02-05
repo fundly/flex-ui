@@ -176,7 +176,7 @@
 			 */
 			private function time_labelFunc(item:Object, column:DataGridColumn):String 
 			{
-				return dfTime.format( new Date(item[column.dataField]*1000) );
+				return dfTime.format( EDateUtil.timestampToLocalDate(item[column.dataField]) );
 			} 
 
 			/**
