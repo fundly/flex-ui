@@ -168,11 +168,6 @@
 				for ( var item:String in myDetailsForm.formVariables)
 					fv[item] = myDetailsForm.formVariables[item];
 		
-/* 				
-				// add the first login time
-				fv['_firstlogin'] = Math.round( new Date().getTime()/1000 );
- */
-				
 				// add the password variables
 				_model.firstlogin.newPWD = password.text;
 				_model.firstlogin.oldPWD = password_old.text;

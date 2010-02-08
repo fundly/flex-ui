@@ -65,7 +65,7 @@
 			}
 			
 			private function createdOnLabelFunction( item : Object, column : DataGridColumn ) : String {
-				return df.format(new Date(item.created_on * 1000));
+				return df.format(EDateUtil.timestampToLocalDate(item.created_on));
 			}		
 		]]>
 	</mx:Script>

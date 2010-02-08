@@ -6,6 +6,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.utils.EDateUtil;
 			import com.enilsson.elephantadmin.events.modules.EmailEvent;
 			import mx.utils.ObjectUtil;
 			import org.osflash.thunderbolt.Logger;
@@ -36,7 +37,7 @@
 			 */
 			private function date_labelFunc(item:Object, column:DataGridColumn):String 
 			{
-		  		return dateFormatter.format( new Date( item[column.dataField] * 1000) );
+		  		return dateFormatter.format( EDateUtil.timestampToLocalDate( item[column.dataField] ) ); 
 			} 
 			/**
 			 * Label function to show the date in the correct format

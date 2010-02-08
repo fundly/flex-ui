@@ -481,7 +481,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.host_committee.model
 					"pledge_total":selectedEvent.pledge_total,
 					"contrib_total":selectedEvent.contrib_total,
 					"outstanding":(Number(selectedEvent.fundraising_goal) - Number(selectedEvent.contrib_total) ),
-					"date_time":df.format(EDateUtil.dateFromTimestamp(selectedEvent.date_time))
+					"date_time":df.format(EDateUtil.timestampToLocalDate(selectedEvent.date_time))
 				};
 				vos.push(vo);
 			}

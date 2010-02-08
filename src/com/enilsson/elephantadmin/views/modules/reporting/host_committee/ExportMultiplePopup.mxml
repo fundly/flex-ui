@@ -110,8 +110,8 @@
 			private function dateRangeChanged():void
 			{
 				filteredEventsCol = new ArrayCollection();
-				var startTimestamp:int = EDateUtil.dateToTimestamp(startDate);
-				var endTimestamp:int = EDateUtil.dateToTimestamp(endDate) + 84600;
+				var startTimestamp:int = EDateUtil.localDateToTimestamp(startDate);
+				var endTimestamp:int = EDateUtil.localDateToTimestamp(endDate) + 84600;
 
 				for each(var item:Object in _dataProvider)
 				{
@@ -137,7 +137,7 @@
 			private function dateLabel(item:Object, column:DataGridColumn):String 
 			{
 				dateFormatter.formatString = "MM/DD/YY"
-				return dateFormatter.format(EDateUtil.dateFromTimestamp(item[column.dataField]));
+				return dateFormatter.format(EDateUtil.timestampToLocalDate(item[column.dataField]));
 			}
 
 			private function moneyLabel(item:Object, column:DataGridColumn):String {

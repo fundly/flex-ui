@@ -49,12 +49,12 @@
 							},
 							'2':{ 
 								'what' : 'pledges.pledge_date',
-								'val' : (_model.my_history.startDate.getTime())/1000,
+								'val' : EDateUtil.localDateToTimestamp(_model.my_history.startDate),
 								'op' : '>'
 							},
 							'3':{ 
 								'what' : 'pledges.pledge_date',
-								'val' : (_model.my_history.endDate.getTime())/1000,
+								'val' : EDateUtil.localDateToTimestamp(_model.my_history.endDate),
 								'op' : '<'
 							}
 						};
@@ -189,7 +189,7 @@
 			 * Label function to show the date in the correct format
 			 */
 			private function date_labelFunc(item:Object, column:DataGridColumn):String {
-		  		return dateFormatter.format( EDateUtil.dateFromTimestamp( item[column.dataField] ) );
+		  		return dateFormatter.format( EDateUtil.timestampToLocalDate( item[column.dataField] ) );
 			} 
 
 		]]>

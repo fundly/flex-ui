@@ -51,8 +51,8 @@
 				<mx:DataGridColumn headerText="State" dataField="state" width="45" />
 				<mx:DataGridColumn headerText="Pledged" dataField="pledge_amount" textAlign="right"
 					width="60" labelFunction="money_labelFunc" sortCompareFunction="sortNumeric" />
-				<mx:DataGridColumn headerText="Contrib'd" dataField="contrib_total" sortCompareFunction="sortNumeric"  
-					width="60" labelFunction="money_labelFunc" />
+				<mx:DataGridColumn headerText="Contrib'd" dataField="contrib_total" textAlign="right" 
+					width="60" labelFunction="money_labelFunc" sortCompareFunction="sortNumeric" />
 			</mx:columns>
 		</mx:DataGrid>
 	</mx:VBox>	

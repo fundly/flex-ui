@@ -146,7 +146,7 @@
 			}
 
 			private function pledgeDateLabelFunction( item : Object, column : DataGridColumn ) : String {
-				return df.format(EDateUtil.dateFromTimestamp(item.pledge_id.pledge_date));
+				return df.format(EDateUtil.timestampToLocalDate(item.pledge_id.pledge_date));
 			}
 			private function pledgeDateSortCompare( a : Object, b : Object ) : int {
 				return ObjectUtil.numericCompare( a.pledge_id.pledge_date, b.pledge_id.pledge_date);

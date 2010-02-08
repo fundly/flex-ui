@@ -136,7 +136,7 @@
 			
 			private function dateLabel(item:Object, column:DataGridColumn):String
 			{
-				return dateFormat.format( EDateUtil.dateFromTimestamp( item[column.dataField] ) );
+				return dateFormat.format( EDateUtil.timestampToLocalDate( item[column.dataField] ) );
 			}
 
 			public function popupPledgeWorkspace():void

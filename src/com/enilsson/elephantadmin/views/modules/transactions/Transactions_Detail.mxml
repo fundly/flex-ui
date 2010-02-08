@@ -123,6 +123,7 @@
 
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.utils.EDateUtil;
 			import com.enilsson.elephantadmin.models.Icons;
 			import com.enilsson.elephantadmin.events.main.SidEvent;
 			import com.enilsson.elephantadmin.events.URLChangeEvent;
@@ -176,7 +177,7 @@
 			{
 				if(_model.debug) Logger.info('Complete Transaction Data', ObjectUtil.toString(data));
 				
-				_date = dateFormatter.format(new Date(data.created_on * 1000));
+				_date = dateFormatter.format(EDateUtil.timestampToLocalDate(data.created_on));
 				_amount = data.amount;
 				_cardName = data.full_name;
 				_cardType = data.card_number_type;

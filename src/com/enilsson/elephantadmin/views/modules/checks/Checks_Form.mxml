@@ -156,7 +156,7 @@
 
 			private function toDateString(unixTimestamp:int):String
 			{				
-				var date:Date = EDateUtil.dateFromTimestamp(unixTimestamp);
+				var date:Date = EDateUtil.timestampToLocalDate(unixTimestamp);
 				return df.format(date);
 			}
 			

@@ -24,6 +24,7 @@
 
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.utils.EDateUtil;
 			private function nameLabel(item:Object, column:DataGridColumn):String
 			{
 				return item.fname + " " + item.lname;
@@ -37,7 +38,7 @@
 
 			private function createdLabel(item:Object, column:DataGridColumn):String
 			{
-				return df.format(new Date(item.created_on * 1000));
+				return df.format(EDateUtil.timestampToLocalDate(item.created_on));
 			}
 		]]>
 	</mx:Script>

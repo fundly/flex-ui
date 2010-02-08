@@ -25,6 +25,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.utils.EDateUtil;
 			import mx.managers.ToolTipManager;
 
 			[Bindable]
@@ -34,7 +35,7 @@
 			{
 				super.data = value;
 				if(data)
-					date = new Date(data.created_on * 1000);
+					date = EDateUtil.timestampToLocalDate( data.created_on ); 
 			}
 		]]>
 	</mx:Script>

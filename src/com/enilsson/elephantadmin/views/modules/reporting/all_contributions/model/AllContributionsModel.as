@@ -26,7 +26,6 @@ package com.enilsson.elephantadmin.views.modules.reporting.all_contributions.mod
 	[Bindable]
 	public class AllContributionsModel extends ReportModuleModel
 	{
-		private const ONE_DAY:int = 24 * 60 * 60;
 		private const FILTER_ALL:uint = 0;
 		private const FILTER_CREDIT_CARD:uint = 1;
 		private const FILTER_CHECK:uint = 2;
@@ -51,9 +50,9 @@ package com.enilsson.elephantadmin.views.modules.reporting.all_contributions.mod
 
 		public var dateType:int = FILTER_FULFILLED_DATE;
 		// default start date is start of today
-		public var startDate:Date = new Date(new Date().getFullYear(),new Date().getMonth(),new Date().getDate());
+		public var startDate:Date = EDateUtil.today();
 		// default end date is end of today
-		public var endDate:Date = new Date(new Date().getFullYear(),new Date().getMonth(),new Date().getDate());
+		public var endDate:Date = EDateUtil.today();
 
 		public var sortArray:Array = ['pledge_date DESC'];
 		public var exportHeaders:Array;
@@ -63,8 +62,11 @@ package com.enilsson.elephantadmin.views.modules.reporting.all_contributions.mod
 
 		public var recordsHtmlText:String;
 		
+		private var _dateFormatter : DateFormatter = new DateFormatter();
+		
 		public function AllContributionsModel():void
 		{
+			
 		}
 
 		override public function init():void
@@ -96,13 +98,16 @@ package com.enilsson.elephantadmin.views.modules.reporting.all_contributions.mod
 		override public function generate():void
 		{
 			super.generate();
-
+			
 			// if no vo was passed through, get parameters from the UI
 			var vo:ReportVO = new ReportVO();
 			var sortBy:String = sortArray.join(",");
+			
+			EDateUtil.setEndOfDay(endDate);
 
-			vo.startTime = EDateUtil.dateToTimestamp(startDate);
-			vo.endTime = EDateUtil.dateToTimestamp(endDate) + ONE_DAY;
+			vo.startTime = EDateUtil.localDateToTimestamp(startDate);
+			vo.endTime = EDateUtil.localDateToTimestamp(endDate);
+			
 			vo.sortBy = sortBy;
 			vo.filter = filter;
 			vo.page = gridCurrentPage;
@@ -124,7 +129,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.all_contributions.mod
 				vo.exportHeaders = exportHeaders;
 				vo.exportFields = exportFields;
 				vo.exportTimeOffset = timezoneOffset;
-				vo.exportTitle = exportTitle
+				vo.exportTitle = exportTitle;
 				vo.page = 0;
 				vo.recordPerPage = 10000000000;
 			}
@@ -194,9 +199,8 @@ package com.enilsson.elephantadmin.views.modules.reporting.all_contributions.mod
 			{
 				var filename:String;
 				filename = exportTitle.replace(/\s/g,"_");
-				var df:DateFormatter = new DateFormatter();
-				df.formatString = "MM-DD-YYYY";
-				navigateToURL(new URLRequest(gatewayBaseURL + '/export.php?id='+event.result+'&file_name='+filename+"_"+df.format(new Date())+'&refresh='+new Date().getTime()),'_parent')
+				_dateFormatter.formatString = "MM-DD-YYYY";
+				navigateToURL(new URLRequest(gatewayBaseURL + '/export.php?id='+event.result+'&file_name='+filename+"_"+_dateFormatter.format(new Date())+'&refresh='+new Date().getTime()),'_parent')
 				exporting = false;
 			}
 		}

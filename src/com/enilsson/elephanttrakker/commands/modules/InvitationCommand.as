@@ -10,6 +10,7 @@ package com.enilsson.elephanttrakker.commands.modules
 	import com.enilsson.elephanttrakker.vo.EmailVO;
 	import com.enilsson.elephanttrakker.vo.ErrorVO;
 	import com.enilsson.elephanttrakker.vo.RecordsVO;
+	import com.enilsson.utils.EDateUtil;
 	import com.enilsson.utils.struktorForm.ConvertRTEText;
 	
 	import mx.collections.ArrayCollection;
@@ -177,7 +178,7 @@ package com.enilsson.elephanttrakker.commands.modules
 			for each(var item:Object in data.result.email_log)
 			{			
 				var emailVO:EmailVO = new EmailVO(item.to,item.subject,ConvertRTEText.fromXHtml(item.content));
-				emailVO.date = new Date(item.created_on * 1000);
+				emailVO.date = EDateUtil.timestampToLocalDate(item.created_on);
 				emailVO.fname = item.user_id.fname;
 				emailVO.lname = item.user_id.lname;
 
