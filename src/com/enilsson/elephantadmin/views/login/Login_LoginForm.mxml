@@ -225,9 +225,9 @@
         	click="submitForm()" />
         	
         <!-- TODO: remove me, for testing only -->
-        <mx:Button label="loginAsUser"
+        <!--<mx:Button label="loginAsUser"
         	useHandCursor="true" buttonMode="true" 
-        	click="new LoginEvent('login', new LoginVO('david.keutgens@enilsson.com', 'ducati696', captchaText.text)).dispatch();" />
+        	click="new LoginEvent('login', new LoginVO('david.keutgens@enilsson.com', 'ducati696', captchaText.text)).dispatch();" />-->
         
         <mx:LinkButton label="forgot your details?"	
         	bottom="0" right="50"
