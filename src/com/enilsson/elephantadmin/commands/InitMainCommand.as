@@ -202,17 +202,8 @@ package com.enilsson.elephantadmin.commands
 			var decoder:SimpleXMLDecoder = new SimpleXMLDecoder(true);
             var xmlObj:Object = decoder.decodeXML(xml);
             
-            // assign the various values to the model			
-			_model.navLayout = xmlObj.layout.nav.link;
-			_model.aclLayout = xmlObj.layout.acl.item;
-
-			for each(var item:Object in xmlObj.layout.variables.variable)
-				_model.serverVariables[item.key] = item.value;
-
-			if(_model.debug) Logger.info('ACL Layout', ObjectUtil.toString(_model.aclLayout));
-		
-			_model.allowedModules = xmlObj.layout.allowed_modules.module;
-
+            buildLayout(xmlObj.layout);
+           
 			// run the command to get the groups info for this instance
 			this.nextEvent = new GetGroupsEvent();
 			this.executeNextCommand();
@@ -231,6 +222,38 @@ package com.enilsson.elephantadmin.commands
 		
 			_model.dataLoading = false;
 			logout();
+		}
+		
+		private function buildLayout( layout : Object ) : void {
+			
+			if(! layout ) return;
+			
+			var navigation 		: ArrayCollection = layout.nav.link as ArrayCollection;
+			var allowedModules 	: ArrayCollection = layout.allowed_modules.module as ArrayCollection;
+			
+			
+			// enable/disable reporting based on user UI rights
+			if( ! _model.session.uiAccess.reportingAccess ) {
+				// remove reporting from allowed modules
+				allowedModules.removeItemAt( allowedModules.getItemIndex("reporting") );
+				// remove reporting from navigation links
+				for ( var i : int = 0; i < navigation.length; i++ ) {
+					if( navigation[i]['module'] == 'reporting' ) {
+						navigation.removeItemAt(i);
+					}
+				}
+     		}
+     		
+            // assign the various values to the model
+            _model.allowedModules = allowedModules;
+			_model.navLayout = navigation;
+			_model.aclLayout = layout.acl.item;
+
+
+			for each(var item:Object in layout.variables.variable)
+				_model.serverVariables[item.key] = item.value;
+
+			if(_model.debug) Logger.info('ACL Layout', ObjectUtil.toString(_model.aclLayout));     				
 		}
 
 

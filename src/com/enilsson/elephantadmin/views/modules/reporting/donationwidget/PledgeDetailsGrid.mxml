@@ -54,7 +54,9 @@
 						enabled="{!_presentationModel.dataLoading}" />
 					<mx:Button width="80" label="Export" color="#000000"
 						click="_presentationModel.exportGrid(grid.dG.columns)"
-						enabled="{!_presentationModel.dataLoading}" />
+						enabled="{!_presentationModel.dataLoading}"
+						visible="{_presentationModel.exportAllowed}"
+						includeInLayout="{_presentationModel.exportAllowed}" />
 				</mx:HBox>
 			</mx:Box>
 		</mx:Canvas>

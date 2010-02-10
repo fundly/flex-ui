@@ -21,6 +21,8 @@
 				<common:CMSSubmitBtn
 					width="140"
 					label="EXPORT BATCH"
+					visible="{_presentationModel.exportAllowed}"
+					includeInLayout="{_presentationModel.exportAllowed}"
 					toolTip="Export checks in this batch to a file"
 					click="_presentationModel.exportBatch();"/>
 			</mx:AddChild>

@@ -389,6 +389,8 @@
 					styleName="actionsList" />
 				<mx:Button id="exportBtn" 
 					label="EXPORT" 
+					visible="{_model.session.uiAccess.dataExport}"
+					includeInLayout="{_model.session.uiAccess.dataExport}"
 					click="exportClickHandler(event)" 
 					icon="{Icons.EXPORT}" 
 					width="100" height="25" 

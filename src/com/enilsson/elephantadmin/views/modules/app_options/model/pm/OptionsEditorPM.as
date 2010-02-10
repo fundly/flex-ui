@@ -7,6 +7,7 @@ package com.enilsson.elephantadmin.views.modules.app_options.model.pm
 	
 	import flash.events.Event;
 	
+	import mx.binding.utils.BindingUtils;
 	import mx.controls.Alert;
 	import mx.events.CloseEvent;
 	import mx.utils.ObjectUtil;
@@ -64,6 +65,9 @@ package com.enilsson.elephantadmin.views.modules.app_options.model.pm
 		public function get displayOption() : Boolean { 
 			return _siteOption && _siteOption.display; 
 		}
+		
+		
+		public var recordWrite : Boolean;
 		
 		
 		public function changeOption( prop : String, value : * ) : void
@@ -129,6 +133,10 @@ package com.enilsson.elephantadmin.views.modules.app_options.model.pm
 		public function OptionsEditorPM(domainModel:IModelLocator)
 		{
 			super( domainModel );
+		}
+		
+		override protected function setUpWatchers():void {
+			addWatcher( BindingUtils.bindProperty( this, "recordWrite", domainModel, ["session","uiAccess","recordWrite"] ), "recordWrite" );
 		}
 	}
 }

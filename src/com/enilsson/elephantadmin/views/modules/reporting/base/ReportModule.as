@@ -27,6 +27,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.base
 				_presentationModel.gatewayURL = _gatewayURL;
 				_presentationModel.instanceID = _instanceID;
 				_presentationModel.recordID = _recordID;
+				_presentationModel.exportAllowed = _exportAllowed;
 				if(_gatewayURL)
 				{
 					var gSegs:Array = _gatewayURL.split('/');
@@ -80,6 +81,11 @@ package com.enilsson.elephantadmin.views.modules.reporting.base
 			else
 				return _recordID;
 		}
+		
+		public function set exportAllowed( value : Boolean ) : void {
+			_exportAllowed = value;
+		}
+		private var _exportAllowed : Boolean;
 
 
 		[Bindable] public var dataLoading:Boolean;

@@ -30,7 +30,7 @@
 			horizontalAlign="center" verticalAlign="middle" >
 			<common:CMSSubmitBtn label="SAVE" 
 				click="_pm.save()" 
-				enabled="{_pm.changed}" />
+				enabled="{_pm.changed &amp;&amp; _pm.recordWrite }" />
 			<common:CMSSubmitBtn label="CANCEL" 
 				click="_pm.cancel()" 
 				enabled="{_pm.changed}" />

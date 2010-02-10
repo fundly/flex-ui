@@ -16,7 +16,9 @@
 			enabled="{!_presentationModel.dataLoading}" />
 		<mx:Button width="80" label="Export" color="#000000"
 			click="handleExport();"
-			enabled="{!_presentationModel.dataLoading}" />
+			enabled="{!_presentationModel.dataLoading}"
+			visible="{_presentationModel.exportAllowed}"
+			includeInLayout="{_presentationModel.exportAllowed}" />
 	</mx:HBox>
 	<mx:HBox id="advancedMenu" width="100%" height="0" verticalAlign="middle" paddingTop="2" resizeEffect="{Resize}">
 		<mx:FormItem label="Region:">
