@@ -83,7 +83,7 @@
 							vars["date"] = "XX/XX/XX";
 							break;
 						case "pledge_amount":
-							vars["pledge_amount"] = "X,XXX"
+							vars["pledge_amount"] = "$X,XXX"
 							break;
 						case "url":
 							vars["url"] = "http://XXX.XXXX.XXX"

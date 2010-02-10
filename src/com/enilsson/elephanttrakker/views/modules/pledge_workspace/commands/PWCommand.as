@@ -536,7 +536,7 @@ package com.enilsson.elephanttrakker.views.modules.pledge_workspace.commands
 					// no contribution details were entered, so it's a plain pledge
 					else {
 						if( _presentationModel.noContribData.form_send == 'email' ) {
-							params['pledge_amount'] = _presentationModel.pledgeAmount;
+							params['pledge_amount'] = cf.format(_presentationModel.pledgeAmount);
 							
 							if(_presentationModel.debug) Logger.info('Email Params - Pledge without contribution', params);								
 															
