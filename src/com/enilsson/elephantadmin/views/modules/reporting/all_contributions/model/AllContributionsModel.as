@@ -74,7 +74,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.all_contributions.mod
 			{
 				regionFilter.addItem(item);
 			}
-			generate();
+			generateFirstPage();
 		}
 
 		public function statusChangeHandler(event:ListEvent):void

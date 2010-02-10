@@ -44,7 +44,7 @@
 					color="#FFFFFF"	/>
 				<mx:HBox horizontalGap="5" >
 					<mx:Button width="80" label="Generate" color="#000000"
-						click="_presentationModel.generate()"
+						click="_presentationModel.generateFirstPage()"
 						enabled="{!_presentationModel.dataLoading}" />
 					<mx:Button width="80" label="Export" color="#000000"
 						click="_presentationModel.exportGrid(grid.dG.columns)"
