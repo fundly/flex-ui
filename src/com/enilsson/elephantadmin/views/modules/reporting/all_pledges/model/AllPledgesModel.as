@@ -60,7 +60,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.all_pledges.model
 			{
 				regionFilter.addItem(item);
 			}
-			generate();
+			generateFirstPage();
 		}
 
 		public function statusChangeHandler(event:ListEvent):void

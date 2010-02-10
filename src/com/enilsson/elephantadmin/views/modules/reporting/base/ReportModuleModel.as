@@ -88,5 +88,10 @@ package com.enilsson.elephantadmin.views.modules.reporting.base
 		{
 			
 		}
+		
+		public function generateFirstPage() : void {
+			gridCurrentPage = 0;
+			generate();
+		}
 	}
 }

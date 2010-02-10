@@ -23,7 +23,7 @@
 			click="toggleAdvanced()"/>
 		<mx:Spacer width="100%" />
 		<mx:Button width="80" label="Generate" color="#000000"
-			click="_presentationModel.generate()"
+			click="_presentationModel.generateFirstPage()"
 			enabled="{!_presentationModel.dataLoading}" />
 		<mx:Button width="80" label="Export" color="#000000"
 			click="handleExport();"
