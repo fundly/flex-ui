@@ -413,9 +413,9 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.commands
 			
 			if(_presentationModel.debug) Logger.info('doPledgeTransaction Start', ObjectUtil.toString( event.params.vo ));
 
-			_presentationModel.formProcessing = true;
+   			_presentationModel.formProcessing = true;
 			
-			delegate.process_pledge ( event.params.vo );
+ 			delegate.process_pledge ( event.params.vo );
 		}
 		
 		private function onResults_doPledgeTransaction(event:Object):void 
@@ -429,15 +429,15 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.commands
 			{
 				case 98 :
 				case 99 :
+					var df:DateFormatter = new DateFormatter();
+						df.formatString = 'MM/DD/YYYY';
+						var cf:CurrencyFormatter = new CurrencyFormatter();
+					var params:Object = _presentationModel.vo.pledge;
+						params['date'] = df.format(new Date());
+				
 					// send an email if there is a contribution
 					if ( _presentationModel.vo.check != null || _presentationModel.vo.transaction != null ) 
 					{
-						var df:DateFormatter = new DateFormatter();
-						df.formatString = 'MM/DD/YYYY';
-						var cf:CurrencyFormatter = new CurrencyFormatter();
-						
-						var params:Object = _presentationModel.vo.pledge;
-						params['date'] = df.format(new Date());
 						params['pledge_amount'] = _presentationModel.vo.check == null ? 
 							cf.format(_presentationModel.vo.transactionData.amount) :  
 							cf.format(_presentationModel.vo.check.amount);
@@ -527,7 +527,31 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.commands
 							this.executeNextCommand();
 							this.nextEvent = null;		
 						}
-					}				
+					}
+					// no contribution details were entered, so it's a plain pledge
+					else {
+						if( _presentationModel.noContribData.form_send == 'email' ) {
+							params['pledge_amount'] = cf.format(_presentationModel.pledgeAmount);
+							
+							if(_presentationModel.debug) Logger.info('Email Params - Pledge without contribution', params);								
+															
+							this.nextEvent = new PWEvent(
+								PWEvent.SEND_EMAIL, 
+								_presentationModel,
+								new EmailVO 
+								(
+									_presentationModel.noContribData.email, 
+									'',
+									'',
+									'',
+									_model.serverVariables.donation_form_template_id,
+									params 
+								)
+							);
+							this.executeNextCommand();
+							this.nextEvent = null;
+						}
+					}
 				
 				
 					if (_presentationModel.action != PledgeWorkspaceModel.EDIT) 
@@ -541,6 +565,7 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.commands
 					} 
 					else 
 						_presentationModel.errorVO = new ErrorVO( 'This contribution was processed successfully', 'successBox', true );
+	
 
 					// update the session information so that the statistics get updated.
 					new SessionEvent( SessionEvent.GET_SESSION_INFO ).dispatch();

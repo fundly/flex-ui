@@ -32,6 +32,8 @@
 			</mx:FormItem>
 		</mx:VBox>
 		
+		<!--disabled for now until all this has been set up and tested-->
+		<!--
 		<mx:VBox
 			width="100%" height="100%"
 			showEffect="fadeIn"
@@ -47,6 +49,7 @@
 				xmlns:components="com.enilsson.elephantadmin.views.modules.app_options.view.components.*" 
 			/>
 		</mx:VBox>
+		-->
 		
 	</mx:HBox>
 	

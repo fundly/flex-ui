@@ -1,19 +1,20 @@
 package com.enilsson.elephantadmin.views.modules.app_options.view.option_views
 {
+	import com.enilsson.elephantadmin.views.modules.app_options.model.pm.OptionsEditorPM;
+	
 	import flash.events.Event;
 	
 	import mx.containers.VBox;
 	
 	public class Options_ProgressReportsBase extends VBox
 	{
-		import com.enilsson.elephantadmin.views.modules.app_options.model.pm.OptionsEditorPM;
-		
 		[Bindable] public var pm : OptionsEditorPM;		
 		
 		[Bindable]
 		protected function get topFundraisersEnabled() : Boolean { return _topFundraisersEnabled; }
 		protected function set topFundraisersEnabled( val : Boolean ) : void {
 			_topFundraisersEnabled = val;
+			optionXml.topfundraisers.enabled = val ? 'true' : 'false';
 			changeOption();
 		} 
 		private var _topFundraisersEnabled : Boolean;
@@ -22,6 +23,7 @@ package com.enilsson.elephantadmin.views.modules.app_options.view.option_views
 		protected function get groupPerformanceEnabled() : Boolean { return _groupPerformanceEnabled; }
 		protected function set groupPerformanceEnabled( val : Boolean ) : void {
 			_groupPerformanceEnabled = val;
+			optionXml.groupperformance.enabled	= val ? 'true' : 'false';
 			changeOption();
 		} 
 		[Bindable] private var _groupPerformanceEnabled : Boolean;
@@ -51,8 +53,6 @@ package com.enilsson.elephantadmin.views.modules.app_options.view.option_views
 			
 			
 		private function changeOption() : void {
-			optionXml.topfundraisers.enabled	= topFundraisersEnabled ? 'true' : 'false';
-			optionXml.groupperformance.enabled	= groupPerformanceEnabled ? 'true' : 'false';
 			pm.changeOption( "value", optionXml.toXMLString() );
 		}
 	}
