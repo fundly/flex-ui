@@ -269,7 +269,7 @@
 			}
 
 			public function dateParse(timestamp:int):Date { 
-				return EDateUtil.dateFromTimestamp(timestamp);
+				return EDateUtil.timestampToLocalDate(timestamp);
 			}
 
 			private function dateLabel(labelValue:Date, previousValue:Date, axis:IAxis):String
@@ -381,20 +381,20 @@
 				chartOverlay1.clear();
 				chartOverlay1.lineStyle(2,0,0.5);
 				chartOverlay1.beginFill(0);
-				chartOverlay1.moveTo(EDateUtil.dateToTimestamp(_presentationModel.summaryDate), 0);
-				chartOverlay1.lineTo(EDateUtil.dateToTimestamp(_presentationModel.summaryDate), LinearAxis(totalChart.verticalAxis).maximum);
+				chartOverlay1.moveTo(EDateUtil.localDateToTimestamp(_presentationModel.summaryDate), 0);
+				chartOverlay1.lineTo(EDateUtil.localDateToTimestamp(_presentationModel.summaryDate), LinearAxis(totalChart.verticalAxis).maximum);
 
 				chartOverlay2.clear();
 				chartOverlay2.lineStyle(2,0,0.5);
 				chartOverlay2.beginFill(0);
-				chartOverlay2.moveTo(EDateUtil.dateToTimestamp(_presentationModel.summaryDate), 0);
-				chartOverlay2.lineTo(EDateUtil.dateToTimestamp(_presentationModel.summaryDate), LinearAxis(incomeChart.verticalAxis).maximum);
+				chartOverlay2.moveTo(EDateUtil.localDateToTimestamp(_presentationModel.summaryDate), 0);
+				chartOverlay2.lineTo(EDateUtil.localDateToTimestamp(_presentationModel.summaryDate), LinearAxis(incomeChart.verticalAxis).maximum);
 
 				chartOverlay3.clear();
 				chartOverlay3.lineStyle(2,0,0.5);
 				chartOverlay3.beginFill(0);
-				chartOverlay3.moveTo(EDateUtil.dateToTimestamp(_presentationModel.summaryDate), 0);
-				chartOverlay3.lineTo(EDateUtil.dateToTimestamp(_presentationModel.summaryDate), LinearAxis(expChart.verticalAxis).maximum);
+				chartOverlay3.moveTo(EDateUtil.localDateToTimestamp(_presentationModel.summaryDate), 0);
+				chartOverlay3.lineTo(EDateUtil.localDateToTimestamp(_presentationModel.summaryDate), LinearAxis(expChart.verticalAxis).maximum);
 			}
 		]]>
 	</mx:Script>

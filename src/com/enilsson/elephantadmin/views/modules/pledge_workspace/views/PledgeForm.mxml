@@ -17,10 +17,11 @@
 	</mx:ViewStack>
 	
 	<mx:Canvas id="pledgeInfoContainer" 
-		left="0" top="5" bottom="5" 
+		left="0" top="0" bottom="5" 
 		width="50%" maxHeight="240"
 		horizontalScrollPolicy="off">
 		<struktorForm:StruktorForm id="pledgeInfo"
+			paddingTop="0" paddingBottom="0"
 			right="{_pledgeInfoRight}"
 			styleName="processingForm"
 			layoutProvider="{presentationModel.pledgeLayout}"

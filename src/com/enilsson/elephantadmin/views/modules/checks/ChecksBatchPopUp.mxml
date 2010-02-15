@@ -117,7 +117,7 @@
 			private function pledgeDateLabel(item:Object, column:DataGridColumn):String 
 			{
 				dateFormatter.formatString = "MM/DD/YY"
-				return dateFormatter.format(EDateUtil.dateFromTimestamp(item.pledge_id.pledge_date));
+				return dateFormatter.format(EDateUtil.timestampToLocalDate(item.pledge_id.pledge_date));
 			}
 
 			private function contactLabel(item:Object, column:DataGridColumn):String 
@@ -151,7 +151,7 @@
 				}
 				if(selectedItems.length > 0)
 				{
-					fulfillMultiple( selectedItems, EDateUtil.dateToTimestamp(entryDate) );
+					fulfillMultiple( selectedItems, EDateUtil.localDateToTimestamp(entryDate) );
 					dispatchEvent(new Event(Event.CLOSE));
 				}
 				else

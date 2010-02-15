@@ -17,12 +17,10 @@ package com.enilsson.elephantadmin.views.modules.reporting.external.common
 	[Bindable]
 	public class ExternalReportModulePM extends ReportModuleModel
 	{
-		public static const ONE_DAY	: int = 24 * 60 * 60;
-		
 		// default start date
-		public var startDate:int;
+		public var startDate:Date;
 		// default end date is end of today
-		public var endDate:int;
+		public var endDate:Date;
 		// by default sort results descending
 		public var sortArray:Array;
 		// the filename prefix that will be used for the exported file
@@ -40,8 +38,8 @@ package com.enilsson.elephantadmin.views.modules.reporting.external.common
 		 **/
 		public function ExternalReportModulePM() {
 			super();	
-			startDate 			= EDateUtil.todayToTimestamp() - ONE_DAY;
-			endDate				= EDateUtil.todayToTimestamp();
+			startDate 			= EDateUtil.today();
+			endDate				= EDateUtil.today();
 			sortArray			= ['created_on DESC'];
 			filenamePrefix		= "Export";
 			filenameExtension	= "csv";

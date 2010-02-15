@@ -35,7 +35,7 @@
 			toolTip="Contact address" 
 			styleName="listDesc" />
 		<mx:Spacer width="100%" />
-		<mx:Label text="Pledge date: {df.format(EDateUtil.dateFromTimestamp(data.pledge_id.pledge_date))}"
+		<mx:Label text="Pledge date: {df.format(EDateUtil.timestampToLocalDate(data.pledge_id.pledge_date))}"
 			toolTip="Pledge date"
 			styleName="listDesc" />
 	</mx:HBox>

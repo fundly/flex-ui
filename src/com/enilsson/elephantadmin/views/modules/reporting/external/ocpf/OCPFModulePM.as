@@ -2,6 +2,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.external.ocpf
 {
 	import com.enilsson.elephantadmin.views.modules.reporting.base.ReportVO;
 	import com.enilsson.elephantadmin.views.modules.reporting.external.common.ExternalReportModulePM;
+	import com.enilsson.utils.EDateUtil;
 
 	[Bindable]
 	public class OCPFModulePM extends ExternalReportModulePM
@@ -60,8 +61,9 @@ package com.enilsson.elephantadmin.views.modules.reporting.external.ocpf
 
 			// don't send any dates if the export has been restricted by batch id
 			if(!restricted) {
-				vo.startTime = startDate;
-				vo.endTime = endDate + ONE_DAY;
+				EDateUtil.setEndOfDay(endDate);
+				vo.startTime = EDateUtil.localDateToTimestamp(startDate);
+				vo.endTime = EDateUtil.localDateToTimestamp(endDate);
 			}
 			
 			vo.sortBy = sortBy;

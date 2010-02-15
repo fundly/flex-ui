@@ -86,7 +86,7 @@ package com.enilsson.elephanttrakker.commands.modules
 				//item.description = eNilssonUtils.cleanRteHTML(item.description);
 				var df:DateFormatter = new DateFormatter();
 				df.formatString = "MM/DD/YYYY";
-				item.date = (df.format( EDateUtil.dateFromTimestamp(item.publish_date) ) );
+				item.date = (df.format( EDateUtil.timestampToLocalDate(item.publish_date) ) );
 				
 				dp.addItem(data.result.news[i]);
 			}

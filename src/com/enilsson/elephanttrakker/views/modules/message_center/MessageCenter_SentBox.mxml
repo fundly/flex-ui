@@ -6,6 +6,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.utils.EDateUtil;
 			import org.osflash.thunderbolt.Logger;
 			import mx.utils.StringUtil;
 			import com.enilsson.elephanttrakker.events.modules.message_center.MessageCenterEvent;
@@ -81,7 +82,7 @@
             */
             private function formatMsgDate(timestamp:int):String	
             {
-            	var formattedDate:Date = new Date( timestamp * 1000 )
+            	var formattedDate:Date = EDateUtil.timestampToLocalDate( timestamp );
             	
             	return df2.format( formattedDate );         	
             }
@@ -90,7 +91,7 @@
 			 * Label function to show the date in the correct format
 			 */
 			private function date_labelFunc(item:Object, column:DataGridColumn):String {
-		  		return df.format( new Date( item[column.dataField] * 1000 ) );
+		  		return df.format( EDateUtil.timestampToLocalDate( item[column.dataField] ) );
 			} 
 		]]>
 	</mx:Script>

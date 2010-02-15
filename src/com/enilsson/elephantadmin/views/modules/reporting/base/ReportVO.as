@@ -5,7 +5,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.base
 	{
 		public var startTime:int;
 		public var endTime:int;
-	
+		
 		public var sortBy:String;
 		public var recordPerPage:int;
 		public var page:int;

@@ -2,6 +2,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.external.netfile
 {
 	import com.enilsson.elephantadmin.views.modules.reporting.base.ReportVO;
 	import com.enilsson.elephantadmin.views.modules.reporting.external.common.ExternalReportModulePM;
+	import com.enilsson.utils.EDateUtil;
 	
 	import mx.collections.ArrayCollection;
 
@@ -35,11 +36,13 @@ package com.enilsson.elephantadmin.views.modules.reporting.external.netfile
 			
 			dataLoading = true;
 			
+			EDateUtil.setEndOfDay(endDate);
+			
 			var vo:ReportVO = new ReportVO();
 			var sortBy:String = sortArray.join(",");
 
-			vo.startTime = startDate;
-			vo.endTime = endDate + ONE_DAY;
+			vo.startTime = EDateUtil.localDateToTimestamp(startDate);
+			vo.endTime = EDateUtil.localDateToTimestamp(endDate);
 			vo.sortBy = sortBy;
 			vo.filter = filter;
 			vo.export = true;

@@ -18,7 +18,7 @@
 		<mx:Text text="{data.address1}, {data.city} {data.state} {data.zip}" 
 			width="{explicitWidth}" 
 			styleName="listDesc" />
-		<mx:Text htmlText="Pledged: &lt;b&gt;{cf.format(data.pledge_amount)}&lt;/b&gt; - Contributed: &lt;b&gt;{cf.format(data.contrib_total)}&lt;/b&gt; - Pledge Date: &lt;b&gt;{df.format(EDateUtil.dateFromTimestamp(data.pledge_date ))}&lt;/b&gt;" 
+		<mx:Text htmlText="Pledged: &lt;b&gt;{cf.format(data.pledge_amount)}&lt;/b&gt; - Contributed: &lt;b&gt;{cf.format(data.contrib_total)}&lt;/b&gt; - Pledge Date: &lt;b&gt;{df.format(EDateUtil.timestampToLocalDate(data.pledge_date ))}&lt;/b&gt;" 
 			width="{explicitWidth}" 
 			styleName="listDesc" />						
 	</mx:VBox>

@@ -122,14 +122,14 @@ package com.enilsson.elephantadmin.views.modules.search.grids
 			var df:DateFormatter = new DateFormatter();
 			df.formatString = 'MM/DD/YYYY';
 			
-			return df.format( new Date ( item.date_time * 1000 ) );
+			return df.format( EDateUtil.timestampToLocalDate ( item.date_time ) );
 		}
 
 		public static function getPledgeDate( item : Object, column : DataGridColumn ):String 
 		{
 			var df:DateFormatter = new DateFormatter();
 			df.formatString = "MM/DD/YYYY"
-			return df.format( EDateUtil.dateFromTimestamp(item.pledge_date) );
+			return df.format( EDateUtil.timestampToLocalDate(item.pledge_date) );
 		}
 
 	}

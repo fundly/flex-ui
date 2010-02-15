@@ -9,13 +9,14 @@
 
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.utils.EDateUtil;
+			import com.enilsson.elephantadmin.vo.SidVO;
 			import mx.formatters.DateFormatter;
 			import com.enilsson.elephantadmin.vo.EmailVO;
 			import mx.utils.ObjectUtil;
 			import mx.collections.ArrayCollection;
 			import com.enilsson.graphics.enDropShadows;
 
-			import com.enilsson.elephantadmin.events.session.PingEvent;
 			import com.enilsson.elephantadmin.models.EAModelLocator;
 			import com.enilsson.elephantadmin.events.modules.EmailEvent;
 			import com.enilsson.elephantadmin.vo.RecordsVO;
@@ -29,9 +30,39 @@
 			override protected function init():void
 			{
 				super.init();
+				
+				var sid:SidVO = _model.sid;
+			
+				if(sid)
+				{
+					if(sid.table_name == 'email_log')
+					{
+						_model.sid = null;
+						
+						var whereObj : Object = {
+							 1: { 
+							 	what:"id",
+							 	val: sid.data.id,
+							 	op: "="
+							 }
+						};
+						
+						// load the email log information for the selected email
+						new EmailEvent(
+							EmailEvent.EMAIL_LOG_RECORDS, 
+							{
+								recordsVO : new RecordsVO(
+									'email_log(user_id<fname:lname:_fid>)', 
+									whereObj)
+							}).dispatch();
+					}
+				}
+				else
+				{
+					// get default list
+					clearSearch();
+				}
 
-				// get default list
-				clearSearch();
 				// reset the data changed flag
 				_model.dataChanged = false;
 			}
@@ -163,7 +194,7 @@
 						whereObj[2] = { 
 							'what' : 'email_log.created_on',
 							'op' : '>',
-							'val' : emailList.fromDate.time / 1000 //start of the date range
+							'val' : EDateUtil.localDateToTimestamp( emailList.fromDate ) //start of the date range
 						};
 						RecordsVO(_model.email_log.lastQuery.params.recordsVO).where = whereObj;
 						_model.email_log.lastQuery.dispatch();
@@ -200,7 +231,7 @@
 						whereObj[3] = { 
 							'what' : 'email_log.created_on',
 							'op' : '<',
-							'val' : emailList.toDate.time / 1000 + 24*60*60 // end of the date range
+							'val' : EDateUtil.localDateToTimestamp( emailList.toDate ) + 24*60*60 // end of the date range
 						};
 						RecordsVO(_model.email_log.lastQuery.params.recordsVO).where = whereObj;
 						_model.email_log.lastQuery.dispatch();
@@ -220,7 +251,7 @@
 			private function date_labelFunc(item:Object, column:DataGridColumn):String 
 			{
 				var today:Date = new Date();
-		  		return dateFormatter.format( new Date( item[column.dataField] * 1000 ) );
+		  		return dateFormatter.format( EDateUtil.timestampToLocalDate(  item[column.dataField] ) );
 			}
 
 			private function name_labelFunc(item:Object, column:DataGridColumn):String 

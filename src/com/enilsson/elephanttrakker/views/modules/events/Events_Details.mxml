@@ -63,7 +63,7 @@
 			<mx:Text id="sourceCode" text="{_model.events.eventDetails.source_code}" styleName="textField"  />
 		</mx:FormItem>			
 		<mx:FormItem label="When" labelWidth="110" styleName="labelField">
-			<mx:Text id="eventDate" text="{dateFormatter.format( EDateUtil.dateFromTimestamp(_model.events.eventDetails.date_time) )}" styleName="textField"  />
+			<mx:Text id="eventDate" text="{dateFormatter.format( EDateUtil.timestampToLocalDate(_model.events.eventDetails.date_time) )}" styleName="textField"  />
 		</mx:FormItem>			
 		<mx:FormItem label="Location" labelWidth="110" styleName="labelField">
 			<mx:Text id="eventLocation" text="{_model.events.eventDetails.location}" styleName="textField" />

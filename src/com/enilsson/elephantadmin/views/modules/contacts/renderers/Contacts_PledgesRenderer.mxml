@@ -11,10 +11,10 @@
 		click="new SidEvent( data.sid ).dispatch()" />
 
 	<mx:VBox width="100%" verticalGap="0">	
-		<mx:Text text="Pledge on {df.format(EDateUtil.dateFromTimestamp(data.pledge_date))} for Event {data.event_id.source_code}"
+		<mx:Text text="Pledge on {df.format(EDateUtil.timestampToLocalDate(data.pledge_date))} for Event {data.event_id.source_code}"
 			width="{explicitWidth}"
 			styleName="listTitle" />
-		<mx:Text text="Created by {data.created_by} - FUND{data.created_by_id} on {df2.format(new Date(data.created_on * 1000))}"
+		<mx:Text text="Created by {data.created_by} - FUND{data.created_by_id} on {df2.format( EDateUtil.timestampToLocalDate( data.created_on ) )}"
 			width="{explicitWidth}"
 			styleName="listDesc" />
 		<mx:Text htmlText="Pledged: &lt;b&gt;{cf.format(data.pledge_amount)}&lt;/b&gt; - Contributed: &lt;b&gt;{cf.format(data.contrib_total)}&lt;/b&gt;" 
@@ -47,13 +47,13 @@
 				switch(item.type)
 				{
 					case "Check":
-						label = "Contribution: " + item.type + " " + cf.format(item.amount) + " on " + df.format(EDateUtil.dateFromTimestamp(item.entry_date));
+						label = "Contribution: " + item.type + " " + cf.format(item.amount) + " on " + df.format(EDateUtil.timestampToLocalDate(item.entry_date));
 						break;
 					case "Credit Card":
-						label = "Contribution: " + item.type + " " + cf.format(item.amount) + " on " + df.format(new Date(item.created_on * 1000));
+						label = "Contribution: " + item.type + " " + cf.format(item.amount) + " on " + df.format( EDateUtil.timestampToLocalDate(item.created_on));
 						break;
 					case "PayPal":
-						label = "Contribution: " + item.type + " " + cf.format(item.amount) + " on " + df.format(new Date(item.created_on * 1000));
+						label = "Contribution: " + item.type + " " + cf.format(item.amount) + " on " + df.format( EDateUtil.timestampToLocalDate(item.created_on));
 						break;
 				}
 				return label;

@@ -23,7 +23,7 @@
 		
 	<mx:ViewStack id="vstack" 
 		creationPolicy="all"  
-		width="630" height="242" 
+		width="630" height="260" 
 		top="40" left="5" 
 		change="_IndexChange = event" 
 		childAdd="presentationModel.numTabs = event.currentTarget.numChildren"

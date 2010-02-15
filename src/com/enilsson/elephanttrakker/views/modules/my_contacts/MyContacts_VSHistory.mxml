@@ -85,7 +85,7 @@
 			} 
 			
 			private function date_labelFunc(item:Object, column:DataGridColumn):String {
-		  		return dateFormatter.format( EDateUtil.dateFromTimestamp( item[column.dataField] ) );
+		  		return dateFormatter.format( EDateUtil.timestampToLocalDate( item[column.dataField] ) );
 			}
 			
 		]]>

@@ -9,6 +9,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.utils.EDateUtil;
 			[Bindable] private var _dateText:String = "";
 			
 			private function formatDate():void
@@ -20,7 +21,7 @@
 						_dateText = "";
 					}
 					else
-						_dateText = df.format(new Date(data.modified_on * 1000)) + " - Last Modified";
+						_dateText = df.format( EDateUtil.timestampToLocalDate( data.modified_on )) + " - Last Modified";
 				}
 			}
 		]]>

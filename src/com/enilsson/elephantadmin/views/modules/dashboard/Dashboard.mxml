@@ -159,6 +159,7 @@
 
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.utils.EDateUtil;
 			import com.enilsson.elephantadmin.events.main.SidEvent;
 			import mx.utils.ObjectUtil;
 			import com.enilsson.elephantadmin.views.modules.dashboard.renderers.EventLookupRenderer;
@@ -211,7 +212,7 @@
 				
 				// Set todayDate's time to midnight local time
 				todayDate.setHours(0,0,0);
-				var datetime:Date = new Date(item.created_on * 1000)
+				var datetime:Date = EDateUtil.timestampToLocalDate( item.created_on ); 
 				
 				// If the time is between midnight today and yesterday show 'yesterday' or the date
 				if( datetime.getTime() < todayDate.getTime())
@@ -247,7 +248,7 @@
 
 			private function loggedLabel(item:Object, column:DataGridColumn):String
 			{
-				return timeFormat.format(new Date(item.last_login * 1000));
+				return timeFormat.format( EDateUtil.timestampToLocalDate( item.last_login ) );
 			}
 		]]>
 	</mx:Script>

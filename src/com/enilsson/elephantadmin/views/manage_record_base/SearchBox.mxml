@@ -214,12 +214,12 @@
 			
 			private function utcDateLabel( item:Object, column:DataGridColumn ):String
 			{
-				return df.format( EDateUtil.dateFromTimestamp(item[column.dataField]) );
+				return df.format( EDateUtil.timestampToLocalDate(item[column.dataField]) );
 			}
 			
 			private function dateLabel(item:Object, column:DataGridColumn):String
 			{
-				return df.format( new Date( item[column.dataField] * 1000 ) );
+				return df.format( EDateUtil.timestampToLocalDate( item[column.dataField] ) );
 			}
 			
 			private function currencyLabel(item:Object, column:DataGridColumn):String

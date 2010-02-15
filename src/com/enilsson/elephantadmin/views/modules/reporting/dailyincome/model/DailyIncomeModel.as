@@ -25,8 +25,6 @@ package com.enilsson.elephantadmin.views.modules.reporting.dailyincome.model
 	[Bindable]
 	public class DailyIncomeModel extends ReportModuleModel
 	{
-		private const ONE_DAY:int = 24 * 60 * 60;
-
 		public var regionFilter:ArrayCollection = new ArrayCollection([
 			{'label':'All','data':'0'}
 		]);
@@ -36,10 +34,10 @@ package com.enilsson.elephantadmin.views.modules.reporting.dailyincome.model
 			{'label':'Cash on Hand','data':'2'}
 		]);
 		public var selectedChartIndex:int = 0;
-		// default start date is 1 week from today
-		public var startDate:Date = new Date(new Date().getFullYear(),new Date().getMonth(),new Date().getDate() - 7);
+		// default start date
+		public var startDate:Date = EDateUtil.today();
 		// default end date is end of today
-		public var endDate:Date = new Date(new Date().getFullYear(),new Date().getMonth(),new Date().getDate());
+		public var endDate:Date = EDateUtil.today();
 
 		public function set summaryDate(value:Date):void
 		{
@@ -65,6 +63,8 @@ package com.enilsson.elephantadmin.views.modules.reporting.dailyincome.model
 		
 		public function DailyIncomeModel():void
 		{
+			// default start date is 1 week from today
+			startDate.setDate( startDate.getDate() - 7 );
 		}
 
 		override public function init():void
@@ -87,10 +87,12 @@ package com.enilsson.elephantadmin.views.modules.reporting.dailyincome.model
 		{
 			dataLoading = true;
 			
+			EDateUtil.setEndOfDay(endDate);
+			
 			var vo:ReportVO = new ReportVO();
 
-			vo.startTime = EDateUtil.dateToTimestamp(startDate);
-			vo.endTime = EDateUtil.dateToTimestamp(endDate) + ONE_DAY;
+			vo.startTime = EDateUtil.localDateToTimestamp(startDate);
+			vo.endTime = EDateUtil.localDateToTimestamp(endDate);
 			vo.groupID = group;
 
 			if(exporting)
@@ -115,7 +117,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.dailyincome.model
 
 		public function addExpenditure(amount:Number):void
 		{
-			var date:int = EDateUtil.dateToTimestamp(summaryDate);
+			var date:int = EDateUtil.localDateToTimestamp(summaryDate);
 			
  			var amfService:RemoteObject = new RemoteObject('amfphp');
 			amfService.endpoint = gatewayURL;
@@ -139,7 +141,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.dailyincome.model
 			var sortBy:String = sortArray.join(",");
 
 			vo.sortBy = sortBy;
-			vo.startTime = EDateUtil.dateToTimestamp(summaryDate);
+			vo.startTime = EDateUtil.localDateToTimestamp(summaryDate);
 			vo.groupID = summaryGroup;
 
 			if(exporting)
@@ -322,7 +324,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.dailyincome.model
 
 		public function chartDateClick(event:ChartItemEvent):void
 		{
-			summaryDate = EDateUtil.dateFromTimestamp(event.hitData.item.date);
+			summaryDate = EDateUtil.timestampToLocalDate(event.hitData.item.date);
 			generateSummary();
 		}
 

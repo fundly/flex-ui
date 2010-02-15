@@ -9,7 +9,7 @@
 			import com.enilsson.utils.EDateUtil;
 			
 			private function date_labelFunc( date:int ):String {
-		  		return df.format( EDateUtil.dateFromTimestamp( date ));
+		  		return df.format( EDateUtil.timestampToLocalDate( date ));
 			} 
 			
 		]]>

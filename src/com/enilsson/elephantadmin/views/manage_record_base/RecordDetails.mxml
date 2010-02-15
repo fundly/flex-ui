@@ -49,6 +49,7 @@
 
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.utils.EDateUtil;
 			import com.enilsson.elephantadmin.views.manage_record_base.model.RecordModel;
 			
 			[Bindable] public var presentationModel:RecordModel;
@@ -60,8 +61,8 @@
 			{
 				var s:Object = presentationModel.selectedRecord;
 				
-				created = s.created_by + ' ' + df.format(new Date(s.created_on * 1000));
-				modified = s.modified_by + ' ' + df.format(new Date(s.modified_on * 1000));			
+				created = s.created_by + ' ' + df.format( EDateUtil.timestampToLocalDate(s.created_on));
+				modified = s.modified_by + ' ' + df.format( EDateUtil.timestampToLocalDate(s.modified_on));			
 				groupName = presentationModel.groupName;
 			}
 		]]>
