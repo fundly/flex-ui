@@ -80,6 +80,8 @@ package com.enilsson.elephantadmin.models
 		[Bindable] public var gatewayBaseURL : String = '';
 		[Bindable] public var s3URL : String = 'https://trakker.s3.amazonaws.com/';
 		
+		[Bindable] public var uiAccess : UIAccessVO = new UIAccessVO();
+		
 		/**
 		* Session variables
 		*/
