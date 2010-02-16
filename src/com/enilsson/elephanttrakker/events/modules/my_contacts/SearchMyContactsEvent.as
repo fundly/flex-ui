@@ -16,7 +16,7 @@ package com.enilsson.elephanttrakker.events.modules.my_contacts
 		{
 			super( EVENT_SEARCH_MYCONTACTS );
 			
-			this.searchTerm = searchTerm
+			this.searchTerm = searchTerm;
 			this.iFrom = iFrom;
 			this.iCount = iCount;
 		}

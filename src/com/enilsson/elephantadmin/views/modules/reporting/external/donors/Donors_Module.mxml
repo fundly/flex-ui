@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ExternalReportModule
+	xmlns="com.enilsson.elephantadmin.views.modules.reporting.external.common.*" 
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	currentState="donorsReport"
+	creationComplete="init()">
+	
+	<states>
+		<mx:State name="donorsReport">
+		
+			<mx:SetProperty target="{exportLabel}" name="text" value="Export donors by group:" />
+			
+			<mx:RemoveChild target="{datesBox}" />
+			<mx:RemoveChild target="{contribTypeFormItem}" />
+			
+			<!-- add a combo box containing the user groups to the filter box of the DonorModule -->			
+			<mx:AddChild relativeTo="{filterBox}" position="lastChild">
+				<mx:ComboBox id="groupsCb"
+					prompt="ALL GROUPS"
+					dataProvider="{_pm.userGroups}"
+					enabled="{!dataLoading}"
+					change="groupChangeHandler(event)"
+					width="150" color="#000000" />
+			</mx:AddChild>
+			
+		</mx:State>
+	</states>
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.events.ListEvent;
+			import com.enilsson.elephantadmin.views.modules.reporting.external.donors.DonorsModulePM
+			
+			[Bindable] private var _pm : DonorsModulePM;
+		
+			private function init() : void {
+				_pm = new DonorsModulePM();
+				presentationModel = _pm;
+			}
+			
+			private function groupChangeHandler(event:ListEvent):void {
+				if(event.currentTarget.selectedItem)
+					_pm.selectedGroupId = event.currentTarget.selectedItem.value;
+				else
+					_pm.selectedGroupId = 0;
+				
+			}
+		]]>
+	</mx:Script>
+	
+</ExternalReportModule>	
+	
+

@@ -2,6 +2,7 @@ package com.enilsson.elephantadmin.vo
 {
 	import com.adobe.cairngorm.vo.IValueObject;
 
+	[Bindable]
 	[RemoteClass(alias="com.enilsson.elephantadmin.vo.SessionVO")]
 	public class SessionVO implements IValueObject
 	{
@@ -17,19 +18,25 @@ package com.enilsson.elephantadmin.vo
 			this.acl = data.acl;
 			this.admin_acl = data.admin_acl;
 			this.groups = data.groups;
+			
+			if(data.ui_access) {
+				this.uiAccess = data.ui_access as UIAccessVO;
+			}
+			else {
+				this.uiAccess = new UIAccessVO();
+			}
 		}
 		
-		[Bindable] public var data:Object;
-		
-		[Bindable] public var fname:String;		
-		[Bindable] public var lname:String;
-		[Bindable] public var fullname:String;
-		[Bindable] public var email:String;
-		[Bindable] public var user_id:uint;
-		[Bindable] public var phone:String;
-		[Bindable] public var acl:Object;
-		[Bindable] public var admin_acl:Object;
-		[Bindable] public var groups:Object;
-
+		public var data:Object;
+		public var fname:String;		
+		public var lname:String;
+		public var fullname:String;
+		public var email:String;
+		public var user_id:uint;
+		public var phone:String;
+		public var acl:Object;
+		public var admin_acl:Object;
+		public var groups:Object;
+		public var uiAccess:UIAccessVO;
 	}
 }

@@ -169,7 +169,7 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 			new PledgeEvent ( 
 				PledgeEvent.LOOKUPINPUT_SEARCH,
 				this,
-				new SearchVO ( tbl, event.currentTarget.searchTerm + '*', null, 0, 200 )
+				new SearchVO ( tbl, event.currentTarget.searchTerm, null, 0, 200 )
 			).dispatch();
 		}
 		

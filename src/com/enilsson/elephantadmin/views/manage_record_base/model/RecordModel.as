@@ -4,13 +4,13 @@ package com.enilsson.elephantadmin.views.manage_record_base.model
 	import com.enilsson.elephantadmin.events.modules.RecordModuleEvent;
 	import com.enilsson.elephantadmin.interfaces.IRecordModel;
 	import com.enilsson.elephantadmin.models.EAModelLocator;
-	import com.enilsson.elephantadmin.models.Icons;
 	import com.enilsson.elephantadmin.vo.RecordVO;
 	import com.enilsson.elephantadmin.vo.RecordsVO;
 	import com.enilsson.elephantadmin.vo.SearchVO;
 	import com.enilsson.elephantadmin.vo.SessionVO;
 	import com.enilsson.elephantadmin.vo.SidVO;
 	import com.enilsson.elephantadmin.vo.StruktorLayoutVO;
+	import com.enilsson.elephantadmin.vo.UIAccessVO;
 	
 	import flash.events.Event;
 	
@@ -320,6 +320,10 @@ package com.enilsson.elephantadmin.views.manage_record_base.model
 		{
 			return EAModelLocator(mainModel).session;
 		}
+		
+		public function get uiAccess() : UIAccessVO {
+			return EAModelLocator(mainModel).uiAccess;
+		}
 
 		public function get itemsPerPage() : Number 
 		{
@@ -571,7 +575,7 @@ package com.enilsson.elephantadmin.views.manage_record_base.model
 				s = new RecordModuleEvent(
 						RecordModuleEvent.SEARCH_RECORDS,
 						this,
-						new SearchVO( table, searchTerm + "*", null, 0, itemsPerPage )
+						new SearchVO( table, searchTerm, null, 0, itemsPerPage )
 					);
 				lastQuery = s;
 				s.dispatch();

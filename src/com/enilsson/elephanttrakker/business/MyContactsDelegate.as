@@ -56,7 +56,7 @@ package com.enilsson.elephanttrakker.business
 		{
 			this.service = ServiceLocator.getInstance().getRemoteObject('struktorPluginsContacts');
 			
-			var token:AsyncToken = service.search( searchTerm + '*', null, iFrom, iCount);
+			var token:AsyncToken = service.search( searchTerm, null, iFrom, iCount);
 			token.addResponder(responder);
 		}
 		
