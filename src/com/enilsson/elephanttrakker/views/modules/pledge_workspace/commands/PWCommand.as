@@ -210,7 +210,7 @@ package com.enilsson.elephanttrakker.views.modules.pledge_workspace.commands
 			var handlers:IResponder = new mx.rpc.Responder(onResults_lookupInputSearch, onFault_lookupInputSearch);
 			var delegate:SearchDelegate = new SearchDelegate(handlers);
 			
-			var s:SearchVO = new SearchVO( event.params.table, event.params.searchTerm + '*', null, 0, event.params.searchCount );
+			var s:SearchVO = new SearchVO( event.params.table, event.params.searchTerm, null, 0, event.params.searchCount );
 			
 			delegate.search( s );
 		}
@@ -363,7 +363,7 @@ package com.enilsson.elephanttrakker.views.modules.pledge_workspace.commands
 					var p:Object = _presentationModel.pledgeData;
 					s = new SearchVO(
 						'pledges',
-						p.lname + ' ' + p.fname.substr(0,3) + '* ' + p.city + ' ' + p.zip + ' ' + p.email + ' ' + p.pledge_amount
+						p.lname + ' ' + p.fname.substr(0,3) + ' ' + p.city + ' ' + p.zip + ' ' + p.email + ' ' + p.pledge_amount
 					);
 				break;				
 			}

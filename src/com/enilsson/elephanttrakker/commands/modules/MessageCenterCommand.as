@@ -450,7 +450,7 @@ package com.enilsson.elephanttrakker.commands.modules
 
 			_model.dataLoading = true;
 			
-			delegate.searchFundRaisers( event.obj.searchTerm + '*', 0, event.obj.searchCount );
+			delegate.searchFundRaisers( event.obj.searchTerm, 0, event.obj.searchCount );
 		}
 
 		private function onResults_searchFundRaisers(data:Object):void 

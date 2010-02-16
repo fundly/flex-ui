@@ -33,7 +33,7 @@ package com.enilsson.elephanttrakker.business
 		{
 			this.service = ServiceLocator.getInstance().getRemoteObject('struktorSearch');
 			
-			var token:AsyncToken = service.table('events', searchTerm.replace(/ /g,"*")+'*', null, iCount, iFrom);
+			var token:AsyncToken = service.table('events', searchTerm, null, iCount, iFrom);
 			token.addResponder(responder);
 		}		
 	
@@ -74,7 +74,7 @@ package com.enilsson.elephanttrakker.business
 		{
 			this.service = ServiceLocator.getInstance().getRemoteObject('struktorSearch');
 			
-			var token:AsyncToken = service.table(table, searchTerm.replace(/ /g,"*")+'*', null, iCount,iFrom);
+			var token:AsyncToken = service.table(table, searchTerm, null, iCount,iFrom);
 			token.addResponder(responder);
 		}		
 	
