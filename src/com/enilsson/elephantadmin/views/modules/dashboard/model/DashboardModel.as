@@ -182,7 +182,7 @@ package com.enilsson.elephantadmin.views.modules.dashboard.model
 																			);
 			//eSQL syntax
 			searchEventsEvent.searchVO = new SearchVO(	'events',
-														event.currentTarget.searchTerm + "*",
+														event.currentTarget.searchTerm,
 														null,
 														0,
 														200

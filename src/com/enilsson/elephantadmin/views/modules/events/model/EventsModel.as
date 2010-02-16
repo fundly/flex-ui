@@ -200,7 +200,7 @@ package com.enilsson.elephantadmin.views.modules.events.model
 		public var hostsList:ArrayCollection;
 		public function hostsSearchStart( event:Event ):void
 		{
-			var s:SearchVO = new SearchVO ( 'tr_users_details', event.currentTarget.searchTerm + '*', null, 0, 200 );
+			var s:SearchVO = new SearchVO ( 'tr_users_details', event.currentTarget.searchTerm, null, 0, 200 );
 			
 			new EventsEvent (
 				EventsEvent.LOOKUP_SEARCH,
