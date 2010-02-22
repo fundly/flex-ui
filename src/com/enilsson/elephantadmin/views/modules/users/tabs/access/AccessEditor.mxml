@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:common="com.enilsson.elephantadmin.views.common.*"
+	styleName="accessEditor">
+
+	<mx:HBox width="100%" verticalAlign="middle">
+		<mx:Text text="User Type:" />
+		<mx:Text fontWeight="bold"
+			visible="{usersModel.userLevel != 'super'}"
+			includeInLayout="{usersModel.userLevel != 'super'}"
+			text="{usersModel.userACL.hasOwnProperty('system_super') ? 'SUPER' : usersModel.userACL.hasOwnProperty('system_power') ? 'POWER' : 'BASE'}" />
+		<mx:ComboBox id="userLevelCombo"
+			visible="{usersModel.userLevel == 'super'}"
+			includeInLayout="{usersModel.userLevel == 'super'}"
+			dataProvider="{usersModel.userLevelList}"
+			selectedIndex="{usersModel.userLevelSelectedIndex}"
+			change="usersModel.userLevelSelectedIndex = event.currentTarget.selectedIndex;"/>
+		<mx:Spacer width="100%" />
+		<common:RestrictedCMSSubmitBtn 
+			visible="{usersModel.userLevel == 'super'}"
+			includeInLayout="{usersModel.userLevel == 'super'}"
+			click="usersModel.manageACL()" 
+			label="Manage ACL" />
+	</mx:HBox>
+	
+	<!-- the rights matrix is only visible if the selected user is a power user -->
+	<mx:Canvas width="100%" 
+		height="0"
+		visible="{usersModel.userLevel == 'super' &amp;&amp; userLevelCombo.selectedIndex == 1 }"
+		verticalScrollPolicy="off"
+		showEffect="adminAccessShow"
+		hideEffect="adminAccessHide" >
+		
+		<mx:Label text="Admin Panel access:" />	
+		
+		<mx:HBox verticalAlign="middle" top="20">
+			<mx:CheckBox label="Modify data"
+				styleName="uiAccessCb" 
+				selected="{usersModel.uiAccess.recordWrite}"
+				change="usersModel.uiAccess.recordWrite = event.currentTarget.selected" />
+			<mx:CheckBox label="Export data"
+				styleName="uiAccessCb"
+				selected="{usersModel.uiAccess.dataExport}"
+				change="usersModel.uiAccess.dataExport = event.currentTarget.selected" />
+			<mx:CheckBox id="viewReportsCb" 
+				label="View reports"
+				styleName="uiAccessCb" 
+				selected="{usersModel.uiAccess.reportingAccess}" 
+				change="handleViewReportsChange(event)" />
+			<mx:CheckBox 
+				label="Export reports"
+				styleName="uiAccessCb" 
+				selected="{usersModel.uiAccess.reportingExport}"
+				enabled="{viewReportsCb.selected}" 
+				change="usersModel.uiAccess.reportingExport = event.currentTarget.selected" />
+		</mx:HBox> 
+			
+	</mx:Canvas>
+	
+	<mx:Parallel id="adminAccessShow" duration="500">
+		<mx:Fade alphaFrom="0" alphaTo="1" />
+		<mx:Resize  heightFrom="0" heightTo="42" />
+	</mx:Parallel>	
+	<mx:Parallel id="adminAccessHide" duration="500">
+		<mx:Fade alphaFrom="1" alphaTo="0" />
+		<mx:Resize heightFrom="42" heightTo="0" />
+	</mx:Parallel>
+	
+	
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephantadmin.views.modules.users.model.UsersModel;
+			
+			[Bindable] public var usersModel : UsersModel;
+			
+			private function handleViewReportsChange( event : Event ) : void {
+				var repAccess : Boolean = event.currentTarget.selected;
+				
+				usersModel.uiAccess.reportingAccess = repAccess;
+				if(!repAccess)
+					usersModel.uiAccess.reportingExport = false;
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<mx:Style>
+		.accessEditor {
+			color: #333333;
+		}
+		
+		.uiAccessCb {
+			fontSize: 10;
+		}
+	</mx:Style>
+	
+</mx:VBox>	

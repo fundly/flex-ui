@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:controls="com.enilsson.controls.*">
+	
+	<mx:Text styleName="textHeading" text="Assign Groups to a User" />
+	<mx:Text styleName="textDesc" width="100%"
+		text="Click on a group below to add that visibility to this user. This will allow them to view records assigned to that group. A super user will only use these settings when using the client UI."
+	/>
+	
+	<mx:HBox color="#333333" width="100%" horizontalAlign="center" verticalAlign="middle" fontSize="11">
+		<mx:Text id="locationGroup" fontWeight="bold" htmlText="{usersModel.locationGroupText}"/>
+		<controls:InfoBtn text="Each user is assigned a group based on the organisations regional criteria, this is set automatically and can not be changed." />
+	</mx:HBox>
+	
+	<mx:DataGrid id="userGroups"
+		styleName="cmsDataGrid" 
+		dataProvider="{usersModel.dgGroups}" 
+		width="100%" height="100%">
+		<mx:columns>
+			<mx:DataGridColumn headerText="Group" dataField="label" />
+			<mx:DataGridColumn headerText="Include?">
+				<mx:itemRenderer>
+					<mx:Component>
+						<mx:HBox horizontalAlign="center">
+							<mx:CheckBox selected="{data.included}" click="data.included = event.currentTarget.selected" />
+						</mx:HBox>
+					</mx:Component>
+				</mx:itemRenderer>
+			</mx:DataGridColumn>
+		</mx:columns>
+	</mx:DataGrid>
+	
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephantadmin.views.modules.users.model.UsersModel;
+			[Bindable] public var usersModel : UsersModel;
+		]]>
+	</mx:Script>
+	
+	
+	<mx:Style>
+		.textHeading {
+			fontSize:14;	
+		}
+		.textDesc {
+			fontSize:12;
+		}
+	</mx:Style>
+
+</mx:VBox>
