@@ -197,12 +197,12 @@
 		</mx:VBox>
 		<mx:Canvas id="footer" 
 			width="100%" height="28" styleName="controlBar">
-			<mx:LinkButton 
-				label="DELETE" fontSize="10" color="#ED1C24" visible="{!_model.resources.addingRecord}" 
+			<common:RestrictedDeleteLinkBtn
+				visible="{!_model.resources.addingRecord}" 
 				verticalCenter="0" left="10"
 				click="dispatchEvent( new Event('deleteRecord') )"
 				 />	
-			<common:CMSSubmitBtn 
+			<common:RestrictedCMSSubmitBtn 
 				label="{((_model.resources.addingRecord) ? 'SAVE' : 'UPDATE')}"
 				toolTip="{moduleForm.isValid ? 'This form is ready to submit' : 'Please correctly fill in all form fields'}" 
 				enabled="{moduleForm.isValid}"

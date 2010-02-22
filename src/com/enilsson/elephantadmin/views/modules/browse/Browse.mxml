@@ -67,10 +67,8 @@
 					label="show all"
 					height="22"
 					click="clearBrowse(event)" />
-				<mx:Button id="exportBtn" 
+				<common:RestrictedExportBtn id="exportBtn" 
 					label="EXPORT"
-					visible="{_model.session.uiAccess.dataExport}"
-					includeInLayout="{_model.session.uiAccess.dataExport}"
 					enabled="{browseTableChoice.selectedItem != null}"
 					click="exportClickHandler(event)" 
 					icon="{Icons.EXPORT}" 

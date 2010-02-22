@@ -3,6 +3,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.base
 	import com.enilsson.elephantadmin.interfaces.IReportModule;
 	
 	import mx.binding.utils.BindingUtils;
+	import mx.binding.utils.ChangeWatcher;
 	import mx.collections.ArrayCollection;
 	import mx.modules.Module;
 
@@ -11,31 +12,33 @@ package com.enilsson.elephantadmin.views.modules.reporting.base
 
 	public class ReportModule extends Module implements IReportModule
 	{
-		[Bindable] public function get presentationModel():ReportModuleModel
-		{
-			return _presentationModel;
-		}
-		private var _presentationModel:ReportModuleModel;
+		[Bindable] 
+		public function get presentationModel():ReportModuleModel { return _presentationModel; }
 		public function set presentationModel(value:ReportModuleModel):void
 		{
+			if( ! value || value == _presentationModel ) return;
+			
 			_presentationModel = value;
-			if(_presentationModel)
+			_presentationModel.allGroups = _allGroups;
+			_presentationModel.userGroups = _userGroups;
+			_presentationModel.itemsPerPage = _itemsPerPage;
+			_presentationModel.gatewayURL = _gatewayURL;
+			_presentationModel.instanceID = _instanceID;
+			_presentationModel.recordID = _recordID;
+			_presentationModel.exportAllowed = _exportAllowed;
+			if(_gatewayURL)
 			{
-				_presentationModel.allGroups = _allGroups;
-				_presentationModel.userGroups = _userGroups;
-				_presentationModel.itemsPerPage = _itemsPerPage;
-				_presentationModel.gatewayURL = _gatewayURL;
-				_presentationModel.instanceID = _instanceID;
-				_presentationModel.recordID = _recordID;
-				_presentationModel.exportAllowed = _exportAllowed;
-				if(_gatewayURL)
-				{
-					var gSegs:Array = _gatewayURL.split('/');
-					_presentationModel.gatewayBaseURL = gSegs[0] + '//' + gSegs[2] + '/';
-				}
-				BindingUtils.bindProperty(this,'dataLoading',_presentationModel,'dataLoading');
+				var gSegs:Array = _gatewayURL.split('/');
+				_presentationModel.gatewayBaseURL = gSegs[0] + '//' + gSegs[2] + '/';
 			}
+				
+			if( ! _dataLoadingWatcher )
+				_dataLoadingWatcher = BindingUtils.bindProperty(this,'dataLoading',_presentationModel,'dataLoading');
+			else
+				_dataLoadingWatcher.reset( _presentationModel );
 		}
+		private var _presentationModel:ReportModuleModel;
+		private var _dataLoadingWatcher : ChangeWatcher;
 
 		public function set instanceID(value:int):void
 		{

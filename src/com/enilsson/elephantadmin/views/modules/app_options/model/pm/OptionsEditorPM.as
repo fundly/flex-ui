@@ -136,7 +136,7 @@ package com.enilsson.elephantadmin.views.modules.app_options.model.pm
 		}
 		
 		override protected function setUpWatchers():void {
-			addWatcher( BindingUtils.bindProperty( this, "recordWrite", domainModel, ["session","uiAccess","recordWrite"] ), "recordWrite" );
+			addWatcher( BindingUtils.bindProperty( this, "recordWrite", domainModel, ["userUIAccess","recordWrite"] ), "recordWrite" );
 		}
 	}
 }

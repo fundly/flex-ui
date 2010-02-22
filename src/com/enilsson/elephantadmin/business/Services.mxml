@@ -377,6 +377,15 @@
 		<mx:method name="export_batch" />
 	</mx:RemoteObject>
 	
+	<mx:RemoteObject id="access"
+		endpoint="{_model.gatewayURL}"
+		destination="amfphp"
+		source="struktor.access"
+		showBusyCursor="true"
+		fault="handleFault(event)">
+		<mx:method name="get_ui_access" />
+	</mx:RemoteObject>
+	
 	<mx:HTTPService id="versionService"
 		url="{_model.versionXmlUrl}"
 		contentType="application/xml"

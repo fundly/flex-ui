@@ -80,7 +80,6 @@ package com.enilsson.elephantadmin.models
 		[Bindable] public var gatewayBaseURL : String = '';
 		[Bindable] public var s3URL : String = 'https://trakker.s3.amazonaws.com/';
 		
-		[Bindable] public var uiAccess : UIAccessVO = new UIAccessVO();
 		
 		/**
 		* Session variables
@@ -99,6 +98,27 @@ package com.enilsson.elephantadmin.models
 			return _session;
 		}
 		private var _session : SessionVO;
+		
+		
+		// property storing the current UIAccessVO for a certain user (e.g. a selected user from the users list)
+		[Bindable] 
+		public function set uiAccess( val : UIAccessVO ) : void {
+			if(val == _uiAccess) return;
+			
+			_uiAccess = val;
+			if( _uiAccess && session && session.data && session.data.user_id == _uiAccess.userId ) {
+				userUIAccess = _uiAccess;
+				_uiAccess = null;
+			}
+		}
+		public function get uiAccess() : UIAccessVO { return _uiAccess; }		
+		private var _uiAccess : UIAccessVO;
+		
+		// property storing the UIAccessVO for the logged in user.
+		[Bindable] public var userUIAccess : UIAccessVO = new UIAccessVO();
+		
+		
+		
 		// variable to define which module to load on initialise 
 		[Bindable] public var firstModule : int = 0;
 		// hold the session id from Struktor
@@ -389,7 +409,7 @@ package com.enilsson.elephantadmin.models
 			// set the main screen back to the login
 			screenState = LOGIN_SCREEN;
 			mainScreenVisible = true;
-			mainViewState = NO_VIEW;
+			mainViewState = DASHBOARD_VIEW;
 			
 			// reset some of the model variables
 			gatewayURL = gatewayBaseURL;
@@ -402,7 +422,6 @@ package com.enilsson.elephantadmin.models
 			
 			// reset each of the module view classes
 			login = new LoginViewClass();
-			//			users = new UsersViewClass();
 			downline = new DownlineViewClass();
 			news = new NewsViewClass();
 			search = new SearchViewClass();
@@ -422,6 +441,8 @@ package com.enilsson.elephantadmin.models
 			email_attachments = new EmailAttachmentsViewClass();
 			
 			appOptions = new AppOptionsModel();
+			
+			userUIAccess = new UIAccessVO();
 			
 			// change the browser info to the login screen
 			SWFAddress.setValue('login');

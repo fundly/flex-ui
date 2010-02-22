@@ -41,14 +41,14 @@
 		
 		<mx:Spacer width="100%" />
 			
-		<common:CMSSubmitBtn
+		<common:RestrictedCMSSubmitBtn
 			label="ADD ALL"
 			toolTip="Add all checks in this page to the new batch"
 			width="80"
 			filters="{[dropShadow]}"
 			click="_presentationModel.addAllChecksToBatch()"
 			/>
-		<common:CMSSubmitBtn
+		<common:RestrictedCMSSubmitBtn
 			label="NEW CHECK"
 			toolTip="Add a new check not listed here"
 			width="90"

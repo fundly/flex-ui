@@ -48,6 +48,8 @@
 					_config.searchListItemRenderer = new ClassFactory(Pledges_ListRenderer);
 					recordModule.configuration(_config);
 				}
+				
+				recordModule.presentationModel.refreshData();
 			}
 		]]>
 	</mx:Script>	

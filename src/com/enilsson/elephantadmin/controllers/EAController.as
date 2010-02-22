@@ -37,7 +37,11 @@ package com.enilsson.elephantadmin.controllers
 			this.addCommand(LoginEvent.EVENT_LOGIN, LoginCommand);
 			this.addCommand(LoginEvent.EVENT_LOGIN_FORGOT, LoginCommand);
 			this.addCommand(RegisterGatewayEvent.EVENT_REGISTER_GATEWAY, RegisterGatewayCommand);
-
+			
+			// ui access
+			this.addCommand(UIAccessEvent.GET_UI_ACCESS_RIGHTS, UIAccessCommand);
+			this.addCommand(UIAccessEvent.SET_UI_ACCESS_RIGHTS, UIAccessCommand);
+			
 			// session 
 			this.addCommand(SessionEvent.GET_SESSION_INFO, SessionCommand);
 			this.addCommand(SessionEvent.END_SESSION, SessionCommand);
@@ -52,7 +56,6 @@ package com.enilsson.elephantadmin.controllers
 			this.addCommand(ViewStateEvent.EVENT_VIEW_STATE, ViewStateCommand);
 			this.addCommand(GetSiteLayoutEvent.EVENT_GET_LAYOUT, InitMainCommand);
 			this.addCommand(GetGroupsEvent.EVENT_GET_GROUPS, InitMainCommand);
-			this.addCommand(S3Event.EVENT_S3, InitMainCommand);
 			this.addCommand(RecordEvent.GET_LAYOUTS, InitMainCommand);
 			this.addCommand(SidEvent.TEST_SID, SidCommand);
 

@@ -15,6 +15,7 @@ package com.enilsson.elephantadmin.views.manage_record_base.model
 	import flash.events.Event;
 	
 	import mx.binding.utils.BindingUtils;
+	import mx.binding.utils.ChangeWatcher;
 	import mx.collections.ArrayCollection;
 	import mx.utils.ObjectUtil;
 	
@@ -75,7 +76,7 @@ package com.enilsson.elephantadmin.views.manage_record_base.model
 			layout 	= EAModelLocator(mainModel).struktorLayout[table];
 			fields 	= layout.fields as Object;
 			
-			var sid:SidVO = EAModelLocator(mainModel).sid
+			var sid:SidVO = EAModelLocator(mainModel).sid;
 
 			if(sid)
 			{
@@ -88,11 +89,13 @@ package com.enilsson.elephantadmin.views.manage_record_base.model
 				}
 			}
 			
-			BindingUtils.bindSetter(sidChangeWatcher, EAModelLocator(mainModel), 'sidChange');
-
-			// clear the search list
-			clearSearch();
+			if(!_sidWatcher)
+				BindingUtils.bindSetter(sidChangeWatcher, EAModelLocator(mainModel), 'sidChange');
+			else
+				_sidWatcher.reset( EAModelLocator(mainModel) );
 		}
+		private var _sidWatcher : ChangeWatcher;
+
 
 		public function checkSID():void
 		{
@@ -321,8 +324,8 @@ package com.enilsson.elephantadmin.views.manage_record_base.model
 			return EAModelLocator(mainModel).session;
 		}
 		
-		public function get uiAccess() : UIAccessVO {
-			return EAModelLocator(mainModel).uiAccess;
+		public function get userUIAccess() : UIAccessVO {
+			return EAModelLocator(mainModel).userUIAccess;
 		}
 
 		public function get itemsPerPage() : Number 
@@ -446,6 +449,13 @@ package com.enilsson.elephantadmin.views.manage_record_base.model
 		protected function getRecordDetails(): void
 		{
 			getAuditTrail();
+		}
+		
+		public function refreshData() : void {
+			switch(viewState) {
+				case 'showOptions': getRecordDetails(); break;
+				case 'showSearch':	clearSearch();		break;
+			}
 		}
 		
 		/**

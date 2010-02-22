@@ -30,7 +30,7 @@
 				</mx:VBox>
 			</mx:TabNavigator>
 			<mx:Canvas height="32" width="{width}" bottom="0">
-				<common:CMSSubmitBtn 
+				<common:RestrictedCMSSubmitBtn 
 					top="6" right="20"
 					enabled="{presentationModel.formValid}"
 					label="{presentationModel.addingNewRecord ? 'ADD' : 'UPDATE'}"
@@ -40,8 +40,7 @@
 					styleName="linkBtn"
 					click="presentationModel.showRecordDetails = true" 
 					verticalCenter="0" left="10" />
-				<mx:LinkButton 
-					label="DELETE" 
+				<common:RestrictedDeleteLinkBtn
 					visible="{presentationModel.showDeleteBtn}"
 					enabled="{presentationModel.enableDeleteBtn}"
 					toolTip="{presentationModel.enableDeleteBtn ? 

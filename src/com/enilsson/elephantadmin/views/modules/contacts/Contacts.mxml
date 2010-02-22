@@ -50,6 +50,8 @@
 					_config.gridFields = [ 'fname', 'lname', 'email', 'state', 'zip', 'pledge_total', 'contrib_total'];
 					recordModule.configuration(_config);
 				}
+				
+				recordModule.presentationModel.refreshData();
 			}
 		]]>
 	</mx:Script>

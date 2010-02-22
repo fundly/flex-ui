@@ -263,7 +263,7 @@
 			enabled="{moduleForm.isValid}"
 			verticalCenter="0" left="10"
 			click="dispatchEvent( new Event('sendTestEmail') )" />
-		<common:CMSSubmitBtn 
+		<common:RestrictedCMSSubmitBtn 
 			label="UPDATE"
 			toolTip="{moduleForm.isValid ? 'This form is ready to submit' : 'Please correctly fill in all form fields'}" 
 			enabled="{moduleForm.isValid}"

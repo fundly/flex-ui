@@ -193,10 +193,13 @@
 							break;
 						case "OCPF":
 							moduleURL = "external/ocpf/" + moduleURL;
-							break;														
+							break;
+						case "Donors":
+							moduleURL = "external/donors/" + moduleURL;
+							break;															
 						case "DailyIncome":
 							moduleURL = "dailyincome/" + moduleURL;
-							break;							
+							break;
 					}
 					modulePath = 'com/enilsson/elephantadmin/views/modules/reporting/' + moduleURL + '_Module.swf?'+new Date().getTime();
 				}
@@ -242,15 +245,22 @@
 					loadedModule.allGroups = _model.allGroups;
 					loadedModule.userGroups = _model.orgGroups;
 					loadedModule.instanceID = _model.appInstanceID;
-					loadedModule.exportAllowed = _model.session.uiAccess.reportingExport;
+					loadedModule.exportAllowed = _model.userUIAccess.reportingExport;
 					
 					if(_model.reporting.reportRecordID != 0)
 					{
 						loadedModule.recordID = _model.reporting.reportRecordID;
 						_model.reporting.reportRecordID = 0;
 					}
-					dataLoadingWatcher = BindingUtils.bindProperty(_model,'dataLoading',loadedModule,'dataLoading');
+					
+					if(!dataLoadingWatcher)
+						dataLoadingWatcher = BindingUtils.bindProperty(_model,'dataLoading',loadedModule,'dataLoading');
+					else
+						dataLoadingWatcher.reset(loadedModule);
 				}
+				else if(dataLoadingWatcher)
+					dataLoadingWatcher.unwatch();
+					
 				_model.dataLoading = false;
 			}
 

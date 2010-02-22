@@ -45,7 +45,7 @@
 			<mx:Spacer height="10" />
 			
 			<mx:HBox width="100%" horizontalAlign="center">
-				<common:CMSSubmitBtn id="refundSubmit"
+				<common:RestrictedCMSSubmitBtn id="refundSubmit"
 					label="SUBMIT"
 					enabled="{refundMethods.selectedIndex == 0 ? refundCheckForm.isValid : false}"
 					toolTip="{refundSubmit.enabled ? 'This form is ready to submit!' : 'Please enter all required fields!'}"

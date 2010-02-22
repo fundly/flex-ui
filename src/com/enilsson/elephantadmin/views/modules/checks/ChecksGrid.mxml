@@ -83,7 +83,8 @@
 
 	<mx:Array id="footerButtons">
 		<mx:HBox verticalCenter="0" right="5" verticalAlign="middle">
-			<common:CMSSubmitBtn
+			<RestrictedCMSSubmitBtn
+				id="newCheckBtn"
 				xmlns:common="com.enilsson.elephantadmin.views.common.*"
 				label="NEW CHECK"
 				toolTip="Add a new check not listed here"
@@ -97,9 +98,11 @@
 			</mx:FormItem>
 			<CMSSubmitBtn id="batchSelectButton" label="Filter" width="60"
 				click="batchSelectButtonHandler()"/>
-			<CMSSubmitBtn id="batchActionButton" label="Fulfill Batch"
-				 toolTip="Fulfill unfulfilled checks in this page"
-				click="batchActionButtonHandler()" enabled="{batchSelected}"/>
+			<RestrictedCMSSubmitBtn id="batchActionButton" 
+				label="Fulfill Batch"
+				toolTip="Fulfill unfulfilled checks in this page"
+				click="batchActionButtonHandler()" 
+				enabled="{batchSelected}"/>
 		</mx:HBox>
 	</mx:Array>
 

@@ -25,7 +25,6 @@ package com.enilsson.elephantadmin.views.modules.batch.model
 		public var newBatchSaving:Boolean;
 		public var isChanged:Boolean;
 		public var isLoading:Boolean;
-		public var exportAllowed : Boolean; 
 
 		public function BatchDetailModel( domainModel : EAModelLocator )
 		{
@@ -125,7 +124,6 @@ package com.enilsson.elephantadmin.views.modules.batch.model
 			addWatcher( BindingUtils.bindSetter( selectedBatchChanged, _model, ["batch", "selectedBatch"] ), "selectedBatch" );
 			addWatcher( BindingUtils.bindSetter( batchCheckListChanged, _model, ["batch", "selectedBatchChecks"]), "selectedBatchChecks");
 			addWatcher( BindingUtils.bindProperty( this, "newBatchSaving", _model, ["batch", "newBatchSaving" ] ), "newBatchSaving");
-			addWatcher( BindingUtils.bindProperty( this, "exportAllowed", _model, ["session", "uiAccess", "dataExport" ] ), "dataExport");
 		}
 
 		[Bindable(event="modelChanged")]

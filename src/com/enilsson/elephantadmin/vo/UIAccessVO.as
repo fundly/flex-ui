@@ -1,22 +1,15 @@
 package com.enilsson.elephantadmin.vo
 {
+	import mx.utils.ObjectUtil;
+	
 	[Bindable]
 	[RemoteClass(alias="admin.UIAccessVO")]
 	public class UIAccessVO
 	{
+		public var userId			: Number;
 		public var dataExport		: Boolean;
 		public var recordWrite		: Boolean;
 		public var reportingAccess	: Boolean;
 		public var reportingExport	: Boolean;
-		
-		public function allowAll() : void { setAll( true ); }
-		public function denyAll() : void { setAll( false );	}
-		
-		private function setAll( value : Boolean ) : void {
-			dataExport = value;
-			recordWrite = value;
-			reportingAccess = value;
-			reportingExport = value;
-		}
 	}
 }

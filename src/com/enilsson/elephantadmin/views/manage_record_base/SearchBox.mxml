@@ -86,7 +86,7 @@
 			dataProvider="{presentationModel.config.searchOptions}"
 			searchStart="presentationModel.searchRecords( searchBox.searchBox.searchTerm, searchBox.searchOption )" 
 			clearSearch="presentationModel.clearSearch()" />
-		<common:CMSSubmitBtn 
+		<common:RestrictedCMSSubmitBtn 
 			id="addButton"
 			verticalCenter="0" right="10"
 			visible="{presentationModel.allowAddNewRecord}"

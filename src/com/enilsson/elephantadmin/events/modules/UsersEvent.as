@@ -1,6 +1,5 @@
 package com.enilsson.elephantadmin.events.modules
 {
-	import com.adobe.cairngorm.vo.IValueObject;
 	import com.enilsson.elephantadmin.views.manage_record_base.model.RecordModel;
 	
 	import flash.events.Event;
@@ -13,7 +12,9 @@ package com.enilsson.elephantadmin.events.modules
 		static public const ADD_GROUPS:String 				= 'usersAddGroups';
 		static public const DEL_GROUPS:String 				= 'usersDelGroups';
 		static public const GET_ACL:String 					= 'usersGetAcl';		
-		static public const SET_ACL:String 					= 'usersSetAcl';		
+		static public const SET_ACL:String 					= 'usersSetAcl';
+		static public const GET_UI_RIGHTS:String			= 'usersGetUIRights';
+		static public const SET_UI_RIGHTS:String			= 'usersSetUIRights';		
 		static public const USERS_EXPORT:String 			= 'usersExport';		
 		static public const USERS_DELETE:String 			= 'usersDelete';		
 		static public const USERS_ENABLE:String 			= 'usersEnable';		

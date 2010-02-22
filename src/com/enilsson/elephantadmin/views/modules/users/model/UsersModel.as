@@ -1,6 +1,7 @@
 package com.enilsson.elephantadmin.views.modules.users.model
 {
 	import com.adobe.cairngorm.model.ModelLocator;
+	import com.enilsson.elephantadmin.events.UIAccessEvent;
 	import com.enilsson.elephantadmin.events.modules.RecordModuleEvent;
 	import com.enilsson.elephantadmin.events.modules.UsersEvent;
 	import com.enilsson.elephantadmin.models.EAModelLocator;
@@ -9,9 +10,12 @@ package com.enilsson.elephantadmin.views.modules.users.model
 	import com.enilsson.elephantadmin.vo.ErrorVO;
 	import com.enilsson.elephantadmin.vo.RecordVO;
 	import com.enilsson.elephantadmin.vo.RecordsVO;
+	import com.enilsson.elephantadmin.vo.UIAccessVO;
 	
 	import flash.display.DisplayObject;
 	
+	import mx.binding.utils.BindingUtils;
+	import mx.binding.utils.ChangeWatcher;
 	import mx.collections.ArrayCollection;
 	import mx.core.Application;
 	import mx.events.CloseEvent;
@@ -42,29 +46,16 @@ package com.enilsson.elephantadmin.views.modules.users.model
 		/**
 		 * User level of the person selected
 		 */
-		public var userLevelSelectedIndex:int;
+		public var userLevelSelectedIndex:int = -1;
 
-		public function get orgGroups():Array
-		{
-			return EAModelLocator(mainModel).orgGroups;
-		}
+		/**
+		 *	Properties for binding - they reflect values of the EAModelLocator
+		 */
+		public var uiAccess 	: UIAccessVO;
+		public var orgGroups 	: Array;
+		public var userLevel 	: String;
+		public var clientUI  	: String;
 		
-		/**
-		 * The user level of the person logged in
-		 */
-		public function get userLevel():String
-		{
-			return EAModelLocator(mainModel).userLevel;
-		}
-
-		/**
-		 * Get the Client UI url from the main model
-		 */
-		public function get clientUI():String
-		{
-			return EAModelLocator(mainModel).clientUI;
-		}
-
 		/**
 		 * ACL Popup Variables
 		 */
@@ -116,7 +107,18 @@ package com.enilsson.elephantadmin.views.modules.users.model
 				'val' : '-99',
 				'op' : '>'
 			};
+			
+			// listen for changes on some model properties
+			if( ! _uiAccessWatcher )	_uiAccessWatcher = BindingUtils.bindProperty( this, "uiAccess", mainModel, "uiAccess" );
+			if( ! _orgGroupsWatcher)	_orgGroupsWatcher = BindingUtils.bindProperty( this, "orgGroups", mainModel, "orgGroups" );
+			if( ! _userLevelWatcher)	_userLevelWatcher = BindingUtils.bindProperty( this, "userLevel", mainModel, "userLevel" );
+			if( ! _clientUIWatcher)		_clientUIWatcher = BindingUtils.bindProperty( this, "clientUI", mainModel, "clientUI" );
+			
 		}
+		private var _uiAccessWatcher : ChangeWatcher;
+		private var _orgGroupsWatcher : ChangeWatcher;
+		private var _userLevelWatcher : ChangeWatcher;
+		private var _clientUIWatcher : ChangeWatcher;
 
 		/**
 		 * Grab the getRecordsDetail event and insert some users specific actions
@@ -133,7 +135,7 @@ package com.enilsson.elephantadmin.views.modules.users.model
 			
 			if(debug) Logger.info('Users Information', ObjectUtil.toString( selectedRecord ));
 		}
-
+		
 		/**
 		 * Override the add record behaviour
 		 */
@@ -208,6 +210,11 @@ package com.enilsson.elephantadmin.views.modules.users.model
 			// get the groups for this user
 			accessGroupLoading = true;
 			new UsersEvent( UsersEvent.GET_GROUPS, this, { 'userID' : recordID } ).dispatch();
+			
+			// get the UI access rights for this user
+			var event	: UIAccessEvent = new UIAccessEvent( UIAccessEvent.GET_UI_ACCESS_RIGHTS );
+			event.userId = recordID;				
+			event.dispatch();
 		}
 
 		private function loadOptionsTab():void
@@ -222,7 +229,7 @@ package com.enilsson.elephantadmin.views.modules.users.model
 			// get the users email address
 			new UsersEvent ( UsersEvent.GET_USER_EMAIL, this, { 'userID' : selectedRecord.user_id }).dispatch();
 		}
-
+		
 		public function updateAccess(value:Array):void
 		{
 			var delList:Array = [];
@@ -236,8 +243,12 @@ package com.enilsson.elephantadmin.views.modules.users.model
 				else if(!group.included && userGroups.indexOf(group.value) > -1)
 					delList.push(group.value);
 			}
-			new UsersEvent( UsersEvent.DEL_GROUPS, this, { 'userID' : recordID, 'groupIDs' : delList } ).dispatch();
-			new UsersEvent( UsersEvent.ADD_GROUPS, this, { 'userID' : recordID, 'groupIDs' : addList } ).dispatch();
+			if(delList.length > 0) {
+				new UsersEvent( UsersEvent.DEL_GROUPS, this, { 'userID' : recordID, 'groupIDs' : delList } ).dispatch();
+			}
+			if(addList.length > 0) {
+				new UsersEvent( UsersEvent.ADD_GROUPS, this, { 'userID' : recordID, 'groupIDs' : addList } ).dispatch();
+			}
 
 			// set the user's user access level if super user
 			if(userLevel == 'super')
@@ -249,21 +260,30 @@ package com.enilsson.elephantadmin.views.modules.users.model
 							new UsersEvent( UsersEvent.DEL_SUPER_USER, this, { 'userID' : recordID } ).dispatch();
 						if(userACL.hasOwnProperty('system_power'))
 							new UsersEvent( UsersEvent.DEL_POWER_USER, this, { 'userID' : recordID } ).dispatch();
-						break;
+					break;
 					case 1: // If power user selected
 						new UsersEvent( UsersEvent.ADD_POWER_USER, this, { 'userID' : recordID } ).dispatch();
 						if(userACL.hasOwnProperty('system_super'))
 							new UsersEvent( UsersEvent.DEL_SUPER_USER, this, { 'userID' : recordID } ).dispatch();
-						break;
+						updateUIAccess();
+					break;
+						
 					case 2: // If super user selected
 						new UsersEvent( UsersEvent.ADD_SUPER_USER, this, { 'userID' : recordID } ).dispatch();
 						if(userACL.hasOwnProperty('system_power'))
 							new UsersEvent( UsersEvent.DEL_POWER_USER, this, { 'userID' : recordID } ).dispatch();
-						break;
+					break;
 				}
 			}
+			
 			// Refresh with data from server
-			loadAccessTab();
+//			 loadAccessTab();
+		}
+		
+		private function updateUIAccess() : void {
+			var uiAccessEvent : UIAccessEvent = new UIAccessEvent(UIAccessEvent.SET_UI_ACCESS_RIGHTS);
+			uiAccessEvent.vo = uiAccess;
+			uiAccessEvent.dispatch();		
 		}
 		
 		

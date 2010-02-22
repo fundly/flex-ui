@@ -49,6 +49,8 @@
 				
 					manageEventRecord.configuration(_config);
 				}
+				
+				manageEventRecord.presentationModel.refreshData();
 			}
 		]]>
 	</mx:Script>

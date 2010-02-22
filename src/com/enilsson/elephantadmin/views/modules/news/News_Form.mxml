@@ -90,12 +90,11 @@
 			/>
 		<mx:Canvas id="footer" 
 			width="100%" height="28" styleName="controlBar">
-			<mx:LinkButton 
-				label="DELETE" fontSize="10" color="#ED1C24" 
+			<common:RestrictedDeleteLinkBtn 
 				verticalCenter="0" left="10"
 				click="dispatchEvent( new Event('deleteRecord') )"
 				 />
-			<common:CMSSubmitBtn 
+			<common:RestrictedCMSSubmitBtn 
 				label="UPDATE"
 				toolTip="{newsForm.isValid ? 'This form is ready to submit' : 'Please correctly fill in all form fields'}" 
 				enabled="{newsForm.isValid}"

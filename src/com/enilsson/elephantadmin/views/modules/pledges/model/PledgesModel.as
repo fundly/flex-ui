@@ -39,12 +39,6 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 			_addNewRecordLabel = 'ADD PLEDGE';
 		}
 		
-		// public method to access getRecordDetails() after a new contribution is added by PledgeWorkspace popup
-		public function refreshRecordDetails():void
-		{
-			getRecordDetails();
-		}
-		
 		/**
 		 * Override the add record behaviour
 		 */

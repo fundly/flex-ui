@@ -5,7 +5,6 @@
 	paddingLeft="10" paddingRight="10" 
 	styleName="CMSDeleteBtn" 
 	focusSkin="{null}"
-	useHandCursor="true" buttonMode="true" 
 	label="Button" width="100">
 	
 	<mx:Style>

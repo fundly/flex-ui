@@ -11,7 +11,7 @@ package com.enilsson.elephantadmin.views.modules.batch.model
 	public class AbstractPM extends EventDispatcher
 	{
 		// Array of changewatchers
-		protected var watchers:Object = [];
+		protected var watchers:Object = {};
 
 		// Array of AbstractPMs
 		protected var children:Array = [];
@@ -60,7 +60,7 @@ package com.enilsson.elephantadmin.views.modules.batch.model
 			// unwatch and delete reference to watchers to for GC
 			for(var name:String in watchers)
 			{
-				if(watchers[name])
+				if( watchers.hasOwnProperty(name) && watchers[name] )
 					ChangeWatcher(watchers[name]).unwatch();
 			}
 			watchers = [];
@@ -76,13 +76,15 @@ package com.enilsson.elephantadmin.views.modules.batch.model
 		
 		protected function addWatcher(watcher:ChangeWatcher, name:String) : void
 		{
-			if(watcher != null && name != null)
+			if(watcher != null && name != null) {
+				removeWatcherByName( name );
 				watchers[name] =  watcher;
+			}
 		}
 
 		protected function removeWatcherByName(name:String) : void
 		{
-			if(name != null)
+			if(name != null && watchers.hasOwnProperty(name) )
 			{
 				ChangeWatcher(watchers[name]).unwatch();
 				delete watchers[name];

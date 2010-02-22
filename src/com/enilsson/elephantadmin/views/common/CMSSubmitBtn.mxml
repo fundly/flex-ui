@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Button 
 	xmlns:mx="http://www.adobe.com/2006/mxml"
-	height="20" 
+	height="20" width="100"
 	paddingLeft="10" paddingRight="10" 
 	styleName="submitBtn" 
 	focusSkin="{null}"
-	useHandCursor="true" buttonMode="true" 
-	label="Button" width="100"
+	label="Button"
 	filters="{[dropShadow]}">
 	
 	<mx:DropShadowFilter id="dropShadow"
@@ -15,6 +14,14 @@
 		color="0x000000"
 		blurX="6" blurY="6"
 		distance="1" />	
+		
+	<mx:Script>
+		<![CDATA[
+			public function set included( val : Boolean ) : void {
+				visible = includeInLayout = val;
+			}
+		]]>
+	</mx:Script>
 	
 	<mx:Style>
 		.submitBtn {
