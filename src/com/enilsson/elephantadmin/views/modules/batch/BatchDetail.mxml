@@ -40,7 +40,7 @@
 				<mx:Spacer width="100%" />
 			</mx:AddChild>
 			<mx:AddChild relativeTo="{cBar}">
-				<common:RestrictedCMSSubmitBtn
+				<common:RestrictedCreateBtn
 					width="110"
 					label="SAVE BATCH"
 					toolTip="Save the new batch"

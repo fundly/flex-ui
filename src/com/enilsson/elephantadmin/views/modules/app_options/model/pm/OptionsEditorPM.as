@@ -67,7 +67,7 @@ package com.enilsson.elephantadmin.views.modules.app_options.model.pm
 		}
 		
 		
-		public var recordWrite : Boolean;
+		public var recordUpdate : Boolean;
 		
 		
 		public function changeOption( prop : String, value : * ) : void
@@ -136,7 +136,7 @@ package com.enilsson.elephantadmin.views.modules.app_options.model.pm
 		}
 		
 		override protected function setUpWatchers():void {
-			addWatcher( BindingUtils.bindProperty( this, "recordWrite", domainModel, ["userUIAccess","recordWrite"] ), "recordWrite" );
+			addWatcher( BindingUtils.bindProperty( this, "recordUpdate", domainModel, ["userUIAccess","recordUpdate"] ), "recordUpdate" );
 		}
 	}
 }

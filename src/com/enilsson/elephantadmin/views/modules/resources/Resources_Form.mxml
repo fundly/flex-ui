@@ -202,12 +202,22 @@
 				verticalCenter="0" left="10"
 				click="dispatchEvent( new Event('deleteRecord') )"
 				 />	
-			<common:RestrictedCMSSubmitBtn 
-				label="{((_model.resources.addingRecord) ? 'SAVE' : 'UPDATE')}"
+				 
+			<common:RestrictedCreateBtn
+				label="SAVE" 
+				visible="{_model.resources.addingRecord == true}"
 				toolTip="{moduleForm.isValid ? 'This form is ready to submit' : 'Please correctly fill in all form fields'}" 
 				enabled="{moduleForm.isValid}"
 				verticalCenter="0" right="10"
 				click="dispatchEvent( new Event('upsertRecord') )" />
+			<common:RestrictedUpdateBtn
+				label="UPDATE" 
+				visible="{_model.resources.addingRecord == false}"
+				toolTip="{moduleForm.isValid ? 'This form is ready to submit' : 'Please correctly fill in all form fields'}" 
+				enabled="{moduleForm.isValid}"
+				verticalCenter="0" right="10"
+				click="dispatchEvent( new Event('upsertRecord') )" />
+				
 		</mx:Canvas>
 	</mx:VBox>
 

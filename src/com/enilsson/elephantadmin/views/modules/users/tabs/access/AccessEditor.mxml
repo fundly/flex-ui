@@ -16,12 +16,14 @@
 			selectedIndex="{usersModel.userLevelSelectedIndex}"
 			change="usersModel.userLevelSelectedIndex = event.currentTarget.selectedIndex;"/>
 		<mx:Spacer width="100%" />
-		<common:RestrictedCMSSubmitBtn 
+		<common:RestrictedUpdateBtn 
 			visible="{usersModel.userLevel == 'super'}"
 			includeInLayout="{usersModel.userLevel == 'super'}"
 			click="usersModel.manageACL()" 
 			label="Manage ACL" />
 	</mx:HBox>
+	
+	<mx:Spacer height="15" />
 	
 	<!-- the rights matrix is only visible if the selected user is a power user -->
 	<mx:Canvas width="100%" 
@@ -33,37 +35,61 @@
 		
 		<mx:Label text="Admin Panel access:" />	
 		
-		<mx:HBox verticalAlign="middle" top="20">
-			<mx:CheckBox label="Modify data"
-				styleName="uiAccessCb" 
-				selected="{usersModel.uiAccess.recordWrite}"
-				change="usersModel.uiAccess.recordWrite = event.currentTarget.selected" />
-			<mx:CheckBox label="Export data"
-				styleName="uiAccessCb"
-				selected="{usersModel.uiAccess.dataExport}"
-				change="usersModel.uiAccess.dataExport = event.currentTarget.selected" />
-			<mx:CheckBox id="viewReportsCb" 
-				label="View reports"
-				styleName="uiAccessCb" 
-				selected="{usersModel.uiAccess.reportingAccess}" 
-				change="handleViewReportsChange(event)" />
-			<mx:CheckBox 
-				label="Export reports"
-				styleName="uiAccessCb" 
-				selected="{usersModel.uiAccess.reportingExport}"
-				enabled="{viewReportsCb.selected}" 
-				change="usersModel.uiAccess.reportingExport = event.currentTarget.selected" />
-		</mx:HBox> 
-			
+		<mx:Grid height="100%" top="25">
+			<mx:GridRow>
+				<mx:GridItem>
+					<mx:CheckBox label="Create records"
+						styleName="uiAccessCb" 
+						selected="{usersModel.uiAccess.recordCreate}"
+						change="usersModel.uiAccess.recordCreate = event.currentTarget.selected" />
+				</mx:GridItem>
+				<mx:GridItem>
+					<mx:CheckBox label="Update records"
+						styleName="uiAccessCb" 
+						selected="{usersModel.uiAccess.recordUpdate}"
+						change="usersModel.uiAccess.recordUpdate = event.currentTarget.selected" />		
+				</mx:GridItem>
+				<mx:GridItem>
+					<mx:CheckBox label="Delete records"
+						styleName="uiAccessCb" 
+						selected="{usersModel.uiAccess.recordDelete}"
+						change="usersModel.uiAccess.recordDelete = event.currentTarget.selected" />
+				</mx:GridItem>
+			</mx:GridRow>
+			<mx:GridRow>
+				<mx:GridItem>
+					<mx:CheckBox label="Export data"
+						styleName="uiAccessCb"
+						selected="{usersModel.uiAccess.dataExport}"
+						change="usersModel.uiAccess.dataExport = event.currentTarget.selected" />
+				</mx:GridItem>
+				<mx:GridItem>
+					<mx:CheckBox id="viewReportsCb" 
+						label="View reports"
+						styleName="uiAccessCb" 
+						selected="{usersModel.uiAccess.reportingAccess}" 
+						change="handleViewReportsChange(event)" />
+				</mx:GridItem>
+				<mx:GridItem>
+					<mx:CheckBox 
+						label="Export reports"
+						styleName="uiAccessCb" 
+						selected="{usersModel.uiAccess.reportingExport}"
+						enabled="{viewReportsCb.selected}" 
+						change="usersModel.uiAccess.reportingExport = event.currentTarget.selected" />
+				</mx:GridItem>
+			</mx:GridRow>
+		</mx:Grid>
+		
 	</mx:Canvas>
 	
 	<mx:Parallel id="adminAccessShow" duration="500">
 		<mx:Fade alphaFrom="0" alphaTo="1" />
-		<mx:Resize  heightFrom="0" heightTo="42" />
+		<mx:Resize  heightFrom="0" heightTo="{RIGHTS_EDITOR_HEIGHT}" />
 	</mx:Parallel>	
 	<mx:Parallel id="adminAccessHide" duration="500">
 		<mx:Fade alphaFrom="1" alphaTo="0" />
-		<mx:Resize heightFrom="42" heightTo="0" />
+		<mx:Resize heightFrom="{RIGHTS_EDITOR_HEIGHT}" heightTo="0" />
 	</mx:Parallel>
 	
 	
@@ -72,6 +98,8 @@
 			import com.enilsson.elephantadmin.views.modules.users.model.UsersModel;
 			
 			[Bindable] public var usersModel : UsersModel;
+			
+			private static const RIGHTS_EDITOR_HEIGHT : int = 90;
 			
 			private function handleViewReportsChange( event : Event ) : void {
 				var repAccess : Boolean = event.currentTarget.selected;

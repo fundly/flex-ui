@@ -78,7 +78,7 @@
 		</mx:ViewStack>
 		<mx:HBox width="100%" horizontalAlign="center" 
 			horizontalGap="12" paddingTop="4">
-			<common:RestrictedCMSSubmitBtn
+			<common:RestrictedCreateBtn
 				xmlns:common="com.enilsson.elephantadmin.views.common.*"
 				label="NEW PLEDGE"
 				toolTip="Add a new pledge for this event"

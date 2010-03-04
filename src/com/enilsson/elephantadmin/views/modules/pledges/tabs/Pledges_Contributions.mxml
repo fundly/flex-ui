@@ -23,12 +23,12 @@
 			dataProvider="{_presentationModel.contributions}" />
 		<mx:HBox width="100%" horizontalAlign="center" 
 			horizontalGap="12" paddingTop="4">
-			<common:RestrictedCMSSubmitBtn
+			<common:RestrictedCreateBtn
 				width="150"
 				click="addContribution(_presentationModel.selectedRecord)"
 				label="ADD CONTRIBUTION"
 				/>
-			<common:RestrictedCMSSubmitBtn
+			<common:RestrictedCreateBtn
 				label="ADD REFUND"
 				enabled="{_presentationModel.selectedRecord.c &gt; 0}"
 				toolTip="{_presentationModel.selectedRecord.c == 0 ? 'You can not refund a pledge if there have not been any contributions' : ''}"

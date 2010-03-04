@@ -29,7 +29,7 @@ List below are all the host committee members for this event. Clicking the fundr
 			itemRenderer="{new ClassFactory(EventHost_Item)}"
 			searchDataProvider="{_presentationModel.hostsList}"
 			searchStart="_presentationModel.hostsSearchStart( event )" />			
-		<common:RestrictedCMSSubmitBtn
+		<common:RestrictedCreateBtn
 			width="85" fontSize="10"
 			label="ADD HOST"
 			click="_presentationModel.addEventHost( addHost.selectedData )"

@@ -8,7 +8,11 @@ package com.enilsson.elephantadmin.vo
 	{
 		public var userId			: Number;
 		public var dataExport		: Boolean;
-		public var recordWrite		: Boolean;
+		
+		public var recordCreate		: Boolean;
+		public var recordUpdate		: Boolean;
+		public var recordDelete		: Boolean;
+		
 		public var reportingAccess	: Boolean;
 		public var reportingExport	: Boolean;
 	}

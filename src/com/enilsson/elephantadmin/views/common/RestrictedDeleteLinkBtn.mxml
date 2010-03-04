@@ -21,7 +21,7 @@
 			private var _unrestricted : Boolean = true;
 			
 			private function handleInitialize() : void {
-				BindingUtils.bindSetter( setUnrestricted, _model, ["userUIAccess", "recordWrite"] );
+				BindingUtils.bindSetter( setUnrestricted, _model, ["userUIAccess", "recordDelete"] );
 			}
 		]]>
 	</mx:Script>

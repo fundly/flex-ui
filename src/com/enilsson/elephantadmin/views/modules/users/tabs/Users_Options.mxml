@@ -8,7 +8,7 @@
 	<mx:HBox width="100%" verticalAlign="top" horizontalAlign="center">
 		<mx:HBox width="40%">
 			<ns:CMSToggleBtn
-				enabled="{_model.userUIAccess.recordWrite}" 
+				enabled="{_model.userUIAccess.recordUpdate}" 
 				offLabel="DISABLE" onLabel="ENABLE"
 				click="toggleDisableUser(event)"  width="110" 
 				isOnState="{_usersModel.selectedRecord.enabled == '0' ? true : false}" />
@@ -22,7 +22,7 @@
 	
 	<mx:HBox width="100%" verticalAlign="top" horizontalAlign="center">
 		<mx:HBox width="40%">
-			<ns:RestrictedCMSSubmitBtn label="CHANGE EMAIL" width="110"
+			<ns:RestrictedUpdateBtn label="CHANGE EMAIL" width="110"
 				enabled="{_model.userLevel == 'super'}" 
 				click="showChangeEmailPopup()"/>
 		</mx:HBox>
@@ -44,7 +44,7 @@
 	
 	<mx:HBox width="100%" verticalAlign="top" horizontalAlign="center">
 		<mx:HBox width="40%">
-			<ns:RestrictedCMSSubmitBtn label="RESET PWD" width="110"
+			<ns:RestrictedUpdateBtn label="RESET PWD" width="110"
 				click="new UsersEvent(UsersEvent.RESET_PASSWORD, _usersModel, {'loginVO': new LoginVO(_usersModel.userEmail, null,null)} ).dispatch()"/>
 		</mx:HBox>
 		<mx:Text styleName="textDesc"

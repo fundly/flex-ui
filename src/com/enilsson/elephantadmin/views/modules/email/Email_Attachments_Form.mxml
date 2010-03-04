@@ -156,12 +156,23 @@
 				verticalCenter="0" left="10"
 				click="dispatchEvent( new Event('deleteRecord') )"
 				 />
-			<common:RestrictedCMSSubmitBtn 
-				label="{((_model.email_attachments.addingRecord) ? 'SAVE' : 'UPDATE')}"
+			
+			<!-- Either show the SAVE or the UPDATE button -->	 
+			<common:RestrictedCreateBtn
+				visible="{_model.email_attachments.addingRecord == true}" 
+				label="SAVE"
 				toolTip="{moduleForm.isValid ? 'This form is ready to submit' : 'Please correctly fill in all form fields'}" 
 				enabled="{moduleForm.isValid}"
 				verticalCenter="0" right="10"
 				click="dispatchEvent( new Event('upsertRecord') )" />
+			<common:RestrictedUpdateBtn
+				visible="{_model.email_attachments.addingRecord == false}"
+				label="UPDATE"
+				toolTip="{moduleForm.isValid ? 'This form is ready to submit' : 'Please correctly fill in all form fields'}" 
+				enabled="{moduleForm.isValid}"
+				verticalCenter="0" right="10"
+				click="dispatchEvent( new Event('upsertRecord') )" />
+				
 		</mx:Canvas>
 	</mx:VBox>
 
