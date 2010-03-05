@@ -64,7 +64,7 @@
 						selected="{usersModel.uiAccess.reportingAccess}" 
 						change="usersModel.uiAccess.reportingAccess = event.currentTarget.selected" />
 				</mx:GridItem>
-				<mx:GridItem>
+				<mx:GridItem colSpan="2">
 					<mx:CheckBox 
 						label="Export data {viewReportsCb.selected ? '&amp; reports' : '' }"
 						styleName="uiAccessCb" 
