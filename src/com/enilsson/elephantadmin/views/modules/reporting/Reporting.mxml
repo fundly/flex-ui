@@ -245,7 +245,7 @@
 					loadedModule.allGroups = _model.allGroups;
 					loadedModule.userGroups = _model.orgGroups;
 					loadedModule.instanceID = _model.appInstanceID;
-					loadedModule.exportAllowed = _model.userUIAccess.reportingExport;
+					loadedModule.exportAllowed = _model.userUIAccess.dataExport;
 					
 					if(_model.reporting.reportRecordID != 0)
 					{

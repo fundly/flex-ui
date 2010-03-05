@@ -58,25 +58,18 @@
 			</mx:GridRow>
 			<mx:GridRow>
 				<mx:GridItem>
-					<mx:CheckBox label="Export data"
-						styleName="uiAccessCb"
-						selected="{usersModel.uiAccess.dataExport}"
-						change="usersModel.uiAccess.dataExport = event.currentTarget.selected" />
-				</mx:GridItem>
-				<mx:GridItem>
 					<mx:CheckBox id="viewReportsCb" 
 						label="View reports"
 						styleName="uiAccessCb" 
 						selected="{usersModel.uiAccess.reportingAccess}" 
-						change="handleViewReportsChange(event)" />
+						change="usersModel.uiAccess.reportingAccess = event.currentTarget.selected" />
 				</mx:GridItem>
 				<mx:GridItem>
 					<mx:CheckBox 
-						label="Export reports"
+						label="Export data {viewReportsCb.selected ? '&amp; reports' : '' }"
 						styleName="uiAccessCb" 
-						selected="{usersModel.uiAccess.reportingExport}"
-						enabled="{viewReportsCb.selected}" 
-						change="usersModel.uiAccess.reportingExport = event.currentTarget.selected" />
+						selected="{usersModel.uiAccess.dataExport}"
+						change="usersModel.uiAccess.dataExport = event.currentTarget.selected" />
 				</mx:GridItem>
 			</mx:GridRow>
 		</mx:Grid>
@@ -100,15 +93,6 @@
 			[Bindable] public var usersModel : UsersModel;
 			
 			private static const RIGHTS_EDITOR_HEIGHT : int = 90;
-			
-			private function handleViewReportsChange( event : Event ) : void {
-				var repAccess : Boolean = event.currentTarget.selected;
-				
-				usersModel.uiAccess.reportingAccess = repAccess;
-				if(!repAccess)
-					usersModel.uiAccess.reportingExport = false;
-			}
-			
 		]]>
 	</mx:Script>
 	

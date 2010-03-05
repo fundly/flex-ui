@@ -14,6 +14,5 @@ package com.enilsson.elephantadmin.vo
 		public var recordDelete		: Boolean;
 		
 		public var reportingAccess	: Boolean;
-		public var reportingExport	: Boolean;
 	}
 }
