@@ -3,8 +3,7 @@
 	xmlns:mx="http://www.adobe.com/2006/mxml"
 	height="20" width="100"
 	paddingLeft="10" paddingRight="10" 
-	styleName="onBtn" filters="{[dropShadow]}"
-	useHandCursor="true" buttonMode="true" >
+	styleName="onBtn" filters="{[dropShadow]}" >
 
 	<mx:DropShadowFilter id="dropShadow"
 		alpha="0.75"

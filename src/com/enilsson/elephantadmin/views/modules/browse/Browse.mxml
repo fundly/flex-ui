@@ -67,7 +67,7 @@
 					label="show all"
 					height="22"
 					click="clearBrowse(event)" />
-				<mx:Button id="exportBtn" 
+				<common:RestrictedExportBtn id="exportBtn" 
 					label="EXPORT"
 					enabled="{browseTableChoice.selectedItem != null}"
 					click="exportClickHandler(event)" 

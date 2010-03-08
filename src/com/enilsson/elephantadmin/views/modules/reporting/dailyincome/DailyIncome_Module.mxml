@@ -217,6 +217,8 @@
 
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.elephantadmin.views.modules.reporting.base.ReportModuleModel;
+			import mx.binding.utils.ChangeWatcher;
 			import mx.charts.LineChart;
 			import mx.charts.ChartItem;
 			import mx.charts.series.items.AreaSeriesItem;
@@ -244,16 +246,31 @@
 			import mx.events.DataGridEvent;
 			import mx.validators.NumberValidator;
 		
-			[Bindable] public var _presentationModel:DailyIncomeModel;
+			[Bindable]
+			override public function get presentationModel() : ReportModuleModel { return _presentationModel; }
+			override public function set presentationModel( val : ReportModuleModel ) : void {
+				
+				if( !val || val == _presentationModel ) return;
+								
+				super.presentationModel = val;
+				
+				_presentationModel = val as DailyIncomeModel;
+				_presentationModel.init();
+				
+				if(!_summaryDateWatcher)
+					BindingUtils.bindSetter(summaryDateChanged, _presentationModel, 'summaryDate');
+				else
+					_summaryDateWatcher.reset( _presentationModel );				
+			}
+			[Bindable] private var _presentationModel : DailyIncomeModel;
+			private var _summaryDateWatcher : ChangeWatcher;
 			
 			private function init():void
 			{
 				presentationModel = new DailyIncomeModel();
-				_presentationModel = presentationModel as DailyIncomeModel;
-				_presentationModel.init();
 				drawChartOverlays();
-				BindingUtils.bindSetter(summaryDateChanged, _presentationModel, 'summaryDate');
 			}
+			
 
 			private function addExpenditure():void
 			{

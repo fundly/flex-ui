@@ -267,8 +267,8 @@
 					icon="{Icons.ADD}" 
 					width="100" height="25" 
 					styleName="actionsList"/>
-				<mx:Button id="exportBtn" 
-					label="EXPORT" 
+				<common:RestrictedExportBtn id="exportBtn" 
+					label="EXPORT"
 					click="exportClickHandler(event)" 
 					icon="{Icons.EXPORT}" 
 					width="100" height="25" 

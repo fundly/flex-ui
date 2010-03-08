@@ -44,6 +44,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.base
 		}
 		public var searching:Boolean;
 		public var exporting:Boolean;
+		public var exportAllowed : Boolean;
 		public var timezoneOffset:int;
 
 		public var gridRecords:ArrayCollection;

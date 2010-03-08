@@ -64,12 +64,11 @@
 	
 	<mx:Canvas id="footer" bottom="0"
 		width="100%" height="28" styleName="controlBar">
-		<mx:LinkButton 
-			label="DELETE" fontSize="10" color="#ED1C24" 
+		<common:RestrictedDeleteLinkBtn 
 			verticalCenter="0" left="10"
 			click="dispatchEvent( new Event('deleteRecord') )" 
 			visible="{isEditable}"/>
-		<common:CMSSubmitBtn 
+		<common:RestrictedUpdateBtn 
 			label="FULFILL"
 			toolTip="{checksForm.isValid ? 'This form is ready to submit' : 'Please correctly fill in all form fields'}" 
 			enabled="{checksForm.isValid &amp;&amp; !_model.dataLoading}"

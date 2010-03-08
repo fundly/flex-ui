@@ -123,7 +123,7 @@ package com.enilsson.elephantadmin.views.modules.batch.model
 			addWatcher( BindingUtils.bindSetter( newBatchCheckListChanged, _model, ["batch", "newBatchCheckList"] ), "newBatchCheckList" );
 			addWatcher( BindingUtils.bindSetter( selectedBatchChanged, _model, ["batch", "selectedBatch"] ), "selectedBatch" );
 			addWatcher( BindingUtils.bindSetter( batchCheckListChanged, _model, ["batch", "selectedBatchChecks"]), "selectedBatchChecks");
-			addWatcher( BindingUtils.bindProperty(this, "newBatchSaving", _model, ["batch", "newBatchSaving" ] ), "newBatchSaving");
+			addWatcher( BindingUtils.bindProperty( this, "newBatchSaving", _model, ["batch", "newBatchSaving" ] ), "newBatchSaving");
 		}
 
 		[Bindable(event="modelChanged")]

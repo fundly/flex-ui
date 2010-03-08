@@ -92,11 +92,15 @@
 						label="Export"
 						color="#000000"
 						enabled="{!dataLoading &amp;&amp; event.selectedIndex != -1}"
+						visible="{_presentationModel.exportAllowed}"
+						includeInLayout="{_presentationModel.exportAllowed}"
 						click="export()"
 						/>
 					<mx:Button id="exportMultipleButton"
 						label="Export Multiple"
 						enabled="{!dataLoading}"
+						visible="{_presentationModel.exportAllowed}"
+						includeInLayout="{_presentationModel.exportAllowed}"
 						color="#000000"
 						click="exportMultiple()"
 						/>

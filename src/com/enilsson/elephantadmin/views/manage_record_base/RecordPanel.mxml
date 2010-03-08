@@ -30,18 +30,27 @@
 				</mx:VBox>
 			</mx:TabNavigator>
 			<mx:Canvas height="32" width="{width}" bottom="0">
-				<common:CMSSubmitBtn 
-					top="6" right="20"
+				
+				<!-- Either show the update or the add button -->			
+				<common:RestrictedCreateBtn 
+					label="ADD"
+					visible="{presentationModel.addingNewRecord == true}"
+					enabled="{presentationModel.formValid}"					 
+					click="presentationModel.upsertRecord(form.formVariables)" 
+					top="6" right="20" />
+				<common:RestrictedUpdateBtn 
+					label="UPDATE"
+					visible="{presentationModel.addingNewRecord == false}"
 					enabled="{presentationModel.formValid}"
-					label="{presentationModel.addingNewRecord ? 'ADD' : 'UPDATE'}"
-					click="presentationModel.upsertRecord(form.formVariables)" />
+					click="presentationModel.upsertRecord(form.formVariables)"
+					top="6" right="20" />	
+					
 				<mx:LinkButton 
 					label="DETAILS" 
 					styleName="linkBtn"
 					click="presentationModel.showRecordDetails = true" 
 					verticalCenter="0" left="10" />
-				<mx:LinkButton 
-					label="DELETE" 
+				<common:RestrictedDeleteLinkBtn
 					visible="{presentationModel.showDeleteBtn}"
 					enabled="{presentationModel.enableDeleteBtn}"
 					toolTip="{presentationModel.enableDeleteBtn ? 

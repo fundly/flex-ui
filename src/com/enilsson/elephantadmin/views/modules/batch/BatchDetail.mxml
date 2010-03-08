@@ -18,7 +18,7 @@
 				<BatchCheckListGrid presentationModel="{_presentationModel}" currentState="{toggleState}" />
 			</mx:AddChild>
 			<mx:AddChild relativeTo="{cBar}">
-				<common:CMSSubmitBtn
+				<common:RestrictedCMSExportBtn
 					width="140"
 					label="EXPORT BATCH"
 					toolTip="Export checks in this batch to a file"
@@ -40,7 +40,7 @@
 				<mx:Spacer width="100%" />
 			</mx:AddChild>
 			<mx:AddChild relativeTo="{cBar}">
-				<common:CMSSubmitBtn
+				<common:RestrictedCreateBtn
 					width="110"
 					label="SAVE BATCH"
 					toolTip="Save the new batch"

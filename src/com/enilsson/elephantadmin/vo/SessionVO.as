@@ -18,13 +18,6 @@ package com.enilsson.elephantadmin.vo
 			this.acl = data.acl;
 			this.admin_acl = data.admin_acl;
 			this.groups = data.groups;
-			
-			if(data.ui_access) {
-				this.uiAccess = data.ui_access as UIAccessVO;
-			}
-			else {
-				this.uiAccess = new UIAccessVO();
-			}
 		}
 		
 		public var data:Object;
@@ -37,6 +30,5 @@ package com.enilsson.elephantadmin.vo
 		public var acl:Object;
 		public var admin_acl:Object;
 		public var groups:Object;
-		public var uiAccess:UIAccessVO;
 	}
 }

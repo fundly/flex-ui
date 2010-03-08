@@ -65,6 +65,8 @@
 					width="80" label="Export" color="#000000"
 					click="_pm.export()"
 					right="5" verticalCenter="0"
+					visible="{_pm.exportAllowed}"
+					includeInLayout="{_pm.exportAllowed}"
 					enabled="{!dataLoading}" />
 					
 		</mx:Canvas>

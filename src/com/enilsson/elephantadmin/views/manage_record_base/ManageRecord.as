@@ -8,6 +8,7 @@ package com.enilsson.elephantadmin.views.manage_record_base
 	import flash.events.MouseEvent;
 	
 	import mx.binding.utils.BindingUtils;
+	import mx.binding.utils.ChangeWatcher;
 	import mx.containers.Canvas;
 	import mx.core.IFactory;
 	import mx.effects.Move;
@@ -46,23 +47,28 @@ package com.enilsson.elephantadmin.views.manage_record_base
 		/**
 		 * Set the module configuration by passing in the parameters to the presentation model
 		 */
-		[Bindable] public var presentationModel:RecordModel;
-		public function setPresentationModel(model:RecordModel):void
+		[Bindable]
+		public function get presentationModel() : RecordModel { return _presentationModel; }
+		public function set presentationModel( model:RecordModel ) : void
 		{
-			if(model)
+			if(model && model != _presentationModel)
 			{
-				presentationModel = model;
+				_presentationModel = model;
+				
+				if( ! _pmWatcher )
+					_pmWatcher = BindingUtils.bindProperty(this, 'currentState', _presentationModel, "viewState");	
+				else
+					_pmWatcher.reset(presentationModel);
+					
 				passPresentationModel();
 			}
 		}
+		private var _presentationModel : RecordModel;
+		private var _pmWatcher : ChangeWatcher;
 
 		public function configuration(value:RecordModuleConfiguration):void
 		{
 			presentationModel.configure( value );
-			passPresentationModel();
-
-			currentState = presentationModel.viewState;
-			BindingUtils.bindProperty(this, 'currentState', presentationModel, "viewState");
 		}
 
 		/**

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:common="com.enilsson.elephantadmin.views.common.*"
+	styleName="accessEditor">
+
+	<mx:HBox width="100%" verticalAlign="middle">
+		<mx:Text text="User Type:" />
+		<mx:Text fontWeight="bold"
+			visible="{usersModel.userLevel != 'super'}"
+			includeInLayout="{usersModel.userLevel != 'super'}"
+			text="{usersModel.userACL.hasOwnProperty('system_super') ? 'SUPER' : usersModel.userACL.hasOwnProperty('system_power') ? 'POWER' : 'BASE'}" />
+		<mx:ComboBox id="userLevelCombo"
+			visible="{usersModel.userLevel == 'super'}"
+			includeInLayout="{usersModel.userLevel == 'super'}"
+			dataProvider="{usersModel.userLevelList}"
+			selectedIndex="{usersModel.userLevelSelectedIndex}"
+			change="usersModel.userLevelSelectedIndex = event.currentTarget.selectedIndex;"/>
+		<mx:Spacer width="100%" />
+		<common:RestrictedUpdateBtn 
+			visible="{usersModel.userLevel == 'super'}"
+			includeInLayout="{usersModel.userLevel == 'super'}"
+			click="usersModel.manageACL()" 
+			label="Manage ACL" />
+	</mx:HBox>
+	
+	<mx:Spacer height="15" />
+	
+	<!-- the rights matrix is only visible if the selected user is a power user -->
+	<mx:Canvas width="100%" 
+		height="0"
+		visible="{usersModel.userLevel == 'super' &amp;&amp; userLevelCombo.selectedIndex == 1 }"
+		verticalScrollPolicy="off"
+		showEffect="adminAccessShow"
+		hideEffect="adminAccessHide" >
+		
+		<mx:Label text="Admin Panel access:" />	
+		
+		<mx:Grid height="100%" top="25">
+			<mx:GridRow>
+				<mx:GridItem>
+					<mx:CheckBox label="Create records"
+						styleName="uiAccessCb" 
+						selected="{usersModel.uiAccess.recordCreate}"
+						change="usersModel.uiAccess.recordCreate = event.currentTarget.selected" />
+				</mx:GridItem>
+				<mx:GridItem>
+					<mx:CheckBox label="Update records"
+						styleName="uiAccessCb" 
+						selected="{usersModel.uiAccess.recordUpdate}"
+						change="usersModel.uiAccess.recordUpdate = event.currentTarget.selected" />		
+				</mx:GridItem>
+				<mx:GridItem>
+					<mx:CheckBox label="Delete records"
+						styleName="uiAccessCb" 
+						selected="{usersModel.uiAccess.recordDelete}"
+						change="usersModel.uiAccess.recordDelete = event.currentTarget.selected" />
+				</mx:GridItem>
+			</mx:GridRow>
+			<mx:GridRow>
+				<mx:GridItem>
+					<mx:CheckBox id="viewReportsCb" 
+						label="View reports"
+						styleName="uiAccessCb" 
+						selected="{usersModel.uiAccess.reportingAccess}" 
+						change="usersModel.uiAccess.reportingAccess = event.currentTarget.selected" />
+				</mx:GridItem>
+				<mx:GridItem colSpan="2">
+					<mx:CheckBox 
+						label="Export data {viewReportsCb.selected ? '&amp; reports' : '' }"
+						styleName="uiAccessCb" 
+						selected="{usersModel.uiAccess.dataExport}"
+						change="usersModel.uiAccess.dataExport = event.currentTarget.selected" />
+				</mx:GridItem>
+			</mx:GridRow>
+		</mx:Grid>
+		
+	</mx:Canvas>
+	
+	<mx:Parallel id="adminAccessShow" duration="500">
+		<mx:Fade alphaFrom="0" alphaTo="1" />
+		<mx:Resize  heightFrom="0" heightTo="{RIGHTS_EDITOR_HEIGHT}" />
+	</mx:Parallel>	
+	<mx:Parallel id="adminAccessHide" duration="500">
+		<mx:Fade alphaFrom="1" alphaTo="0" />
+		<mx:Resize heightFrom="{RIGHTS_EDITOR_HEIGHT}" heightTo="0" />
+	</mx:Parallel>
+	
+	
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephantadmin.views.modules.users.model.UsersModel;
+			
+			[Bindable] public var usersModel : UsersModel;
+			
+			private static const RIGHTS_EDITOR_HEIGHT : int = 90;
+		]]>
+	</mx:Script>
+	
+	<mx:Style>
+		.accessEditor {
+			color: #333333;
+		}
+		
+		.uiAccessCb {
+			fontSize: 10;
+		}
+	</mx:Style>
+	
+</mx:VBox>	

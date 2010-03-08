@@ -48,6 +48,8 @@
 					_config.gridFields = [ 'fname', 'lname', '_city', '_state', '_fid' ];
 					recordModule.configuration(_config);
 				}
+				
+				recordModule.presentationModel.refreshData();
 			}
 		]]>
 	</mx:Script>

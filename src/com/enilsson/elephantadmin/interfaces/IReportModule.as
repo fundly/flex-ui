@@ -19,5 +19,7 @@ package com.enilsson.elephantadmin.interfaces
 
 		function set recordID(value:int):void;
 		function get recordID():int;
+		
+		function set exportAllowed( value : Boolean ) : void;
 	}
 }

@@ -29,7 +29,7 @@ List below are all the host committee members for this event. Clicking the fundr
 			itemRenderer="{new ClassFactory(EventHost_Item)}"
 			searchDataProvider="{_presentationModel.hostsList}"
 			searchStart="_presentationModel.hostsSearchStart( event )" />			
-		<common:CMSSubmitBtn
+		<common:RestrictedCreateBtn
 			width="85" fontSize="10"
 			label="ADD HOST"
 			click="_presentationModel.addEventHost( addHost.selectedData )"
@@ -95,6 +95,8 @@ List below are all the host committee members for this event. Clicking the fundr
 		<common:CMSSubmitBtn
 			label="VIEW HOST COMMITTEE REPORT"
 			width="200"
+			visible="{_presentationModel.userUIAccess.reportingAccess}"
+			includeInLayout="{_presentationModel.userUIAccess.reportingAccess}"
 			click="new ReportingEvent(ReportingEvent.SHOW_RECORD, null, 'HostCommittee', _presentationModel.recordID).dispatch()"/>
 	</mx:HBox>		
 	

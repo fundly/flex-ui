@@ -5,12 +5,12 @@ package com.enilsson.elephantadmin.commands
 	import com.adobe.cairngorm.control.CairngormEvent;
 	import com.asual.swfaddress.SWFAddress;
 	import com.enilsson.elephantadmin.business.*;
+	import com.enilsson.elephantadmin.events.UIAccessEvent;
 	import com.enilsson.elephantadmin.events.main.*;
 	import com.enilsson.elephantadmin.events.modules.RecordEvent;
 	import com.enilsson.elephantadmin.events.session.*;
 	import com.enilsson.elephantadmin.models.EAModelLocator;
 	import com.enilsson.elephantadmin.models.Icons;
-	import com.enilsson.elephantadmin.vo.S3VO;
 	import com.enilsson.elephantadmin.vo.SessionVO;
 	import com.enilsson.elephantadmin.vo.StruktorLayoutVO;
 	import com.enilsson.utils.eNilssonUtils;
@@ -21,6 +21,8 @@ package com.enilsson.elephantadmin.commands
 	import mx.controls.Alert;
 	import mx.events.CloseEvent;
 	import mx.rpc.IResponder;
+	import mx.rpc.Responder;
+	import mx.rpc.events.ResultEvent;
 	import mx.rpc.xml.SimpleXMLDecoder;
 	import mx.utils.ObjectUtil;
 	
@@ -34,20 +36,17 @@ package com.enilsson.elephantadmin.commands
 		{
 			switch(event.type)
 			{
-				case RecordEvent.GET_LAYOUTS :
-					getLayouts(event as RecordEvent);
-				break;
 				case SessionEvent.INIT_SESSION_CHECK :
 					sessionCheck(event as SessionEvent);
 				break;
+				case RecordEvent.GET_LAYOUTS :
+					getLayouts(event as RecordEvent);
+				break;				
 				case GetSiteLayoutEvent.EVENT_GET_LAYOUT :
 					getSiteLayout(event as GetSiteLayoutEvent);
 				break;
 				case GetGroupsEvent.EVENT_GET_GROUPS :
 					getGroups(event as GetGroupsEvent);
-				break;
-				case S3Event.EVENT_S3 :
-					getS3credentials(event as S3Event);
 				break;
 			}
 		}
@@ -57,7 +56,7 @@ package com.enilsson.elephantadmin.commands
 		 */
 		private function sessionCheck(event:SessionEvent):void
 		{
-			var handlers : IResponder = new mx.rpc.Responder(onResults_sessionCheck, onFault_sessionCheck);
+			var handlers : IResponder = new Responder(onResults_sessionCheck, onFault_sessionCheck);
 			var delegate:SessionDelegate = new SessionDelegate(handlers);
 			
 			if(_model.session)
@@ -187,7 +186,7 @@ package com.enilsson.elephantadmin.commands
 		 */
 		private function getSiteLayout(event:GetSiteLayoutEvent):void
 		{
-			var handlers : IResponder = new mx.rpc.Responder(onResults_getSiteLayout, onFault_getSiteLayout);	
+			var handlers : IResponder = new Responder(onResults_getSiteLayout, onFault_getSiteLayout);	
 			var delegate:LayoutDelegate = new LayoutDelegate(handlers);
 			
 			delegate.getApplicationLayout();
@@ -202,17 +201,8 @@ package com.enilsson.elephantadmin.commands
 			var decoder:SimpleXMLDecoder = new SimpleXMLDecoder(true);
             var xmlObj:Object = decoder.decodeXML(xml);
             
-            // assign the various values to the model			
-			_model.navLayout = xmlObj.layout.nav.link;
-			_model.aclLayout = xmlObj.layout.acl.item;
-
-			for each(var item:Object in xmlObj.layout.variables.variable)
-				_model.serverVariables[item.key] = item.value;
-
-			if(_model.debug) Logger.info('ACL Layout', ObjectUtil.toString(_model.aclLayout));
-		
-			_model.allowedModules = xmlObj.layout.allowed_modules.module;
-
+            buildLayout(xmlObj.layout);
+           
 			// run the command to get the groups info for this instance
 			this.nextEvent = new GetGroupsEvent();
 			this.executeNextCommand();
@@ -232,6 +222,38 @@ package com.enilsson.elephantadmin.commands
 			_model.dataLoading = false;
 			logout();
 		}
+		
+		private function buildLayout( layout : Object ) : void {
+			
+			if(! layout ) return;
+			
+			var navigation 		: ArrayCollection = layout.nav.link as ArrayCollection;
+			var allowedModules 	: ArrayCollection = layout.allowed_modules.module as ArrayCollection;
+			
+			
+			// enable/disable reporting based on user UI rights
+			if( ! _model.userUIAccess.reportingAccess ) {
+				// remove reporting from allowed modules
+				allowedModules.removeItemAt( allowedModules.getItemIndex("reporting") );
+				// remove reporting from navigation links
+				for ( var i : int = 0; i < navigation.length; i++ ) {
+					if( navigation[i]['module'] == 'reporting' ) {
+						navigation.removeItemAt(i);
+					}
+				}
+     		}
+     		
+            // assign the various values to the model
+            _model.allowedModules = allowedModules;
+			_model.navLayout = navigation;
+			_model.aclLayout = layout.acl.item;
+
+
+			for each(var item:Object in layout.variables.variable)
+				_model.serverVariables[item.key] = item.value;
+
+			if(_model.debug) Logger.info('ACL Layout', ObjectUtil.toString(_model.aclLayout));     				
+		}
 
 
 		/**
@@ -239,7 +261,7 @@ package com.enilsson.elephantadmin.commands
 		 */
 		private function getGroups(event:GetGroupsEvent):void
 		{
-			var handlers : IResponder = new mx.rpc.Responder(onResults_getGroups, onFault_getGroups);
+			var handlers : IResponder = new Responder(onResults_getGroups, onFault_getGroups);
 			var delegate:GroupsProfilesDelegate = new GroupsProfilesDelegate(handlers);
 			
 			delegate.listGroups();
@@ -302,31 +324,6 @@ package com.enilsson.elephantadmin.commands
 
 
 		/**
-		 * Get the Amazon s3 credentials
-		 */
-		private function getS3credentials(event:S3Event):void
-		{
-			var handlers : IResponder = new mx.rpc.Responder(onResults_getS3credentials, onFault_getS3credentials);
-			var delegate:S3Delegate = new S3Delegate(handlers);
-			
-			delegate.get_credentials();
-		}
-
-		private function onResults_getS3credentials(event:Object):void
-		{
-			if(_model.debug) Logger.info('Success getS3credentials', ObjectUtil.toString(event.result));
-			
-			_model.s3vo = new S3VO ( event.result );
-		}
-		
-		private function onFault_getS3credentials(event:Object):void
-		{
-			if(_model.debug) Logger.info('Fail getS3credentials', ObjectUtil.toString(event));
-			logout();
-		}
-		
-		
-		/**
 		 * Handle the actions needed when the session, layout and groups are all loaded successfully
 		 */
 		private function handleSuccessfulLoad():void
@@ -367,7 +364,7 @@ package com.enilsson.elephantadmin.commands
 		 */			
 		private function getLayouts(event:RecordEvent):void
 		{
-			var handlers:IResponder = new mx.rpc.Responder(onResult_getLayouts, onFault_getLayouts);
+			var handlers:IResponder = new Responder(onResult_getLayouts, onFault_getLayouts);
 			var delegate:LayoutDelegate = new LayoutDelegate(handlers);
 			
 			_model.dataLoading = true;
@@ -375,7 +372,7 @@ package com.enilsson.elephantadmin.commands
 			delegate.getLayouts();			
 		}
 				
-		private function onResult_getLayouts(event:Object):void 
+		private function onResult_getLayouts(event:ResultEvent):void 
 		{
 			if(_model.debug) Logger.info(' getLayouts Success', ObjectUtil.toString(event.result));
 			
@@ -389,9 +386,11 @@ package com.enilsson.elephantadmin.commands
 			// tell the model that the layouts are in place	
 			_model.struktorLayout.loaded = true;	
 
-			this.nextEvent = new GetSiteLayoutEvent();
-			this.executeNextCommand();
-			this.nextEvent = null;
+			var e : UIAccessEvent = new UIAccessEvent( UIAccessEvent.GET_UI_ACCESS_RIGHTS );
+			e.nextEvent = new GetSiteLayoutEvent();			
+			nextEvent = e;
+			executeNextCommand();
+			nextEvent = null;
 		}
 		
 		public function onFault_getLayouts(event:Object):void
@@ -400,7 +399,6 @@ package com.enilsson.elephantadmin.commands
 			
 			_model.dataLoading = false;
 			logout();
-		}
-		
+		}		
 	}
 }

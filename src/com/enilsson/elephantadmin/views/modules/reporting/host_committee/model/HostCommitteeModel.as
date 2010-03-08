@@ -73,6 +73,8 @@ package com.enilsson.elephantadmin.views.modules.reporting.host_committee.model
 
 		public function eventChangeHandler(event:ListEvent):void
 		{
+			if(! event.currentTarget.selectedItem) return;
+			
 			eventID = event.currentTarget.selectedItem.id;
 			eventSelectedIndex = event.currentTarget.selectedIndex;
 			hostID = 0;

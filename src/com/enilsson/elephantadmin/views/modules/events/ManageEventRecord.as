@@ -37,11 +37,6 @@ package com.enilsson.elephantadmin.views.modules.events
 			};
 		}
 		
-		override public function configuration(value:RecordModuleConfiguration):void
-		{
-			super.configuration(value);
-		}
-		
 		override protected function createChildren():void
 		{
 			super.createChildren();

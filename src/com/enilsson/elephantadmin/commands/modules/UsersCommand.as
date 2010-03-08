@@ -294,7 +294,7 @@ package com.enilsson.elephantadmin.commands.modules
 				_usersModel.accessTabLoading = false;
 		}
 		
-		public function onFault_getGroups(event:FaultEvent):void
+		private function onFault_getGroups(event:FaultEvent):void
 		{
 			if(_model.debug) Logger.info('getGroups Fail', ObjectUtil.toString(event));
 			
@@ -327,7 +327,7 @@ package com.enilsson.elephantadmin.commands.modules
 			_model.dataLoading = false;
 		}
 		
-		public function onFault_addGroups(event:FaultEvent):void
+		private function onFault_addGroups(event:FaultEvent):void
 		{
 			if(_model.debug) Logger.info('addGroup Fail', ObjectUtil.toString(event));
 			
@@ -354,7 +354,7 @@ package com.enilsson.elephantadmin.commands.modules
 			_model.dataLoading = false;
 		}
 		
-		public function onFault_delGroups(event:Object):void
+		private function onFault_delGroups(event:Object):void
 		{
 			if(_model.debug) Logger.info('delGroups Fail', ObjectUtil.toString(event));
 			
@@ -403,7 +403,7 @@ package com.enilsson.elephantadmin.commands.modules
 				_usersModel.accessTabLoading = false;
 		}
 		
-		public function onFault_getACL(event:FaultEvent):void
+		private function onFault_getACL(event:FaultEvent):void
 		{
 			if(_model.debug) Logger.info('getACL Fail', ObjectUtil.toString(event));
 
@@ -443,7 +443,7 @@ package com.enilsson.elephantadmin.commands.modules
 			_model.dataLoading = false;
 
 		}
-		public function onFault_setACL(event:FaultEvent):void
+		private function onFault_setACL(event:FaultEvent):void
 		{
 			if(_model.debug) Logger.info('setACL Fail', ObjectUtil.toString(event));
 
@@ -455,6 +455,8 @@ package com.enilsson.elephantadmin.commands.modules
 
 			_model.dataLoading = false;
 		}
+		
+		
 
 		/**
 		 * Disable user account
@@ -479,7 +481,7 @@ package com.enilsson.elephantadmin.commands.modules
 			_model.dataLoading = false;
 
 		}
-		public function onFault_disableUser(event:FaultEvent):void
+		private function onFault_disableUser(event:FaultEvent):void
 		{
 			if(_model.debug) Logger.info('disable user Fail', ObjectUtil.toString(event));
 
@@ -515,7 +517,7 @@ package com.enilsson.elephantadmin.commands.modules
 			_model.dataLoading = false;
 
 		}
-		public function onFault_enableUser(event:Object):void
+		private function onFault_enableUser(event:Object):void
 		{
 			if(_model.debug) Logger.info('enable user Fail', ObjectUtil.toString(event));
 
@@ -551,7 +553,7 @@ package com.enilsson.elephantadmin.commands.modules
 			_usersModel.invitationTemplate = event.result[tableName][1];
 		}
 		
-		public function onFault_getTemplate(event:FaultEvent):void
+		private function onFault_getTemplate(event:FaultEvent):void
 		{
 			if(_model.debug) Logger.info('Invitation getTemplate Fail', ObjectUtil.toString(event.fault));
 			
@@ -669,7 +671,7 @@ package com.enilsson.elephantadmin.commands.modules
 				_model.errorVO = new ErrorVO('Internet connection error, please check before trying again!.','errorBox',true);
 		}
 
-		public function onFault_forgot(event:Object):void
+		private function onFault_forgot(event:Object):void
 		{
 			if(_model.debug) Logger.info('Forget details Event', ObjectUtil.toString(event));
 			_model.dataLoading = false;
@@ -698,7 +700,7 @@ package com.enilsson.elephantadmin.commands.modules
 			_model.dataLoading = false;
 		}
 		
-		public function onFault_addPowerUser(event:Object):void
+		private function onFault_addPowerUser(event:Object):void
 		{
 			if(_model.debug) Logger.info('addPowerUser fault', ObjectUtil.toString(event));
 			
@@ -727,7 +729,7 @@ package com.enilsson.elephantadmin.commands.modules
 
 		}
 		
-		public function onFault_delPowerUser(event:Object):void
+		private function onFault_delPowerUser(event:Object):void
 		{
 			if(_model.debug) Logger.info('delPowerUser fault', ObjectUtil.toString(event));
 			
@@ -756,7 +758,7 @@ package com.enilsson.elephantadmin.commands.modules
 			_model.dataLoading = false;
 		}
 		
-		public function onFault_addSuperUser(event:Object):void
+		private function onFault_addSuperUser(event:Object):void
 		{
 			if(_model.debug) Logger.info('addSuperUser fault', ObjectUtil.toString(event));
 			
@@ -785,7 +787,7 @@ package com.enilsson.elephantadmin.commands.modules
 			_model.dataLoading = false;
 		}
 		
-		public function onFault_delSuperUser(event:Object):void
+		private function onFault_delSuperUser(event:Object):void
 		{
 			if(_model.debug) Logger.info('delSuperUser fault', ObjectUtil.toString(event));
 			_model.dataLoading = false;
@@ -815,7 +817,7 @@ package com.enilsson.elephantadmin.commands.modules
 			_model.dataLoading = false;
 		}
 		
-		public function onFault_getUserEmail(event:Object):void
+		private function onFault_getUserEmail(event:Object):void
 		{
 			if(_model.debug) Logger.info('getUserEmail fault', ObjectUtil.toString(event));
 			
@@ -847,7 +849,7 @@ package com.enilsson.elephantadmin.commands.modules
 			_model.dataLoading = false;
 		}
 		
-		public function onFault_getUserContact(event:Object):void
+		private function onFault_getUserContact(event:Object):void
 		{
 			if(_model.debug) Logger.info('getUserContact fault', ObjectUtil.toString(event));
 			
@@ -998,7 +1000,7 @@ package com.enilsson.elephantadmin.commands.modules
 			_model.dataLoading = false;
 		}
 		
-		public function onFault_adminChangeEmail(event:Object):void
+		private function onFault_adminChangeEmail(event:Object):void
 		{
 			if(_model.debug) Logger.info('adminChangeEmail fault', ObjectUtil.toString(event));
 			
