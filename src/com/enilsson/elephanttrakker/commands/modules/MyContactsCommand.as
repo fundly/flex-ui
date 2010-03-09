@@ -24,6 +24,8 @@ package com.enilsson.elephanttrakker.commands.modules
 	public class MyContactsCommand extends SequenceCommand implements ICommand, IResponder
 	{
 		private var _model:ETModelLocator = ETModelLocator.getInstance();
+		
+		private var _event : CairngormEvent;
 
 		public function MyContactsCommand()
 		{
@@ -33,6 +35,8 @@ package com.enilsson.elephanttrakker.commands.modules
 		override public function execute(event:CairngormEvent):void
 		{
 			if(_model.debug) Logger.info('MyContacts Command', ObjectUtil.toString(event.type));
+			
+			_event = event;
 			
 			switch(event.type)
 			{
@@ -319,7 +323,17 @@ package com.enilsson.elephanttrakker.commands.modules
 				case '99' :
 					_model.my_contacts.resetPopupContactForm();
 					
-					_model.my_contacts.errorVO = new ErrorVO('That contact was successfully edited', 'successBox', true );
+					var e		: UpsertContactEvent 	= _event as UpsertContactEvent;
+					var message : String; 
+					
+					if ( e != null && e.formData['id'] === undefined ) {
+						message = 'A duplicate contact you own has been edited';
+					}
+					else {
+						message = 'That contact was successfully edited';
+					}
+					
+					_model.my_contacts.errorVO = new ErrorVO( message, 'successBox', true );
 					_model.my_contacts.onClose = function():void {
 						_model.my_contacts.isSubmitting = false;
 					}
