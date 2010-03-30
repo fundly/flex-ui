@@ -149,12 +149,6 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 			eventsValue = formField.dataValue;
 			BindingUtils.bindProperty(formField, 'dataValue', this, 'eventsValue');
 			
-			// disable pledge amount validation if present so that amounts can be set to anything
-			// when editing a pledge			
-			var vals : Array = event.currentTarget.getFieldValidators('pledge_amount', 'selection_numeric');			
-			var val : Object = vals && vals.length > 0 ? vals[0] : null;
-			if( val != null ) 
-				val.validationSource = null;
 		}
 		
 		/**
