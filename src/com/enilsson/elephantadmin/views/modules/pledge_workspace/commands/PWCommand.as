@@ -439,7 +439,7 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.commands
 					if ( _presentationModel.vo.check != null || _presentationModel.vo.transaction != null ) 
 					{
 						params['pledge_amount'] = _presentationModel.vo.check == null ? 
-							cf.format(_presentationModel.vo.transactionData.amount) :  
+							cf.format(_presentationModel.vo.transaction.amount) :  
 							cf.format(_presentationModel.vo.check.amount);
 						
 						// send an email thanking the user for a credit card transaction
