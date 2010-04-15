@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PledgeRefundedDecorator
+	useHandCursor="true" buttonMode="true"
+	toolTip="Inspect this pledge. { warningVisible ? WARNING_TEXT : '' }" 
+	xmlns="com.enilsson.elephantadmin.views.common.*" xmlns:mx="http://www.adobe.com/2006/mxml"
+	click="new SidEvent( data.sid ).dispatch()">
+		<mx:Script>
+			<![CDATA[
+				import com.enilsson.elephantadmin.events.main.SidEvent;
+				import com.enilsson.elephantadmin.models.Icons;
+			]]>
+		</mx:Script>
+		
+		<mx:Image source="{Icons.MAGNIFIER_16}" />	
+	
+</PledgeRefundedDecorator>

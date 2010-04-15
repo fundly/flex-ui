@@ -4,13 +4,15 @@
 	useHandCursor="true"
 	buttonMode="true"
 	click="clickHandler(event)"
-	toolTip="Inspect this record">
+	toolTip="{TOOLTIP_TEXT}">
 	
 	<mx:Script>
 		<![CDATA[
 			import com.enilsson.elephantadmin.models.Icons;
 			import com.enilsson.elephantadmin.events.main.SidEvent;
 			import com.enilsson.elephantadmin.models.EAModelLocator;
+			
+			public static const TOOLTIP_TEXT : String = "Inspect this record.";
 			
 			[Bindable] private var _model : EAModelLocator = EAModelLocator.getInstance(); 
 			

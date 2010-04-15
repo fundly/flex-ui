@@ -263,7 +263,10 @@ package com.enilsson.elephantadmin.commands.modules
 					_pledgesModel.refundError = new ErrorVO( 'Check refund added successfully!', 'successBox', true );
 					
 					// refresh the search list
-					_presentationModel.lastQuery.dispatch();
+					if(_presentationModel.lastQuery) {
+						_presentationModel.lastQuery.dispatch();
+					}
+					
 					_presentationModel.searchListSelectedIndex = _presentationModel.searchListLastIndex;
 					
 					// refresh the contributions

@@ -3,12 +3,10 @@
 	paddingTop="0" paddingBottom="0" 
 	verticalAlign="middle"
 	horizontalScrollPolicy="off" 
-	verticalScrollPolicy="off">
+	verticalScrollPolicy="off" 
+	xmlns:common="com.enilsson.elephantadmin.views.common.*">
 
-	<mx:Image useHandCursor="true" buttonMode="true"
-		toolTip="View details on this pledge" 
-		source="{Icons.PLEDGE}"
-		click="new SidEvent( data.sid ).dispatch()" />
+	<common:PledgeRefundedPledgeIcon pledge="{data}" />
 
 	<mx:VBox verticalGap="0">
 		<mx:HBox width="{explicitWidth}" horizontalAlign="left" verticalAlign="middle" horizontalGap="0">

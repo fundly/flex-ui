@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PledgeRefundedDecorator pledge="{data}"
+	buttonMode="true" useHandCursor="true"
+	xmlns="com.enilsson.elephantadmin.views.common.*" 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:renderers="com.enilsson.elephantadmin.views.modules.search.renderers.*">
+	
+	<renderers:MagnifierIcon id="magnifierIcon" data="{data}"
+		toolTip="{MagnifierIcon.TOOLTIP_TEXT} { warningVisible ? WARNING_TEXT : '' }" />
+	
+</PledgeRefundedDecorator>

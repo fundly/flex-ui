@@ -104,6 +104,7 @@
 
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.elephantadmin.views.modules.search.renderers.PledgeMagnifierIcon;
 			import com.enilsson.utils.EDateUtil;
 			import com.enilsson.elephantadmin.models.Icons;
 			import mx.collections.SortField;
@@ -228,7 +229,7 @@
 				col.minWidth = col.width = 40;
 				col.headerText = "";
 				col.dataField = "sid";
-				col.itemRenderer = new ClassFactory(MagnifierIcon);
+				col.itemRenderer = new ClassFactory(PledgeMagnifierIcon);
 				cols.push( col );
 				
 				_model.browse.columns = cols;			
