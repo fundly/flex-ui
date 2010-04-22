@@ -9,6 +9,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.base
 		public var sortBy:String;
 		public var recordPerPage:int;
 		public var page:int;
+		public var showRefunds:Boolean;
 	
 		public var filter:int;
 
