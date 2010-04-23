@@ -81,8 +81,11 @@ package com.enilsson.elephantadmin.models
 		[Embed(source="/assets/images/new_icons/nav/pledges2.png")]
 		public static const PLEDGE:Class;
 		
-		[Embed(source="/assets/images/pledge_refunded.png")]
-		public static const PLEDGE_REFUNDED:Class;
+		[Embed(source="/assets/images/exclamation_14.png")]
+		public static const EXCLAMATION_MARK_14:Class;
+		
+		[Embed(source="/assets/images/exclamation_38.png")]
+		public static const EXCLAMATION_MARK_38:Class;
 
 		[Embed(source="/assets/images/new_icons/nav/record.png")]
 		public static const RECORD:Class;

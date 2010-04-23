@@ -11,7 +11,7 @@
 			public static const WARNING_TEXT : String = "Note: All contributions for this pledge have been refunded!";
 			
 			[Bindable] public var warningText : String = WARNING_TEXT;
-			
+
 			[Bindable]
 			public function get pledge() : Object { return _pledge; }
 			public function set pledge( value : Object ) : void {
@@ -28,6 +28,11 @@
 			private var _warningVisible : Boolean;
 
 			
+			override public function set data(value:Object):void {
+				super.data = value;
+				pledge = data;
+			}
+			
 						
 			override public function addChild(child:DisplayObject):DisplayObject {
 				var d : DisplayObject = super.addChild( child );
@@ -42,7 +47,6 @@
 				
 				if( !_img ) {
 					_img 				= new Image();
-					_img.source 		= Icons.PLEDGE_REFUNDED;
 					_img.mouseEnabled	= false;
 					addChild( _img );
 				}
@@ -92,12 +96,10 @@
 				var w : Number = getMaxWidth();
 				w = w == 0 ? explicitWidth : w;
 				
-				var newWidth : Number = _img.width * ( h / _img.height ); 
+				_img.source = ( h <= 20 ) ? Icons.EXCLAMATION_MARK_14 : Icons.EXCLAMATION_MARK_38;
 				
-				_img.explicitWidth = newWidth;
-				_img.explicitHeight = h;
-				_img.x = (w / 2) - (newWidth / 2);
-				_img.y = (height / 2) - (h / 2);
+				_img.x = w/2 - _img.width/2;
+				_img.y = height/2 - _img.height/2;
 			}
 			
 			private var _pledge : Object;
