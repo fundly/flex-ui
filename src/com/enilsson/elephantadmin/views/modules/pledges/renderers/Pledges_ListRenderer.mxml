@@ -24,7 +24,7 @@
 			styleName="listDesc" />						
 	</mx:VBox>
 	
-	<common:PledgeRefundedDecorator verticalCenter="0" right="60" pledge="{data}" />
+	<common:PledgeRefundedDecorator verticalCenter="0" right="80" height="30" pledge="{data}" />
 
 	<mx:Button id="viewContact"
 		visible="false"
