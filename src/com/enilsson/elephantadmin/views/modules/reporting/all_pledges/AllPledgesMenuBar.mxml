@@ -8,6 +8,7 @@
 			<mx:HRule width="10" height="100%"/>
 			<mx:DateField id="range_end" width="90" color="#000000" formatString="MM/DD/YYYY" selectedDate="{_presentationModel.endDate}" change="_presentationModel.endDate = event.currentTarget.selectedDate" textAlign="center" enabled="{!_presentationModel.dataLoading}" />
 		</mx:FormItem>
+		<mx:CheckBox label="Show refunds" change="_presentationModel.showRefunds = event.currentTarget.selected" />
 		<mx:LinkButton id="advancedButton" label="{ADVANCED_LABEL}" paddingTop="5"
 			click="toggleAdvanced()"/>
 		<mx:Spacer width="100%" />

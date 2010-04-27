@@ -96,7 +96,9 @@
 				var w : Number = getMaxWidth();
 				w = w == 0 ? explicitWidth : w;
 				
-				_img.source = ( h <= 20 ) ? Icons.EXCLAMATION_MARK_14 : Icons.EXCLAMATION_MARK_38;
+				if(h < 21 ) 		_img.source = Icons.EXCLAMATION_MARK_14;
+				else if(h < 31 )	_img.source = Icons.EXCLAMATION_MARK_24;
+				else				_img.source = Icons.EXCLAMATION_MARK_38;
 				
 				_img.x = w/2 - _img.width/2;
 				_img.y = height/2 - _img.height/2;
