@@ -55,13 +55,7 @@
 						<mx:DataGridColumn headerText="Date"
 							labelFunction="dateLabel"
 							dataField="pledge_date"  />
-						<mx:DataGridColumn width="22">
-							<mx:itemRenderer>
-								<mx:Component>
-									<common:PledgeRefundedInspectIcon pledge="{data}" />
-								</mx:Component>
-							</mx:itemRenderer>
-						</mx:DataGridColumn>
+						<mx:DataGridColumn width="22" itemRenderer="com.enilsson.elephantadmin.views.common.PledgeRefundedInspectIcon" />
 					</mx:columns>
 				</mx:DataGrid>
 			</mx:Canvas>
