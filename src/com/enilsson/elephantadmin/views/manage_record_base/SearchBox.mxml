@@ -108,7 +108,7 @@
 
 	<mx:Script>
 		<![CDATA[
-			import com.enilsson.elephantadmin.views.common.PledgeRefundedDecorator;
+			import com.enilsson.common.components.PledgeRefundedDecorator;
 			import com.enilsson.elephantadmin.views.common.ListGridToggle;
 			import com.enilsson.utils.EDateUtil;
 			import mx.events.DataGridEvent;

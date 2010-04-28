@@ -2,7 +2,7 @@
 <PledgeRefundedDecorator
 	useHandCursor="true" buttonMode="true"
 	toolTip="View details on this pledge. { warningVisible ? WARNING_TEXT : '' }" 
-	xmlns="com.enilsson.elephantadmin.views.common.*" xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns="com.enilsson.common.components.*" xmlns:mx="http://www.adobe.com/2006/mxml"
 	click="handleClick()">
 		<mx:Script>
 			<![CDATA[

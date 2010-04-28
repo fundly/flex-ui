@@ -7,7 +7,7 @@
 	backgroundColor="#ffffff"
 	rollOver="viewContact.visible = true"
 	rollOut="viewContact.visible = false" 
-	xmlns:common="com.enilsson.elephantadmin.views.common.*">
+	xmlns:common="com.enilsson.common.components.*">
 	
 	<mx:VBox verticalGap="0"
 		paddingTop="0" paddingBottom="0">
