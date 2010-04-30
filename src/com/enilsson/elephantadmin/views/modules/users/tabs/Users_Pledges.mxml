@@ -57,10 +57,12 @@
 					<mx:DataGridColumn headerText="Pledged"
 						dataField="pledge_amount" 
 						labelFunction="amountLabel"
+						sortCompareFunction="pledge_amountCompare"
 						textAlign="right" />
 					<mx:DataGridColumn headerText="Contributed"
 						dataField="contrib_total" 
 						labelFunction="amountLabel"
+						sortCompareFunction="contrib_totalCompare"
 						textAlign="right" />
 					<mx:DataGridColumn headerText="Event" 
 						labelFunction="eventLabel" />
@@ -147,24 +149,27 @@
 				});
 			}
 
-			private function eventLabel(item:Object, column:DataGridColumn):String
-			{
+			private function eventLabel(item:Object, column:DataGridColumn):String {
 				return item.event_id.source_code;
 			}
 			
-			private function amountLabel(item:Object, column:DataGridColumn):String
-			{
+			private function amountLabel(item:Object, column:DataGridColumn):String	{
 				return currencyFormat.format(item[column.dataField]);
 			}
 
-			private function contactSort(itemA:Object, itemB:Object):int
-			{
+			private function contactSort(itemA:Object, itemB:Object):int {
 				return ObjectUtil.stringCompare(itemA.lname, itemB.lname, true)
 			}
 			
-			private function dateLabel(item:Object, column:DataGridColumn):String
-			{
+			private function dateLabel(item:Object, column:DataGridColumn):String {
 				return dateFormat.format( EDateUtil.timestampToLocalDate( item[column.dataField] ) );
+			}
+			
+			private function pledge_amountCompare( o1 : Object, o2: Object ) : int {
+				return ObjectUtil.numericCompare( o1.pledge_amount, o2.pledge_amount );
+			}
+			private function contrib_totalCompare( o1 : Object, o2 : Object ) : int {
+				return ObjectUtil.numericCompare( o1.contrib_total, o2.contrib_total ); 
 			}
 		]]>
 	</mx:Script>
