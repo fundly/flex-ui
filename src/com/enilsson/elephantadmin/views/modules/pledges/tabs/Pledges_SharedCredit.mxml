@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+	label="SHARED CREDIT" 
+	enabled="{!_presentationModel.sharedCreditTabLoading}"
+	implements="com.enilsson.elephantadmin.interfaces.IOptionView"	
+	width="100%" height="100%">
+	
+	<mx:VBox width="100%" height="100%">
+		<mx:List 
+			width="100%" height="100%"
+			alternatingItemColors="['#FFFFFF', '#EDEDED']" 
+			variableRowHeight="true" 
+			itemRenderer="com.enilsson.elephantadmin.views.modules.pledges.renderers.Pledges_FundraiserRenderer"
+			dataProvider="{_presentationModel.sharedCreditFundraisers}" />
+	</mx:VBox>
+	
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephantadmin.interfaces.IRecordModel;
+			import com.enilsson.elephantadmin.views.modules.pledges.model.PledgesModel;
+			
+			[Bindable] private var _presentationModel:PledgesModel;
+			public function set presentationModel ( value:IRecordModel ):void {
+				_presentationModel = PledgesModel(value);
+			}
+			[Bindable] public function get presentationModel():IRecordModel {
+				return _presentationModel;
+			}
+		]]>
+	</mx:Script>
+	
+</mx:Canvas>

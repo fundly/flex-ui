@@ -37,6 +37,9 @@ package com.enilsson.elephantadmin.commands.modules
 			{
 				case PledgeEvent.GET_CONTRIBUTIONS :
 					getContributions( event as PledgeEvent );
+				break;
+				case PledgeEvent.GET_SHARED_CREDIT_FUNDRAISERS :
+					getSharedCreditFundraisers( event as PledgeEvent );
 				break;	
 				case PledgeEvent.LOOKUPINPUT_SEARCH :
 					lookupInputSearch( event as PledgeEvent );
@@ -139,6 +142,24 @@ package com.enilsson.elephantadmin.commands.modules
 				'errorBox', 
 				true 
 			);
+		}
+		
+		
+		private function getSharedCreditFundraisers( event : PledgeEvent ):void
+		{
+			var handlers:IResponder = new mx.rpc.Responder(onResults_getContributions, onFault_getContributions);
+			var delegate:RecordDelegate = new RecordDelegate(handlers);
+
+			if(_model.debug) Logger.info(_moduleName + ' getContributions Call', ObjectUtil.toString(event.recordVO));
+
+			_model.dataLoading = true;
+
+			delegate.selectRecord( event.recordVO );
+		}
+		private function onResult_getSharedCreditFundraisers( event : ResultEvent ) : void {
+			
+		}
+		private function onFault_getSharedCreditFundraisers( event) : void {
 		}
 
 

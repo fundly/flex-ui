@@ -31,6 +31,9 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 	{
 		public var contributions:ArrayCollection;
 		public var contributionsTabLoading:Boolean;
+		
+		public var sharedCreditFundraisers:ArrayCollection;
+		public var sharedCreditTabLoading:Boolean;
 
 		public function PledgesModel(parentModel:ModelLocator=null)
 		{
@@ -70,8 +73,9 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 		override protected function getRecordDetails():void
 		{
 			super.getRecordDetails();
-
+			
 			getContributions();
+			getSharedCreditFundraisers();
 		}
 		
 		/**
@@ -102,6 +106,13 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 				this.recordID
 				);
 			new PledgeEvent(PledgeEvent.GET_CONTRIBUTIONS, this, recordVO).dispatch();
+		}
+		
+		public function getSharedCreditFundraisers() : void {
+			sharedCreditTabLoading = true;
+			sharedCreditFundraisers = new ArrayCollection();
+			
+			var esql:String = 'tr_users';
 		}
 
 
