@@ -213,7 +213,9 @@ package com.enilsson.elephantadmin.controllers
 			this.addCommand(PledgeEvent.GET_LABEL, PledgesCommand);
 			this.addCommand(PledgeEvent.UPSERT_CHECKREFUND, PledgesCommand);
 			this.addCommand(PledgeEvent.DELETE_CHECKREFUND, PledgesCommand);
-//			this.addCommand(PledgeEvent.VALIDATE_UPSERT_CHECK, PledgesCommand );
+			this.addCommand(PledgeEvent.GET_SHARED_CREDIT_FUNDRAISERS, PledgesCommand);
+			this.addCommand(PledgeEvent.UPSERT_SHARED_CREDIT, PledgesCommand);
+			this.addCommand(PledgeEvent.DELETE_SHARED_CREDIT, PledgesCommand);
 
 			// contacts module
 			this.addCommand(ContactsEvent.UPSERT_CONTACT, ContactsCommand);

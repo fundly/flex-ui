@@ -1,21 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+<mx:VBox
 	label="SHARED CREDIT" 
 	enabled="{!_presentationModel.sharedCreditTabLoading}"
 	implements="com.enilsson.elephantadmin.interfaces.IOptionView"	
-	width="100%" height="100%">
+	width="100%" height="100%"
+	paddingLeft="10" paddingRight="10" paddingTop="10" paddingBottom="10"
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:controls="com.enilsson.controls.*" 
+	xmlns:common="com.enilsson.elephantadmin.views.common.*">
 	
-	<mx:VBox width="100%" height="100%">
-		<mx:List 
-			width="100%" height="100%"
-			alternatingItemColors="['#FFFFFF', '#EDEDED']" 
-			variableRowHeight="true" 
-			itemRenderer="com.enilsson.elephantadmin.views.modules.pledges.renderers.Pledges_FundraiserRenderer"
-			dataProvider="{_presentationModel.sharedCreditFundraisers}" />
-	</mx:VBox>
+	
+	<mx:HBox width="100%"
+		borderColor="#FFFFFF" borderStyle="solid"
+		backgroundColor="#FFFFFF" cornerRadius="4"
+		paddingTop="3" paddingBottom="3"
+		horizontalAlign="center"
+		verticalAlign="middle">
+		
+		<mx:Text styleName="textDesc" text="Select new shared credit holder:" />
+		
+		<controls:LookupInput id="tr_users_id"
+			styleName="struktorInput"
+			itemRenderer="{new ClassFactory(FID_Item)}"
+			searchDataProvider="{_presentationModel.fidSearch}"
+			searchStart="_presentationModel.searchStartHandler( event )" />
+						
+		<common:RestrictedCreateBtn
+			label="ADD"
+			width="85" fontSize="10"
+			enabled="{ tr_users_id.label.length > 0 }"
+			click="handleAddClick(event)"
+			/>
+	</mx:HBox>
+	
+	<mx:List id="userList"
+		styleName="fundraiserList"
+		width="100%" height="100%"
+		variableRowHeight="true" 
+		itemRenderer="{new ClassFactory(Pledges_FundraiserRenderer)}"
+		dataProvider="{_presentationModel.sharedCreditFundraisers}" />
+		
+	<mx:Canvas width="100%">
+		<common:RestrictedCreateBtn
+			horizontalCenter="0" verticalCenter="0"
+			label="REMOVE"
+			width="85" fontSize="10"
+			enabled="{ userList.selectedItem != null }"
+			click="_presentationModel.removeSharedCredit( userList.selectedItem )"
+			/>		
+	</mx:Canvas>
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.utils.ObjectUtil;
+			import com.enilsson.elephantadmin.views.modules.pledges.renderers.FID_Item;
+			import mx.controls.Text;
+			import com.enilsson.elephantadmin.views.modules.pledges.renderers.Pledges_FundraiserRenderer;
 			import com.enilsson.elephantadmin.interfaces.IRecordModel;
 			import com.enilsson.elephantadmin.views.modules.pledges.model.PledgesModel;
 			
@@ -26,7 +66,19 @@
 			[Bindable] public function get presentationModel():IRecordModel {
 				return _presentationModel;
 			}
+			
+			private function handleAddClick( event : Event ) : void {
+				_presentationModel.addSharedCredit( tr_users_id.selectedData );
+				tr_users_id.clear();
+			}
 		]]>
 	</mx:Script>
 	
-</mx:Canvas>
+	<mx:Style>
+		.fundraiserList{
+			color:#333333;
+			alternatingItemColors: #FFFFFF,#EDEDED;
+		}
+	</mx:Style>
+	
+</mx:VBox>

@@ -14,6 +14,7 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 	import com.enilsson.elephantadmin.views.modules.pledges.renderers.SourceCode_Item;
 	import com.enilsson.elephantadmin.vo.ErrorVO;
 	import com.enilsson.elephantadmin.vo.RecordVO;
+	import com.enilsson.elephantadmin.vo.RecordsVO;
 	import com.enilsson.elephantadmin.vo.SearchVO;
 	
 	import flash.display.DisplayObject;
@@ -29,11 +30,14 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 	[Bindable]
 	public class PledgesModel extends RecordModel
 	{
+		
 		public var contributions:ArrayCollection;
 		public var contributionsTabLoading:Boolean;
 		
-		public var sharedCreditFundraisers:ArrayCollection;
-		public var sharedCreditTabLoading:Boolean;
+		public var sharedCreditFundraisers : ArrayCollection;
+		public var sharedCreditTabLoading : Boolean;		
+		public var sharedCreditUsersList : ArrayCollection;
+		public var sharedCreditError : ErrorVO;
 
 		public function PledgesModel(parentModel:ModelLocator=null)
 		{
@@ -109,10 +113,23 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 		}
 		
 		public function getSharedCreditFundraisers() : void {
-			sharedCreditTabLoading = true;
-			sharedCreditFundraisers = new ArrayCollection();
 			
-			var esql:String = 'tr_users';
+			var esql:String = 'shared_credit(' + 
+				'user_id<fname:lname:_fid>' + 
+				')';
+					
+			var where : Object =  {
+				statement:	"(1)",	
+					1 :	{	
+						what : "shared_credit.pledge_id",
+						val : this.recordID,
+						op : "="
+					}
+			};
+			
+			var recordsVO:RecordsVO = new RecordsVO( esql, where );
+			
+			new PledgeEvent(PledgeEvent.GET_SHARED_CREDIT_FUNDRAISERS, this, recordsVO).dispatch();
 		}
 
 
@@ -165,12 +182,21 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 		/**
 		 * Handle the searches for the LookupInput fields
 		 */
-		private function searchStartHandler(event:Event):void
+		public function searchStartHandler(event:Event):void
 		{
 			if(debug) Logger.info ('search start', event.currentTarget.dataValue, event.currentTarget.label);
 			
-			var tbl:String = event.currentTarget.id == 'tr_users_id' ? 'tr_users_details' : 'events';
+			var tbl:String;
 			
+			switch( event.currentTarget.id ) {
+				case 'tr_users_id' : 
+					tbl = 'tr_users_details'; 
+				break;
+				default: 
+					tbl = 'events'; 
+				break;
+			}
+			 
 			new PledgeEvent ( 
 				PledgeEvent.LOOKUPINPUT_SEARCH,
 				this,
@@ -262,6 +288,33 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 				this,
 				{ sid : selectedRecord.sid }
 			).dispatch();
+		}
+		
+		public function userSearchStart( event : Object ) : void {
+			
+		}
+		
+		public function addSharedCredit( user : Object ) : void {
+			
+			if(!user || !selectedRecord) return;
+			
+			var pledge : Object = selectedRecord;
+						
+			var sharedCredit : Object = {
+				pledge_id : pledge.id,
+				user_id : user.user_id
+			};
+						
+			var vo : RecordVO = new RecordVO( 'shared_credit', 0, sharedCredit );						
+			new PledgeEvent( PledgeEvent.UPSERT_SHARED_CREDIT, this, vo ).dispatch();
+		}
+		
+		public function removeSharedCredit( sharedCredit : Object ) : void {
+			
+			if(!sharedCredit) return;
+			
+			var vo : RecordVO = new RecordVO( 'shared_credit', sharedCredit.id );
+			new PledgeEvent( PledgeEvent.DELETE_SHARED_CREDIT, this, vo ).dispatch();
 		}
 		
 		/**

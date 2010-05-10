@@ -7,11 +7,13 @@ package com.enilsson.elephantadmin.events.modules
 	public class PledgeEvent extends RecordModuleEvent
 	{
 		static public const GET_CONTRIBUTIONS:String = 'pledgeGetContributions';
-		static public const GET_SHARED_CREDIT_FUNDRAISERS:String = 'pledgeGetFundraisers';
 		static public const LOOKUPINPUT_SEARCH:String = 'pledgeLookupInputSearch';
 		static public const GET_LABEL:String = 'pledgeGetLabel';
 		static public const UPSERT_CHECKREFUND:String = 'upsertCheckRefund';
 		static public const DELETE_CHECKREFUND:String = 'deleteCheckRefund';
+		static public const GET_SHARED_CREDIT_FUNDRAISERS:String = 'pledgeGetFundraisers';
+		static public const UPSERT_SHARED_CREDIT:String = 'upsertSharedCredit';
+		static public const DELETE_SHARED_CREDIT:String = 'deleteSharedCredit';
 
 		public function PledgeEvent( type:String, model:RecordModel, vo:Object = null )
 		{
