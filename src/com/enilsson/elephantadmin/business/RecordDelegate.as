@@ -32,7 +32,8 @@ package com.enilsson.elephantadmin.business
 		{
 			this.service = ServiceLocator.getInstance().getRemoteObject('struktorEdit');
 			
-			var token:AsyncToken = service.upsert(record.table_name, record.params);
+			var id : Object = isNaN(record.user_id) ? null : record.user_id;									
+			var token:AsyncToken = service.upsert(record.table_name, record.params, id );
 			token.addResponder(responder);
 		}
 		
