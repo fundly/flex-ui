@@ -121,7 +121,7 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 			var where : Object =  {
 				statement:	"(1)",	
 					1 :	{	
-						what : "shared_credit.pledge_id",
+						what : "shared_credit.p_id",
 						val : this.recordID,
 						op : "="
 					}
@@ -301,11 +301,11 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 			var pledge : Object = selectedRecord;
 						
 			var sharedCredit : Object = {
-				pledge_id : pledge.id,
+				p_id : pledge.id,
 				user_id : user.user_id
 			};
 						
-			var vo : RecordVO = new RecordVO( 'shared_credit', 0, sharedCredit );						
+			var vo : RecordVO = new RecordVO( 'shared_credit', 0, sharedCredit, user.user_id );						
 			new PledgeEvent( PledgeEvent.UPSERT_SHARED_CREDIT, this, vo ).dispatch();
 		}
 		
