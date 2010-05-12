@@ -26,9 +26,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.fundraisers.model
 	[Bindable]
 	public class FundraisersModel extends ReportModuleModel
 	{
-		public var regionFilter:ArrayCollection = new ArrayCollection([
-			{'label':'All','data':'0'}
-		]);
+		public var regionFilter:ArrayCollection = new ArrayCollection();
 
 		public var sortArray:Array = ['downline_pledge DESC'];
 		public var exportHeaders:Array = [];
@@ -37,6 +35,9 @@ package com.enilsson.elephantadmin.views.modules.reporting.fundraisers.model
 
 		public var recordsHtmlText:String;
 		
+		private var _allRegions : Object = {'label':'All','value':'0'};
+		private var _selectedRegion : Object = _allRegions;
+		
 		public function FundraisersModel():void
 		{
 		}
@@ -44,6 +45,9 @@ package com.enilsson.elephantadmin.views.modules.reporting.fundraisers.model
 		override public function init():void
 		{
 			super.init();
+			
+			regionFilter.addItem( _allRegions );
+			
 			for each(var item:Object in userGroups)
 			{
 				regionFilter.addItem(item);
@@ -54,7 +58,15 @@ package com.enilsson.elephantadmin.views.modules.reporting.fundraisers.model
 		public function regionChangeHandler(event:ListEvent):void
 		{
 			gridCurrentPage = 0;
-			group = event.currentTarget.selectedItem.value;
+			
+			if( event.currentTarget.selectedItem != null ) {
+				_selectedRegion = event.currentTarget.selectedItem;
+			}
+			else {
+				_selectedRegion = event.currentTarget.selectedItem = _allRegions;
+			}
+			
+			group = _selectedRegion.value;
 		}
 
 		override public function generate():void
@@ -75,7 +87,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.fundraisers.model
 				vo.export = true;
 				vo.exportHeaders = exportHeaders;
 				vo.exportFields = exportFields;
-				exportTitle = 'Fundraisers - ' + regionFilter.getItemAt(group).label;
+				exportTitle = 'Fundraisers - ' + _selectedRegion.label;
 				vo.exportTitle = exportTitle;
 				vo.page = 0;
 				vo.recordPerPage = 10000000000;

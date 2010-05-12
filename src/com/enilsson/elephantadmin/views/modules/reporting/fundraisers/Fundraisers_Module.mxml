@@ -64,12 +64,14 @@
 		</mx:DataGridColumn>
 		<mx:DataGridColumn width="100" dataField="fname" headerText="First Name" />
 		<mx:DataGridColumn width="100" dataField="lname" headerText="Last Name" />
+		
 		<mx:DataGridColumn width="90" dataField="_fundraising_goal" headerText="Fundraising Goal" labelFunction="money_labelFunc" sortCompareFunction="fundraising_goalCompare" textAlign="right"/>
 		<mx:DataGridColumn width="90" dataField="pledge_total" headerText="Total Pledged" labelFunction="money_labelFunc" sortCompareFunction="pledge_totalCompare" textAlign="right"/>
 		<mx:DataGridColumn width="90" dataField="contrib_total" headerText="Total Contribution" labelFunction="money_labelFunc" sortCompareFunction="contrib_totalCompare" textAlign="right"/>
 		<mx:DataGridColumn width="90" dataField="downline_pledge" headerText="Downline Pledged" labelFunction="money_labelFunc" sortCompareFunction="downline_pledgeCompare" textAlign="right"/>
 		<mx:DataGridColumn width="90" dataField="downline_contrib" headerText="Downline Contribution" labelFunction="money_labelFunc" sortCompareFunction="downline_contribCompare" textAlign="right"/>
 		<mx:DataGridColumn width="90" dataField="user_contrib" headerText="Personal Contribution" labelFunction="money_labelFunc" sortCompareFunction="user_contribCompare" textAlign="right"/>
+				
 		<mx:DataGridColumn width="80" dataField="_fid" headerText="Fundraiser ID" sortCompareFunction="fidCompare"/>
 		<mx:DataGridColumn width="100" dataField="_city" headerText="City" />
 		<mx:DataGridColumn width="35" dataField="_state" headerText="State" />
@@ -78,6 +80,8 @@
 		<mx:DataGridColumn width="150" dataField="email" headerText="Email" />
 		<mx:DataGridColumn width="50" dataField="mod_group_id" headerText="Region ID"  sortCompareFunction="region_idCompare" />
 		<mx:DataGridColumn width="100" dataField="mod_group_name" headerText="Region Name" />
+		
+		<mx:DataGridColumn width="50" dataField="last_online" headerText="Last Login" labelFunction="last_online_labelFunc" sortCompareFunction="last_onlineCompare" />
 	</mx:Array>
 
 	<mx:CurrencyFormatter id="currencyFormatter" precision="2" currencySymbol="$" useNegativeSign="false" />
@@ -102,38 +106,31 @@
 				_presentationModel.init();
 			}
 
-			private function fundraising_goalCompare(obj1:Object, obj2:Object):int
-			{
+			private function fundraising_goalCompare(obj1:Object, obj2:Object):int {
 				return ObjectUtil.numericCompare(obj1.fundraising_goal,obj2.fundraising_goal);
 			}
 
-			private function pledge_totalCompare(obj1:Object, obj2:Object):int
-			{
+			private function pledge_totalCompare(obj1:Object, obj2:Object):int {
 				return ObjectUtil.numericCompare(obj1.pledge_total,obj2.pledge_total);
 			}
 
-			private function contrib_totalCompare(obj1:Object, obj2:Object):int
-			{
+			private function contrib_totalCompare(obj1:Object, obj2:Object):int {
 				return ObjectUtil.numericCompare(obj1.contrib_total,obj2.contrib_total);
 			}
 
-			private function downline_contribCompare(obj1:Object, obj2:Object):int
-			{
+			private function downline_contribCompare(obj1:Object, obj2:Object):int {
 				return ObjectUtil.numericCompare(obj1.downline_contrib,obj2.downline_contrib);
 			} 
 
-			private function downline_pledgeCompare(obj1:Object, obj2:Object):int
-			{
+			private function downline_pledgeCompare(obj1:Object, obj2:Object):int {
 				return ObjectUtil.numericCompare(obj1.downline_pledge,obj2.downline_pledge);
 			}
 
-			private function user_contribCompare(obj1:Object, obj2:Object):int
-			{
+			private function user_contribCompare(obj1:Object, obj2:Object):int {
 				return ObjectUtil.numericCompare(obj1.user_contrib,obj2.user_contrib);
 			}
 
-			private function fidCompare(obj1:Object, obj2:Object):int
-			{
+			private function fidCompare(obj1:Object, obj2:Object):int {
 				var fid1String:String = String(obj1._fid).match(/\D+/)[0];
 				var fid2String:String = String(obj2._fid).match(/\D+/)[0];
 
@@ -146,23 +143,29 @@
 				return ObjectUtil.numericCompare(fid1Number,fid2Number);
 			}
 
-			private function region_idCompare(obj1:Object, obj2:Object):int
-			{
+			private function region_idCompare(obj1:Object, obj2:Object):int {
 				return ObjectUtil.numericCompare(obj1.mod_group_id,obj2.mod_group_id);
+			}
+			
+			
+			private function last_online_labelFunc(item:Object, column:DataGridColumn):String {
+				var s : String = date_labelFunc( item, column );
+				return ( s && s.length > 0 ) ? s : 'never';
+			}
+			private function last_onlineCompare(obj1:Object, obj2:Object):int {
+				return ObjectUtil.numericCompare(obj1.last_online, obj2.last_online);
 			}
 
 			private function money_labelFunc(item:Object, column:DataGridColumn):String {
 				return currencyFormatter.format(item[column.dataField]);
 			}
 
-			private function date_labelFunc(item:Object, column:DataGridColumn):String 
-			{
+			private function date_labelFunc(item:Object, column:DataGridColumn):String {
 				dateFormatter.formatString = "MM/DD/YY"
 				return dateFormatter.format(EDateUtil.timestampToLocalDate(item[column.dataField]));
 			}
 
-			private function datetime_labelFunc(item:Object, column:DataGridColumn):String 
-			{
+			private function datetime_labelFunc(item:Object, column:DataGridColumn):String {
 				dateFormatter.formatString = "MM/DD/YY L:NNA"
 				return dateFormatter.format(EDateUtil.timestampToLocalDate(item[column.dataField]));
 			}
