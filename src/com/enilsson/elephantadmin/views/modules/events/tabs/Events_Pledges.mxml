@@ -45,11 +45,13 @@
 						<mx:DataGridColumn headerText="Pledged"
 							dataField="pledge_amount"
 							textAlign="right" 
-							labelFunction="amountLabel" />
+							labelFunction="amountLabel"
+							sortCompareFunction="pledge_amountCompare" />
 						<mx:DataGridColumn headerText="Contributed"
 							dataField="contrib_total" 
 							textAlign="right"
-							labelFunction="amountLabel" />
+							labelFunction="amountLabel"
+							sortCompareFunction="contrib_totalCompare" />
 						<mx:DataGridColumn headerText="Event" 
 							labelFunction="eventLabel" />
 						<mx:DataGridColumn headerText="Date"
@@ -87,6 +89,7 @@
 
 	<mx:Script>
 		<![CDATA[
+			import mx.utils.ObjectUtil;
 			import com.enilsson.elephantadmin.views.modules.pledge_workspace.model.PledgeWorkspaceModel;
 			import com.enilsson.elephantadmin.models.EAModelLocator;
 			import com.adobe.cairngorm.model.ModelLocator;
@@ -111,19 +114,23 @@
 				return _presentationModel;
 			}
 
-			private function eventLabel(item:Object, column:DataGridColumn):String
-			{
+			private function eventLabel(item:Object, column:DataGridColumn):String {
 				return item.event_id.source_code;
 			}
 			
-			private function amountLabel(item:Object, column:DataGridColumn):String
-			{
+			private function amountLabel(item:Object, column:DataGridColumn):String {
 				return cf.format(item[column.dataField]);
 			}
 			
-			private function dateLabel(item:Object, column:DataGridColumn):String
-			{
+			private function dateLabel(item:Object, column:DataGridColumn):String {
 				return dateFormat.format( EDateUtil.timestampToLocalDate( item[column.dataField] ) );
+			}
+			
+			private function pledge_amountCompare( o1 : Object, o2: Object ) : int {
+				return ObjectUtil.numericCompare( o1.pledge_amount, o2.pledge_amount );
+			}
+			private function contrib_totalCompare( o1 : Object, o2 : Object ) : int {
+				return ObjectUtil.numericCompare( o1.contrib_total, o2.contrib_total ); 
 			}
 
 			public function popupPledgeWorkspace():void
