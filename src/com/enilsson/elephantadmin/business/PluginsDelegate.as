@@ -155,5 +155,21 @@ package com.enilsson.elephantadmin.business
 			var token:AsyncToken = service.process_pledge( p.tr_users_id, p.contact, p.pledge, p.transaction, p.check );			
 			token.addResponder(responder);
 		}
+		
+		public function addSharedCredit( pledgeID:int, userID:int ) : void
+		{
+			this.service = ServiceLocator.getInstance().getRemoteObject('struktorPluginsSharedCredit');
+			
+			var token:AsyncToken = service.add_shared_credit( pledgeID, userID );
+			token.addResponder(responder);		
+		}
+		
+		public function deleteSharedCredit( pledgeID:int, userID:int ) : void
+		{
+			this.service = ServiceLocator.getInstance().getRemoteObject('struktorPluginsSharedCredit');
+			
+			var token:AsyncToken = service.remove_shared_credit( pledgeID, userID );
+			token.addResponder(responder);
+		}
 	}
 }

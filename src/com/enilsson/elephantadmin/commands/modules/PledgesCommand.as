@@ -1,12 +1,15 @@
 package com.enilsson.elephantadmin.commands.modules
 {
 	import com.adobe.cairngorm.control.CairngormEvent;
+	import com.enilsson.elephantadmin.business.PluginsDelegate;
 	import com.enilsson.elephantadmin.business.RecordDelegate;
 	import com.enilsson.elephantadmin.business.RecordsDelegate;
 	import com.enilsson.elephantadmin.business.SearchDelegate;
 	import com.enilsson.elephantadmin.events.modules.PledgeEvent;
 	import com.enilsson.elephantadmin.views.modules.pledges.model.PledgesModel;
 	import com.enilsson.elephantadmin.vo.ErrorVO;
+	import com.enilsson.elephantadmin.vo.RecordsVO;
+	import com.enilsson.elephantadmin.vo.SharedCreditVO;
 	
 	import mx.collections.ArrayCollection;
 	import mx.collections.Sort;
@@ -39,9 +42,6 @@ package com.enilsson.elephantadmin.commands.modules
 				case PledgeEvent.GET_CONTRIBUTIONS :
 					getContributions( event as PledgeEvent );
 				break;
-				case PledgeEvent.GET_SHARED_CREDIT_FUNDRAISERS :
-					getSharedCreditFundraisers( event as PledgeEvent );
-				break;	
 				case PledgeEvent.LOOKUPINPUT_SEARCH :
 					lookupInputSearch( event as PledgeEvent );
 				break;
@@ -54,11 +54,14 @@ package com.enilsson.elephantadmin.commands.modules
 				case PledgeEvent.DELETE_CHECKREFUND :
 					deleteRefund( event as PledgeEvent );
 				break;
-				case PledgeEvent.UPSERT_SHARED_CREDIT :
-					upsertSharedCredit( event as PledgeEvent );
+				case PledgeEvent.GET_SHARED_CREDIT_USERS :
+					getSharedCreditFundraisers( event as PledgeEvent );
+				break;	
+				case PledgeEvent.ADD_SHARED_CREDIT :
+					addSharedCredit( event as PledgeEvent );
 				break;
-				case PledgeEvent.DELETE_SHARED_CREDIT :
-					deleteSharedCredit( event as  PledgeEvent );
+				case PledgeEvent.REMOVE_SHARED_CREDIT :
+					removeSharedCredit( event as  PledgeEvent );
 				break;
 			}
 		}
@@ -149,44 +152,6 @@ package com.enilsson.elephantadmin.commands.modules
 				'errorBox', 
 				true 
 			);
-		}
-		
-		
-		private function getSharedCreditFundraisers( event : PledgeEvent ):void
-		{
-			var handlers:IResponder = new mx.rpc.Responder(onResult_getSharedCreditFundraisers, onFault_getSharedCreditFundraisers);
-			var delegate:RecordsDelegate = new RecordsDelegate(handlers);
-
-			if(_model.debug) Logger.info(_moduleName + ' getSharedCreditFundraisers Call', ObjectUtil.toString(event.recordVO));
-
-			_model.dataLoading = true;
-			_pledgesModel.sharedCreditTabLoading = true;
-
-			delegate.getRecords( event.recordsVO );
-		}
-		private function onResult_getSharedCreditFundraisers( event : ResultEvent ) : void {
-			if(_model.debug) Logger.info('getSharedCreditFundraisers Success', ObjectUtil.toString(event.result));
-			
-			var ac 		: ArrayCollection = new ArrayCollection();
-			var table	: String = event.result.table_name;
-			var item	: Object;
-			
-			for each( item in event.result[table] ) {
-				ac.addItem( item );
-			}
-			
-			_pledgesModel.sharedCreditTabLoading = false;
-			_pledgesModel.sharedCreditFundraisers = ac;
-		}
-		private function onFault_getSharedCreditFundraisers( event : FaultEvent ) : void {
-			if(_model.debug) Logger.info('getSharedCreditFundraisers Fault', ObjectUtil.toString(event.fault));
-			_model.errorVO = new ErrorVO( 
-				'There was a problem loading the shared credit fundraisers:<br><br>' + event.fault.faultString, 
-				'errorBox', 
-				true 
-			);
-			
-			_pledgesModel.sharedCreditTabLoading = false;
 		}
 
 
@@ -402,46 +367,88 @@ package com.enilsson.elephantadmin.commands.modules
 		}
 		
 		
+		/**
+		 * get Shared Credit Fundaisers
+		 */
+		private function getSharedCreditFundraisers( event : PledgeEvent ):void
+		{
+			if(_model.debug) Logger.info(_moduleName + ' getSharedCreditFundraisers Call', ObjectUtil.toString(event.params));
+			
+			if( ! event.params || ! event.params.hasOwnProperty('pledgeID') )
+				return;
+			
+			var handlers:IResponder = new mx.rpc.Responder(onResult_getSharedCreditFundraisers, onFault_getSharedCreditFundraisers);
+			var delegate:RecordsDelegate = new RecordsDelegate(handlers);
+			
+			var esql:String = 'shared_credit(user_id<fname:lname:_fid>)';
+					
+			var where : Object =  {
+				statement:	"(1)",	
+					1 :	{	
+						what : "shared_credit.shared_pledge_id",
+						val : event.params.pledgeID,
+						op : "="
+					}
+			};
+			
+			var recordsVO:RecordsVO = new RecordsVO( esql, where );
+			
+			_model.dataLoading = true;
+			_pledgesModel.sharedCreditTabLoading = true;
+
+			delegate.getRecords( recordsVO );
+		}
+		private function onResult_getSharedCreditFundraisers( event : ResultEvent ) : void {
+			if(_model.debug) Logger.info('getSharedCreditFundraisers Success', ObjectUtil.toString(event.result));
+			
+			var ac 		: ArrayCollection = new ArrayCollection();
+			var table	: String = event.result.table_name;
+			var item	: Object;
+			
+			for each( item in event.result[table] ) {
+				ac.addItem( item );
+			}
+			
+			_pledgesModel.sharedCreditTabLoading = false;
+			_pledgesModel.sharedCreditFundraisers = ac;
+		}
+		private function onFault_getSharedCreditFundraisers( event : FaultEvent ) : void {
+			if(_model.debug) Logger.info('getSharedCreditFundraisers Fault', ObjectUtil.toString(event.fault));
+			_model.errorVO = new ErrorVO( 
+				'There was a problem loading the shared credit fundraisers:<br><br>' + event.fault.faultString, 
+				'errorBox', 
+				true 
+			);
+			
+			_pledgesModel.sharedCreditTabLoading = false;
+		}
 		
 		/**
-		 * upsert for SharedCredit
+		 * add for SharedCredit
 		 */
-		private function upsertSharedCredit( event : PledgeEvent ) : void {
-			var handlers:IResponder = new mx.rpc.Responder(onResult_upsertSharedCredit, onFault_upsertSharedCredit);
-			var delegate:RecordDelegate = new RecordDelegate(handlers);
+		private function addSharedCredit( event : PledgeEvent ) : void {
+			var handlers:IResponder = new mx.rpc.Responder(onResult_addSharedCredit, onFault_addSharedCredit);
+			var delegate:PluginsDelegate = new PluginsDelegate(handlers);
+			var vo : SharedCreditVO = event.params as SharedCreditVO;
+			
+			if(!vo) return;
 
-			_model.dataLoading = true;
-			delegate.upsertRecord( event.recordVO );			
+			_model.dataLoading = true;		
+			delegate.addSharedCredit( vo.pledgeID, vo.userID );			
 		}		
-		private function onResult_upsertSharedCredit( event : ResultEvent ) : void {
-			if(_pledgesModel.debug) Logger.info('upsertSharedCredit Success', ObjectUtil.toString(event.result));
+		private function onResult_addSharedCredit( event : ResultEvent ) : void {
+			if(_pledgesModel.debug) Logger.info('addSharedCredit Success', ObjectUtil.toString(event.result));
 			
 			_model.dataLoading = false;
-
-			switch(event.result.state)
-			{
-				case '99' :
-				case '98' :
-					_model.errorVO = new ErrorVO( 'Shared credit added successfully!', 'successBox', true );
+	
+			_model.errorVO = new ErrorVO( 'Shared credit added successfully!', 'successBox', true );
 									
-					// refresh the shared credit fundraisers
-					_pledgesModel.getSharedCreditFundraisers();
-				break;
-				case '-99' :
-					var eMsg:String = event.result.errors is Array ? '' : event.result.errors;
-					
-					for(var i:String in event.result.errors)
-						eMsg += '- ' + event.result.errors[i] + '<br>';
-						
-					_model.errorVO = new ErrorVO( 
-						'There was a problem adding shared credit:<br><br>' + eMsg, 
-						'errorBox', 
-						true 
-					);
-				break;	
-			}
+			// refresh the shared credit fundraisers
+			_pledgesModel.getSharedCreditFundraisers();
+
 		}		
-		private function onFault_upsertSharedCredit( event : FaultEvent ) : void {
+		private function onFault_addSharedCredit( event : FaultEvent ) : void {
+			if(_pledgesModel.debug) Logger.info('addSharedCredit Fault', ObjectUtil.toString(event.fault));
 			_model.dataLoading = false;
 			_model.errorVO = new ErrorVO( 'There was a problem adding shared credit:<br><br>' + event.fault.faultString, 'errorBox', true );
 		}
@@ -449,16 +456,16 @@ package com.enilsson.elephantadmin.commands.modules
 		
 		
 		/**
-		 * delete for SharedCredit
+		 * remove for SharedCredit
 		 */
-		private function deleteSharedCredit( event : PledgeEvent ) : void {
-			var handlers:IResponder = new mx.rpc.Responder(onResult_deleteSharedCredit, onFault_deleteSharedCredit);
+		private function removeSharedCredit( event : PledgeEvent ) : void {
+			var handlers:IResponder = new mx.rpc.Responder(onResult_removeSharedCredit, onFault_removeSharedCredit);
 			var delegate:RecordDelegate = new RecordDelegate(handlers);
 
 			_model.dataLoading = true;
-			delegate.deleteRecord( event.recordVO );			
+//			delegate.deleteRecord( event.recordVO );			
 		}		
-		private function onResult_deleteSharedCredit( event : ResultEvent ) : void {
+		private function onResult_removeSharedCredit( event : ResultEvent ) : void {
 			_model.dataLoading = false;
 			
 			switch(event.result.state)
@@ -483,7 +490,7 @@ package com.enilsson.elephantadmin.commands.modules
 				break;	
 			}
 		}		
-		private function onFault_deleteSharedCredit( event : FaultEvent ) : void {
+		private function onFault_removeSharedCredit( event : FaultEvent ) : void {
 			_model.dataLoading = false;
 			_model.errorVO = new ErrorVO( 'There was a problem deleting the shared credit:<br><br>' + event.fault.faultString, 'errorBox', true );
 		}

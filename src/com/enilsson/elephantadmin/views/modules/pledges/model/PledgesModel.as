@@ -16,6 +16,7 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 	import com.enilsson.elephantadmin.vo.RecordVO;
 	import com.enilsson.elephantadmin.vo.RecordsVO;
 	import com.enilsson.elephantadmin.vo.SearchVO;
+	import com.enilsson.elephantadmin.vo.SharedCreditVO;
 	
 	import flash.display.DisplayObject;
 	
@@ -112,26 +113,6 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 			new PledgeEvent(PledgeEvent.GET_CONTRIBUTIONS, this, recordVO).dispatch();
 		}
 		
-		public function getSharedCreditFundraisers() : void {
-			
-			var esql:String = 'shared_credit(' + 
-				'user_id<fname:lname:_fid>' + 
-				')';
-					
-			var where : Object =  {
-				statement:	"(1)",	
-					1 :	{	
-						what : "shared_credit.p_id",
-						val : this.recordID,
-						op : "="
-					}
-			};
-			
-			var recordsVO:RecordsVO = new RecordsVO( esql, where );
-			
-			new PledgeEvent(PledgeEvent.GET_SHARED_CREDIT_FUNDRAISERS, this, recordsVO).dispatch();
-		}
-
 
 		/**
 		 * Variables for the lookup search input fields
@@ -294,27 +275,26 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 			
 		}
 		
+		public function getSharedCreditFundraisers() : void {
+			new PledgeEvent(PledgeEvent.GET_SHARED_CREDIT_USERS, this, { pledgeID : this.recordID } ).dispatch();
+		}
+		
 		public function addSharedCredit( user : Object ) : void {
 			
 			if(!user || !selectedRecord) return;
 			
-			var pledge : Object = selectedRecord;
-						
-			var sharedCredit : Object = {
-				p_id : pledge.id,
-				user_id : user.user_id
-			};
-						
-			var vo : RecordVO = new RecordVO( 'shared_credit', 0, sharedCredit, user.user_id );						
-			new PledgeEvent( PledgeEvent.UPSERT_SHARED_CREDIT, this, vo ).dispatch();
+			var vo : SharedCreditVO = new SharedCreditVO( selectedRecord.id, user.user_id );
+			new PledgeEvent( PledgeEvent.ADD_SHARED_CREDIT, this, vo ).dispatch();
 		}
 		
 		public function removeSharedCredit( sharedCredit : Object ) : void {
 			
 			if(!sharedCredit) return;
 			
-			var vo : RecordVO = new RecordVO( 'shared_credit', sharedCredit.id );
-			new PledgeEvent( PledgeEvent.DELETE_SHARED_CREDIT, this, vo ).dispatch();
+//			var vo : SharedCreditVO = new SharedCreditVO( sharedCredit.id, user.user_id );
+//			
+//			var vo : RecordVO = new RecordVO( 'shared_credit', sharedCredit.id );
+//			new PledgeEvent( PledgeEvent.DELETE_SHARED_CREDIT, this, vo ).dispatch();
 		}
 		
 		/**

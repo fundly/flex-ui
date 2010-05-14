@@ -182,7 +182,7 @@
 	<mx:RemoteObject id="struktorPluginsDownline"
 		endpoint="{_model.gatewayURL}" 
 		destination="amfphp" 
-		source="plugins.{_model.appInstanceID}.downline" 
+		source="plugins.common.downline" 
 		showBusyCursor="true"
 		fault="handleFault(event)">
 		<mx:method name="get_downline" />
@@ -191,7 +191,7 @@
 	<mx:RemoteObject id="struktorPluginsRSS"
 		endpoint="{_model.gatewayURL}" 
 		destination="amfphp" 
-		source="plugins.{_model.appInstanceID}.rssExtractor" 
+		source="plugins.common.rssExtractor" 
 		showBusyCursor="true"
 		fault="handleFault(event)">
 		<mx:method name="selective_feed" />
@@ -200,7 +200,7 @@
 	<mx:RemoteObject id="struktorPluginsEmail"
 		endpoint="{_model.gatewayURL}" 
 		destination="amfphp" 
-		source="plugins.{_model.appInstanceID}.email"
+		source="plugins.common.email"
 		showBusyCursor="true"
 		fault="handleFault(event)">
 		<mx:method name="send_test_email" />
@@ -213,7 +213,7 @@
     <mx:RemoteObject id="struktorPluginsContacts"
     	endpoint="{_model.gatewayURL}" 
     	destination="amfphp" 
-    	source="plugins.{_model.appInstanceID}.contacts" 
+    	source="plugins.common.contacts" 
     	showBusyCursor="true"
     	fault="handleFault(event)">
     	<mx:method name="list_contacts" />
@@ -345,7 +345,7 @@
 	<mx:RemoteObject id="struktorPluginsPledges"
 		endpoint="{_model.gatewayURL}" 
 		destination="amfphp" 
-		source="plugins.{_model.appInstanceID}.pledges" 
+		source="plugins.common.pledges" 
 		requestTimeout="120"
 		showBusyCursor="true"
 		fault="handleFault(event)">
@@ -355,7 +355,7 @@
 	<mx:RemoteObject id="struktorPluginsChecks"
 		endpoint="{_model.gatewayURL}" 
 		destination="amfphp" 
-		source="plugins.{_model.appInstanceID}.checks" 
+		source="plugins.common.checks" 
 		requestTimeout="120"
 		showBusyCursor="true"
 		fault="handleFault(event)">
@@ -370,7 +370,7 @@
 	<mx:RemoteObject id="struktorPluginsBatches"
 		endpoint="{_model.gatewayURL}" 
 		destination="amfphp" 
-		source="plugins.{_model.appInstanceID}.reporting.batch" 
+		source="plugins.common.reporting.batch" 
 		requestTimeout="120"
 		showBusyCursor="true"
 		fault="handleFault(event)">
@@ -384,6 +384,17 @@
 		showBusyCursor="true"
 		fault="handleFault(event)">
 		<mx:method name="get_ui_access" />
+	</mx:RemoteObject>
+	
+	<mx:RemoteObject id="struktorPluginsSharedCredit"
+		endpoint="{_model.gatewayURL}" 
+		destination="amfphp" 
+		source="plugins.common.shared_credit" 
+		requestTimeout="120"
+		showBusyCursor="true"
+		fault="handleFault(event)">
+		<mx:method name="add_shared_credit" />
+		<mx:method name="remove_shared_credit" />
 	</mx:RemoteObject>
 	
 	<mx:HTTPService id="versionService"
