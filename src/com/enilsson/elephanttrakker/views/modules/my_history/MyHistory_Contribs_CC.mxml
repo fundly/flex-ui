@@ -11,6 +11,7 @@
 		top="5" selectable="true" verticalGridLines="false" horizontalScrollPolicy="off" 
 		headerRelease="sortAction(event)">
 		<mx:columns>
+			<mx:DataGridColumn textAlign="left" dataField="contact" headerText="Full Name" />
             <mx:DataGridColumn textAlign="left" dataField="full_name" headerText="Name on Card" />
             <mx:DataGridColumn textAlign="left" dataField="card_number" headerText="Card Number" />
             <mx:DataGridColumn textAlign="right" headerText="Amount" dataField="amount" labelFunction="money_labelFunc" />            
