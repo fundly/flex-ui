@@ -67,10 +67,10 @@
 										
 					addChild( text );	
 				}				
-				else if ( _presentationModel.maxOut.max_fund_contrib_per_year )
-				{
-					Logger.info('MaxOut', 'Maxout By Year');	
-				}
+//				else if ( _presentationModel.maxOut.max_fund_contrib_per_year )
+//				{
+//					Logger.info('MaxOut', 'Maxout By Year');	
+//				}
 				else
 				{
 					var vbox:VBox = new VBox();
