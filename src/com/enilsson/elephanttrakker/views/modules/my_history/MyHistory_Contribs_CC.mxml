@@ -17,7 +17,7 @@
             <mx:DataGridColumn textAlign="left" headerText="Date" dataField="created_on" labelFunction="date_labelFunc" />            
             <mx:DataGridColumn textAlign="left" headerText="Time" dataField="created_on" labelFunction="time_labelFunc" />            
             <mx:DataGridColumn textAlign="left" headerText="Actions" width="50" 
-            	itemRenderer="com.enilsson.elephanttrakker.views.modules.my_history.renderers.MyHistory_ContribsActions" />
+            	itemRenderer="com.enilsson.elephanttrakker.views.modules.my_history.renderers.MyHistory_CCActions" />
         </mx:columns>
 	</mx:DataGrid>
 	

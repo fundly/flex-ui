@@ -148,7 +148,7 @@
             <mx:DataGridColumn textAlign="left" headerText="Status"
             	itemRenderer="com.enilsson.elephanttrakker.views.modules.my_history.renderers.MyHistory_CheckStatus" />
             <mx:DataGridColumn textAlign="left" headerText="Actions" width="50" 
-            	itemRenderer="com.enilsson.elephanttrakker.views.modules.my_history.renderers.MyHistory_ContribsActions" />
+            	itemRenderer="com.enilsson.elephanttrakker.views.modules.my_history.renderers.MyHistory_ChecksActions" />
         </mx:columns>
 	</mx:DataGrid>
 	
