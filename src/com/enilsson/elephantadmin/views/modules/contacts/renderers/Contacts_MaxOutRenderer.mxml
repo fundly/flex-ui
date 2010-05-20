@@ -7,8 +7,21 @@
 	<mx:Text styleName="maxOutCType" text="{data.contribution_type}" width="40%" />
 	<mx:Text styleName="maxOutAmt" text="{cf.format( data.contrib_total )}" width="30%" textAlign="right" />
 	<common:LimitBar limit="{data.percentage}" label="" width="100%" />
-	<mx:Text styleName="maxOutAmt" text="{cf.format( data.limit )}" />
+	<mx:Text styleName="maxOutAmt" text="{getLimitString(data.limit)}" />
 	
 	<mx:CurrencyFormatter id="cf" precision="2" currencySymbol="$" />
+	
+	<mx:Script>
+		<![CDATA[
+			
+			private function getLimitString( limit : Number ) : String {
+				if( isNaN(limit) || limit <= 0 )
+					return "UNLIMITED";
+	
+				return cf.format( limit );
+			}
+			
+		]]>
+	</mx:Script>
 	
 </mx:HBox>

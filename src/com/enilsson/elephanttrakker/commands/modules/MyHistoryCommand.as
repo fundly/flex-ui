@@ -285,11 +285,19 @@ package com.enilsson.elephanttrakker.commands.modules
 			
 			var sort:String = event.sort == '' ? 'checks.created_on DESC' : event.sort;
 
-			var where:Object= {'statement':'(1)','1':{ 
-				'what' : 'checks.created_by_id',
-				'val' : _model.session.user_id,
-				'op' : '='
-			}};		
+			var where:Object= {
+				'statement':'(1 AND 2)',
+				'1':{ 
+					'what'	: 'checks.created_by_id',
+					'val'	: _model.session.user_id,
+					'op'	: '='
+				},
+				'2':{
+					'what' : 'checks.entry_date',
+					'val'	: 0,
+					'op'	: '>'
+				}
+			};		
 			
 			delegate.getRecords( 
 				new RecordsVO( esql, where, sort, event.iFrom, event.iCount, event.paginate ) 

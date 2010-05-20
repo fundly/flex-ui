@@ -104,7 +104,8 @@
 							if ( item.fund_type == i )
 							{
 								item['limit'] = limits[item.contribution_type];
-								item['percentage'] = Math.round( Number(item.contrib_total) / item.limit * 100 );
+								item['percentage'] = (item.limit > 0) ? ( Math.round( Number(item.contrib_total) / item.limit * 100 ) ) : 0;
+								
 								records.addItem ( item );
 							}
 						}

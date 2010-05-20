@@ -32,7 +32,7 @@
 	
 	<mx:ApplicationControlBar styleName="overviewAppBar" 
 		width="{this.width}" height="25">
-		<mx:Text styleName="controlBarTitle" text="ANNOUNCEMENTS" />
+		<mx:Text styleName="controlBarTitle" text="NEWS" />
 	</mx:ApplicationControlBar>
 	<mx:Button id="announceMore" 
 		styleName="controlMore" 
