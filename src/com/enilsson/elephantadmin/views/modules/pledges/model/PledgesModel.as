@@ -291,10 +291,8 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 			
 			if(!sharedCredit) return;
 			
-//			var vo : SharedCreditVO = new SharedCreditVO( sharedCredit.id, user.user_id );
-//			
-//			var vo : RecordVO = new RecordVO( 'shared_credit', sharedCredit.id );
-//			new PledgeEvent( PledgeEvent.DELETE_SHARED_CREDIT, this, vo ).dispatch();
+			var vo : SharedCreditVO = new SharedCreditVO( sharedCredit.shared_pledge_id, sharedCredit.sw_user_id );
+			new PledgeEvent( PledgeEvent.REMOVE_SHARED_CREDIT, this, vo ).dispatch();
 		}
 		
 		/**

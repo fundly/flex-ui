@@ -164,7 +164,7 @@ package com.enilsson.elephantadmin.business
 			token.addResponder(responder);		
 		}
 		
-		public function deleteSharedCredit( pledgeID:int, userID:int ) : void
+		public function removeSharedCredit( pledgeID:int, userID:int ) : void
 		{
 			this.service = ServiceLocator.getInstance().getRemoteObject('struktorPluginsSharedCredit');
 			

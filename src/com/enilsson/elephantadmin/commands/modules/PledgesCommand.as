@@ -409,6 +409,7 @@ package com.enilsson.elephantadmin.commands.modules
 				ac.addItem( item );
 			}
 			
+			_model.dataLoading = false;
 			_pledgesModel.sharedCreditTabLoading = false;
 			_pledgesModel.sharedCreditFundraisers = ac;
 		}
@@ -420,6 +421,7 @@ package com.enilsson.elephantadmin.commands.modules
 				true 
 			);
 			
+			_model.dataLoading = false;
 			_pledgesModel.sharedCreditTabLoading = false;
 		}
 		
@@ -460,35 +462,23 @@ package com.enilsson.elephantadmin.commands.modules
 		 */
 		private function removeSharedCredit( event : PledgeEvent ) : void {
 			var handlers:IResponder = new mx.rpc.Responder(onResult_removeSharedCredit, onFault_removeSharedCredit);
-			var delegate:RecordDelegate = new RecordDelegate(handlers);
+			var delegate:PluginsDelegate = new PluginsDelegate(handlers);
+			var vo : SharedCreditVO = event.params as SharedCreditVO;
+			
+			if(!vo) return;
 
-			_model.dataLoading = true;
-//			delegate.deleteRecord( event.recordVO );			
+			_model.dataLoading = true;		
+			delegate.removeSharedCredit( vo.pledgeID, vo.userID );			
 		}		
 		private function onResult_removeSharedCredit( event : ResultEvent ) : void {
-			_model.dataLoading = false;
+			if(_pledgesModel.debug) Logger.info('removeSharedCredit Success', ObjectUtil.toString(event.result));
 			
-			switch(event.result.state)
-			{
-				case '88' :
-					_model.errorVO = new ErrorVO( 'The shared credit was deleted successfully!', 'successBox', true );
-					
-					// refresh the shared credit fundraisers
-					_pledgesModel.getSharedCreditFundraisers();					
-				break;
-				case '-88' :
-					var eMsg:String = event.result.errors is Array ? '' : event.result.errors;
-					
-					for(var j:String in event.result.errors)
-						eMsg += '- ' + event.result.errors[j] + '<br>';
-						
-					_model.errorVO = new ErrorVO( 
-						'There was a problem deleting the shared credit:<br><br>' + eMsg, 
-						'errorBox', 
-						true 
-					);
-				break;	
-			}
+			_model.dataLoading = false;
+	
+			_model.errorVO = new ErrorVO( 'Shared credit removed successfully!', 'successBox', true );
+									
+			// refresh the shared credit fundraisers
+			_pledgesModel.getSharedCreditFundraisers();
 		}		
 		private function onFault_removeSharedCredit( event : FaultEvent ) : void {
 			_model.dataLoading = false;
