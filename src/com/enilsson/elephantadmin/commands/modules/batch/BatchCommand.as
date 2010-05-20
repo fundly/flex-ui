@@ -42,9 +42,6 @@ package com.enilsson.elephantadmin.commands.modules.batch
 				case BatchEvent.GET_CHECK_LIST:
 					getChecks(); 
 				break;
-				case BatchEvent.GET_PLEDGE_LIST:
-					getPledges(); 
-				break;
 				case BatchEvent.SAVE_BATCH:
 					saveBatch(); 
 				break;
@@ -187,7 +184,7 @@ package com.enilsson.elephantadmin.commands.modules.batch
 		
 			var whereObj:Object =
 				{
-					statement : "(1) AND (2)" 
+					statement : "(1) AND (2) AND (3)" 
 				,	1 :	{	what : "checks.entry_date"
 						,	val : "0"
 						,	op : "="
@@ -196,6 +193,10 @@ package com.enilsson.elephantadmin.commands.modules.batch
 						,	val : "NULL"
 						,	op : "IS"
 						}
+				,	3 :	{	what : "checks.checks_refid"
+						,	val : "NULL"
+						,	op : "IS"
+						} 
 				};
 			
 			var option : Object = mainModel.batch.checkListSearchOption;
@@ -210,8 +211,8 @@ package com.enilsson.elephantadmin.commands.modules.batch
 					operator = 'LIKE';
 				}
 				
-				whereObj.statement = "(1) AND (2) AND (3)";
-				whereObj['3'] = {
+				whereObj.statement = "(1) AND (2) AND (3) AND (4)";
+				whereObj['4'] = {
 					what: option.column,
 					val: value,
 					op: operator
@@ -221,15 +222,6 @@ package com.enilsson.elephantadmin.commands.modules.batch
 			var listOrder : String = mainModel.batch.checkListOrder ? mainModel.batch.checkListOrder : "DESC";
 			var order : String = orderField + " " + listOrder;
 
-/*  			var recordsVO:RecordsVO = new RecordsVO(
-				"checks<amount:full_name:entry_date>(pledge_id<fname:lname:pledge_date:pledge_amount:address1:address2:city:state:zip:occupation:employer>(user_id<fname:lname:_fid>))"
-				, whereObj
-				, order
-				, mainModel.batch.checkListFrom
-				, mainModel.itemsPerPage
-				, "P"
-			);
- */ 			
 			delegate.getAllUnfulfilledChecks(whereObj, order, mainModel.batch.checkListFrom, mainModel.itemsPerPage, "P");
 		}
 
@@ -269,59 +261,6 @@ package com.enilsson.elephantadmin.commands.modules.batch
 			
 			mainModel.dataLoading = false;
 			mainModel.batch.checkListLoading = false;
-		}
-
-		/**
-		 * Get list of unfulfilled pledges
-		 */			
-		private function getPledges():void
-		{
-			var handlers:IResponder = new mx.rpc.Responder(onResults_getPledges, onFault_getPledges);
-			var delegate:RecordsDelegate = new RecordsDelegate(handlers);
-			
-			mainModel.dataLoading = true;
-
-			var whereObj:Object =
-				{
-					statement:	"(1)"
-				,	1 :	{	what : "pledges.contrib_total"
-						,	val : "pledges.pledge_amount"
-						,	op : "<"
-						}
-				};
-			var recordsVO:RecordsVO = new RecordsVO("pledges"
-				, whereObj
-				, "pledges.created_on DESC"
-				, mainModel.batch.pledgeListFrom
-				, mainModel.itemsPerPage
-				, "P"
-			);
-			delegate.getRecords( recordsVO );
-		}
-
-		private function onResults_getPledges(event:ResultEvent):void 
-		{
-			if(mainModel.debug) Logger.info('getRecords Success', ObjectUtil.toString(event.result));
-			
-			mainModel.dataLoading = false;
-
-			mainModel.batch.pledgeListTotal = event.result.total_rows;
-
-			var tableName:String = event.result.table_name;
-
-			var pledgeList:ArrayCollection = new ArrayCollection();
-			for each( var item:Object in event.result[tableName])
-			{
-				pledgeList.addItem(item);
-			}
-			mainModel.batch.pledgeList = pledgeList;
-		}
-
-		private function onFault_getPledges(event:FaultEvent):void
-		{
-			if(mainModel.debug) Logger.info('get PledgesRecords Fail', ObjectUtil.toString(event));
-			
-			mainModel.dataLoading = false;
 		}
 
 		/**

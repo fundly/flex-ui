@@ -227,7 +227,6 @@ package com.enilsson.elephantadmin.controllers
 			// batches module
 			this.addCommand(BatchEvent.GET_CHECK_LIST, BatchCommand);
 			this.addCommand(BatchEvent.GET_BATCH_LIST, BatchCommand);
-			this.addCommand(BatchEvent.GET_PLEDGE_LIST, BatchCommand);
 			this.addCommand(BatchEvent.SAVE_BATCH, BatchCommand);
 			this.addCommand(BatchEvent.EXPORT_BATCH, BatchCommand);
 			this.addCommand(BatchEvent.GET_CHECKS_FOR_BATCH, BatchCommand);
