@@ -36,10 +36,10 @@ package com.enilsson.elephanttrakker.models.viewclasses
 		public var quickstats_chart:Object;
 		
 		public var numDonors:int = 0;
-		public var totalPledged:int = 0;
+		public var totalPledged:Number = 0;
 		public var totalContribs:int = 0;
-		public var avPerDonor:int = 0;
-		public var downline:int = 0;
+		public var avPerDonor:Number = 0;
+		public var downline:Number = 0;
 		
 		public var topDonors:Object;
 		
