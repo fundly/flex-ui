@@ -67,10 +67,10 @@
 										
 					addChild( text );	
 				}				
-				else if ( _presentationModel.maxOut.max_fund_contrib_per_year )
-				{
-					Logger.info('MaxOut', 'Maxout By Year');	
-				}
+//				else if ( _presentationModel.maxOut.max_fund_contrib_per_year )
+//				{
+//					Logger.info('MaxOut', 'Maxout By Year');	
+//				}
 				else
 				{
 					var vbox:VBox = new VBox();
@@ -104,7 +104,8 @@
 							if ( item.fund_type == i )
 							{
 								item['limit'] = limits[item.contribution_type];
-								item['percentage'] = Math.round( Number(item.contrib_total) / item.limit * 100 );
+								item['percentage'] = (item.limit > 0) ? ( Math.round( Number(item.contrib_total) / item.limit * 100 ) ) : 0;
+								
 								records.addItem ( item );
 							}
 						}

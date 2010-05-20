@@ -85,6 +85,8 @@
 		<mx:DataGridColumn width="150" dataField="email" headerText="Email" />
 		<mx:DataGridColumn width="50" dataField="mod_group_id" headerText="Region ID"  sortCompareFunction="region_idCompare" />
 		<mx:DataGridColumn width="100" dataField="mod_group_name" headerText="Region Name" />
+		
+		<mx:DataGridColumn width="50" dataField="last_online" headerText="Last Login" labelFunction="last_online_labelFunc" sortable="false" />
 	</mx:Array>
 
 	<mx:CurrencyFormatter id="currencyFormatter" precision="2" currencySymbol="$" useNegativeSign="false" />
@@ -161,6 +163,14 @@
 
 			private function region_idCompare(obj1:Object, obj2:Object):int {
 				return ObjectUtil.numericCompare(obj1.mod_group_id,obj2.mod_group_id);
+			}
+			
+			private function last_online_labelFunc(item:Object, column:DataGridColumn):String {
+				var s : String = date_labelFunc( item, column );
+				return ( s && s.length > 0 ) ? s : 'never';
+			}
+			private function last_onlineCompare(obj1:Object, obj2:Object):int {
+				return ObjectUtil.numericCompare(obj1.last_online, obj2.last_online);
 			}
 
 			private function money_labelFunc(item:Object, column:DataGridColumn):String {

@@ -222,6 +222,8 @@ package com.enilsson.elephanttrakker.commands.modules
 			// show the data loading icon
 			_model.dataLoading = true;
 			
+			var esql : String = 'transactions(pledge_id<fname:lname>)';
+			
 			var sort:String = event.sort == '' ? 'transactions.created_on DESC' : event.sort;
 
 			var where:Object= {'statement':'(1)','1':{ 
@@ -231,7 +233,7 @@ package com.enilsson.elephanttrakker.commands.modules
 			}};		
 			
 			delegate.getRecords( 
-				new RecordsVO( 'transactions', where, sort, event.iFrom, event.iCount, event.paginate ) 
+				new RecordsVO( esql, where, sort, event.iFrom, event.iCount, event.paginate ) 
 			);
 		}
 
@@ -243,6 +245,11 @@ package com.enilsson.elephanttrakker.commands.modules
 			var dp:ArrayCollection = new ArrayCollection()
 			for each( var item:Object in data.result.transactions)
 			{
+				if( item.hasOwnProperty('pledge_id') && item.pledge_id != null )
+					item.contact = item.pledge_id.fname + " " + item.pledge_id.lname;
+				else
+					item.contact = null;
+					
 				dp.addItem(item);				
 			}
 			// assign the altered array collection to the model for binding
@@ -274,16 +281,26 @@ package com.enilsson.elephanttrakker.commands.modules
 			// show the data loading icon
 			_model.dataLoading = true;
 			
+			var esql : String = 'checks(pledge_id<fname:lname>)';
+			
 			var sort:String = event.sort == '' ? 'checks.created_on DESC' : event.sort;
 
-			var where:Object= {'statement':'(1)','1':{ 
-				'what' : 'checks.created_by_id',
-				'val' : _model.session.user_id,
-				'op' : '='
-			}};		
+			var where:Object= {
+				'statement':'(1 AND 2)',
+				'1':{ 
+					'what'	: 'checks.created_by_id',
+					'val'	: _model.session.user_id,
+					'op'	: '='
+				},
+				'2':{
+					'what' : 'checks.entry_date',
+					'val'	: 0,
+					'op'	: '>'
+				}
+			};		
 			
 			delegate.getRecords( 
-				new RecordsVO( 'checks', where, sort, event.iFrom, event.iCount, event.paginate ) 
+				new RecordsVO( esql, where, sort, event.iFrom, event.iCount, event.paginate ) 
 			);
 		}
 
@@ -295,6 +312,11 @@ package com.enilsson.elephanttrakker.commands.modules
 			var dp:ArrayCollection = new ArrayCollection()
 			for each( var item:Object in data.result.checks)	
 			{
+				if( item.hasOwnProperty('pledge_id') && item.pledge_id != null )
+					item.contact = item.pledge_id.fname + " " + item.pledge_id.lname;
+				else
+					item.contact = null;
+				
 				dp.addItem(item);				
 			}
 			// assign the altered array collection to the model for binding
