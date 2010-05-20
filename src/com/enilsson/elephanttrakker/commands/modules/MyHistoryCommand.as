@@ -391,7 +391,12 @@ package com.enilsson.elephanttrakker.commands.modules
 		{
 			if(_model.debug) Logger.info('My Downline Success', ObjectUtil.toString(data.result));
 
-			_model.my_history.downline = data.result['downline_stats'][1].pledge;
+			try {
+				_model.my_history.downline = data.result['downline_stats'][1].pledge;
+			}
+			catch( e : Error ) {
+				_model.my_history.downline = 0;
+			}
 
 			this.nextEvent = new MyHistoryEvent( MyHistoryEvent.GET_TOPDONORS );
 			this.executeNextCommand();
