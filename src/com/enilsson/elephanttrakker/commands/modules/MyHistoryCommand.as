@@ -414,7 +414,8 @@ package com.enilsson.elephanttrakker.commands.modules
 			if(_model.debug) Logger.info('My Downline Success', ObjectUtil.toString(data.result));
 
 			try {
-				_model.my_history.downline = data.result['downline_stats'][1].pledge;
+				var stats : Object = data.result.downline_stats[1];
+				_model.my_history.downline = Number(stats.pledge) + Number(stats.shared_credit_pledge_total_downline);
 			}
 			catch( e : Error ) {
 				_model.my_history.downline = 0;
