@@ -190,9 +190,18 @@
 
 				_model.checks.currPage = 0;
 				
+				var where : Object = {
+					'statement' : '(1)',
+					'1': {
+						'what':'checks.checks_refid',
+						'val': 'NULL',
+						'op': 'IS'
+					}	
+				};
+				
 				_model.checks.recordQuery = new RecordsVO(
 					'checks(pledge_id<ALL>(tr_users_id<fname:lname:_fid>))',
-					null, 
+					where, 
 					_sortOrder, 
 					_model.checks.currPage, 
 					_model.itemsPerPage, 
