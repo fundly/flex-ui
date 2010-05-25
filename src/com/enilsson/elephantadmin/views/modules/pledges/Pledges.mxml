@@ -47,7 +47,7 @@
 						{ label : "OCCUPATION", data : "pledges.occupation" },
 						{ label : "EMPLOYER", data : "pledges.employer" }
 					]);
-					_config.gridFields = [ 'fname', 'lname', 'state', 'zip', 'pledge_amount', 'contrib_total','pledge_date', 'pledgewarning' ];
+					_config.gridFields = [ 'fname', 'lname', 'state', 'zip', 'pledge_amount', 'contrib_total','pledge_date', 'pledgeicons' ];
 					_config.searchListItemRenderer = new ClassFactory(Pledges_ListRenderer);
 					recordModule.configuration(_config);
 				}

@@ -73,8 +73,13 @@ package com.enilsson.elephantadmin.views.modules.dashboard.model
 																			);
 
 			//eSQL syntax
-			getLatestPledgesEvent.recordsVO = new RecordsVO(	'pledges<fname:lname:state:pledge_amount:created_on>(user_id<fname:lname:_fid>,event_id<source_code>)',
-																null, 
+			getLatestPledgesEvent.recordsVO = new RecordsVO( 'pledges<fname:lname:state:pledge_amount:created_on>(user_id<fname:lname:_fid>,event_id<source_code>)',
+																{	'statement':'(1)', 
+																	'1':{ 	'what':'pledges.pledges_refid',
+																			'op':'IS',
+																			'val':'NULL'
+																		}
+																}, 
 																'pledges.id DESC', 
 																0, 
 																100, 

@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
-	toolTip="{warningVisible ? WARNING_TEXT : ''}">
+	toolTip="{warningVisible ? WARNING_TEXT : ''}" 
+	initialize="handleInitialize()"
+	horizontalScrollPolicy="off" verticalScrollPolicy="off" >
 
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.elephantadmin.events.main.SidEvent;
+			import com.enilsson.elephantadmin.events.main.SidForIdEvent;
+			import com.enilsson.common.utils.SharedCreditUtil;
 			import mx.controls.Image;
 			import com.enilsson.elephantadmin.utils.PledgeUtil;
 			import com.enilsson.elephantadmin.models.Icons;
@@ -11,11 +16,15 @@
 			public static const WARNING_TEXT : String = "Note: All contributions for this pledge have been refunded!";
 			
 			[Bindable] public var warningText : String = WARNING_TEXT;
+			[Bindable] public var isSharedCreditPledge : Boolean;
+			
+			public var clickEnabled : Boolean = true;
 
 			[Bindable]
 			public function get pledge() : Object { return _pledge; }
 			public function set pledge( value : Object ) : void {
 				_pledge = value;
+				isSharedCreditPledge = SharedCreditUtil.isSharedCreditPledge( _pledge );
 				warningVisible = PledgeUtil.allContribsRefunded( _pledge );
 			}		
 						
@@ -101,7 +110,26 @@
 				else				_img.source = Icons.EXCLAMATION_MARK_38;
 				
 				_img.x = w/2 - _img.width/2;
-				_img.y = height/2 - _img.height/2;
+			}
+			
+			
+			private function handleInitialize() : void {
+				addListeners();
+			}
+			
+			private function addListeners() : void {
+				addEventListener( MouseEvent.CLICK, handleClick );
+			}
+			
+			private function handleClick( event : MouseEvent ) : void {
+				if(! pledge || ! clickEnabled ) return;
+				
+				if( isSharedCreditPledge ) {
+					new SidForIdEvent( 'pledges', pledge.pledges_refid ).dispatch();
+				}					
+				else if( pledge.hasOwnProperty('sid')) {
+					new SidEvent( pledge.sid ).dispatch();
+				}
 			}
 			
 			private var _pledge : Object;

@@ -84,5 +84,12 @@ package com.enilsson.elephantadmin.business
 			var token:AsyncToken = service.get_sid_tree( sid );
 			token.addResponder(responder);
 		}
+		
+		public function getSid( table : String, recordId : int ) : void {
+			this.service = ServiceLocator.getInstance().getRemoteObject('struktorSelect');
+			
+			var token:AsyncToken = service.get_sid( table, recordId );
+			token.addResponder( responder );
+		}
 	}
 }

@@ -36,7 +36,7 @@
 		styleName="fundraiserList"
 		width="100%" height="100%"
 		variableRowHeight="true" 
-		itemRenderer="{new ClassFactory(Pledges_FundraiserRenderer)}"
+		itemRenderer="{new ClassFactory(Pledges_SharedCreditRenderer)}"
 		dataProvider="{_presentationModel.sharedCreditFundraisers}" />
 		
 	<mx:Canvas width="100%">
@@ -51,12 +51,12 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.elephantadmin.views.modules.pledges.renderers.Pledges_SharedCreditRenderer;
 			import mx.controls.Button;
 			import mx.containers.TabNavigator;
 			import mx.utils.ObjectUtil;
 			import com.enilsson.elephantadmin.views.modules.pledges.renderers.FID_Item;
 			import mx.controls.Text;
-			import com.enilsson.elephantadmin.views.modules.pledges.renderers.Pledges_FundraiserRenderer;
 			import com.enilsson.elephantadmin.interfaces.IRecordModel;
 			import com.enilsson.elephantadmin.views.modules.pledges.model.PledgesModel;
 			

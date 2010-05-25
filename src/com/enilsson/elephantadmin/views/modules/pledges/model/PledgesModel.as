@@ -1,7 +1,9 @@
 package com.enilsson.elephantadmin.views.modules.pledges.model
 {
 	import com.adobe.cairngorm.model.ModelLocator;
+	import com.enilsson.common.utils.SharedCreditUtil;
 	import com.enilsson.controls.LookupInput;
+	import com.enilsson.elephantadmin.events.main.SidForIdEvent;
 	import com.enilsson.elephantadmin.events.modules.PledgeEvent;
 	import com.enilsson.elephantadmin.events.modules.RecordModuleEvent;
 	import com.enilsson.elephantadmin.models.EAModelLocator;
@@ -14,7 +16,6 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 	import com.enilsson.elephantadmin.views.modules.pledges.renderers.SourceCode_Item;
 	import com.enilsson.elephantadmin.vo.ErrorVO;
 	import com.enilsson.elephantadmin.vo.RecordVO;
-	import com.enilsson.elephantadmin.vo.RecordsVO;
 	import com.enilsson.elephantadmin.vo.SearchVO;
 	import com.enilsson.elephantadmin.vo.SharedCreditVO;
 	
@@ -90,6 +91,19 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 		{
 			showDeleteBtn = true;
 			enableDeleteBtn = value.c == 0;
+		}
+		
+		/**
+		 * Handle selecting of SharedCredit pledges so that only the master record can be edited.
+		 */
+		override public function set selectedRecord ( value:Object ):void
+		{
+			if( SharedCreditUtil.isSharedCreditPledge(value) ) {
+				new SidForIdEvent( 'pledges', value.pledges_refid ).dispatch();
+			}
+			else {
+				super.selectedRecord = value;
+			}
 		}
 
 		/**
@@ -276,12 +290,14 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 		}
 		
 		public function getSharedCreditFundraisers() : void {
-			new PledgeEvent(PledgeEvent.GET_SHARED_CREDIT_USERS, this, { pledgeID : this.recordID } ).dispatch();
+			
+			var pid : int = this.recordID;			
+			new PledgeEvent(PledgeEvent.GET_SHARED_CREDIT_USERS, this, { pledgeID : pid } ).dispatch();
 		}
 		
 		public function addSharedCredit( user : Object ) : void {
 			
-			if(!user || !selectedRecord) return;
+			if(!user || !selectedRecord ) return;
 			
 			var vo : SharedCreditVO = new SharedCreditVO( selectedRecord.id, user.user_id );
 			new PledgeEvent( PledgeEvent.ADD_SHARED_CREDIT, this, vo ).dispatch();

@@ -10,7 +10,7 @@
 			text="{data.user_id.fname} {data.user_id.lname}" 
 			fontWeight="bold" fontSize="12" />
 		<mx:Label 
-			text="({data.sw_user_id._fid})" 
+			text="({data.user_id._fid})" 
 			fontSize="10" />
 	</mx:VBox>
 		

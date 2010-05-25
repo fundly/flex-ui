@@ -58,6 +58,7 @@ package com.enilsson.elephantadmin.controllers
 			this.addCommand(GetGroupsEvent.EVENT_GET_GROUPS, InitMainCommand);
 			this.addCommand(RecordEvent.GET_LAYOUTS, InitMainCommand);
 			this.addCommand(SidEvent.TEST_SID, SidCommand);
+			this.addCommand(SidForIdEvent.SID_FOR_ID, SidForIdCommand );
 
 			// dashboard module
 			this.addCommand(DashboardEvent.GET_ACTIVE_USERS, DashboardCommand);
