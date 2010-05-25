@@ -2,7 +2,7 @@
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
 	label="PLEDGES"  enabled="{!_usersModel.pledgesTabLoading}"
 	implements="com.enilsson.elephantadmin.interfaces.IOptionView"	
-	width="100%" height="100%" xmlns:common="com.enilsson.elephantadmin.views.common.*">
+	width="100%" height="100%" xmlns:common="com.enilsson.elephantadmin.views.common.*" xmlns:components="com.enilsson.common.components.*">
 
 	<mx:VBox verticalGap="2"
 		horizontalAlign="center"
@@ -33,9 +33,9 @@
 					alternatingItemColors="['#FFFFFF', '#EDEDED']" 
 					dataProvider="{_usersModel.pledges}">
 					<mx:columns>
-					<mx:DataGridColumn headerText="Contact"
+					<components:SharedItemGridColumn headerText="Contact"
 						sortCompareFunction="contactSort">
-						<mx:itemRenderer>
+						<components:itemRenderer>
 							<mx:Component>
 								<mx:HBox horizontalAlign="left" horizontalGap="0">
 									<mx:Text text="{data.fname} {data.lname}" 
@@ -50,24 +50,24 @@
 									</mx:Script>
 								</mx:HBox>
 							</mx:Component>
-						</mx:itemRenderer>
-					</mx:DataGridColumn>
-					<mx:DataGridColumn headerText="State"
+						</components:itemRenderer>
+					</components:SharedItemGridColumn>
+					<components:SharedItemGridColumn headerText="State"
 						width="30" 
 						dataField="state" />
-					<mx:DataGridColumn headerText="Pledged"
+					<components:SharedItemGridColumn headerText="Pledged"
 						dataField="pledge_amount" 
 						labelFunction="amountLabel"
 						sortCompareFunction="pledge_amountCompare"
 						textAlign="right" />
-					<mx:DataGridColumn headerText="Contributed"
+					<components:SharedItemGridColumn headerText="Contributed"
 						dataField="contrib_total" 
 						labelFunction="amountLabel"
 						sortCompareFunction="contrib_totalCompare"
 						textAlign="right" />
-					<mx:DataGridColumn headerText="Event" 
+					<components:SharedItemGridColumn headerText="Event" 
 						labelFunction="eventLabel" />
-					<mx:DataGridColumn headerText="Date"
+					<components:SharedItemGridColumn headerText="Date"
 						labelFunction="dateLabel"
 						dataField="pledge_date"  />
 					<mx:DataGridColumn width="22" itemRenderer="com.enilsson.elephantadmin.views.common.PledgeRefundedInspectIcon" />
