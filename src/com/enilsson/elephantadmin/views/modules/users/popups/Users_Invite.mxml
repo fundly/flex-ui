@@ -100,7 +100,7 @@
 		</mx:VBox>
 		<mx:VBox width="100%" height="100%" paddingTop="10" paddingLeft="10" paddingRight="10" backgroundColor="#ffffff">
 			<mx:Text color="#333333" width="100%" fontSize="11"
-				htmlText="This form allows you to send an invitation to join {_usersModel.appName} to anyone via email.&lt;br&gt;&lt;br&gt;You can add a personal message to accompany the login details the new fundraiser will receive.&lt;br&gt;&lt;br&gt;If the invitation is accepted that fundraiser will automatically be added to your downline if checkbox is selected."
+				htmlText="This form allows you to send a {_usersModel.appName} invitation to anyone via email.&lt;br&gt;&lt;br&gt;Feel free to add a personal message to accompany the login details the new fundraiser will receive.&lt;br&gt;&lt;br&gt;The new user will be added to your downline if the checkbox is selected."
 				 />
 		</mx:VBox>
 	</mx:HBox>
