@@ -42,7 +42,7 @@
 		</mx:VBox>
 		<mx:VBox width="100%" height="100%" paddingTop="10" paddingLeft="10" paddingRight="10" backgroundColor="#ffffff">
 			<mx:Text color="#333333" width="100%" fontSize="11"
-				htmlText="This form allows you to create a user {_usersModel.appName} without emailing him or her.&lt;br&gt;&lt;br&gt;The new user will be added to your downline if the checkbox is selected."
+				htmlText="This form allows you to create a {_usersModel.appName} user without emailing him or her.&lt;br&gt;&lt;br&gt;The new user will be added to your downline if the checkbox is selected."
 				 />
 		</mx:VBox>
 	</mx:HBox>
