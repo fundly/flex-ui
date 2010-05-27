@@ -93,7 +93,8 @@
 
 	<mx:Script>
 		<![CDATA[
-			import com.enilsson.elephantadmin.views.modules.search.renderers.PledgeMagnifierIcon;
+			import com.enilsson.common.components.SharedItemGridColumn;
+			import com.enilsson.elephantadmin.views.common.PledgeRefundedInspectIcon;
 			import com.enilsson.utils.EDateUtil;
 			import com.enilsson.elephantadmin.models.Icons;
 			import mx.collections.SortField;
@@ -236,7 +237,7 @@
 				{
 					if(_currentFields[i].in_sql)
 					{
-						var dgCol:DataGridColumn = new DataGridColumn();
+						var dgCol:SharedItemGridColumn = new SharedItemGridColumn();
 						dgCol.headerText = _currentFields[i].label;
 						dgCol.minWidth = 40;
 						dgCol.dataField = _currentFields[i].fieldname;
@@ -262,7 +263,7 @@
 				col.minWidth = col.width = 40;
 				col.headerText = "";
 				col.dataField = "sid";
-				col.itemRenderer = new ClassFactory(PledgeMagnifierIcon);
+				col.itemRenderer = new ClassFactory(PledgeRefundedInspectIcon);
 				cols.push( col );
 				
 				_model.browse.columns = cols;			

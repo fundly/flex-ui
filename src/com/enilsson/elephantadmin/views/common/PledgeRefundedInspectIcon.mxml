@@ -3,11 +3,9 @@
 	useHandCursor="true" buttonMode="true"
 	toolTip="Inspect this pledge. { warningVisible ? WARNING_TEXT : '' }" 
 	xmlns="com.enilsson.common.components.*" 
-	xmlns:mx="http://www.adobe.com/2006/mxml"
-	click="new SidEvent( data.sid ).dispatch()">
+	xmlns:mx="http://www.adobe.com/2006/mxml">
 		<mx:Script>
 			<![CDATA[
-				import com.enilsson.elephantadmin.events.main.SidEvent;
 				import com.enilsson.elephantadmin.models.Icons;
 			]]>
 		</mx:Script>
