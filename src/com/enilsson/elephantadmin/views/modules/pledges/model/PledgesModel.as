@@ -236,7 +236,7 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 		/**
 		 * Create a refund as a check contribution
 		 */
-		public function upsertCheckRefund( formVariables:Object ):void
+		public function addCheckRefund( formVariables:Object ):void
 		{
 			// check to see the user hasnt tried to refund too much
 			if( Number(formVariables.amount) > Number(selectedRecord.contrib_total) )
@@ -255,9 +255,9 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 			
 			// dispatch the event to upsert the data
 			new PledgeEvent (
-				PledgeEvent.UPSERT_CHECKREFUND,
+				PledgeEvent.ADD_CHECKREFUND,
 			 	this,
-			 	new RecordVO ( 'checks', 0, formVariables )
+			 	formVariables
 			).dispatch();
 		}
 		

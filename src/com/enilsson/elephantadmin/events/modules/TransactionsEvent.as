@@ -12,7 +12,7 @@ package com.enilsson.elephantadmin.events.modules
 		static public var TRANSACTIONS_FAILED_SEARCH:String = 'transactionsFailedSearch';
 
 		public var e:String;
-		public var params:Object
+		public var params:Object;
 
 		public function TransactionsEvent(e:String, params:Object=null)
 		{

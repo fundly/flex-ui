@@ -132,6 +132,14 @@ package com.enilsson.elephantadmin.business
 			token.addResponder(responder);
 		}
 		
+		public function addCheckRefund( check : Object ) : void 
+		{
+			this.service = ServiceLocator.getInstance().getRemoteObject('struktorPluginsChecks');
+			
+			var token : AsyncToken = service.add_refund( check );
+			token.addResponder(responder);
+		}
+		
 		public function upsertContact( params:Object, userID:int=0 ):void
 		{
 			this.service = ServiceLocator.getInstance().getRemoteObject('struktorPluginsContacts');

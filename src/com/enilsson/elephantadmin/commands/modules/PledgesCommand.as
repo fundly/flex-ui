@@ -48,8 +48,8 @@ package com.enilsson.elephantadmin.commands.modules
 				case PledgeEvent.GET_LABEL :
 					searchLabel( event as PledgeEvent );
 				break;
-				case PledgeEvent.UPSERT_CHECKREFUND :
-					upsertCheckRefund( event as PledgeEvent );
+				case PledgeEvent.ADD_CHECKREFUND :
+					addCheckRefund( event as PledgeEvent );
 				break;
 				case PledgeEvent.DELETE_CHECKREFUND :
 					deleteRefund( event as PledgeEvent );
@@ -251,55 +251,38 @@ package com.enilsson.elephantadmin.commands.modules
 		}
 
 		/**
-		 * Upsert a check refund
+		 * Add a check refund
 		 */
-		private function upsertCheckRefund( event:PledgeEvent ):void
+		private function addCheckRefund( event:PledgeEvent ):void
 		{			
-			var handlers:IResponder = new mx.rpc.Responder(onResults_upsertCheckRefund, onFault_upsertCheckRefund);
-			var delegate:RecordDelegate = new RecordDelegate(handlers);
+			var handlers:IResponder = new mx.rpc.Responder(onResults_addCheckRefund, onFault_addCheckRefund);
+			var delegate:PluginsDelegate = new PluginsDelegate(handlers);
 			
 			_model.dataLoading = true;
 			
-			delegate.upsertRecord( event.recordVO );
+			delegate.addCheckRefund( event.params );
 		}
 		
-		private function onResults_upsertCheckRefund( event:Object ):void 
+		private function onResults_addCheckRefund( event:Object ):void 
 		{
 			if(_pledgesModel.debug) Logger.info('upsertCheckRefund Success', ObjectUtil.toString(event.result));
 			
 			_model.dataLoading = false;
 
-			switch(event.result.state)
-			{
-				case '99' :
-				case '98' :
-					_pledgesModel.refundError = new ErrorVO( 'Check refund added successfully!', 'successBox', true );
+			_pledgesModel.refundError = new ErrorVO( 'Check refund added successfully!', 'successBox', true );
 					
-					// refresh the search list
-					if(_presentationModel.lastQuery) {
-						_presentationModel.lastQuery.dispatch();
-					}
-					
-					_presentationModel.searchListSelectedIndex = _presentationModel.searchListLastIndex;
-					
-					// refresh the contributions
-					_pledgesModel.updatePledge();
-				break;
-				case '-99' :
-					var eMsg:String = '';
-					for(var i:String in event.result.errors)
-						eMsg += '- ' + event.result.errors[i] + '<br>';
-						
-					_pledgesModel.refundError = new ErrorVO( 
-						'There was a problem processing this refund:<br><br>' + eMsg, 
-						'errorBox', 
-						true 
-					);
-				break;	
+			// refresh the search list
+			if(_presentationModel.lastQuery) {
+				_presentationModel.lastQuery.dispatch();
 			}
+			
+			_presentationModel.searchListSelectedIndex = _presentationModel.searchListLastIndex;
+			
+			// refresh the contributions
+			_pledgesModel.updatePledge();
 		}	
 		
-		private function onFault_upsertCheckRefund(event:Object):void
+		private function onFault_addCheckRefund(event:Object):void
 		{
 			if(_pledgesModel.debug) Logger.info('upsertCheckRefund Fault', ObjectUtil.toString(event.fault));	
 			

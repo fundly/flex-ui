@@ -212,7 +212,7 @@ package com.enilsson.elephantadmin.controllers
 			this.addCommand(PledgeEvent.GET_CONTRIBUTIONS, PledgesCommand);
 			this.addCommand(PledgeEvent.LOOKUPINPUT_SEARCH, PledgesCommand);
 			this.addCommand(PledgeEvent.GET_LABEL, PledgesCommand);
-			this.addCommand(PledgeEvent.UPSERT_CHECKREFUND, PledgesCommand);
+			this.addCommand(PledgeEvent.ADD_CHECKREFUND, PledgesCommand);
 			this.addCommand(PledgeEvent.DELETE_CHECKREFUND, PledgesCommand);
 			this.addCommand(PledgeEvent.GET_SHARED_CREDIT_USERS, PledgesCommand);
 			this.addCommand(PledgeEvent.ADD_SHARED_CREDIT, PledgesCommand);
