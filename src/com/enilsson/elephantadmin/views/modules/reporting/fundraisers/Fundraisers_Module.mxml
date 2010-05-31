@@ -74,8 +74,8 @@
 		
 		<mx:DataGridColumn width="90" dataField="shared_credit_pledge_total" headerText="Total Shared Credit Pledged" labelFunction="money_labelFunc" sortCompareFunction="shared_credit_pledge_totalCompare" textAlign="right"/>
 		<mx:DataGridColumn width="90" dataField="shared_credit_contrib_total" headerText="Total Shared Credit Contribution" labelFunction="money_labelFunc" sortCompareFunction="shared_credit_contrib_totalCompare" textAlign="right"/>
-		<mx:DataGridColumn width="90" dataField="downline_shared_credit_pledge_total" headerText="Downline Shared Credit Pledged" labelFunction="money_labelFunc" sortCompareFunction="downline_shared_credit_pledge_totalCompare" textAlign="right"/>
-		<mx:DataGridColumn width="90" dataField="downline_shared_credit_contrib_total" headerText="Downline Shared Credit Contribution" labelFunction="money_labelFunc" sortCompareFunction="downline_shared_credit_contrib_totalCompare" textAlign="right"/>
+		<mx:DataGridColumn width="90" dataField="shared_credit_downline_pledge" headerText="Downline Shared Credit Pledged" labelFunction="money_labelFunc" sortCompareFunction="shared_credit_downline_pledgeCompare" textAlign="right"/>
+		<mx:DataGridColumn width="90" dataField="shared_credit_downline_contrib" headerText="Downline Shared Credit Contribution" labelFunction="money_labelFunc" sortCompareFunction="shared_credit_downline_contribCompare" textAlign="right"/>
 		
 		<mx:DataGridColumn width="80" dataField="_fid" headerText="Fundraiser ID" sortCompareFunction="fidCompare"/>
 		<mx:DataGridColumn width="100" dataField="_city" headerText="City" />
@@ -137,11 +137,11 @@
 			private function shared_credit_contrib_totalCompare( o1 : Object, o2 : Object ) : int {
 				return ObjectUtil.numericCompare(o1.shared_credit_contrib_total, o2.shared_credit_contrib_total);
 			}
-			private function downline_shared_credit_pledge_totalCompare( o1 : Object, o2 : Object ) : int {
-				return ObjectUtil.numericCompare(o1.downline_shared_credit_pledge_total, o2.downline_shared_credit_pledge_total);
+			private function shared_credit_downline_pledgeCompare( o1 : Object, o2 : Object ) : int {
+				return ObjectUtil.numericCompare(o1.shared_credit_downline_pledge, o2.shared_credit_downline_pledge);
 			}
-			private function downline_shared_credit_contrib_totalCompare( o1 : Object, o2 : Object ) : int {
-				return ObjectUtil.numericCompare(o1.downline_shared_credit_contrib_total, o2.downline_shared_credit_contrib_total);
+			private function shared_credit_downline_contribCompare( o1 : Object, o2 : Object ) : int {
+				return ObjectUtil.numericCompare(o1.shared_credit_downline_contrib, o2.shared_credit_downline_contrib);
 			}
 
 			private function user_contribCompare(obj1:Object, obj2:Object):int {

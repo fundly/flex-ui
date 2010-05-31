@@ -19,7 +19,6 @@
 				change="_presentationModel.endDate = event.currentTarget.selectedDate" 
 				textAlign="center" enabled="{!_presentationModel.dataLoading}" />
 		</mx:FormItem>
-		<mx:CheckBox label="Show refunds" change="_presentationModel.showRefunds = event.currentTarget.selected" />
 		<mx:LinkButton id="advancedButton" label="{ADVANCED_LABEL}" paddingTop="5"
 			click="toggleAdvanced()"/>
 		<mx:Spacer width="100%" />
@@ -32,21 +31,33 @@
 			visible="{_presentationModel.exportAllowed}"
 			includeInLayout="{_presentationModel.exportAllowed}" />
 	</mx:HBox>
-	<mx:HBox id="advancedMenu" width="100%" height="0" verticalAlign="middle" resizeEffect="{Resize}" paddingTop="2">
-		<mx:FormItem label="Date type:">
-			<mx:ComboBox width="120" color="#000000" dataProvider="{_presentationModel.dateTypeFilter}" id="dateType" enabled="{!_presentationModel.dataLoading}" change="_presentationModel.dateTypeChangeHandler(event)"/>
+	<mx:VBox id="advancedMenu" width="100%" height="0" verticalAlign="middle" resizeEffect="{Resize}" paddingTop="2">
+		<mx:HBox>
+			<mx:FormItem label="Date type:">
+				<mx:ComboBox width="120" color="#000000" paddingLeft="8" dataProvider="{_presentationModel.dateTypeFilter}" id="dateType" enabled="{!_presentationModel.dataLoading}" change="_presentationModel.dateTypeChangeHandler(event)"/>
+			</mx:FormItem>
+			<mx:FormItem label="Region:">
+				<mx:ComboBox width="150" dropdownWidth="200" color="#000000" dataProvider="{_presentationModel.regionFilter}" id="region" enabled="{!_presentationModel.dataLoading}" change="_presentationModel.regionChangeHandler(event)"/>
+			</mx:FormItem>
+			<mx:FormItem label="Payment method:">
+				<mx:ComboBox width="120" color="#000000" dataProvider="{_presentationModel.contributionFilter}" id="status" enabled="{!_presentationModel.dataLoading}" change="_presentationModel.statusChangeHandler(event)"/>
+			</mx:FormItem>
+		</mx:HBox>
+		<mx:FormItem label="Contributions:" direction="horizontal" >
+			<mx:CheckBox label="Show fully refunded contributions"
+				textSelectedColor="{getStyle('color')}"
+				textRollOverColor="{getStyle('color')}" 
+				change="_presentationModel.showRefunds = event.currentTarget.selected" paddingLeft="17" />
+			<mx:CheckBox label="Show shared credit"
+				textSelectedColor="{getStyle('color')}"
+				textRollOverColor="{getStyle('color')}" 
+				change="_presentationModel.showSharedCredit = event.currentTarget.selected" />
 		</mx:FormItem>
-		<mx:FormItem label="Region:">
-			<mx:ComboBox width="150" dropdownWidth="200" color="#000000" dataProvider="{_presentationModel.regionFilter}" id="region" enabled="{!_presentationModel.dataLoading}" change="_presentationModel.regionChangeHandler(event)"/>
-		</mx:FormItem>
-		<mx:FormItem label="Payment method:">
-			<mx:ComboBox width="120" color="#000000" dataProvider="{_presentationModel.contributionFilter}" id="status" enabled="{!_presentationModel.dataLoading}" change="_presentationModel.statusChangeHandler(event)"/>
-		</mx:FormItem>
-	</mx:HBox>
+	</mx:VBox>
 
 	<mx:states>
 		<mx:State name="{ADVANCED_STATE}">
-			<mx:SetProperty target="{advancedMenu}" name="height" value="25" />
+			<mx:SetProperty target="{advancedMenu}" name="height" value="54" />
 			<mx:SetProperty target="{advancedButton}" name="label" value="{BASIC_LABEL}" />
 		</mx:State>
 		<mx:State name="{BASIC_STATE}">

@@ -56,6 +56,9 @@ package com.enilsson.elephantadmin.views.modules.reporting.all_contributions.mod
 		
 		// flag indicating if refunds should be shown or not
 		public var showRefunds : Boolean;
+		
+		// flag indicating if shared credit contributions should be shown or not
+		public var showSharedCredit : Boolean;
 
 		public var sortArray:Array = ['pledge_date DESC'];
 		public var exportHeaders:Array;
@@ -117,6 +120,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.all_contributions.mod
 			vo.recordPerPage = itemsPerPage;
 			vo.groupID = group;
 			vo.showRefunds = showRefunds;
+			vo.showSharedCredit = showSharedCredit;
 
 			if(exporting)
 			{
