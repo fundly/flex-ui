@@ -89,12 +89,29 @@
 				lastField = contactDetails.lastField;
 				
 				// assign an event handler to the last field to cope with tabbing to the next page						
-				lastField.addEventListener(FocusEvent.KEY_FOCUS_CHANGE, function(evt:FocusEvent):void {
-					if (!evt.shiftKey && evt.keyCode == 9) {
-						evt.preventDefault();
-						presentationModel.vindex++;						
+				lastField.addEventListener(FocusEvent.KEY_FOCUS_CHANGE, function(evt:FocusEvent):void {									
+					if ( evt.keyCode == 9 ) {
+						if( !evt.shiftKey ) { 
+							evt.preventDefault();						
+							if(_isValid) {
+								presentationModel.showErrorList = false;
+								presentationModel.vindex++;								
+							}
+							else {
+								presentationModel.showErrorList = ! presentationModel.showErrorList;
+							}
+						}	
+						else {
+							presentationModel.showErrorList = false;
+						}
 					}
-				});	
+				});
+				
+				//assign a mouse focus listener that hides the error list if it is visible
+				lastField.addEventListener(FocusEvent.MOUSE_FOCUS_CHANGE, function(evt:FocusEvent) : void {
+					if(presentationModel.showErrorList)
+						presentationModel.showErrorList = false;
+				});
 															
 				// validate the form if the action is edit
 				if(presentationModel.action == PledgeWorkspaceModel.EDIT)
