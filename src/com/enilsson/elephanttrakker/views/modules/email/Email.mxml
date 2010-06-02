@@ -46,7 +46,8 @@
 							useHandCursor="true" buttonMode="true" 
 							mouseFocusEnabled="true" mouseFocusChange="validateForm()" />
 					</mx:FormItem>		
-					<mx:FormItem label="Message" labelWidth="70" 
+					<view:MessageFormItem label="Message"
+						labelWidth="70" labelTop="34" 
 						width="100%" height="190" 
 						required="true" styleName="formLabel">
 						<mx:RichTextEditor id="message" 
@@ -59,7 +60,7 @@
 							keyUp="validateForm()" 
 							mouseFocusEnabled="true" 
 							mouseFocusChange="validateForm()" />
-					</mx:FormItem>	
+					</view:MessageFormItem>	
 				</mx:Form>
 				<mx:HBox width="100%" horizontalAlign="right" paddingRight="6">
 					<common:ValidFormIndicator id="formStatus" status="{isValid}" />

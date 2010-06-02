@@ -48,7 +48,7 @@
 				horizontalScrollPolicy="off">
 				<mx:ViewStack id="ccBillingVStack"
 					selectedIndex="{presentationModel.ccVStack}"
-					change="TooltipUtil.hideTooltip()"
+					change="billingVStackChangeHandler(event)"
 					width="330" height="100%"
 					top="0" horizontalCenter="-8">
 					<struktorForm:StruktorForm id="ccForm" 
@@ -72,6 +72,7 @@
 							top="25"
 							layoutProvider="{presentationModel.transactionLayout}"
 							dataProvider="{presentationModel.initialBillingDetails}"
+							formBuildComplete="formBuildCompleteAction(event)"
 							isValidChanged="setIsValid()"
 							validateOnKeyPress="true"
 							selectedGroups="{[2]}" 
@@ -369,22 +370,14 @@
 						presentationModel.pledgeData = pledgeInfo.formVariables;
 					break;
 					
-					case ccForm :
+					case billingForm :
 						lastField = event.currentTarget.lastField;
-						
- 						lastField.addEventListener(FocusEvent.KEY_FOCUS_CHANGE, function(evt:FocusEvent):void {
-							if (!evt.shiftKey && evt.keyCode == 9) 
-							{
-								evt.preventDefault();
-								
-								if ( presentationModel.numTabs > 2 && presentationModel.action != PledgeWorkspaceModel.EDIT ) {
-									presentationModel.prevVIndex = presentationModel.vindex;
-									presentationModel.vindex++;
-								}
-								else if ( presentationModel.workspaceValid )
-									presentationModel.setSubmitFocus = true;
-							}
-						});
+						addLastFieldListeners( lastField );
+					break;
+					
+					case ccForm :
+						lastField = event.currentTarget.lastField;						
+ 						addLastFieldListeners( lastField );
  
 						field = event.currentTarget.getField('amount') as TextInput;
  						BindingUtils.bindProperty(field, 'text', presentationModel, 'pledgeAmount');
@@ -412,18 +405,51 @@
 					if( ! emailField.parent.visible )
 						handleKeyFocusChange( event );
 				});
-				emailField.addEventListener( FocusEvent.KEY_FOCUS_CHANGE, handleKeyFocusChange );
+				sendByField.addEventListener( FocusEvent.MOUSE_FOCUS_CHANGE, function( event : FocusEvent ) : void {
+					if( ! emailField.parent.visible )
+						handleMouseFocusChange( event );
+				});	
 				
+				addLastFieldListeners( emailField );
 				BindingUtils.bindProperty(emailField, 'text', presentationModel, 'contactEmail');
 			}
 			
+			private function addLastFieldListeners( field : IEventDispatcher ) : void {
+				if(!field) return;
+				field.addEventListener( FocusEvent.KEY_FOCUS_CHANGE, handleKeyFocusChange );
+				field.addEventListener( FocusEvent.MOUSE_FOCUS_CHANGE, handleMouseFocusChange );
+			} 
+			
 			private function handleKeyFocusChange( event : FocusEvent ) : void {
-				if(!event.shiftKey && event.keyCode == Keyboard.TAB && presentationModel.numTabs > 2) {
-					event.preventDefault();
-					presentationModel.prevVIndex = presentationModel.vindex;
-					presentationModel.vindex++;
+				
+				if ( event.keyCode == Keyboard.TAB ) {
+					if( !event.shiftKey ) { 
+						event.preventDefault();
+						event.stopImmediatePropagation();			
+						if(_isValid) {
+							if ( presentationModel.numTabs > 2 && presentationModel.action != PledgeWorkspaceModel.EDIT ) {
+								presentationModel.showErrorList = false;
+								presentationModel.prevVIndex = presentationModel.vindex;
+								presentationModel.vindex++;
+							}
+							else if ( presentationModel.workspaceValid )
+								presentationModel.setSubmitFocus = true;
+						}
+						else {
+							presentationModel.showErrorList = ! presentationModel.showErrorList;
+						}
+					}	
+					else {
+						presentationModel.showErrorList = false;
+					}
 				}
 			}
+			
+			private function handleMouseFocusChange( event : FocusEvent ) : void {
+				if(presentationModel.showErrorList)
+					presentationModel.showErrorList = false;
+			}
+			
 			
 			/**
 			 * Handle the searches for the LookupInput fields
@@ -520,13 +546,35 @@
 				{
 					case PledgeWorkspaceModel.CC_VIEW :
 						presentationModel.transactionData = ccForm.formVariables;
+						UIComponent(ccForm.firstField).setFocus();
 					break;
 					case PledgeWorkspaceModel.CHECK_VIEW :
 						presentationModel.checkData = checkForm.formVariables;
+						UIComponent(checkForm.firstField).setFocus();
 					break;
 					case PledgeWorkspaceModel.NO_CONTRIB_VIEW :
 						presentationModel.transactionData = null;
 						presentationModel.checkData = null;
+						UIComponent(noContribForm.firstField).setFocus();
+					break;
+				}
+			}
+			
+			
+			/**
+			 * Handle the cc details/billing viewstack change and verify the forms
+			 */
+			private function billingVStackChangeHandler( event : IndexChangedEvent ) : void {
+				
+				setIsValid();
+				TooltipUtil.hideTooltip();
+				
+				switch( event.newIndex ) {
+					case PledgeWorkspaceModel.CC_DETAILS_VIEW:
+						UIComponent(ccForm.firstField).setFocus();
+					break;
+					case PledgeWorkspaceModel.BILLING_DETAILS_VIEW: 
+						UIComponent(billingForm.firstField).setFocus();
 					break;
 				}
 			}
