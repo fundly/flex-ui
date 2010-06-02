@@ -144,7 +144,7 @@
 							enabled="{!dataLoading &amp;&amp; _presentationModel.hostFilter.length > 1}"
 							change="_presentationModel.changeHost(hostCombo.selectedItem);"/>
 					</mx:FormItem>
-					<mx:CheckBox label="Show Shared Credit"
+					<mx:CheckBox label="Show shared credit"
 						textSelectedColor="#333333"
 						textRollOverColor="#333333" 
 						change="_presentationModel.showSharedCredit = event.currentTarget.selected; 
