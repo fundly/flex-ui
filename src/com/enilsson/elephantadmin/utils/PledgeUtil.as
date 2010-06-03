@@ -15,17 +15,11 @@ package com.enilsson.elephantadmin.utils
 			
 			var p : Object = pledge;
 			
-			return  ( isPledge(p)
-				&& p.c > 0				
-				&& p.pledge_amount > 0				
-				&& p.contrib_total == 0 );
+			return  ( isPledge(p) && p.pledge_amount == 0 );
 		}
 		
 		public static function isPledge( o : Object ) : Boolean {
-			return  ( o!= null 
-				&& o.hasOwnProperty("c")
-				&& o.hasOwnProperty("pledge_amount")
-				&& o.hasOwnProperty("contrib_total") );
+			return  ( o!= null && o.hasOwnProperty("pledge_amount") );
 		}
 	}
 }
