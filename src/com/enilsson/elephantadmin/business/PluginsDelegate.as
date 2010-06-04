@@ -155,5 +155,20 @@ package com.enilsson.elephantadmin.business
 			var token:AsyncToken = service.process_pledge( p.tr_users_id, p.contact, p.pledge, p.transaction, p.check );			
 			token.addResponder(responder);
 		}
+		
+		public function getTempSourceCodes() : void
+		{
+			this.service = ServiceLocator.getInstance().getRemoteObject('struktorPluginsEvents');
+			
+			var token:AsyncToken = service.getTempSourceCodes();
+			token.addResponder(responder);
+		}
+		
+		public function upsertEvent( event : Object ) : void 
+		{
+			this.service = ServiceLocator.getInstance().getRemoteObject('struktorPluginsEvents');
+			var token:AsyncToken = service.upsertEvent( event );
+			token.addResponder(responder);
+		}
 	}
 }

@@ -175,9 +175,11 @@ package com.enilsson.elephantadmin.controllers
 			this.addCommand(EventsEvent.EXPORT, EventsCommand);
 			this.addCommand(EventsEvent.GET_HOSTS, EventsCommand);
 			this.addCommand(EventsEvent.GET_PLEDGES, EventsCommand);
+			this.addCommand(EventsEvent.GET_TEMP_SOURCE_CODES, EventsCommand);
 			this.addCommand(EventsEvent.LOOKUP_SEARCH, EventsCommand);
 			this.addCommand(EventsEvent.UPSERT_HOST_RECORD, EventsCommand);
 			this.addCommand(EventsEvent.DELETE_HOST_RECORD, EventsCommand);
+			this.addCommand(EventsEvent.UPSERT_EVENT, EventsCommand );
 
 			// popups
 			this.addCommand(DownlineEvent.GET_DOWNLINE, DownlineCommand);

@@ -3,7 +3,6 @@ package com.enilsson.elephantadmin.views.modules.events
 	import com.enilsson.elephantadmin.models.EAModelLocator;
 	import com.enilsson.elephantadmin.views.common.AccessOptionsTab;
 	import com.enilsson.elephantadmin.views.manage_record_base.ManageRecord;
-	import com.enilsson.elephantadmin.views.manage_record_base.model.RecordModuleConfiguration;
 	import com.enilsson.elephantadmin.views.modules.events.model.EventsModel;
 	
 	import flash.events.Event;
@@ -39,7 +38,17 @@ package com.enilsson.elephantadmin.views.modules.events
 		
 		override protected function createChildren():void
 		{
+			if( !recordPanel )
+			{
+				recordPanel = new EventRecordPanel();
+				recordPanel.styleName = 'recordPanel';
+				this.addChild( recordPanel );
+			}
+			
 			super.createChildren();
+			
+			// move recordPanel to the top after all the other children have been created
+			setChildIndex( recordPanel, numChildren - 1 );
 			
 			if(optionsBox)
 			{
@@ -54,6 +63,5 @@ package com.enilsson.elephantadmin.views.modules.events
 				BindingUtils.bindProperty(accessOptionsTab, "setGroups", _model, "orgGroups");
 			}
 		}
-		
 	}
 }
