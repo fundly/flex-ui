@@ -23,6 +23,8 @@ package com.enilsson.elephantadmin.views.modules.contacts.model
 		public var matches:ArrayCollection;
 		public var matchTabLoading:Boolean;
 		
+		public var numContribs : int;
+		public var numRefunds : int;
 
 		public function ContactsModel(parentModel:ModelLocator=null)
 		{

@@ -189,7 +189,10 @@ package com.enilsson.elephantadmin.commands.modules
 			if(_model.debug) Logger.info('Loading Contact\'s Pledges Success', ObjectUtil.toString(data.result));
 
 			// assign some variables
-			var pledges:ArrayCollection = new ArrayCollection()
+			_contactsModel.numContribs = 0;
+			_contactsModel.numRefunds = 0;
+			
+			var pledges:ArrayCollection = new ArrayCollection();
 			for each(var item:Object in data.result.pledges)
 			{
 				var contributions:ArrayCollection = new ArrayCollection();
@@ -199,6 +202,7 @@ package com.enilsson.elephantadmin.commands.modules
 					{
 						transaction.type = "Credit Card";
 						contributions.addItem(transaction);
+						updateContributionsCount(transaction);
 					}
 				}
 				if(item.checks[1])
@@ -209,6 +213,7 @@ package com.enilsson.elephantadmin.commands.modules
 						{
 							check.type = "Check";
 							contributions.addItem(check);
+							updateContributionsCount(check);
 						}
 					}
 				}
@@ -218,6 +223,7 @@ package com.enilsson.elephantadmin.commands.modules
 					{
 						paypal.type = "PayPal";
 						contributions.addItem(paypal);
+						updateContributionsCount(paypal);
 					}
 				}
 				if(contributions.length > 0)
@@ -246,6 +252,15 @@ package com.enilsson.elephantadmin.commands.modules
 				'errorBox', 
 				true 
 			);
+		}
+		private function updateContributionsCount( contribution : Object ) : void {
+			if( contribution && contribution.hasOwnProperty('amount') ) 
+			{
+				if( contribution.amount < 0 )
+					_contactsModel.numRefunds++;
+				else
+					_contactsModel.numContribs++;
+			}
 		}
 
 

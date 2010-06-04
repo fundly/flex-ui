@@ -18,7 +18,7 @@
 			<mx:VRule height="10" />
 			<mx:Text htmlText="&lt;b&gt;Contributed&lt;/b&gt;: {cf.format(_presentationModel.selectedRecord.contrib_total)}" />
 			<mx:VRule height="10" />
-			<mx:Text htmlText="&lt;b&gt;Number of Contributions&lt;/b&gt;: {parseInt(_presentationModel.selectedRecord.c)}" />
+			<mx:Text htmlText="&lt;b&gt;Number of Contributions&lt;/b&gt;: {_presentationModel.numContribs} ({_presentationModel.numRefunds} refunds)" />
 			<mx:Spacer width="100%" />
 			<common:ListGridToggle stateChange="pledgesVstack.selectedIndex = event.currentTarget.showState == ListGridToggle.LIST ? 0 : 1;" />			
 		</mx:HBox>
