@@ -104,7 +104,7 @@
 				
 				return value.city + ", " + value.state + "<br>" + 
 						"Pledged: <b>" + currencyFormatter.format(value.pledge_total) + "</b>" + 
-						" - Contrib'd: <b>" + currencyFormatter.format(value.contrib_total) + "</b>";
+						" - Contributed: <b>" + currencyFormatter.format(value.contrib_total) + "</b>";
 			}
 
 		]]>
