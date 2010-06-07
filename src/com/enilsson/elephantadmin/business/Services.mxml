@@ -378,6 +378,17 @@
 		<mx:method name="export_batch" />
 	</mx:RemoteObject>
 	
+	<mx:RemoteObject id="struktorPluginsEvents"
+		endpoint="{_model.gatewayURL}"
+		destination="amfphp" 
+		source="plugins.common.events" 
+		requestTimeout="120"
+		showBusyCursor="true"
+		fault="handleFault(event)">
+		<mx:method name="upsertEvent" />
+		<mx:method name="getTempSourceCodes" />
+	</mx:RemoteObject>
+	
 	<mx:RemoteObject id="access"
 		endpoint="{_model.gatewayURL}"
 		destination="amfphp"

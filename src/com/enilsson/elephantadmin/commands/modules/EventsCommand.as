@@ -1,6 +1,7 @@
 package com.enilsson.elephantadmin.commands.modules
 {
 	import com.adobe.cairngorm.control.CairngormEvent;
+	import com.enilsson.elephantadmin.business.PluginsDelegate;
 	import com.enilsson.elephantadmin.business.RecordDelegate;
 	import com.enilsson.elephantadmin.business.RecordsDelegate;
 	import com.enilsson.elephantadmin.business.SearchDelegate;
@@ -13,6 +14,7 @@ package com.enilsson.elephantadmin.commands.modules
 	
 	import mx.collections.ArrayCollection;
 	import mx.rpc.IResponder;
+	import mx.rpc.Responder;
 	import mx.rpc.events.FaultEvent;
 	import mx.rpc.events.ResultEvent;
 	import mx.utils.ObjectUtil;
@@ -46,6 +48,9 @@ package com.enilsson.elephantadmin.commands.modules
 				case EventsEvent.GET_PLEDGES :
 					getPledges( event as EventsEvent );
 				break;
+				case EventsEvent.GET_TEMP_SOURCE_CODES :
+					getTempSourceCodes( event as EventsEvent );
+				break;
 				case EventsEvent.LOOKUP_SEARCH :
 					hostsLookup( event as EventsEvent );
 				break;
@@ -54,6 +59,9 @@ package com.enilsson.elephantadmin.commands.modules
 				break;
 				case EventsEvent.DELETE_HOST_RECORD :
 					deleteHostRecord( event as EventsEvent );
+				break;
+				case EventsEvent.UPSERT_EVENT :
+					upsertEvent( event as EventsEvent );
 				break;
 			}
 		}	
@@ -161,6 +169,27 @@ package com.enilsson.elephantadmin.commands.modules
 
 			_model.dataLoading = false;
 		}
+		
+		private function getTempSourceCodes( event : EventsEvent ):void 
+		{
+			var handlers:IResponder = new mx.rpc.Responder( onResults_getTempSourceCodes, onFault_getTempSourceCodes );
+			var delegate:PluginsDelegate = new PluginsDelegate( handlers );
+			
+			_model.dataLoading = true;
+			delegate.getTempSourceCodes();
+		}
+		private function onResults_getTempSourceCodes( event : ResultEvent ) : void
+		{
+			_model.dataLoading = false;
+			_eventsModel.tempSourceCodes = new ArrayCollection( event.result as Array );			
+		} 
+		
+		private function onFault_getTempSourceCodes( event : FaultEvent ) : void
+		{
+			_model.dataLoading = false;
+			if(_model.debug) Logger.info('getTempSourceCodes Fault', ObjectUtil.toString( event.fault ));
+		}
+		
 
 
 		/**
@@ -320,5 +349,32 @@ package com.enilsson.elephantadmin.commands.modules
 		}
 
 		
+		private function upsertEvent( event : EventsEvent ) : void {
+			var handlers:IResponder = new mx.rpc.Responder(onResult_upsertEvent, onFault_upsertEvent);
+			var delegate:PluginsDelegate = new PluginsDelegate(handlers);
+
+			_model.dataLoading = true;
+
+			delegate.upsertEvent( event.params );
+		}
+		private function onResult_upsertEvent( event : ResultEvent ) : void {
+			_model.dataLoading = false;
+			
+			_model.errorVO = new ErrorVO( 'Event saved successfully!', 'successBox', true );
+			
+			var pm : EventsModel = _presentationModel as EventsModel;
+			pm.getTempSourceCodes();
+			pm.lastQuery.dispatch();
+		} 
+		private function onFault_upsertEvent( event : FaultEvent ) : void {
+			if(_eventsModel.debug) Logger.info('upsertEvent Fault', ObjectUtil.toString(event.fault));	
+			
+			_model.dataLoading = false;			
+			_model.errorVO = new ErrorVO( 
+				'There was a problem saving this event!<br><br>' + event.fault.faultString, 
+				'errorBox', 
+				true 
+			);
+		}
 	}
 }

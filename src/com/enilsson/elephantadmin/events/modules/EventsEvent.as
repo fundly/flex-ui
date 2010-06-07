@@ -10,9 +10,11 @@ package com.enilsson.elephantadmin.events.modules
 		static public var EXPORT:String = 'events_export';
 		static public var GET_HOSTS:String = 'events_hosts';
 		static public var GET_PLEDGES:String = 'events_pledges';
+		static public var GET_TEMP_SOURCE_CODES:String = 'events_tempsourcecodes';
 		static public var LOOKUP_SEARCH:String = 'events_lookupsearch';
 		static public var UPSERT_HOST_RECORD:String = 'events_upserthost';
 		static public var DELETE_HOST_RECORD:String = 'events_deletehost';
+		static public var UPSERT_EVENT:String = "event_upsert";
 
 		public function EventsEvent( type:String, model:RecordModel, vo:Object = null )
 		{
