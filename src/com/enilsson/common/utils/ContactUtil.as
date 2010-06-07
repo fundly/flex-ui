@@ -10,7 +10,7 @@ package com.enilsson.common.utils
 				 && isPropertySet(contact, 'address1')
 				 && isPropertySet(contact, 'state')
 				 && isPropertySet(contact, 'city')
-				 && isPropertySet(contact, 'zip'); 
+				 && isPropertySet(contact, 'zip') ); 
 		}
 		
 		private static function isPropertySet( contact : Object, prop : String ) : Boolean {
