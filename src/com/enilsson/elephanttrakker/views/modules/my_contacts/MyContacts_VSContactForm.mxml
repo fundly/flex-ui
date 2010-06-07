@@ -53,6 +53,8 @@
 
 	<mx:Script>
 		<![CDATA[
+			import mx.controls.Alert;
+			import com.enilsson.common.utils.ContactUtil;
 			import com.enilsson.elephanttrakker.events.modules.my_contacts.GetContactEvent;
 			import mx.utils.ObjectUtil;
 			import com.enilsson.graphics.enDropShadows;
@@ -67,7 +69,15 @@
 				if(_model.debug)
 					Logger.info('upsertContact', contactsForm.formVariables);
 				
-				new UpsertContactEvent( contactsForm.formVariables ).dispatch()
+				var contact : Object = contactsForm.formVariables;				
+				if( ContactUtil.hasAddressInfo( contact ) ) {
+					new UpsertContactEvent( contact ).dispatch()	
+				}
+				else {
+					Alert.show("No address info entered", "Address info?");
+				}
+				
+				
 			}
 			
 			private function formBuildCompleteHandler(event:Event):void
