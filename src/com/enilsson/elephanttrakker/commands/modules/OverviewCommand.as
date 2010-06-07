@@ -171,7 +171,7 @@ package com.enilsson.elephanttrakker.commands.modules
 			}};
 			
 			delegate.getRecords( 
-				new RecordsVO( 'statistics<c:contrib_total:p:pledge_total:month:year>', where, 'statistics.year ASC statistics.month ASC' ) 
+				new RecordsVO( 'statistics', where, 'statistics.year ASC statistics.month ASC' ) 
 			);
 		}
 
@@ -225,20 +225,25 @@ package com.enilsson.elephanttrakker.commands.modules
 					if(item.year == periodArray[i].year && item.month == periodArray[i].month) break;
 				}
 				
+				var numContribs : int = parseInt(item.c) + parseInt(item.shared_credit_c);
+				var contribTotal : int = parseInt(item.contrib_total) + parseInt(item.shared_credit_contrib_total);
+				var numPledges : int = parseInt(item.p) + parseInt(item.shared_credit_p);
+				var pledgeTotal : int = parseInt(item.pledge_total) + parseInt(item.shared_credit_pledge_total);
+				
 				var dpObj:Object = new Object();
 				if(iter == 0){
 					dpObj = {
 						'label' : periodArray[i].month + '/' + periodArray[i].year.toString().substr(2,2),
 						'month' : periodArray[i].month,
 						'year' : periodArray[i].year,
-						'Pledge' : ((item.pledge_total) ? parseInt(item.pledge_total) : 0),
-						'Received' : ((item.contrib_total) ? parseInt(item.contrib_total) : 0),
-						'Donors' : ((item.p) ? parseInt(item.p) : 0),
-						'Contribs' : ((item.c) ? parseInt(item.c) : 0),
-						'cPledge' : ((item.pledge_total) ? parseInt(item.pledge_total) : 0),
-						'cReceived' : ((item.contrib_total) ? parseInt(item.contrib_total) : 0),
-						'cDonors' : ((item.p) ? parseInt(item.p) : 0),
-						'cContribs' : ((item.p) ? parseInt(item.c) : 0)
+						'Pledge' : pledgeTotal,
+						'Received' : contribTotal,
+						'Donors' : numPledges,
+						'Contribs' : numContribs,
+						'cPledge' : pledgeTotal,
+						'cReceived' : contribTotal,
+						'cDonors' : numPledges,
+						'cContribs' : numContribs
 					}
 				}
 				else
@@ -265,14 +270,14 @@ package com.enilsson.elephanttrakker.commands.modules
 							'label' : periodArray[i].month + '/' + periodArray[i].year.toString().substr(2,2),
 							'month' : periodArray[i].month,
 							'year' : periodArray[i].year,
-							'Pledge' : parseInt(item.pledge_total),
-							'Received' : parseInt(item.contrib_total),
-							'Donors' : parseInt(item.p),
-							'Contribs' : parseInt(item.c),
-							'cPledge' : (parseInt(dp[iter-1].cPledge) + parseInt(item.pledge_total)),
-							'cReceived' : (parseInt(dp[iter-1].cReceived) + parseInt(item.contrib_total)),
-							'cDonors' : (parseInt(dp[iter-1].cDonors) + parseInt(item.p)),
-							'cContribs' : (parseInt(dp[iter-1].cContribs) + parseInt(item.c))
+							'Pledge' : pledgeTotal,
+							'Received' : contribTotal,
+							'Donors' : numPledges,
+							'Contribs' : numContribs,
+							'cPledge' : (parseInt(dp[iter-1].cPledge) + pledgeTotal),
+							'cReceived' : (parseInt(dp[iter-1].cReceived) + contribTotal),
+							'cDonors' : (parseInt(dp[iter-1].cDonors) + numPledges),
+							'cContribs' : (parseInt(dp[iter-1].cContribs) + numContribs)
 						}
 					}
 				}

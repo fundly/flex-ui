@@ -132,6 +132,14 @@ package com.enilsson.elephantadmin.business
 			token.addResponder(responder);
 		}
 		
+		public function addCheckRefund( check : Object ) : void 
+		{
+			this.service = ServiceLocator.getInstance().getRemoteObject('struktorPluginsChecks');
+			
+			var token : AsyncToken = service.add_refund( check );
+			token.addResponder(responder);
+		}
+		
 		public function upsertContact( params:Object, userID:int=0 ):void
 		{
 			this.service = ServiceLocator.getInstance().getRemoteObject('struktorPluginsContacts');
@@ -155,7 +163,7 @@ package com.enilsson.elephantadmin.business
 			var token:AsyncToken = service.process_pledge( p.tr_users_id, p.contact, p.pledge, p.transaction, p.check );			
 			token.addResponder(responder);
 		}
-		
+
 		public function getTempSourceCodes() : void
 		{
 			this.service = ServiceLocator.getInstance().getRemoteObject('struktorPluginsEvents');
@@ -168,6 +176,22 @@ package com.enilsson.elephantadmin.business
 		{
 			this.service = ServiceLocator.getInstance().getRemoteObject('struktorPluginsEvents');
 			var token:AsyncToken = service.upsertEvent( event );
+			token.addResponder(responder);
+		}
+		
+		public function addSharedCredit( pledgeID:int, userID:int ) : void
+		{
+			this.service = ServiceLocator.getInstance().getRemoteObject('struktorPluginsSharedCredit');
+			
+			var token:AsyncToken = service.add_shared_credit( pledgeID, userID );
+			token.addResponder(responder);		
+		}
+		
+		public function removeSharedCredit( pledgeID:int, userID:int ) : void
+		{
+			this.service = ServiceLocator.getInstance().getRemoteObject('struktorPluginsSharedCredit');
+			
+			var token:AsyncToken = service.remove_shared_credit( pledgeID, userID );
 			token.addResponder(responder);
 		}
 	}

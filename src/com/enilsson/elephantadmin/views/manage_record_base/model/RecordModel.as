@@ -170,10 +170,14 @@ package com.enilsson.elephantadmin.views.manage_record_base.model
 		private var _viewState:String = 'showSearch';
 		public function set viewState ( value:String ):void
 		{
-			_viewState = value;
+			if( _viewState != value ) {
+				_viewState = value;
 			
-			if(_viewState == 'showOptions' && !addingNewRecord)
-				getRecordDetails();
+				if( ( _viewState == 'showOptions' && !addingNewRecord ) || 
+					( _viewState == 'showSearch' && records.length == 0 ) )
+					refreshData();
+			}
+				
 		}
 
 
@@ -454,7 +458,7 @@ package com.enilsson.elephantadmin.views.manage_record_base.model
 		public function refreshData() : void {
 			switch(viewState) {
 				case 'showOptions': getRecordDetails(); break;
-				case 'showSearch':	clearSearch();		break;
+				case 'showSearch': clearSearch(); break;
 			}
 		}
 		

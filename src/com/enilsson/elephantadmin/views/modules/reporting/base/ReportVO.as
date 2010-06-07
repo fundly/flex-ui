@@ -10,6 +10,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.base
 		public var recordPerPage:int;
 		public var page:int;
 		public var showRefunds:Boolean;
+		public var showSharedCredit:Boolean;
 	
 		public var filter:int;
 

@@ -49,7 +49,7 @@
 					label="SUBMIT"
 					enabled="{refundMethods.selectedIndex == 0 ? refundCheckForm.isValid : false}"
 					toolTip="{refundSubmit.enabled ? 'This form is ready to submit!' : 'Please enter all required fields!'}"
-					click="presentationModel.upsertCheckRefund( refundCheckForm.formVariables )" />				
+					click="presentationModel.addCheckRefund( refundCheckForm.formVariables )" />				
 			</mx:HBox>
 			
 		</mx:VBox>

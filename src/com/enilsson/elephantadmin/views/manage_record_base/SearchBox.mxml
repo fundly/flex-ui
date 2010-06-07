@@ -108,6 +108,7 @@
 
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.common.components.SharedItemGridColumn;
 			import com.enilsson.common.components.PledgeRefundedDecorator;
 			import com.enilsson.elephantadmin.views.common.ListGridToggle;
 			import com.enilsson.utils.EDateUtil;
@@ -159,12 +160,12 @@
 					{
 						var field:String = presentationModel.config.gridFields[i];
 						
-						dgCol = new DataGridColumn();
+						dgCol = new SharedItemGridColumn();
 						dgCol.dataField = field;
 						
 						f = presentationModel.fields[field];
 						
-						if( field == "pledgewarning" ) {
+						if( field == "pledgeicons" ) {
 							dgCol.itemRenderer = new ClassFactory(PledgeRefundedDecorator);
 							dgCol.width = 14;
 							dgCol.resizable = false;

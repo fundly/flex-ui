@@ -14,11 +14,6 @@
 		click="editAction(data)"
 		useHandCursor="true" buttonMode="true"
 		/>
-	<!--mx:Button styleName="btnRSVP" 
-		toolTip="RSVP {data.fname} to an Event" 
-		click="rsvpContact()"
-		useHandCursor="true" buttonMode="true"
-		/-->
 	<mx:Button styleName="btnDelete" 
 		toolTip="Delete this pledge"
 		visible="{data.c == 0}"
@@ -29,6 +24,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.common.utils.SharedCreditUtil;
 			import com.enilsson.elephanttrakker.views.modules.pledge_workspace.model.PledgeWorkspaceVO;
 			import com.enilsson.elephanttrakker.views.modules.pledge_workspace.events.SPWEvent;
 			import com.enilsson.elephanttrakker.events.modules.my_history.MyHistoryEvent;
@@ -73,22 +69,11 @@
 				new MyHistoryEvent( MyHistoryEvent.DELETE_PLEDGE, { 'pledge_id' : data.id } ).dispatch();
 			}
 			
-			
-/* 			private function rsvpContact():void
+			override protected function updateDisplayList(w:Number, h:Number):void
 			{
-				_model.events.selectedEventID = 0;
-				_model.events.selectedEventName = '';
-				_model.events.selectedContactID = data.contact_id;
-				_model.events.selectedContactName = data.lname + ', '+ data.fname;
-				
-				_model.events.selectedData = data;
-				_model.events.selectedData['fullName'] = data.lname + ', '+ data.fname;
-				_model.events.showRSVPFormOnStart = true;
-
-	
-				// change the main view to see the call logging
-				_model.mainViewState = ETModelLocator.EVENTS_VIEW;
-			} */
+				super.updateDisplayList(w, h);
+				visible = SharedCreditUtil.isSharedCreditPledge( data ) == false; 
+			}
 		]]>
 		
 	</mx:Script>

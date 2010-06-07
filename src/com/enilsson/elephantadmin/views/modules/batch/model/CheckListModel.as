@@ -84,16 +84,6 @@ package com.enilsson.elephantadmin.views.modules.batch.model
 			new BatchEvent(BatchEvent.GET_CHECK_LIST).dispatch();
 		}
 
-		public function getPledgeList(event:PaginatorEvent = null):void
-		{
-			if(event) {
-				_model.batch.pledgeListFrom = event.index * itemsPerPage;
-			} else {
-				_model.batch.pledgeListFrom = 0;
-			}
-			new BatchEvent(BatchEvent.GET_PLEDGE_LIST).dispatch();
-		}
-		
 		public function addAllChecksToBatch() : void 
 		{
 			new BatchListEvent( BatchListEvent.ADD_CHECKS_TO_NEW_BATCH, checkList.toArray() ).dispatch();

@@ -1,11 +1,15 @@
 package com.enilsson.elephantadmin.commands.modules
 {
 	import com.adobe.cairngorm.control.CairngormEvent;
+	import com.enilsson.elephantadmin.business.PluginsDelegate;
 	import com.enilsson.elephantadmin.business.RecordDelegate;
+	import com.enilsson.elephantadmin.business.RecordsDelegate;
 	import com.enilsson.elephantadmin.business.SearchDelegate;
 	import com.enilsson.elephantadmin.events.modules.PledgeEvent;
 	import com.enilsson.elephantadmin.views.modules.pledges.model.PledgesModel;
 	import com.enilsson.elephantadmin.vo.ErrorVO;
+	import com.enilsson.elephantadmin.vo.RecordsVO;
+	import com.enilsson.elephantadmin.vo.SharedCreditVO;
 	
 	import mx.collections.ArrayCollection;
 	import mx.collections.Sort;
@@ -37,18 +41,27 @@ package com.enilsson.elephantadmin.commands.modules
 			{
 				case PledgeEvent.GET_CONTRIBUTIONS :
 					getContributions( event as PledgeEvent );
-				break;	
+				break;
 				case PledgeEvent.LOOKUPINPUT_SEARCH :
 					lookupInputSearch( event as PledgeEvent );
 				break;
 				case PledgeEvent.GET_LABEL :
 					searchLabel( event as PledgeEvent );
 				break;
-				case PledgeEvent.UPSERT_CHECKREFUND :
-					upsertCheckRefund( event as PledgeEvent );
+				case PledgeEvent.ADD_CHECKREFUND :
+					addCheckRefund( event as PledgeEvent );
 				break;
 				case PledgeEvent.DELETE_CHECKREFUND :
 					deleteRefund( event as PledgeEvent );
+				break;
+				case PledgeEvent.GET_SHARED_CREDIT_USERS :
+					getSharedCreditFundraisers( event as PledgeEvent );
+				break;	
+				case PledgeEvent.ADD_SHARED_CREDIT :
+					addSharedCredit( event as PledgeEvent );
+				break;
+				case PledgeEvent.REMOVE_SHARED_CREDIT :
+					removeSharedCredit( event as  PledgeEvent );
 				break;
 			}
 		}
@@ -238,55 +251,38 @@ package com.enilsson.elephantadmin.commands.modules
 		}
 
 		/**
-		 * Upsert a check refund
+		 * Add a check refund
 		 */
-		private function upsertCheckRefund( event:PledgeEvent ):void
+		private function addCheckRefund( event:PledgeEvent ):void
 		{			
-			var handlers:IResponder = new mx.rpc.Responder(onResults_upsertCheckRefund, onFault_upsertCheckRefund);
-			var delegate:RecordDelegate = new RecordDelegate(handlers);
+			var handlers:IResponder = new mx.rpc.Responder(onResults_addCheckRefund, onFault_addCheckRefund);
+			var delegate:PluginsDelegate = new PluginsDelegate(handlers);
 			
 			_model.dataLoading = true;
 			
-			delegate.upsertRecord( event.recordVO );
+			delegate.addCheckRefund( event.params );
 		}
 		
-		private function onResults_upsertCheckRefund( event:Object ):void 
+		private function onResults_addCheckRefund( event:Object ):void 
 		{
 			if(_pledgesModel.debug) Logger.info('upsertCheckRefund Success', ObjectUtil.toString(event.result));
 			
 			_model.dataLoading = false;
 
-			switch(event.result.state)
-			{
-				case '99' :
-				case '98' :
-					_pledgesModel.refundError = new ErrorVO( 'Check refund added successfully!', 'successBox', true );
+			_pledgesModel.refundError = new ErrorVO( 'Check refund added successfully!', 'successBox', true );
 					
-					// refresh the search list
-					if(_presentationModel.lastQuery) {
-						_presentationModel.lastQuery.dispatch();
-					}
-					
-					_presentationModel.searchListSelectedIndex = _presentationModel.searchListLastIndex;
-					
-					// refresh the contributions
-					_pledgesModel.updatePledge();
-				break;
-				case '-99' :
-					var eMsg:String = '';
-					for(var i:String in event.result.errors)
-						eMsg += '- ' + event.result.errors[i] + '<br>';
-						
-					_pledgesModel.refundError = new ErrorVO( 
-						'There was a problem processing this refund:<br><br>' + eMsg, 
-						'errorBox', 
-						true 
-					);
-				break;	
+			// refresh the search list
+			if(_presentationModel.lastQuery) {
+				_presentationModel.lastQuery.dispatch();
 			}
+			
+			_presentationModel.searchListSelectedIndex = _presentationModel.searchListLastIndex;
+			
+			// refresh the contributions
+			_pledgesModel.updatePledge();
 		}	
 		
-		private function onFault_upsertCheckRefund(event:Object):void
+		private function onFault_addCheckRefund(event:Object):void
 		{
 			if(_pledgesModel.debug) Logger.info('upsertCheckRefund Fault', ObjectUtil.toString(event.fault));	
 			
@@ -352,6 +348,124 @@ package com.enilsson.elephantadmin.commands.modules
 			_model.dataLoading = false;			
 			_model.errorVO = new ErrorVO( 'There was a problem processing this record!<br><br>' + event.fault.faultString, 'errorBox', true );
 		}
+		
+		
+		/**
+		 * get Shared Credit Fundaisers
+		 */
+		private function getSharedCreditFundraisers( event : PledgeEvent ):void
+		{
+			if(_model.debug) Logger.info(_moduleName + ' getSharedCreditFundraisers Call', ObjectUtil.toString(event.params));
+			
+			if( ! event.params || ! event.params.hasOwnProperty('pledgeID') )
+				return;
+			
+			var handlers:IResponder = new mx.rpc.Responder(onResult_getSharedCreditFundraisers, onFault_getSharedCreditFundraisers);
+			var delegate:RecordsDelegate = new RecordsDelegate(handlers);
+			
+			var esql:String = 'shared_credit(user_id<fname:lname:_fid>)';
+					
+			var where : Object =  {
+				statement:	"(1)",	
+					1 :	{	
+						what : "shared_credit.shared_pledge_id",
+						val : event.params.pledgeID,
+						op : "="
+					}
+			};
+			
+			var recordsVO:RecordsVO = new RecordsVO( esql, where );
+			
+			_model.dataLoading = true;
+			_pledgesModel.sharedCreditTabLoading = true;
+
+			delegate.getRecords( recordsVO );
+		}
+		private function onResult_getSharedCreditFundraisers( event : ResultEvent ) : void {
+			if(_model.debug) Logger.info('getSharedCreditFundraisers Success', ObjectUtil.toString(event.result));
+			
+			var ac 		: ArrayCollection = new ArrayCollection();
+			var table	: String = event.result.table_name;
+			var item	: Object;
+			
+			for each( item in event.result[table] ) {
+				ac.addItem( item );
+			}
+			
+			_model.dataLoading = false;
+			_pledgesModel.sharedCreditTabLoading = false;
+			_pledgesModel.sharedCreditFundraisers = ac;
+		}
+		private function onFault_getSharedCreditFundraisers( event : FaultEvent ) : void {
+			if(_model.debug) Logger.info('getSharedCreditFundraisers Fault', ObjectUtil.toString(event.fault));
+			_model.errorVO = new ErrorVO( 
+				'There was a problem loading the shared credit fundraisers:<br><br>' + event.fault.faultString, 
+				'errorBox', 
+				true 
+			);
+			
+			_model.dataLoading = false;
+			_pledgesModel.sharedCreditTabLoading = false;
+		}
+		
+		/**
+		 * add for SharedCredit
+		 */
+		private function addSharedCredit( event : PledgeEvent ) : void {
+			var handlers:IResponder = new mx.rpc.Responder(onResult_addSharedCredit, onFault_addSharedCredit);
+			var delegate:PluginsDelegate = new PluginsDelegate(handlers);
+			var vo : SharedCreditVO = event.params as SharedCreditVO;
+			
+			if(!vo) return;
+
+			_model.dataLoading = true;		
+			delegate.addSharedCredit( vo.pledgeID, vo.userID );			
+		}		
+		private function onResult_addSharedCredit( event : ResultEvent ) : void {
+			if(_pledgesModel.debug) Logger.info('addSharedCredit Success', ObjectUtil.toString(event.result));
+			
+			_model.dataLoading = false;
 	
+			_model.errorVO = new ErrorVO( 'Shared credit added successfully!', 'successBox', true );
+									
+			// refresh the shared credit fundraisers
+			_pledgesModel.getSharedCreditFundraisers();
+
+		}		
+		private function onFault_addSharedCredit( event : FaultEvent ) : void {
+			if(_pledgesModel.debug) Logger.info('addSharedCredit Fault', ObjectUtil.toString(event.fault));
+			_model.dataLoading = false;
+			_model.errorVO = new ErrorVO( 'There was a problem adding shared credit:<br><br>' + event.fault.faultString, 'errorBox', true );
+		}
+		
+		
+		
+		/**
+		 * remove for SharedCredit
+		 */
+		private function removeSharedCredit( event : PledgeEvent ) : void {
+			var handlers:IResponder = new mx.rpc.Responder(onResult_removeSharedCredit, onFault_removeSharedCredit);
+			var delegate:PluginsDelegate = new PluginsDelegate(handlers);
+			var vo : SharedCreditVO = event.params as SharedCreditVO;
+			
+			if(!vo) return;
+
+			_model.dataLoading = true;		
+			delegate.removeSharedCredit( vo.pledgeID, vo.userID );			
+		}		
+		private function onResult_removeSharedCredit( event : ResultEvent ) : void {
+			if(_pledgesModel.debug) Logger.info('removeSharedCredit Success', ObjectUtil.toString(event.result));
+			
+			_model.dataLoading = false;
+	
+			_model.errorVO = new ErrorVO( 'Shared credit removed successfully!', 'successBox', true );
+									
+			// refresh the shared credit fundraisers
+			_pledgesModel.getSharedCreditFundraisers();
+		}		
+		private function onFault_removeSharedCredit( event : FaultEvent ) : void {
+			_model.dataLoading = false;
+			_model.errorVO = new ErrorVO( 'There was a problem deleting the shared credit:<br><br>' + event.fault.faultString, 'errorBox', true );
+		}
 	}
 }

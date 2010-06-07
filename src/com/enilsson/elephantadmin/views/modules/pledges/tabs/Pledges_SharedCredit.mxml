@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox
+	label="SHARED CREDIT" 
+	enabled="{!_presentationModel.sharedCreditTabLoading}"
+	implements="com.enilsson.elephantadmin.interfaces.IOptionView"	
+	width="100%" height="100%"
+	paddingLeft="10" paddingRight="10" paddingTop="10" paddingBottom="10"
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:controls="com.enilsson.controls.*" 
+	xmlns:common="com.enilsson.elephantadmin.views.common.*">
+	
+	<mx:HBox width="100%"
+		borderColor="#FFFFFF" borderStyle="solid"
+		backgroundColor="#FFFFFF" cornerRadius="4"
+		paddingTop="3" paddingBottom="3"
+		horizontalAlign="center"
+		verticalAlign="middle">
+		
+		<mx:Text styleName="textDesc" text="Select new shared credit holder:" />
+		
+		<controls:LookupInput id="tr_users_id"
+			styleName="struktorInput"
+			itemRenderer="{new ClassFactory(FID_Item)}"
+			searchDataProvider="{_presentationModel.fidSearch}"
+			searchStart="_presentationModel.searchStartHandler( event )" />
+						
+		<common:RestrictedCreateBtn
+			label="ADD"
+			width="85" fontSize="10"
+			enabled="{ tr_users_id.label.length > 0 }"
+			click="handleAddClick(event)"
+			/>
+	</mx:HBox>
+	
+	<mx:List id="userList"
+		styleName="fundraiserList"
+		width="100%" height="100%"
+		variableRowHeight="true" 
+		itemRenderer="{new ClassFactory(Pledges_SharedCreditRenderer)}"
+		dataProvider="{_presentationModel.sharedCreditFundraisers}" />
+		
+	<mx:Canvas width="100%">
+		<common:RestrictedCreateBtn
+			horizontalCenter="0" verticalCenter="0"
+			label="REMOVE"
+			width="85" fontSize="10"
+			enabled="{ userList.selectedItem != null }"
+			click="_presentationModel.removeSharedCredit( userList.selectedItem )"
+			/>		
+	</mx:Canvas>
+	
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephantadmin.views.modules.pledges.renderers.Pledges_SharedCreditRenderer;
+			import mx.controls.Button;
+			import mx.containers.TabNavigator;
+			import mx.utils.ObjectUtil;
+			import com.enilsson.elephantadmin.views.modules.pledges.renderers.FID_Item;
+			import mx.controls.Text;
+			import com.enilsson.elephantadmin.interfaces.IRecordModel;
+			import com.enilsson.elephantadmin.views.modules.pledges.model.PledgesModel;
+			
+			[Bindable] private var _presentationModel:PledgesModel;
+			public function set presentationModel ( value:IRecordModel ):void {
+				_presentationModel = PledgesModel(value);
+			}
+			[Bindable] public function get presentationModel():IRecordModel {
+				return _presentationModel;
+			}
+			
+			private function handleAddClick( event : Event ) : void {
+				_presentationModel.addSharedCredit( tr_users_id.selectedData );
+				tr_users_id.clear();
+			}
+			
+			
+			public function set showTab( val : Boolean ) : void {
+				if( parent is TabNavigator ) 
+				{
+					var tn : TabNavigator = parent as TabNavigator;
+					var i : int = tn.getChildIndex( this );
+					
+					try{
+						// hide the tab on the parent tab navigator
+						var tab : Button = tn.getTabAt( i );
+						tab.visible = tab.includeInLayout = val;
+						tn.invalidateDisplayList();
+						
+						// select the first visible tab after hiding
+						for( var j:int = 0; j < tn.numChildren; j++ ) {
+							tab = tn.getTabAt( j );
+							if( tab.visible ) 
+								tn.selectedIndex = j;
+						}
+					}catch( e : Error ) { }
+				} 
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:Style>
+		.fundraiserList{
+			color:#333333;
+			alternatingItemColors: #FFFFFF,#EDEDED;
+		}
+	</mx:Style>
+	
+</mx:VBox>

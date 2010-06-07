@@ -359,6 +359,7 @@
 		requestTimeout="120"
 		showBusyCursor="true"
 		fault="handleFault(event)">
+		<mx:method name="add_refund" />
 		<mx:method name="insert_checks_batches" />
 		<mx:method name="list_unfulfilled_checks" />
 		<mx:method name="list_batch_checks" />
@@ -395,6 +396,17 @@
 		showBusyCursor="true"
 		fault="handleFault(event)">
 		<mx:method name="get_ui_access" />
+	</mx:RemoteObject>
+	
+	<mx:RemoteObject id="struktorPluginsSharedCredit"
+		endpoint="{_model.gatewayURL}" 
+		destination="amfphp" 
+		source="plugins.common.shared_credit" 
+		requestTimeout="120"
+		showBusyCursor="true"
+		fault="handleFault(event)">
+		<mx:method name="add_shared_credit" />
+		<mx:method name="remove_shared_credit" />
 	</mx:RemoteObject>
 	
 	<mx:HTTPService id="versionService"

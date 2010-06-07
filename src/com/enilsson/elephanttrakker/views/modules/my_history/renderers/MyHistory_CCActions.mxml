@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MyHistory_ContribsActions 
+	xmlns="com.enilsson.elephanttrakker.views.modules.my_history.renderers.*" 
+	xmlns:mx="http://www.adobe.com/2006/mxml">
+	
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.common.utils.SharedCreditUtil;
+			
+			override protected function updateDisplayList(w:Number, h:Number):void
+			{
+				super.updateDisplayList(w, h);
+				visible = SharedCreditUtil.isSharedCreditTransaction( data ) == false; 
+			}
+		]]>
+	</mx:Script>
+	
+</MyHistory_ContribsActions>
