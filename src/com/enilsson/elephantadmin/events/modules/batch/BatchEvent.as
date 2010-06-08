@@ -11,7 +11,6 @@ package com.enilsson.elephantadmin.events.modules.batch
 		public static const EXPORT_BATCH:String = "batchExportBatch";
 		public static const GET_CHECK_LIST:String = "batchGetCheckList";
 		public static const GET_BATCH_LIST:String = "batchGetBatchList";
-		public static const GET_PLEDGE_LIST:String = "batchGetPledgeList";
 		public static const GET_CHECKS_FOR_BATCH:String = "batchGetChecksForBatch";
 
 		public var callBack:Function;

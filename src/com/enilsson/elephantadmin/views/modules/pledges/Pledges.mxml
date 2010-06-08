@@ -7,11 +7,14 @@
 	verticalScrollPolicy="off" horizontalScrollPolicy="off" >
 
 	<recordModule:ManageRecord id="recordModule" width="100%" height="100%">
+		<!-- the user has to be a super user to see the shared credit tab -->
+		<tabs:Pledges_SharedCredit showTab="{ (EAModelLocator(mainModel).userLevel == 'super') }" />
 		<tabs:Pledges_Contributions />
 	</recordModule:ManageRecord>
 
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.elephantadmin.models.EAModelLocator;
 			import com.enilsson.elephantadmin.views.modules.pledges.renderers.Pledges_ListRenderer;
 			import com.adobe.cairngorm.model.ModelLocator;
 			import com.enilsson.elephantadmin.views.modules.pledges.model.PledgesModel;
@@ -44,7 +47,7 @@
 						{ label : "OCCUPATION", data : "pledges.occupation" },
 						{ label : "EMPLOYER", data : "pledges.employer" }
 					]);
-					_config.gridFields = [ 'fname', 'lname', 'state', 'zip', 'pledge_amount', 'contrib_total','pledge_date'];
+					_config.gridFields = [ 'fname', 'lname', 'state', 'zip', 'pledge_amount', 'contrib_total','pledge_date', 'pledgeicons' ];
 					_config.searchListItemRenderer = new ClassFactory(Pledges_ListRenderer);
 					recordModule.configuration(_config);
 				}

@@ -12,6 +12,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.core.UIComponent;
 			import mx.managers.ToolTipManager;
 			import mx.core.IToolTip;
 			import com.enilsson.elephanttrakker.views.modules.pledge_workspace.model.PledgeWorkspaceModel;
@@ -221,6 +222,9 @@
 		  			}
 	  			 }
 	  			 
+	  			 if(_iBoxes.length > 0)
+	  			 	addLastFieldListeners( _iBoxes[_iBoxes.length-1].box );
+	  			 
 	  			 if(presentationModel.debug) Logger.info('Build Initials', presentationModel.action);
 			}
 
@@ -255,6 +259,32 @@
 					time: 0.4, 
 					transition: 'linear' 
 				});
+			}
+			
+			private function addLastFieldListeners( field : IEventDispatcher ) : void {
+				field.addEventListener( FocusEvent.KEY_FOCUS_CHANGE, handleKeyFocusChange );
+				field.addEventListener( FocusEvent.MOUSE_FOCUS_CHANGE, handleMouseFocusChange );
+			}
+			
+			private function handleKeyFocusChange( event : FocusEvent ) : void {
+				if ( event.keyCode == Keyboard.TAB ) {
+					if( !event.shiftKey ) { 
+						event.preventDefault();
+						event.stopImmediatePropagation();			
+						if( presentationModel.workspaceValid ) 
+							presentationModel.setSubmitFocus = true;
+						else
+							presentationModel.showErrorList = ! presentationModel.showErrorList;
+					}	
+					else {
+						presentationModel.showErrorList = false;
+					}
+				}
+			}
+			
+			private function handleMouseFocusChange( event : FocusEvent ) : void {
+				if(presentationModel.showErrorList)
+					presentationModel.showErrorList = false;
 			}
 		]]>
 	</mx:Script>

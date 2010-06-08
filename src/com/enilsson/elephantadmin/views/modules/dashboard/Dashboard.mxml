@@ -50,22 +50,8 @@
 						width="90"
 						labelFunction="timeLabel"
 						sortCompareFunction="timeSort" />
-					<mx:DataGridColumn width="22" sortable="false">
-						<mx:itemRenderer>
-							<mx:Component>
-								<mx:HBox horizontalAlign="center">
-									<mx:Button useHandCursor="true" buttonMode="true"
-										styleName="inspectRecord"
-										click="new SidEvent( data.sid ).dispatch()"
-										toolTip="Inspect this pledge" />
-									<mx:Script>
-										<![CDATA[
-											import com.enilsson.elephantadmin.events.main.SidEvent;
-										]]>
-									</mx:Script>
-								</mx:HBox>
-							</mx:Component>
-						</mx:itemRenderer>
+					<mx:DataGridColumn width="22" sortable="false"
+						itemRenderer="{new ClassFactory(PledgeRefundedInspectIcon)}">
 					</mx:DataGridColumn>
 				</mx:columns>
 			</mx:DataGrid>
@@ -159,6 +145,7 @@
 
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.elephantadmin.views.common.PledgeRefundedInspectIcon;
 			import com.enilsson.utils.EDateUtil;
 			import com.enilsson.elephantadmin.events.main.SidEvent;
 			import mx.utils.ObjectUtil;

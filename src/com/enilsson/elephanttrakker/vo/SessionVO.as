@@ -17,6 +17,14 @@ package com.enilsson.elephanttrakker.vo
 			this.firstlogin = data._firstlogin;
 			this.acl = data.acl;
 			this.groups = data.groups;
+			
+			this.pledgeTotal = Number(data._pledge_total) + Number(data._shared_credit_pledge_total);
+			this.numPledges = Number(data._p) + Number(data._shared_credit_p);
+			this.contribTotal = Number(data._contrib_total) + Number(data._shared_credit_contrib_total);
+			this.numContribs = Number(data._c) + Number(data._shared_credit_c);
+			
+			this.pledgeAverage = this.pledgeTotal / this.numPledges;
+			 
 		}
 		
 		[Bindable] public var data:Object;
@@ -30,5 +38,10 @@ package com.enilsson.elephanttrakker.vo
 		[Bindable] public var acl:Object;
 		[Bindable] public var groups:Object;
 		
+		[Transient] [Bindable] public var pledgeTotal : Number = 0;
+		[Transient]	[Bindable] public var numPledges : Number = 0;
+		[Transient]	[Bindable] public var pledgeAverage : Number = 0;
+		[Transient]	[Bindable] public var contribTotal : Number = 0;
+		[Transient]	[Bindable] public var numContribs : Number = 0;
 	}
 }

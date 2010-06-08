@@ -6,9 +6,18 @@
 	backgroundAlpha="0"
 	backgroundColor="#ffffff"
 	rollOver="viewContact.visible = true"
-	rollOut="viewContact.visible = false">
+	rollOut="viewContact.visible = false" 
+	xmlns:common="com.enilsson.common.components.*" 
+	xmlns:common1="com.enilsson.elephantadmin.views.common.*">
 	
-	<mx:VBox verticalGap="0"
+	<common1:PledgeRefundedPledgeIcon
+		left="5" top="10"
+		pledge="{data}" 
+		clickEnabled="false" 
+		useHandCursor="false"
+		buttonMode="false" />	
+	
+	<mx:VBox left="55" verticalGap="0"
 		paddingTop="0" paddingBottom="0">
 		<mx:HBox width="{explicitWidth - 10}"
 			verticalAlign="middle">
@@ -22,7 +31,7 @@
 			width="{explicitWidth}" 
 			styleName="listDesc" />						
 	</mx:VBox>
-
+	
 	<mx:Button id="viewContact"
 		visible="false"
 		verticalCenter="0" right="10"
@@ -49,7 +58,7 @@
 			import com.enilsson.elephantadmin.events.main.SidEvent;
 			
 			private function handleContactClick(event : MouseEvent) : void {
-				if( data && data.contact_id && data.contact_id.sid )
+				if( data && data.contact_id && data.contact_id.hasOwnProperty('sid') )
 					new SidEvent( data.contact_id.sid ).dispatch();
 			}
 		]]>

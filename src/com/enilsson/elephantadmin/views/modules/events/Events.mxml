@@ -38,7 +38,6 @@
 						{ label : "EVERYTHING", data : 0 }, 
 						{ label : "NAME", data : "events.name"}, 
 						{ label : "SOURCE CODE", data : "events.source_code"},
-						{ label : "TYPE", data : "events.type"},
 						{ label : "VENUE NAME", data : "events.venue_name"},
 						{ label : "ADDRESS", data : "events.venue_address"},
 						{ label : "CITY", data : "events.city"},

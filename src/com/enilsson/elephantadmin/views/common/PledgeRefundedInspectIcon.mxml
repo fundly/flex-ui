@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PledgeRefundedDecorator
+	useHandCursor="true" buttonMode="true"
+	toolTip="Inspect this pledge. { warningVisible ? WARNING_TEXT : '' }" 
+	xmlns="com.enilsson.common.components.*" 
+	xmlns:mx="http://www.adobe.com/2006/mxml">
+		<mx:Script>
+			<![CDATA[
+				import com.enilsson.elephantadmin.models.Icons;
+			]]>
+		</mx:Script>
+		
+		<mx:Image source="{Icons.MAGNIFIER_16}" />	
+	
+</PledgeRefundedDecorator>

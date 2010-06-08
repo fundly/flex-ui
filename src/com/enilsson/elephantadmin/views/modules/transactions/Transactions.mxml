@@ -117,7 +117,70 @@
 				// reset the data changed flag
 				_model.dataChanged = false;
 			}
-						
+			
+			private function dispatchTransactionEvent( whereObj : Object ) : void {
+				
+				if( ! whereObj ) whereObj = {};
+				
+				new TransactionsEvent( 
+						TransactionsEvent.TRANSACTIONS_RECORDS, { 
+							'recordsVO' : new RecordsVO (
+								'transactions(pledge_id(contact_id),created_by_id<fname:lname:_fid>)',
+								whereObj, 
+								'transactions.created_on DESC', 
+								_model.transactions.currPage, 
+								_model.itemsPerPage, 
+								'P' 
+							)
+						}
+					).dispatch();
+			}
+			
+			private function buildWhere( index : uint, part : Object ) : Object 
+			{							
+				var indexStr : String = "(" + index + ")";
+								
+				var whereObj 	: Object;
+				var whereArray	: Array = [];
+				
+				try {
+					whereObj = (_model.transactions.lastQuery.params.recordsVO as RecordsVO).where;	
+				}
+				catch( e : Error ) { }
+				
+				
+				if( whereObj && part )
+				{
+					whereArray = String(whereObj.statement).split(" AND ");
+					
+					if( whereArray.indexOf( indexStr ) == -1)	// if condition does not exist add to the where statement
+						whereArray.push( indexStr );
+					whereObj['statement'] = whereArray.join(" AND ");
+				} 
+				else 
+				{
+					whereObj = new Object();
+					whereObj['statement'] = indexStr;
+				}
+				
+				if( part )
+					whereObj[index] = part;
+				
+				// filter out transactions with transaction_refids
+				if( whereArray.indexOf( '(1)' ) == -1 ) {
+					whereArray.push( '(1)' );
+					whereObj['statement'] = whereArray.join( " AND " );
+					whereObj[1] = {
+						what:	'transactions.transactions_refid',
+						op: 	'IS',
+						val: 	'NULL'
+					};
+				}
+				
+				return whereObj;
+			}
+			
+									
 			private function searchStart(event:Event):void 
 			{
 				if(moduleGrid.searchTerm != ""){
@@ -125,73 +188,29 @@
 
 					var searchField:String = moduleGrid.searchOption.data;
 
-					var whereObj:Object;
-					if(RecordsVO(_model.transactions.lastQuery.params.recordsVO).where)
-					{
-						whereObj = RecordsVO(_model.transactions.lastQuery.params.recordsVO).where;
-						var whereArray:Array = String(whereObj.statement).split(" AND ");
-						if( whereArray.indexOf("(1)") == -1)	// if condition (1) not exist add to the where statement
-							whereArray.push("(1)");
-						whereObj['statement'] = whereArray.join(" AND ");
-					} else {
-						whereObj = new Object();
-						whereObj['statement'] = '(1)';
-					}
-
-					whereObj[1] = { 
+					var wherePart : Object = { 
 						'what' : searchField,
 						'val' : "%"+moduleGrid.searchTerm+"%",
 						'op' : 'LIKE'
 					};
 	
-					new TransactionsEvent( 
-						TransactionsEvent.TRANSACTIONS_RECORDS, { 
-							'recordsVO' : new RecordsVO(
-								'transactions(pledge_id(contact_id),created_by_id<fname:lname:_fid>)',
-								whereObj, 
-								'transactions.created_on DESC', 
-								_model.transactions.currPage, 
-								_model.itemsPerPage, 
-								'P' 
-							) 
-						} 
-					).dispatch();
+					var where : Object = buildWhere( 2, wherePart );
+					dispatchTransactionEvent( where );
 				}
 			}
 			
 			private function indexSearchStart(event:Event):void 
 			{
 				moduleGrid.clearSearch.visible = true;
-				var whereObj:Object;
-				if(RecordsVO(_model.transactions.lastQuery.params.recordsVO).where)
-				{
-					whereObj = RecordsVO(_model.transactions.lastQuery.params.recordsVO).where;
-					var whereArray:Array = String(whereObj.statement).split(" AND ");
-					if( whereArray.indexOf("(1)") == -1)	// if condition (1) not exist add to the where statement
-						whereArray.push("(1)");
-					whereObj['statement'] = whereArray.join(" AND ");
-				} else {
-					whereObj = new Object();
-					whereObj['statement'] = '(1)';
-				}
-
-				whereObj[1] = { 
+				
+				var wherePart : Object = { 
 					'what' : 'transactions.full_name',
 					'val' : moduleGrid.indexBar.searchLetter+"%",
 					'op' : 'LIKE'
-					};
-				new TransactionsEvent( 
-					TransactionsEvent.TRANSACTIONS_RECORDS, { 
-						'recordsVO' : new RecordsVO( 
-							'transactions(pledge_id(contact_id),created_by_id<fname:lname:_fid>)',
-							whereObj, 
-							'transactions.created_on DESC', 
-							_model.transactions.currPage, 
-							_model.itemsPerPage, 
-							'P' 
-						) 
-					} 
-				).dispatch();
+				};
+	
+				var where : Object = buildWhere( 2, wherePart );
+				dispatchTransactionEvent( where );
 			}
 			
 			private function resetSearch():void 
@@ -200,18 +219,8 @@
 				moduleGrid.clearDateRange();
 				_model.transactions.currPage = 0;
 				
-				new TransactionsEvent( 
-					TransactionsEvent.TRANSACTIONS_RECORDS, { 
-						'recordsVO' : new RecordsVO( 
-							'transactions(pledge_id(contact_id),created_by_id<fname:lname:_fid>)',
-							null, 
-							'transactions.created_on DESC', 
-							_model.transactions.currPage, 
-							_model.itemsPerPage, 
-							'P' 
-						) 
-					} 
-				).dispatch();
+				var where : Object = buildWhere( 2, null );
+				dispatchTransactionEvent( where );
 			}
 			
 			private function newPageAction(event:Event):void 
@@ -231,30 +240,19 @@
 
 				switch(_model.transactions.lastQuery.type){
 					case TransactionsEvent.TRANSACTIONS_RECORDS:
-						var whereObj:Object
-						// if where object exits, keep (1) which is the "LIKE" statement 
-						if(RecordsVO(_model.transactions.lastQuery.params.recordsVO).where)
-						{
-							whereObj = RecordsVO(_model.transactions.lastQuery.params.recordsVO).where
-							var whereArray:Array = String(whereObj.statement).split(" AND ");
-								if( whereArray.indexOf("(2)") == -1)	// if condition (1) not exist add to the where statement
-							whereArray.push("(2)");
-							whereObj['statement'] = whereArray.join(" AND ");
-						}
-						else
-						{
-							whereObj = new Object();
-							whereObj['statement'] = '(2)';
-						}
 
-						whereObj[2] = { 
+						var wherePart : Object = { 
 							'what' : 'transactions.created_on',
 							'op' : '>',
 							'val' : EDateUtil.localDateToTimestamp(moduleGrid.fromDate ) //start of the date range
 						};
-						RecordsVO(_model.transactions.lastQuery.params.recordsVO).where = whereObj;
+						
+						var where : Object = buildWhere( 3, wherePart );
+												
+						RecordsVO(_model.transactions.lastQuery.params.recordsVO).where = where;
 						_model.transactions.lastQuery.dispatch();
- 						break;
+						
+					break;
 				}
 			}
 
@@ -264,30 +262,19 @@
 
 				switch(_model.transactions.lastQuery.type){
 					case TransactionsEvent.TRANSACTIONS_RECORDS:
-						var whereObj:Object
-						// if where object exits, keep (1) which is the "LIKE" statement 
-						if(RecordsVO(_model.transactions.lastQuery.params.recordsVO).where)
-						{
-							whereObj = RecordsVO(_model.transactions.lastQuery.params.recordsVO).where
-							var whereArray:Array = String(whereObj.statement).split(" AND ");
-								if( whereArray.indexOf("(3)") == -1)	// if condition (3) not exist add to the where statement
-							whereArray.push("(3)");
-							whereObj['statement'] = whereArray.join(" AND ");
-						}
-						else
-						{
-							whereObj = new Object();
-							whereObj['statement'] = '(3)';
-						}
 
-						whereObj[3] = { 
+						var wherePart : Object = { 
 							'what' : 'transactions.created_on',
 							'op' : '<',
 							'val' : EDateUtil.localDateToTimestamp(moduleGrid.toDate) + 24*60*60 // end of the date range
 						};
-						RecordsVO(_model.transactions.lastQuery.params.recordsVO).where = whereObj;
+						
+						var where : Object = buildWhere( 4, wherePart );
+						
+						RecordsVO(_model.transactions.lastQuery.params.recordsVO).where = where;
 						_model.transactions.lastQuery.dispatch();
- 						break;
+						
+ 					break;
 				}
 			}
 

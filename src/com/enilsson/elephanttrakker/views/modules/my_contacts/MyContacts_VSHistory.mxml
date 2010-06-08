@@ -21,8 +21,11 @@
 				width="100%" height="100%" borderSides="bottom"
 				verticalGridLines="false" horizontalScrollPolicy="off" >
 				<mx:columns>
+					 <mx:DataGridColumn
+					 	headerText="" width="8" sortable="false" resizable="false"
+		            	itemRenderer="com.enilsson.common.components.PledgeRefundedDecorator" />
 		            <mx:DataGridColumn textAlign="left" dataField="pledge_date" labelFunction="date_labelFunc"
-		            	headerText="Date" width="55" />            
+		            	headerText="Date" width="60" />            
 		            <mx:DataGridColumn textAlign="left" dataField="state" 
 		            	dataTipField="fullAddress" showDataTips="true" 
 		            	headerText="State" width="35" />
@@ -33,7 +36,7 @@
 		            	headerText="Pledged" width="56" labelFunction="money_labelFunc" />
 		            <mx:DataGridColumn textAlign="right" dataField="contrib_total" 
 		            	headerText="Contrib'd" width="56" labelFunction="money_labelFunc" />
-		            <mx:DataGridColumn textAlign="left" headerText="Actions" width="48" 
+		            <mx:DataGridColumn textAlign="right" headerText="Actions"
 		            	itemRenderer="com.enilsson.elephanttrakker.views.modules.my_contacts.renderers.History_Item" />
 		        </mx:columns>
 			</mx:DataGrid>

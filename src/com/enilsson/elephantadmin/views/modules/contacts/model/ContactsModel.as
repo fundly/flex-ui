@@ -1,12 +1,15 @@
 package com.enilsson.elephantadmin.views.modules.contacts.model
 {
 	import com.adobe.cairngorm.model.ModelLocator;
+	import com.enilsson.common.components.AddressInfoAlert;
+	import com.enilsson.common.utils.ContactUtil;
 	import com.enilsson.elephantadmin.events.modules.ContactsEvent;
 	import com.enilsson.elephantadmin.views.manage_record_base.model.RecordModel;
 	import com.enilsson.elephantadmin.vo.RecordVO;
 	import com.enilsson.elephantadmin.vo.RecordsVO;
 	
 	import mx.collections.ArrayCollection;
+	import mx.events.CloseEvent;
 	import mx.utils.ObjectUtil;
 	
 	import org.osflash.thunderbolt.Logger;
@@ -23,6 +26,8 @@ package com.enilsson.elephantadmin.views.modules.contacts.model
 		public var matches:ArrayCollection;
 		public var matchTabLoading:Boolean;
 		
+		public var numContribs : int;
+		public var numRefunds : int;
 
 		public function ContactsModel(parentModel:ModelLocator=null)
 		{
@@ -45,13 +50,22 @@ package com.enilsson.elephantadmin.views.modules.contacts.model
 			// Upsert if formVariables was changed
 			if(this.formVariables != selectedRecord)
 			{
-				new ContactsEvent( 
-					ContactsEvent.UPSERT_CONTACT,
-					this,
-					new RecordVO ( 'contacts', 0, this.formVariables )
-				).dispatch();
+				if( ContactUtil.hasAddressInfo( formVariables ) )
+					dispatchUpsertEvent();
+				else
+					AddressInfoAlert.show( handleAlertClose );
 			}
-			
+		}
+		private function handleAlertClose( event : CloseEvent ) : void {
+			if( event.detail == AddressInfoAlert.CONTINUE )
+				dispatchUpsertEvent();
+		}
+		private function dispatchUpsertEvent() : void {
+			new ContactsEvent( 
+				ContactsEvent.UPSERT_CONTACT,
+				this,
+				new RecordVO ( 'contacts', 0, this.formVariables )
+			).dispatch();
 		}
 
 		/**

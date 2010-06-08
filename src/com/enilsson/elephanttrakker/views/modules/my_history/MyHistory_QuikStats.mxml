@@ -10,25 +10,25 @@
 		<mx:HBox width="100%" height="100%" backgroundColor="#f3f3f3" verticalAlign="middle">
 			<mx:Image source="{_model.icons.users}" width="40" />
 			<mx:Text text="Number of Pledges" width="155" fontSize="11" />
-			<mx:Text id="QSdonors" fontWeight="bold" fontSize="11" text="{_model.session.data._p}" />
+			<mx:Text id="QSdonors" fontWeight="bold" fontSize="11" text="{_model.session.numPledges}" />
 		</mx:HBox>
 		<mx:HBox width="100%" height="100%" verticalAlign="middle">
 			<mx:Image source="{_model.icons.pledge}" width="40" />
 			<mx:Text text="Total Amount Pledged" width="155" fontSize="11" />
 			<mx:Text id="QSpledged" fontWeight="bold" fontSize="11" 
-				text="{cF.format(_model.session.data._pledge_total)}"  />
+				text="{cF.format(_model.session.pledgeTotal)}"  />
 		</mx:HBox>			
 		<mx:HBox width="100%" height="100%" backgroundColor="#f3f3f3" verticalAlign="middle" >
 			<mx:Image source="{_model.icons.pledge}" width="40" />
 			<mx:Text text="Total Amount Contributed" width="155" fontSize="11" />
 			<mx:Text id="QSoutstanding" fontWeight="bold" fontSize="11" 
-				text="{cF.format(_model.session.data._contrib_total)}"  />
+				text="{cF.format(_model.session.contribTotal)}"  />
 		</mx:HBox>			
 		<mx:HBox width="100%" height="100%" verticalAlign="middle" >
 			<mx:Image source="{_model.icons.users}" width="40" />
 			<mx:Text text="Average per Pledge" width="155" fontSize="11" />
 			<mx:Text id="QSav" fontWeight="bold" fontSize="11" 
-				text="{cF.format(_model.session.data._pledge_total == 0 ? 0 : _model.session.data._pledge_total/_model.session.data._p)}"  />
+				text="{cF.format(_model.session.pledgeAverage)}"  />
 		</mx:HBox>
 		<mx:HBox width="100%" height="100%" backgroundColor="#f3f3f3" verticalAlign="middle" 
 			click="_model.mainViewState = ETModelLocator.DOWNLINE_VIEW;" 
@@ -97,7 +97,6 @@
 					_model.my_history.initQuickStats = false;
 					
 					new MyHistoryEvent( MyHistoryEvent.EVENT_DOWNLINE ).dispatch();
-					new MyHistoryEvent( MyHistoryEvent.GET_TOPDONORS ).dispatch();
 				}
 			}
 			

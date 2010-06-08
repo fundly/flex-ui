@@ -1,16 +1,23 @@
 <grids:SearchResultGrid xmlns:mx="http://www.adobe.com/2006/mxml"
-	xmlns:grids="com.enilsson.elephantadmin.views.modules.search.grids.*">	
+	xmlns:grids="com.enilsson.elephantadmin.views.modules.search.grids.*" 
+	xmlns:components="com.enilsson.common.components.*">	
 
 	<grids:columns>
-		<mx:DataGridColumn id="nameColumn" labelFunction="{LabelFunctionCollection.getFullName}" />
-		<mx:DataGridColumn id="cityStateColumn" labelFunction="{LabelFunctionCollection.getCityAndState}" />
-		<mx:DataGridColumn id="contributionTypeColumn" dataField="contribution_type" />
-		<mx:DataGridColumn id="fundTypeColumn" dataField="fund_type" />
-		<mx:DataGridColumn id="pledgeAmountColumn" labelFunction="{LabelFunctionCollection.getPledgeAmount}" textAlign="right" />
-		<mx:DataGridColumn id="contribTotalColumn" labelFunction="{LabelFunctionCollection.getContribTotal}" textAlign="right"/>
-		<mx:DataGridColumn id="pledgeDateColumn" labelFunction="{LabelFunctionCollection.getPledgeDate}" />
+		<components:SharedItemGridColumn id="nameColumn" labelFunction="{LabelFunctionCollection.getFullName}" />
+		<components:SharedItemGridColumn id="cityStateColumn" labelFunction="{LabelFunctionCollection.getCityAndState}" />
+		<components:SharedItemGridColumn id="contributionTypeColumn" dataField="contribution_type" />
+		<components:SharedItemGridColumn id="fundTypeColumn" dataField="fund_type" />
+		<components:SharedItemGridColumn id="pledgeAmountColumn" labelFunction="{LabelFunctionCollection.getPledgeAmount}" textAlign="right" />
+		<components:SharedItemGridColumn id="contribTotalColumn" labelFunction="{LabelFunctionCollection.getContribTotal}" textAlign="right"/>
+		<components:SharedItemGridColumn id="pledgeDateColumn" labelFunction="{LabelFunctionCollection.getPledgeDate}" />
 		<mx:DataGridColumn id="showRecordColumn" width="{SearchResultGrid.SHOW_RECORD_COLUMN_WIDTH}" 
-			itemRenderer="com.enilsson.elephantadmin.views.modules.search.renderers.MagnifierIcon" />
+			itemRenderer="{new ClassFactory(PledgeRefundedInspectIcon)}" />
 	</grids:columns>
+	
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephantadmin.views.common.PledgeRefundedInspectIcon;
+		]]>
+	</mx:Script>
 
 </grids:SearchResultGrid>

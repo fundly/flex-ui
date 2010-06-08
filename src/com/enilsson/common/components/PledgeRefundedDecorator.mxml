@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
+	toolTip="{warningVisible ? WARNING_TEXT : ''}" 
+	initialize="handleInitialize()"
+	horizontalScrollPolicy="off" verticalScrollPolicy="off" >
+
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephantadmin.events.main.SidEvent;
+			import com.enilsson.elephantadmin.events.main.SidForIdEvent;
+			import com.enilsson.common.utils.SharedCreditUtil;
+			import mx.controls.Image;
+			import com.enilsson.elephantadmin.utils.PledgeUtil;
+			import com.enilsson.elephantadmin.models.Icons;
+						
+			public static const WARNING_TEXT : String = "Note: All contributions for this pledge have been refunded!";
+			
+			[Bindable] public var warningText : String = WARNING_TEXT;
+			[Bindable] public var isSharedCreditPledge : Boolean;
+			
+			public var clickEnabled : Boolean = true;
+
+			[Bindable]
+			public function get pledge() : Object { return _pledge; }
+			public function set pledge( value : Object ) : void {
+				_pledge = value;
+				isSharedCreditPledge = SharedCreditUtil.isSharedCreditPledge( _pledge );
+				warningVisible = PledgeUtil.allContribsRefunded( _pledge );
+			}		
+						
+			[Bindable]
+			public function get warningVisible() : Boolean { return _warningVisible; } 
+			public function set warningVisible( value : Boolean ) : void {
+				_warningVisible = value;
+				invalidateProperties();
+			}			
+			private var _warningVisible : Boolean;
+
+			
+			override public function set data(value:Object):void {
+				super.data = value;
+				pledge = data;
+			}
+			
+						
+			override public function addChild(child:DisplayObject):DisplayObject {
+				var d : DisplayObject = super.addChild( child );
+				if(d && _img)
+					swapChildren( d, _img );
+				
+				return d;
+			}
+			
+			override protected function createChildren():void {
+				super.createChildren();
+				
+				if( !_img ) {
+					_img 				= new Image();
+					_img.mouseEnabled	= false;
+					addChild( _img );
+				}
+			}
+			
+			override protected function commitProperties():void {
+				super.commitProperties();
+				_img.visible = _warningVisible;	
+			}
+			
+			override protected function measure():void {
+				super.measure();
+				measuredHeight = height = ( explicitHeight > 0 ? explicitHeight : getMaxHeight() );
+			}
+			
+			override protected function updateDisplayList(w:Number, h:Number):void {
+				super.updateDisplayList(w,h);
+				resetImage();
+			}
+			
+			private function getDimension( prop : String ) : Number {
+				var c : Array = getChildren();
+				var max : Number = 0;
+				
+				for each( var d : DisplayObject in c ) {
+					if( d == _img ) continue;
+					max = Math.max( max, d[prop] );						
+				}
+				
+				return max;
+			}
+			
+			private function getMaxHeight() : Number {
+				return getDimension("height");
+			}			
+			
+			private function getMaxWidth() : Number {
+				return getDimension("width");
+			}
+			
+			
+			private function resetImage() : void {
+				
+				var h : Number = getMaxHeight();
+				h = h == 0 ? explicitHeight : h;
+				
+				var w : Number = getMaxWidth();
+				w = w == 0 ? explicitWidth : w;
+				
+				if(h < 21 ) 		_img.source = Icons.EXCLAMATION_MARK_14;
+				else if(h < 31 )	_img.source = Icons.EXCLAMATION_MARK_24;
+				else				_img.source = Icons.EXCLAMATION_MARK_38;
+				
+				_img.x = w/2 - _img.width/2;
+			}
+			
+			
+			private function handleInitialize() : void {
+				addListeners();
+			}
+			
+			private function addListeners() : void {
+				addEventListener( MouseEvent.CLICK, handleClick );
+			}
+			
+			private function handleClick( event : MouseEvent ) : void {
+				if(! pledge || ! clickEnabled ) return;
+				
+				if( isSharedCreditPledge ) {
+					new SidForIdEvent( 'pledges', pledge.pledges_refid ).dispatch();
+				}					
+				else if( pledge.hasOwnProperty('sid')) {
+					new SidEvent( pledge.sid ).dispatch();
+				}
+			}
+			
+			private var _pledge : Object;
+			private var _img : Image;
+		]]>
+	</mx:Script>
+	
+</mx:Canvas>

@@ -108,6 +108,8 @@
 
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.common.components.SharedItemGridColumn;
+			import com.enilsson.common.components.PledgeRefundedDecorator;
 			import com.enilsson.elephantadmin.views.common.ListGridToggle;
 			import com.enilsson.utils.EDateUtil;
 			import mx.events.DataGridEvent;
@@ -150,6 +152,7 @@
 				
 				var cols:Array = [];
 				var dgCol:DataGridColumn;
+				var f : Object;
 				
 				if( presentationModel.config.gridFields != null )
 				{
@@ -157,28 +160,43 @@
 					{
 						var field:String = presentationModel.config.gridFields[i];
 						
-						dgCol = new DataGridColumn();
-						dgCol.headerText = presentationModel.fields[field].label;
+						dgCol = new SharedItemGridColumn();
 						dgCol.dataField = field;
 						
-						switch(presentationModel.fields[field].type)
-						{
-							case 'utc_date' :
-								dgCol.labelFunction = utcDateLabel;
-							break;
-							case 'date' :
-								dgCol.labelFunction = dateLabel;
-							break;
-							case 'currency' :								
-								dgCol.labelFunction = currencyLabel;
-							break;
+						f = presentationModel.fields[field];
+						
+						if( field == "pledgeicons" ) {
+							dgCol.itemRenderer = new ClassFactory(PledgeRefundedDecorator);
+							dgCol.width = 14;
+							dgCol.resizable = false;
+							dgCol.sortable = false;
+						}
+						
+						if( f && f.hasOwnProperty('label') )
+							dgCol.headerText = f.label;
+						else
+							dgCol.headerText = "";	
+							
+						if( f && f.hasOwnProperty('type') ) {					
+							switch(f.type)
+							{
+								case 'utc_date' :
+									dgCol.labelFunction = utcDateLabel;
+								break;
+								case 'date' :
+									dgCol.labelFunction = dateLabel;
+								break;
+								case 'currency' :								
+									dgCol.labelFunction = currencyLabel;
+								break;
+							}
 						}
 						cols.push(dgCol);
 					}		
 				}
 				else
 				{
-					for each( var f:Object in presentationModel.fields )
+					for each( f in presentationModel.fields )
 					{
 						if( !f.hasOwnProperty('in_sql') ) continue;
 						if( f.in_sql != true ) continue;

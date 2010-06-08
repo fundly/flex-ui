@@ -23,7 +23,7 @@
 		</mx:HBox>
 		<mx:Text styleName="listItemDesc"
 			width="{explicitWidth - 25}"
-			htmlText="{data.city}, {data.state} - Pledged: &lt;b&gt;{currencyFormatter.format(data.pledge_total)}&lt;/b&gt;" />
+			htmlText="{getDescription(data)}" />
 	</mx:VBox>
 	
 	<mx:HBox right="10" verticalAlign="middle">
@@ -97,6 +97,14 @@
 	
 				// change the main view to see the call logging
 				_model.mainViewState = ETModelLocator.EVENTS_VIEW;
+			}
+			
+			private function getDescription( value : Object ) : String {
+				if(!value) return null;
+				
+				return value.city + ", " + value.state + "<br>" + 
+						"Pledged: <b>" + currencyFormatter.format(value.pledge_total) + "</b>" + 
+						" - Contributed: <b>" + currencyFormatter.format(value.contrib_total) + "</b>";
 			}
 
 		]]>

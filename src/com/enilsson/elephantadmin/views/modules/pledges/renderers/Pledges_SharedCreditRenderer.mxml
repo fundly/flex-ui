@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas 
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:renderers="com.enilsson.elephantadmin.views.modules.search.renderers.*">
+
+	<mx:VBox 
+		left="5" verticalCenter="0"
+		verticalGap="0">
+		<mx:Label 
+			text="{data.user_id.fname} {data.user_id.lname}" 
+			fontWeight="bold" fontSize="12" />
+		<mx:Label 
+			text="({data.user_id._fid})" 
+			fontSize="10" />
+	</mx:VBox>
+		
+	<mx:Image
+		right="20" verticalCenter="0"
+		source="{Icons.MAGNIFIER_16}" 
+		buttonMode="true" useHandCursor="true" click="handleClick( event )" />
+	
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephantadmin.models.Icons;
+			import com.enilsson.elephantadmin.events.main.SidEvent;
+			
+			private function handleClick( event : MouseEvent ) : void {
+				try {
+					new SidEvent( data.user_id.sid ).dispatch();
+				}catch( e : Error ) { }
+			}
+		
+			override public function set data(value:Object):void {
+				super.data = value;
+			}
+			
+		]]>
+	</mx:Script>
+	
+</mx:Canvas>

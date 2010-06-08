@@ -1,7 +1,9 @@
 package com.enilsson.elephantadmin.views.modules.pledges.model
 {
 	import com.adobe.cairngorm.model.ModelLocator;
+	import com.enilsson.common.utils.SharedCreditUtil;
 	import com.enilsson.controls.LookupInput;
+	import com.enilsson.elephantadmin.events.main.SidForIdEvent;
 	import com.enilsson.elephantadmin.events.modules.PledgeEvent;
 	import com.enilsson.elephantadmin.events.modules.RecordModuleEvent;
 	import com.enilsson.elephantadmin.models.EAModelLocator;
@@ -15,6 +17,7 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 	import com.enilsson.elephantadmin.vo.ErrorVO;
 	import com.enilsson.elephantadmin.vo.RecordVO;
 	import com.enilsson.elephantadmin.vo.SearchVO;
+	import com.enilsson.elephantadmin.vo.SharedCreditVO;
 	
 	import flash.display.DisplayObject;
 	
@@ -29,8 +32,14 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 	[Bindable]
 	public class PledgesModel extends RecordModel
 	{
+		
 		public var contributions:ArrayCollection;
 		public var contributionsTabLoading:Boolean;
+		
+		public var sharedCreditFundraisers : ArrayCollection;
+		public var sharedCreditTabLoading : Boolean;		
+		public var sharedCreditUsersList : ArrayCollection;
+		public var sharedCreditError : ErrorVO;
 
 		public function PledgesModel(parentModel:ModelLocator=null)
 		{
@@ -70,8 +79,9 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 		override protected function getRecordDetails():void
 		{
 			super.getRecordDetails();
-
+			
 			getContributions();
+			getSharedCreditFundraisers();
 		}
 		
 		/**
@@ -81,6 +91,19 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 		{
 			showDeleteBtn = true;
 			enableDeleteBtn = value.c == 0;
+		}
+		
+		/**
+		 * Handle selecting of SharedCredit pledges so that only the master record can be edited.
+		 */
+		override public function set selectedRecord ( value:Object ):void
+		{
+			if( SharedCreditUtil.isSharedCreditPledge(value) ) {
+				new SidForIdEvent( 'pledges', value.pledges_refid ).dispatch();
+			}
+			else {
+				super.selectedRecord = value;
+			}
 		}
 
 		/**
@@ -103,7 +126,7 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 				);
 			new PledgeEvent(PledgeEvent.GET_CONTRIBUTIONS, this, recordVO).dispatch();
 		}
-
+		
 
 		/**
 		 * Variables for the lookup search input fields
@@ -154,12 +177,21 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 		/**
 		 * Handle the searches for the LookupInput fields
 		 */
-		private function searchStartHandler(event:Event):void
+		public function searchStartHandler(event:Event):void
 		{
 			if(debug) Logger.info ('search start', event.currentTarget.dataValue, event.currentTarget.label);
 			
-			var tbl:String = event.currentTarget.id == 'tr_users_id' ? 'tr_users_details' : 'events';
+			var tbl:String;
 			
+			switch( event.currentTarget.id ) {
+				case 'tr_users_id' : 
+					tbl = 'tr_users_details'; 
+				break;
+				default: 
+					tbl = 'events'; 
+				break;
+			}
+			 
 			new PledgeEvent ( 
 				PledgeEvent.LOOKUPINPUT_SEARCH,
 				this,
@@ -204,7 +236,7 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 		/**
 		 * Create a refund as a check contribution
 		 */
-		public function upsertCheckRefund( formVariables:Object ):void
+		public function addCheckRefund( formVariables:Object ):void
 		{
 			// check to see the user hasnt tried to refund too much
 			if( Number(formVariables.amount) > Number(selectedRecord.contrib_total) )
@@ -223,9 +255,9 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 			
 			// dispatch the event to upsert the data
 			new PledgeEvent (
-				PledgeEvent.UPSERT_CHECKREFUND,
+				PledgeEvent.ADD_CHECKREFUND,
 			 	this,
-			 	new RecordVO ( 'checks', 0, formVariables )
+			 	formVariables
 			).dispatch();
 		}
 		
@@ -251,6 +283,32 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 				this,
 				{ sid : selectedRecord.sid }
 			).dispatch();
+		}
+		
+		public function userSearchStart( event : Object ) : void {
+			
+		}
+		
+		public function getSharedCreditFundraisers() : void {
+			
+			var pid : int = this.recordID;			
+			new PledgeEvent(PledgeEvent.GET_SHARED_CREDIT_USERS, this, { pledgeID : pid } ).dispatch();
+		}
+		
+		public function addSharedCredit( user : Object ) : void {
+			
+			if(!user || !selectedRecord ) return;
+			
+			var vo : SharedCreditVO = new SharedCreditVO( selectedRecord.id, user.user_id );
+			new PledgeEvent( PledgeEvent.ADD_SHARED_CREDIT, this, vo ).dispatch();
+		}
+		
+		public function removeSharedCredit( sharedCredit : Object ) : void {
+			
+			if(!sharedCredit) return;
+			
+			var vo : SharedCreditVO = new SharedCreditVO( sharedCredit.shared_pledge_id, sharedCredit.sw_user_id );
+			new PledgeEvent( PledgeEvent.REMOVE_SHARED_CREDIT, this, vo ).dispatch();
 		}
 		
 		/**

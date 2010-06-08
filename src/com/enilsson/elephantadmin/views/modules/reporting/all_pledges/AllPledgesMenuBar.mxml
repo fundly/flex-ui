@@ -20,18 +20,30 @@
 			visible="{_presentationModel.exportAllowed}"
 			includeInLayout="{_presentationModel.exportAllowed}" />
 	</mx:HBox>
-	<mx:HBox id="advancedMenu" width="100%" height="0" verticalAlign="middle" paddingTop="2" resizeEffect="{Resize}">
-		<mx:FormItem label="Region:">
-			<mx:ComboBox width="150" dropdownWidth="200" color="#000000" dataProvider="{_presentationModel.regionFilter}" id="region" enabled="{!_presentationModel.dataLoading}" change="_presentationModel.regionChangeHandler(event)"/>
+	<mx:VBox id="advancedMenu" width="100%" height="0" verticalAlign="middle" resizeEffect="{Resize}" paddingTop="2">
+		<mx:HBox>
+			<mx:FormItem label="Region:" direction="horizontal">
+				<mx:ComboBox width="150" dropdownWidth="200" color="#000000" dataProvider="{_presentationModel.regionFilter}" id="region" enabled="{!_presentationModel.dataLoading}" change="_presentationModel.regionChangeHandler(event)"/>
+			</mx:FormItem>
+			<mx:FormItem label="Status:">
+				<mx:ComboBox width="150" color="#000000" dataProvider="{_presentationModel.pledgesFilter}" id="status" enabled="{!_presentationModel.dataLoading &amp;&amp; !_presentationModel.searching}" change="_presentationModel.statusChangeHandler(event)"/>
+			</mx:FormItem>
+		</mx:HBox>
+		<mx:FormItem label="Pledges:" direction="horizontal">
+			<mx:CheckBox label="Show fully refunded pledges"
+				textRollOverColor="{getStyle('color')}"
+				textSelectedColor="{getStyle('color')}"
+				change="_presentationModel.showRefunds = event.currentTarget.selected" paddingLeft="17" />
+			<mx:CheckBox label="Show shared credit"
+				textRollOverColor="{getStyle('color')}"
+				textSelectedColor="{getStyle('color')}" 
+				change="_presentationModel.showSharedCredit = event.currentTarget.selected" />
 		</mx:FormItem>
-		<mx:FormItem label="Status:">
-			<mx:ComboBox width="150" color="#000000" dataProvider="{_presentationModel.pledgesFilter}" id="status" enabled="{!_presentationModel.dataLoading &amp;&amp; !_presentationModel.searching}" change="_presentationModel.statusChangeHandler(event)"/>
-		</mx:FormItem>
-	</mx:HBox>
+	</mx:VBox>
 
 	<mx:states>
 		<mx:State name="{ADVANCED_STATE}">
-			<mx:SetProperty target="{advancedMenu}" name="height" value="25" />
+			<mx:SetProperty target="{advancedMenu}" name="height" value="54" />
 			<mx:SetProperty target="{advancedButton}" name="label" value="{BASIC_LABEL}" />
 		</mx:State>
 		<mx:State name="{BASIC_STATE}">

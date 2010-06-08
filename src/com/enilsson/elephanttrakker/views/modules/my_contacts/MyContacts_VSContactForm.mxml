@@ -42,7 +42,7 @@
 			useHandCursor="true" buttonMode="true" 
 			visible="{_model.my_contacts.currCreatedID == _model.session.user_id ? true : false}" 
 			enabled="{contactsForm.isValid &amp;&amp; !_model.my_contacts.isSubmitting}"  
-			click="upsertContact(event)" />	
+			click="handleSubmitClick(event)" />	
 	</mx:Canvas>
 	
 
@@ -53,6 +53,9 @@
 
 	<mx:Script>
 		<![CDATA[
+			import mx.events.CloseEvent;
+			import com.enilsson.common.components.AddressInfoAlert;
+			import com.enilsson.common.utils.ContactUtil;
 			import com.enilsson.elephanttrakker.events.modules.my_contacts.GetContactEvent;
 			import mx.utils.ObjectUtil;
 			import com.enilsson.graphics.enDropShadows;
@@ -62,12 +65,15 @@
 			
 			[Bindable] private var _model:ETModelLocator = ETModelLocator.getInstance();
 			
-			private function upsertContact(event:MouseEvent):void
+			private function handleSubmitClick(event:MouseEvent):void
 			{
 				if(_model.debug)
 					Logger.info('upsertContact', contactsForm.formVariables);
 				
-				new UpsertContactEvent( contactsForm.formVariables ).dispatch()
+				if( ContactUtil.hasAddressInfo( contactsForm.formVariables ) )
+					upsertContact();	
+				else
+					AddressInfoAlert.show( handleAlertClose );
 			}
 			
 			private function formBuildCompleteHandler(event:Event):void
@@ -78,6 +84,16 @@
 					new GetContactEvent(GetContactEvent.EVENT_GET_CONTACT_INFO, _model.my_contacts.contactData.created_by_id).dispatch()
 				else
 					_model.my_contacts.sharedName = "";
+			}
+			
+			
+			private function handleAlertClose( event : CloseEvent ) : void {
+				if( event.detail == AddressInfoAlert.CONTINUE )
+					upsertContact();	
+			}
+			
+			private function upsertContact() : void {
+				new UpsertContactEvent( contactsForm.formVariables ).dispatch();
 			}
 			
 		]]>

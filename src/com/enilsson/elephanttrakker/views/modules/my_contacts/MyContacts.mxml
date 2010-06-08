@@ -14,7 +14,7 @@
 	
 	<ns:MyContacts_SearchList 
 		left="25" top="0" 
-		height="{this.height}" width="297" 
+		height="{this.height}" width="287" 
 		itemsPerPage="{_model.itemsPerPage}"
 		itemsTotal="{_model.my_contacts.numContacts}" />
 	
@@ -30,7 +30,7 @@
 		visible="{_model.my_contacts.numContacts > 0}"
 		borderStyle="solid" borderColor="#999999"
 		selectedIndex="{_model.my_contacts.contactElementsViewState}" 
-		width="310" height="{this.height-26}"
+		width="320" height="{this.height-26}"
 		right="40" top="26">
 		<ns:MyContacts_VSContactForm label="Details" />
 		<ns:MyContacts_VSHistory label="Pledges" />

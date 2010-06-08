@@ -20,7 +20,7 @@
 			private function editAction():void
 			{
 				var p:PledgeWorkspaceVO = new PledgeWorkspaceVO();
-				p.pledgeID = data.pledge_id
+				p.pledgeID = data.pledge_id;
 				
 				new SPWEvent ( SPWEvent.EDIT, p ).dispatch();
 			}

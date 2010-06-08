@@ -51,6 +51,8 @@ package com.enilsson.elephantadmin.views.modules.reporting.host_committee.model
 		public var pledgeCurrentPage:int;
 
 		public var chart:EventChartModel;
+		
+		public var showSharedCredit : Boolean;
 
 		public function HostCommitteeModel():void
 		{
@@ -82,13 +84,14 @@ package com.enilsson.elephantadmin.views.modules.reporting.host_committee.model
 			generate();
 		}
 
-		public function hostChangeHandler(event:ListEvent):void
+		public function changeHost( item : Object ):void
 		{
+			if(!item) return;
 			pledgeCurrentPage = 0;
-			hostID = event.currentTarget.selectedItem.data;
+			hostID = item.data;
 			getHostPledges();
 		}
-
+		
 		public function getEventList():void
 		{
 			dataLoading = true;	
@@ -156,6 +159,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.host_committee.model
 			vo.page = gridCurrentPage;
 			vo.recordPerPage = itemsPerPage;
 			vo.groupID = group;
+			vo.showSharedCredit = showSharedCredit;
 
 			if(exporting)
 			{
@@ -266,6 +270,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.host_committee.model
 			vo.userID = hostID;
 			vo.page = pledgeCurrentPage;
 			vo.recordPerPage = itemsPerPage;
+			vo.showSharedCredit = showSharedCredit;
 
 			if(exporting)
 			{
@@ -459,6 +464,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.host_committee.model
 				vo.export = true;
 				vo.exportHeaders = exportHeaders;
 				vo.exportFields = exportFields;
+				vo.showSharedCredit = showSharedCredit;
 
 				var selectedEvent:Object;
 				for each(var e:Object in eventFilter)

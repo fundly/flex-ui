@@ -1,6 +1,5 @@
 package com.enilsson.elephantadmin.events.modules
 {
-	import com.adobe.cairngorm.vo.IValueObject;
 	import com.enilsson.elephantadmin.views.manage_record_base.model.RecordModel;
 	
 	import flash.events.Event;
@@ -10,8 +9,13 @@ package com.enilsson.elephantadmin.events.modules
 		static public const GET_CONTRIBUTIONS:String = 'pledgeGetContributions';
 		static public const LOOKUPINPUT_SEARCH:String = 'pledgeLookupInputSearch';
 		static public const GET_LABEL:String = 'pledgeGetLabel';
-		static public const UPSERT_CHECKREFUND:String = 'upsertCheckRefund';
+		
+		static public const ADD_CHECKREFUND:String = 'addCheckRefund';
 		static public const DELETE_CHECKREFUND:String = 'deleteCheckRefund';
+		
+		static public const GET_SHARED_CREDIT_USERS:String = 'pledgeGetFundraisers';
+		static public const ADD_SHARED_CREDIT:String = 'addSharedCredit';
+		static public const REMOVE_SHARED_CREDIT:String = 'removeSharedCredit';
 
 		public function PledgeEvent( type:String, model:RecordModel, vo:Object = null )
 		{

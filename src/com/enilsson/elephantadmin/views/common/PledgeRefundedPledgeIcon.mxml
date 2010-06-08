@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PledgeRefundedDecorator height="60"
+	xmlns="com.enilsson.common.components.*"
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	useHandCursor="true" buttonMode="true" 
+	toolTip="View details on this pledge. { warningVisible ? WARNING_TEXT : '' }">
+	
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.elephantadmin.models.Icons;
+		]]>
+	</mx:Script>
+		
+	<mx:Image source="{Icons.PLEDGE}" top="0" horizontalCenter="0" />
+	<mx:Label color="#FF0000" text="(shared)" fontSize="8"
+		horizontalCenter="0" top="40" 
+		visible="{isSharedCreditPledge}" 
+		includeInLayout="{isSharedCreditPledge}" />	
+
+</PledgeRefundedDecorator>

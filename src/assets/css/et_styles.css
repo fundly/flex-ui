@@ -473,9 +473,9 @@ Alert{
 /*-- End Grid Button styles --*/
 
 /*-- Update PopUp --*/
-.updateWindow {
+.titleWindow {
 	color:#FFFFFF;
-	titleStyleName:updateWindowTitle;
+	titleStyleName:titleWindowTitle;
 	borderThickness:0;
 	headerHeight:26;
 	dropShadowEnabled: true;
@@ -491,7 +491,7 @@ Alert{
 	modalTransperancy:0.95;
 }
 
-.updateWindowTitle{
+.titleWindowTitle{
 	fontFamily: appFont;
 	fontSize:14;
 	fontWeight:bold;

@@ -5,7 +5,7 @@
 	enabled="{!_presentationModel.pledgesTabLoading}"
 	implements="com.enilsson.elephantadmin.interfaces.IOptionView"	
 	width="100%" 
-	height="100%">
+	height="100%" xmlns:components="com.enilsson.common.components.*">
 
 	<mx:VBox verticalGap="2"
 		horizontalAlign="center"
@@ -17,6 +17,8 @@
 			<mx:Text htmlText="&lt;b&gt;Pledged&lt;/b&gt;: {cf.format(_presentationModel.selectedRecord.pledge_total)}" />
 			<mx:VRule height="10" />
 			<mx:Text htmlText="&lt;b&gt;Contributed&lt;/b&gt;: {cf.format(_presentationModel.selectedRecord.contrib_total)}" />
+			<mx:VRule height="10" />
+			<mx:Text htmlText="&lt;b&gt;Number of Contributions&lt;/b&gt;: {_presentationModel.numContribs} ({_presentationModel.numRefunds} refunds)" />
 			<mx:Spacer width="100%" />
 			<common:ListGridToggle stateChange="pledgesVstack.selectedIndex = event.currentTarget.showState == ListGridToggle.LIST ? 0 : 1;" />			
 		</mx:HBox>
@@ -24,10 +26,11 @@
 		<mx:Spacer height="5" />
 				
 		<mx:ViewStack id="pledgesVstack" width="100%" height="100%">
-			<mx:Canvas horizontalScrollPolicy="off">
-				<mx:List width="100%" height="100%" 
+			<mx:Canvas>
+				<mx:List
+					width="100%" height="{pledgesVstack.height}"
+					variableRowHeight="true"
 					alternatingItemColors="['#FFFFFF', '#EDEDED']" 
-					variableRowHeight="true" 
 					itemRenderer="com.enilsson.elephantadmin.views.modules.contacts.renderers.Contacts_PledgesRenderer"
 					dataProvider="{_presentationModel.pledges}" />			
 			</mx:Canvas>
@@ -36,42 +39,26 @@
 					alternatingItemColors="['#FFFFFF', '#EDEDED']" 
 					dataProvider="{_presentationModel.pledges}">
 					<mx:columns>
-						<mx:DataGridColumn headerText="Address"
+						<components:SharedItemGridColumn headerText="Address"
 							dataField="address1" />
-						<mx:DataGridColumn headerText="City"
+						<components:SharedItemGridColumn headerText="City"
 							dataField="city" />
-						<mx:DataGridColumn headerText="State"
+						<components:SharedItemGridColumn headerText="State"
 							dataField="state" />
-						<mx:DataGridColumn headerText="Pledged"
+						<components:SharedItemGridColumn headerText="Pledged"
 							dataField="pledge_amount" 
 							labelFunction="amountLabel"
 							sortCompareFunction="pledge_amountCompare" />
-						<mx:DataGridColumn headerText="Contributed"
+						<components:SharedItemGridColumn headerText="Contributed"
 							dataField="contrib_total" 
 							labelFunction="amountLabel"
 							sortCompareFunction="contrib_totalCompare" />
-						<mx:DataGridColumn headerText="Event" 
+						<components:SharedItemGridColumn headerText="Event" 
 							labelFunction="eventLabel" />
-						<mx:DataGridColumn headerText="Date"
+						<components:SharedItemGridColumn headerText="Date"
 							labelFunction="dateLabel"
 							dataField="pledge_date"  />
-						<mx:DataGridColumn width="22">
-							<mx:itemRenderer>
-								<mx:Component>
-									<mx:HBox horizontalAlign="center">
-										<mx:Button useHandCursor="true" buttonMode="true"
-											styleName="inspectRecord"
-											click="new SidEvent( data.sid ).dispatch()"
-											toolTip="Inspect this pledge" />
-										<mx:Script>
-											<![CDATA[
-												import com.enilsson.elephantadmin.events.main.SidEvent;
-											]]>
-										</mx:Script>
-									</mx:HBox>
-								</mx:Component>
-							</mx:itemRenderer>
-						</mx:DataGridColumn>
+						<mx:DataGridColumn width="22" itemRenderer="com.enilsson.elephantadmin.views.common.PledgeRefundedInspectIcon" />
 					</mx:columns>
 				</mx:DataGrid>
 			</mx:Canvas>

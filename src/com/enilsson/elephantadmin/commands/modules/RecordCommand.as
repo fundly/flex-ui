@@ -17,15 +17,11 @@ package com.enilsson.elephantadmin.commands.modules
 	
 	import org.osflash.thunderbolt.Logger;
 
-	public class RecordCommand extends SequenceCommand implements ICommand, IResponder
+	public class RecordCommand extends SequenceCommand
 	{
 		private var _model:EAModelLocator = EAModelLocator.getInstance();
 		private var _moduleName:String = 'record';
 		
-		public function RecordCommand()
-		{
-			super();
-		}
 		
 		override public function execute(event:CairngormEvent):void
 		{
@@ -41,14 +37,6 @@ package com.enilsson.elephantadmin.commands.modules
 				break;				
 			}
 		}
-
-
-		/**
-		 * Stubs required for IResponder interface; need as Delegate constructor argument
-		 */
-		public function fault(info:Object):void { Logger.info(info.toString()); }
-		public function result(data:Object):void { /* no longer used */ }
-
 
 
 		/**

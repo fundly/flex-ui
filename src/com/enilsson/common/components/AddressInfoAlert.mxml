@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" 
+	layout="vertical" width="600" height="220" title="CAUTION"
+	showCloseButton="false"
+	styleName="titleWindow">
+	
+	<mx:Text width="100%" text="{ALERT_TEXT}" /> 
+	
+	<mx:Spacer height="20" />
+	
+	<mx:HBox width="100%" horizontalAlign="center" color="#181818">
+		<mx:Button label="Yes, provide address information" click="handleCancelClick( event )" />
+		<mx:Button label="No, continue without" click="handleContinueClick( event )" />
+	</mx:HBox>
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.events.CloseEvent;
+			import mx.controls.Alert;
+			import mx.core.Application;
+			import mx.managers.PopUpManager;
+			
+			public static const CONTINUE : int = 0;
+			public static const CANCEL : int = 1;
+			
+			private const ALERT_TEXT : String = "You have not provided address information for this contact. Without address information, " + 
+					"BlueSwarm is not able to prevent duplicate contact records from being created, nor is BlueSwarm able to automatically match this " + 
+					"contact with any donations he/she may submit as a result of your efforts.\n\n" + 
+					"Do you want to provide that address information now?";
+			
+			
+			private static var _window : AddressInfoAlert;
+			
+			public static function show( closeHandler : Function = null ) : void {
+				
+				_window = new AddressInfoAlert();
+				
+				if( closeHandler != null ) {
+					_window.addEventListener( CloseEvent.CLOSE, closeHandler );
+				}
+				
+				PopUpManager.addPopUp( _window, Application.application.root, true );
+				PopUpManager.centerPopUp( _window );
+			}
+			
+			private function close( detail : int = CANCEL ) : void {
+				var e : CloseEvent = new CloseEvent( CloseEvent.CLOSE );
+				e.detail = detail; 
+				
+				dispatchEvent( e );
+				PopUpManager.removePopUp( _window );
+				_window = null;
+			}
+			
+			private function handleCancelClick( event : Event ) : void {
+				close( AddressInfoAlert.CANCEL );				
+			}
+			 
+			private function handleContinueClick( event : Event ) : void {
+				close( AddressInfoAlert.CONTINUE );
+			}
+			
+		]]>
+	</mx:Script>
+	
+</mx:TitleWindow>

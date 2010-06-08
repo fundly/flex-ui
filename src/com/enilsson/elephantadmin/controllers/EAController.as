@@ -58,6 +58,7 @@ package com.enilsson.elephantadmin.controllers
 			this.addCommand(GetGroupsEvent.EVENT_GET_GROUPS, InitMainCommand);
 			this.addCommand(RecordEvent.GET_LAYOUTS, InitMainCommand);
 			this.addCommand(SidEvent.TEST_SID, SidCommand);
+			this.addCommand(SidForIdEvent.SID_FOR_ID, SidForIdCommand );
 
 			// dashboard module
 			this.addCommand(DashboardEvent.GET_ACTIVE_USERS, DashboardCommand);
@@ -211,9 +212,11 @@ package com.enilsson.elephantadmin.controllers
 			this.addCommand(PledgeEvent.GET_CONTRIBUTIONS, PledgesCommand);
 			this.addCommand(PledgeEvent.LOOKUPINPUT_SEARCH, PledgesCommand);
 			this.addCommand(PledgeEvent.GET_LABEL, PledgesCommand);
-			this.addCommand(PledgeEvent.UPSERT_CHECKREFUND, PledgesCommand);
+			this.addCommand(PledgeEvent.ADD_CHECKREFUND, PledgesCommand);
 			this.addCommand(PledgeEvent.DELETE_CHECKREFUND, PledgesCommand);
-//			this.addCommand(PledgeEvent.VALIDATE_UPSERT_CHECK, PledgesCommand );
+			this.addCommand(PledgeEvent.GET_SHARED_CREDIT_USERS, PledgesCommand);
+			this.addCommand(PledgeEvent.ADD_SHARED_CREDIT, PledgesCommand);
+			this.addCommand(PledgeEvent.REMOVE_SHARED_CREDIT, PledgesCommand);
 
 			// contacts module
 			this.addCommand(ContactsEvent.UPSERT_CONTACT, ContactsCommand);
@@ -225,7 +228,6 @@ package com.enilsson.elephantadmin.controllers
 			// batches module
 			this.addCommand(BatchEvent.GET_CHECK_LIST, BatchCommand);
 			this.addCommand(BatchEvent.GET_BATCH_LIST, BatchCommand);
-			this.addCommand(BatchEvent.GET_PLEDGE_LIST, BatchCommand);
 			this.addCommand(BatchEvent.SAVE_BATCH, BatchCommand);
 			this.addCommand(BatchEvent.EXPORT_BATCH, BatchCommand);
 			this.addCommand(BatchEvent.GET_CHECKS_FOR_BATCH, BatchCommand);
