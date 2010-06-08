@@ -357,7 +357,7 @@ package com.enilsson.elephantadmin.commands.modules
 		{
 			if(_model.debug) Logger.info(_moduleName + ' getSharedCreditFundraisers Call', ObjectUtil.toString(event.params));
 			
-			if( ! event.params || ! event.params.hasOwnProperty('pledgeID') )
+			if( ! event.params || ! event.params.hasOwnProperty('pledgeID') || ! _model.userLevel != 'super' )
 				return;
 			
 			var handlers:IResponder = new mx.rpc.Responder(onResult_getSharedCreditFundraisers, onFault_getSharedCreditFundraisers);

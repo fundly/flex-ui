@@ -8,7 +8,7 @@
 
 	<recordModule:ManageRecord id="recordModule" width="100%" height="100%">
 		<!-- the user has to be a super user to see the shared credit tab -->
-		<tabs:Pledges_SharedCredit showTab="{ (EAModelLocator(mainModel).userLevel == 'super') }" />
+		<tabs:Pledges_SharedCredit showTab="{ _model.userLevel == 'super' }" />
 		<tabs:Pledges_Contributions />
 	</recordModule:ManageRecord>
 
@@ -22,6 +22,8 @@
 			import mx.collections.ArrayCollection;
 
 			[Bindable] public var mainModel : ModelLocator;
+			[Bindable] private var _model : EAModelLocator;
+			
 			private var _config : RecordModuleConfiguration;
 			
 			override protected function init():void
@@ -30,6 +32,7 @@
 				
 				if(!_config)
 				{
+					_model = mainModel as EAModelLocator;
 					recordModule.presentationModel = new PledgesModel(mainModel);
 
 					_config = new RecordModuleConfiguration();
