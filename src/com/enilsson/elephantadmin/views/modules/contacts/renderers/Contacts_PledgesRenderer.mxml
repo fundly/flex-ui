@@ -45,7 +45,8 @@
 				switch(item.type)
 				{
 					case "Check":
-						label = "Contribution: " + item.type + " " + cf.format(item.amount) + " on " + df.format(EDateUtil.timestampToLocalDate(item.entry_date));
+						var ctype : String = item.amount < 0 ? "Refund" : "Contribution";
+						label = ctype + ": " + item.type + " " + cf.format(item.amount) + " on " + df.format(EDateUtil.timestampToLocalDate(item.entry_date));
 						break;
 					case "Credit Card":
 						label = "Contribution: " + item.type + " " + cf.format(item.amount) + " on " + df.format( EDateUtil.timestampToLocalDate(item.created_on));
