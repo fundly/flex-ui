@@ -2,7 +2,7 @@
 <ModalTitleWindow xmlns="com.enilsson.elephantadmin.views.popups.*" 
 	xmlns:mx="http://www.adobe.com/2006/mxml" 
 	layout="vertical" 
-	styleName="updateWindow"
+	styleName="titleWindow"
 	title="Update Available">
 
 	<mx:Text width="100%" height="100%"
