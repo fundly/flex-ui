@@ -4,7 +4,6 @@ package com.enilsson.elephantadmin.commands.modules
 	import com.adobe.cairngorm.commands.SequenceCommand;
 	import com.adobe.cairngorm.control.CairngormEvent;
 	import com.enilsson.elephantadmin.business.LayoutDelegate;
-	import com.enilsson.elephantadmin.business.RecordDelegate;
 	import com.enilsson.elephantadmin.business.RecordsDelegate;
 	import com.enilsson.elephantadmin.business.SearchDelegate;
 	import com.enilsson.elephantadmin.events.modules.EmailEvent;
@@ -91,13 +90,10 @@ package com.enilsson.elephantadmin.commands.modules
 			
 			_model.dataLoading = false;
 			
-			_model[_moduleName].totalRecords = event.result.total_rows;
-			
 			var tableName:String = event.result.table_name;
 			
 			_model[_moduleName].records = new ArrayCollection();
-			for each( var item:Object in event.result[tableName])
-			{
+			for each( var item:Object in event.result[tableName]) {
 				_model[_moduleName].records.addItem(item);
 			}
 			if(_model[_moduleName].records.length > 0){
@@ -106,6 +102,11 @@ package com.enilsson.elephantadmin.commands.modules
 				_model[_moduleName].selectedIndex = -1;
 				_model[_moduleName].selectedIndex = 0;
 			}
+			
+			if( event.result.hasOwnProperty('total_rows') )
+				_model[_moduleName].totalRecords = event.result.total_rows;
+			else
+				_model[_moduleName].totalRecords = _model[_moduleName].records.length;
 		}
 		
 		public function onFault_getRecords(event:FaultEvent):void

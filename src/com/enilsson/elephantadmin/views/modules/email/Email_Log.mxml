@@ -40,10 +40,11 @@
 						_model.sid = null;
 						
 						var whereObj : Object = {
-							 1: { 
-							 	what:"id",
+							statement: '(1)',
+							1: { 
+							 	what:'email_log.id',
 							 	val: sid.data.id,
-							 	op: "="
+							 	op: '='
 							 }
 						};
 						
