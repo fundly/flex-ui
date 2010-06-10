@@ -2,7 +2,6 @@ package com.enilsson.elephantadmin.views.modules.events.model
 {
 	import com.adobe.cairngorm.model.ModelLocator;
 	import com.enilsson.elephantadmin.events.modules.EventsEvent;
-	import com.enilsson.elephantadmin.events.modules.RecordModuleEvent;
 	import com.enilsson.elephantadmin.views.common.ErrorMsgBox;
 	import com.enilsson.elephantadmin.views.manage_record_base.model.RecordModel;
 	import com.enilsson.elephantadmin.vo.ErrorVO;
@@ -35,6 +34,8 @@ package com.enilsson.elephantadmin.views.modules.events.model
 		public var pledgesTabLoading:Boolean;
 		
 		public var pledges:ArrayCollection;
+		
+		public var tempSourceCodes:ArrayCollection;
 		
 		/**
 		 * Capture the get record event and add the Pledge specific elements to it
@@ -137,11 +138,8 @@ package com.enilsson.elephantadmin.views.modules.events.model
 					
 				_eventAccessRights = null;						
 				
-				new RecordModuleEvent( 
-					RecordModuleEvent.UPSERT,
-					this,
-					new RecordVO ( table, 0, this.formVariables )
-				).dispatch();
+
+				new EventsEvent( EventsEvent.UPSERT_EVENT, this, formVariables ).dispatch();
 			}
 		}
 		
@@ -191,6 +189,10 @@ package com.enilsson.elephantadmin.views.modules.events.model
 			var recordsVO:RecordsVO = new RecordsVO( eSQL, where );
 			
 			new EventsEvent( EventsEvent.GET_PLEDGES, this, recordsVO ).dispatch();
+		}
+		
+		public function getTempSourceCodes():void {
+			new EventsEvent( EventsEvent.GET_TEMP_SOURCE_CODES, this ).dispatch();
 		}
 
 

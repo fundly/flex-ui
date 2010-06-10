@@ -155,7 +155,7 @@
     <mx:RemoteObject id="struktorImporter"
     	endpoint="{_model.gatewayURL}" 
     	destination="amfphp" 
-    	source="plugins.{_model.appInstanceID}.importer" 
+    	source="plugins.common.importer" 
     	showBusyCursor="true"
     	fault="handleFault(event)">
     	<mx:method name="empty_cache" />
@@ -166,7 +166,7 @@
     <mx:RemoteObject id="struktorPluginsDownline"
     	endpoint="{_model.gatewayURL}" 
     	destination="amfphp" 
-    	source="plugins.{_model.appInstanceID}.downline" 
+    	source="plugins.common.downline" 
     	showBusyCursor="true"
     	fault="handleFault(event)">
     	<mx:method name="get_downline" />
@@ -175,7 +175,7 @@
     <mx:RemoteObject id="struktorPluginsRSS"
     	endpoint="{_model.gatewayURL}" 
     	destination="amfphp" 
-    	source="plugins.{_model.appInstanceID}.rssExtractor" 
+    	source="plugins.common.rssExtractor" 
     	showBusyCursor="true"
     	fault="handleFault(event)">
     	<mx:method name="selective_feed" />
@@ -184,7 +184,7 @@
     <mx:RemoteObject id="struktorPluginsEmail"
     	endpoint="{_model.gatewayURL}" 
     	destination="amfphp" 
-    	source="plugins.{_model.appInstanceID}.email" 
+    	source="plugins.common.email" 
     	showBusyCursor="true"
     	fault="handleFault(event)">
     	<mx:method name="send_email" />
@@ -193,7 +193,7 @@
     <mx:RemoteObject id="struktorPluginsMsgs"
     	endpoint="{_model.gatewayURL}" 
     	destination="amfphp" 
-    	source="plugins.{_model.appInstanceID}.msgs" 
+    	source="plugins.common.msgs" 
     	showBusyCursor="true"
     	fault="handleFault(event)">
     	<mx:method name="send_message" />
@@ -202,7 +202,7 @@
     <mx:RemoteObject id="struktorPluginsContacts"
     	endpoint="{_model.gatewayURL}" 
     	destination="amfphp" 
-    	source="plugins.{_model.appInstanceID}.contacts" 
+    	source="plugins.common.contacts" 
     	showBusyCursor="true"
     	fault="handleFault(event)">
     	<mx:method name="list_contacts" />
@@ -213,7 +213,7 @@
     <mx:RemoteObject id="struktorPluginsPledges"
     	endpoint="{_model.gatewayURL}" 
     	destination="amfphp" 
-    	source="plugins.{_model.appInstanceID}.pledges" 
+    	source="plugins.common.pledges" 
     	requestTimeout="120"
     	showBusyCursor="true"
     	fault="handleFault(event)">
