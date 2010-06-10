@@ -12,8 +12,10 @@ package com.enilsson.elephanttrakker.vo
 		public var transaction:TransactionVO;
 		public var transactionData:Object = {};
 		public var check:Object;
-		public var billing:Object = {};
+//		public var billing:Object = {};
 		public var paymentType:String;		
+		
+		public var contribution:Object = {};
 
 	}
 }

@@ -35,6 +35,8 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 		public static const CHECK_VIEW			: int = 1;
 		public static const NO_CONTRIB_VIEW		: int = 2;
 		public static const LIST_CONTRIBS_VIEW	: int = 3;
+		public static const IN_KIND_VIEW		: int = 4;
+		public static const CASH_VIEW			: int = 5;
 		
 		public static const CONTACT_FORM_VIEW	: int = 0;
 		public static const PLEDGE_FORM_VIEW	: int = 1;
@@ -42,6 +44,11 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 		
 		public static const CC_DETAILS_VIEW			: int = 0;
 		public static const BILLING_DETAILS_VIEW	: int = 1;
+		
+		public static const CONTRIB_TYPE_CC 		: String = 'transaction';
+		public static const CONTRIB_TYPE_CHECK		: String = 'check';
+		public static const CONTRIB_TYPE_IN_KIND	: String = 'inkind';
+		public static const CONTRIB_TYPE_CASH		: String = 'cash';
 		
 		
 		/**
@@ -69,6 +76,7 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 				BindingUtils.bindProperty(this, 'pledgeLayout', model, ['struktorLayout','pledges'] );
 				BindingUtils.bindProperty(this, 'transactionLayout', model, ['struktorLayout', 'transactions'] );
 				BindingUtils.bindProperty(this, 'checkLayout', model, ['struktorLayout', 'checks'] );
+				BindingUtils.bindProperty(this, 'contribMiscLayout', model, ['struktorLayout', 'contributions_misc'] );
 				BindingUtils.bindProperty(this, 'siteLayoutLoaded', model, 'siteLayoutLoaded' );
 				BindingUtils.bindProperty(this, 'debug', model, 'debug' );
 				BindingUtils.bindProperty(this, 'mainViewState', model, 'mainViewState' );
@@ -84,6 +92,7 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 		public var pledgeLayout			: StruktorLayoutVO;
 		public var transactionLayout	: StruktorLayoutVO;
 		public var checkLayout			: StruktorLayoutVO;
+		public var contribMiscLayout	: StruktorLayoutVO;	
 		public var siteLayoutLoaded		: Boolean;
 		public var debug				: Boolean;
 		public var mainViewState		: int;
@@ -390,6 +399,29 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 		}
 		
 		public var noContribData : Object;
+		
+		
+		/**
+		 * Storage of the edited in-kind data
+		 */
+		private var _inKindData : Object;
+		public function set inKindData( value : Object ) : void {
+			_inKindData = ObjectUtil.copy( value );	
+		}
+		public function get inKindData() : Object {
+			return _inKindData;	
+		}
+		
+		/**
+		 * Storage of the edited cash data
+		 */
+		private var _cashData : Object;
+		public function set cashData( value : Object ) : void {
+			_cashData = ObjectUtil.copy( value );
+		}
+		public function get cashData() : Object {
+			return _cashData;
+		}
 
 		
 		/**
@@ -413,6 +445,8 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 		public var ccFields:Array;
 		public var checkFields:Array;
 		public var noContribFields:Array;
+		public var inKindFields:Array;
+		public var cashFields:Array;
 
 
 		/**
@@ -447,6 +481,8 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 		public var checkErrors		:Array = [];
 		public var billingErrors	:Array = [];
 		public var noContribErrors	:Array = [];
+		public var inKindErrors		:Array = [];
+		public var cashErrors		:Array = [];
 
 		/**
 		 * Flag to initiate a reset on the agreement initials boxes
@@ -589,10 +625,15 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 					vo.paymentType = 'check';
 				break;
 				case NO_CONTRIB_VIEW :
-					vo.transaction = null;
-					vo.check = null;
+					vo.contribution = null;
+//					vo.transaction = null;
+//					vo.check = null;
 					vo.paymentType = 'none';
-				break;		
+				break;	
+				case IN_KIND_VIEW :
+					vo.contribution = inKindData;
+					vo.contribution.type = CONTRIB_TYPE_IN_KIND;
+					
 			}
 			
 			// make some action dependant changes to the VO
