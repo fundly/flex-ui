@@ -65,17 +65,20 @@
 		<mx:DataGridColumn width="100" dataField="fname" headerText="First Name" />
 		<mx:DataGridColumn width="100" dataField="lname" headerText="Last Name" />
 		
-		<mx:DataGridColumn width="90" dataField="_fundraising_goal" headerText="Fundraising Goal" labelFunction="money_labelFunc" sortCompareFunction="fundraising_goalCompare" textAlign="right"/>
-		<mx:DataGridColumn width="90" dataField="pledge_total" headerText="Total Pledged" labelFunction="money_labelFunc" sortCompareFunction="pledge_totalCompare" textAlign="right"/>
-		<mx:DataGridColumn width="90" dataField="contrib_total" headerText="Total Contribution" labelFunction="money_labelFunc" sortCompareFunction="contrib_totalCompare" textAlign="right"/>
-		<mx:DataGridColumn width="90" dataField="downline_pledge" headerText="Downline Pledged" labelFunction="money_labelFunc" sortCompareFunction="downline_pledgeCompare" textAlign="right"/>
-		<mx:DataGridColumn width="90" dataField="downline_contrib" headerText="Downline Contribution" labelFunction="money_labelFunc" sortCompareFunction="downline_contribCompare" textAlign="right"/>
-		<mx:DataGridColumn width="90" dataField="user_contrib" headerText="Personal Contribution" labelFunction="money_labelFunc" sortCompareFunction="user_contribCompare" textAlign="right"/>
+		<mx:DataGridColumn width="120" dataField="_fundraising_goal" headerText="Fundraising Goal" labelFunction="money_labelFunc" sortCompareFunction="fundraising_goalCompare" textAlign="right"/>
+		<mx:DataGridColumn width="100" dataField="pledge_total" headerText="Total Pledged" labelFunction="money_labelFunc" sortCompareFunction="pledge_totalCompare" textAlign="right"/>
+		<mx:DataGridColumn width="100" dataField="contrib_total" headerText="Total Contribution" labelFunction="money_labelFunc" sortCompareFunction="contrib_totalCompare" textAlign="right"/>
+		<mx:DataGridColumn width="140" dataField="_c" headerText="Total Contribution Count" sortCompareFunction="_cCompare" textAlign="center"/>
 		
-		<mx:DataGridColumn width="90" dataField="shared_credit_pledge_total" headerText="Total Shared Credit Pledged" labelFunction="money_labelFunc" sortCompareFunction="shared_credit_pledge_totalCompare" textAlign="right"/>
-		<mx:DataGridColumn width="90" dataField="shared_credit_contrib_total" headerText="Total Shared Credit Contribution" labelFunction="money_labelFunc" sortCompareFunction="shared_credit_contrib_totalCompare" textAlign="right"/>
-		<mx:DataGridColumn width="90" dataField="shared_credit_downline_pledge" headerText="Downline Shared Credit Pledged" labelFunction="money_labelFunc" sortCompareFunction="shared_credit_downline_pledgeCompare" textAlign="right"/>
-		<mx:DataGridColumn width="90" dataField="shared_credit_downline_contrib" headerText="Downline Shared Credit Contribution" labelFunction="money_labelFunc" sortCompareFunction="shared_credit_downline_contribCompare" textAlign="right"/>
+		<mx:DataGridColumn width="100" dataField="downline_pledge" headerText="Downline Pledged" labelFunction="money_labelFunc" sortCompareFunction="downline_pledgeCompare" textAlign="right"/>
+		<mx:DataGridColumn width="125" dataField="downline_contrib" headerText="Downline Contribution" labelFunction="money_labelFunc" sortCompareFunction="downline_contribCompare" textAlign="right"/>
+		<mx:DataGridColumn width="152" dataField="_c_downline" headerText="Downline Contribution Count" sortCompareFunction="_c_downlineCompare" textAlign="center"/>
+		<mx:DataGridColumn width="120" dataField="user_contrib" headerText="Personal Contribution" labelFunction="money_labelFunc" sortCompareFunction="user_contribCompare" textAlign="right"/>
+		
+		<mx:DataGridColumn width="145" dataField="shared_credit_pledge_total" headerText="Total Shared Credit Pledged" labelFunction="money_labelFunc" sortCompareFunction="shared_credit_pledge_totalCompare" textAlign="right"/>
+		<mx:DataGridColumn width="170" dataField="shared_credit_contrib_total" headerText="Total Shared Credit Contribution" labelFunction="money_labelFunc" sortCompareFunction="shared_credit_contrib_totalCompare" textAlign="right"/>
+		<mx:DataGridColumn width="168" dataField="shared_credit_downline_pledge" headerText="Downline Shared Credit Pledged" labelFunction="money_labelFunc" sortCompareFunction="shared_credit_downline_pledgeCompare" textAlign="right"/>
+		<mx:DataGridColumn width="190" dataField="shared_credit_downline_contrib" headerText="Downline Shared Credit Contribution" labelFunction="money_labelFunc" sortCompareFunction="shared_credit_downline_contribCompare" textAlign="right"/>
 		
 		<mx:DataGridColumn width="80" dataField="_fid" headerText="Fundraiser ID" sortCompareFunction="fidCompare"/>
 		<mx:DataGridColumn width="100" dataField="_city" headerText="City" />
@@ -122,13 +125,18 @@
 			private function contrib_totalCompare(obj1:Object, obj2:Object):int {
 				return ObjectUtil.numericCompare(obj1.contrib_total,obj2.contrib_total);
 			}
+			private function _cCompare(obj1:Object, obj2:Object):int {
+				return ObjectUtil.numericCompare(obj1._c, obj2._c);
+			}
 
 			private function downline_contribCompare(obj1:Object, obj2:Object):int {
 				return ObjectUtil.numericCompare(obj1.downline_contrib,obj2.downline_contrib);
 			} 
-
 			private function downline_pledgeCompare(obj1:Object, obj2:Object):int {
 				return ObjectUtil.numericCompare(obj1.downline_pledge,obj2.downline_pledge);
+			}
+			private function _c_downlineCompare(obj1:Object, obj2:Object):int {
+				return ObjectUtil.numericCompare(obj1._c_downline, obj2._c_downline);
 			}
 			
 			private function shared_credit_pledge_totalCompare( o1 : Object, o2 : Object ) : int {
