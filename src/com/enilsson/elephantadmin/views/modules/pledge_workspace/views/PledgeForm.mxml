@@ -594,29 +594,35 @@
 				setIsValid();
 				TooltipUtil.hideTooltip();
 				
+				var firstField : UIComponent;
+				
 				switch(event.newIndex)
 				{
 					case PledgeWorkspaceModel.CC_VIEW :
 						presentationModel.transactionData = ccForm.formVariables;
-						UIComponent(ccForm.firstField).setFocus();
+						firstField = ccForm.firstField as UIComponent;
 					break;
 					case PledgeWorkspaceModel.CHECK_VIEW :
 						presentationModel.checkData = checkForm.formVariables;
-						UIComponent(checkForm.firstField).setFocus();
+						firstField = checkForm.firstField as UIComponent;
 					break;
 					case PledgeWorkspaceModel.NO_CONTRIB_VIEW :
 						presentationModel.transactionData = null;
 						presentationModel.checkData = null;
-						UIComponent(noContribForm.firstField).setFocus();
+						firstField = noContribForm.firstField as UIComponent;
 					break;
 					case PledgeWorkspaceModel.IN_KIND_VIEW:
 						presentationModel.inKindData = inKindForm.formVariables;
-						UIComponent(inKindForm.firstField).setFocus();
+						firstField = inKindForm.firstField as UIComponent;
 					break;
 					case PledgeWorkspaceModel.CASH_VIEW:
 						presentationModel.cashData = cashForm.formVariables;
-						UIComponent(cashForm.firstField).setFocus();
+						firstField = cashForm.firstField as UIComponent;
 					break;
+				}
+				
+				if( firstField != null ) {
+					firstField.setFocus();
 				}
 			}
 			

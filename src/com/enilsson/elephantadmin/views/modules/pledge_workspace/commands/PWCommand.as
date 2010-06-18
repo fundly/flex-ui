@@ -55,9 +55,6 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.commands
 				case PWEvent.SAVE :
 					savePledge(event as PWEvent);
 				break;
-				case PWEvent.DUP_SEARCH :
-					checkDups(event as PWEvent);
-				break;				
 				case PWEvent.DO_TRANSACTION :
 					doPledgeTransaction(event as PWEvent);
 				break;				
@@ -115,7 +112,7 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.commands
 					for ( var i:String in d.checks)
 					{	
 						obj = d.checks[i];
-						obj['paymentType'] = 'Check';
+						obj['type'] = ContributionType.CONTRIB_TYPE_CHECK.type;
 						t.addItem(obj);				
 					}
 				}
@@ -128,11 +125,24 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.commands
 					for ( i in d.transactions)
 					{	
 						obj = d.transactions[i];
-						obj['paymentType'] = 'Credit Card';
+						obj['type'] = ContributionType.CONTRIB_TYPE_TANSACTION.type;
 						t.addItem(obj);				
 					}
 				}
 			}
+			if(d.hasOwnProperty('contributions_misc'))
+			{
+				if(d.contributions_misc['1'])
+				{
+					for ( i in d.contributions_misc)
+					{	
+						obj = d.contributions_misc[i];
+						// contribtions in contributions_misc already have the type property set.
+						t.addItem(obj);
+					}
+				}
+			}
+			
 			
 			// sort the data by created_on date
 			var sort:Sort = new Sort();
@@ -339,71 +349,6 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.commands
 
 
 		/**
-		 * Check the entered information for the presence of duplicates
-		 */
-		private function checkDups(event:PWEvent):void
-		{			
-			var handlers:IResponder = new mx.rpc.Responder(onResults_checkDups, onFault_checkDups);
-			var delegate:SearchDelegate = new SearchDelegate(handlers);
-			
-			_presentationModel.formProcessing = true;
-			
- 			var s:SearchVO;
-
-			switch(event.params.table)
-			{
-				case 'pledges' :
-					var p:Object = _presentationModel.pledgeData;
-					s = new SearchVO(
-						'pledges',
-						p.lname + ' ' + p.fname.substr(0,3) + ' ' + p.city + ' ' + p.zip + ' ' + p.email + ' ' + p.pledge_amount
-					);
-				break;				
-			}
-			
-			if(_presentationModel.debug) Logger.info('Dup Check', event.params.table, ObjectUtil.toString(s));
-			
-			delegate.search( s );
-		}
-		
-		private function onResults_checkDups(data:Object):void 
-		{
-			if(_presentationModel.debug) Logger.info('checkDups Success', ObjectUtil.toString(data.result[0]));
-			
-			var item:Object;
-			var tableName:String = data.result[0].table_name;
-			
-			switch (tableName)
-			{
-				case 'pledges' :
-					if(data.result[0].hasOwnProperty('pledges'))
-					{	
-						_presentationModel.pledgeDups = new Array();
-						
-						for each ( item in data.result[0].pledges )
-							_presentationModel.pledgeDups.push(item);
-						
-						_presentationModel.formProcessing = false;
-						_presentationModel.dupsVStack = 1;	
-						_presentationModel.showDupBox = true;
-					}
-					else
-					{
-						this.nextEvent = new PWEvent ( PWEvent.DO_TRANSACTION, _presentationModel );
-						this.executeNextCommand();
-						this.nextEvent = null;
-					}							
-				break;
-			}
-		}	
-		
-		private function onFault_checkDups(data:Object):void
-		{
-			if(_presentationModel.debug) Logger.info('checkDups Fault');
-		}						
-
-
-		/**
 		 * Pass the PledgeVO for transaction
 		 */
 		private function doPledgeTransaction( event:PWEvent ):void
@@ -436,27 +381,25 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.commands
 						params['date'] = df.format(new Date());
 				
 					// send an email if there is a contribution
-					if ( _presentationModel.vo.check != null || _presentationModel.vo.transaction != null ) 
+					if ( _presentationModel.vo.contribution != null ) 
 					{
-						params['pledge_amount'] = _presentationModel.vo.check == null ? 
-							cf.format(_presentationModel.vo.transaction.amount) :  
-							cf.format(_presentationModel.vo.check.amount);
+						params['pledge_amount'] = cf.format(_presentationModel.vo.contribution.amount);  
 						
 						// send an email thanking the user for a credit card transaction
-						if(_presentationModel.vo.transaction != null)
+						if( _presentationModel.vo.contribution.type == ContributionType.CONTRIB_TYPE_TANSACTION.type )
 						{						
 							// add the transaction data, unfortunately you cant loop through a typed object (WTF??)
-							params['card_type'] = _presentationModel.vo.transaction.card_type;
-							params['card_number'] = _presentationModel.vo.transaction.card_number;
-							params['amount'] = _presentationModel.vo.transaction.amount;
-							params['full_name'] = _presentationModel.vo.transaction.full_name;
-							params['fname'] = _presentationModel.vo.transaction.fname;
-							params['lname'] = _presentationModel.vo.transaction.lname;
-							params['address'] = _presentationModel.vo.transaction.address;
-							params['address2'] = _presentationModel.vo.transaction.address2;
-							params['city'] = _presentationModel.vo.transaction.city;
-							params['state'] = _presentationModel.vo.transaction.state;
-							params['zip'] = _presentationModel.vo.transaction.zip;
+							params['card_type'] = _presentationModel.vo.contribution.card_type;
+							params['card_number'] = _presentationModel.vo.contribution.card_number;
+							params['amount'] = _presentationModel.vo.contribution.amount;
+							params['full_name'] = _presentationModel.vo.contribution.full_name;
+							params['fname'] = _presentationModel.vo.contribution.fname;
+							params['lname'] = _presentationModel.vo.contribution.lname;
+							params['address'] = _presentationModel.vo.contribution.address;
+							params['address2'] = _presentationModel.vo.contribution.address2;
+							params['city'] = _presentationModel.vo.contribution.city;
+							params['state'] = _presentationModel.vo.contribution.state;
+							params['zip'] = _presentationModel.vo.contribution.zip;
 							
 							// format the amount
 							params.amount = cf.format(params.amount);
@@ -486,30 +429,26 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.commands
 							this.nextEvent = null;
 						}
 						// email for check contribution
-						else
+						else if( _presentationModel.vo.contribution.type == ContributionType.CONTRIB_TYPE_CHECK.type &&
+								_presentationModel.vo.contribution.form_send == 'email')
 						{
-							// check to see that the user wants to send out an email
-							if( _presentationModel.vo.check.form_send == 'email')
-							{
-								if(_presentationModel.debug) Logger.info('Email Params - Check contribution', params);								
+							if(_presentationModel.debug) Logger.info('Email Params - Check contribution', params);								
 															
-								this.nextEvent = new PWEvent(
-									PWEvent.SEND_EMAIL, 
-									_presentationModel,
-									new EmailVO(
-										_presentationModel.vo.pledge.email
-										, ""
-										, ""
-										, ""
-										, _model.serverVariables.donation_form_template_id
-										, params
-									)
-								);
-								this.executeNextCommand();
-								this.nextEvent = null;
-							}
+							this.nextEvent = new PWEvent(
+								PWEvent.SEND_EMAIL, 
+								_presentationModel,
+								new EmailVO(
+									_presentationModel.vo.pledge.email
+									, ""
+									, ""
+									, ""
+									, _model.serverVariables.donation_form_template_id
+									, params
+								)
+							);
+							this.executeNextCommand();
+							this.nextEvent = null;
 						}
-
 						
 						if(_presentationModel.action == PledgeWorkspaceModel.EDIT)
 						{

@@ -153,11 +153,6 @@ package com.enilsson.elephantadmin.models
 		[Bindable] public var mastheadOpen : Boolean = true;
 		
 		
-		public function get successTextCC():String { return "The Credit Card pledge was successful." ; }
-		public function get successTextCheck():String { return "The Check pledge was successful."; }
-		public function get successTextNone():String { return "The pledge was successful."; }
-		
-		
 		/**
 		* Database specifc variables - IDs of system templates/attachments in the Database
 		*/

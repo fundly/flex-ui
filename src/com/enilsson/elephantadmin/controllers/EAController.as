@@ -253,7 +253,6 @@ package com.enilsson.elephantadmin.controllers
 			this.addCommand(PWEvent.LOOKUP_INPUT_SEARCH, PWCommand);
 			this.addCommand(PWEvent.GET_LABEL, PWCommand);	
 			this.addCommand(PWEvent.SAVE, PWCommand);
-			this.addCommand(PWEvent.DUP_SEARCH, PWCommand);	
 			this.addCommand(PWEvent.DO_TRANSACTION, PWCommand);
 			this.addCommand(PWEvent.SEND_EMAIL, PWCommand);
 			this.addCommand(PWEvent.DELETE_SAVED_PLEDGE, PWCommand);

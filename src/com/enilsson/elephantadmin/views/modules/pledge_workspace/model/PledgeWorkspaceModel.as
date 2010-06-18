@@ -4,10 +4,9 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 	import com.enilsson.elephantadmin.models.EAModelLocator;
 	import com.enilsson.elephantadmin.views.modules.pledge_workspace.events.PWEvent;
 	import com.enilsson.elephantadmin.vo.ErrorVO;
+	import com.enilsson.elephantadmin.vo.PledgeVO;
 	import com.enilsson.elephantadmin.vo.SessionVO;
 	import com.enilsson.elephantadmin.vo.StruktorLayoutVO;
-	import com.enilsson.elephanttrakker.vo.PledgeVO;
-	import com.enilsson.elephanttrakker.vo.TransactionVO;
 	import com.enilsson.utils.eNilssonUtils;
 	
 	import flash.events.Event;
@@ -45,11 +44,6 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 		public static const CC_DETAILS_VIEW			: int = 0;
 		public static const BILLING_DETAILS_VIEW	: int = 1;
 		
-		public static const CONTRIB_TYPE_CC 		: String = 'transaction';
-		public static const CONTRIB_TYPE_CHECK		: String = 'check';
-		public static const CONTRIB_TYPE_IN_KIND	: String = 'inkind';
-		public static const CONTRIB_TYPE_CASH		: String = 'cash';
-		
 		
 		/**
 		 * Variable to register when a saved record is being restored
@@ -80,9 +74,6 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 				BindingUtils.bindProperty(this, 'siteLayoutLoaded', model, 'siteLayoutLoaded' );
 				BindingUtils.bindProperty(this, 'debug', model, 'debug' );
 				BindingUtils.bindProperty(this, 'mainViewState', model, 'mainViewState' );
-				BindingUtils.bindProperty(this, 'successTextCC', model, 'successTextCC' );
-				BindingUtils.bindProperty(this, 'successTextCheck', model, 'successTextCheck');
-				BindingUtils.bindProperty(this, 'successTextNone', model, 'successTextNone');
 			}
 			
 			if(debug) Logger.info ( 'Instantiate PledgeWorkspaceModel' );
@@ -96,9 +87,6 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 		public var siteLayoutLoaded		: Boolean;
 		public var debug				: Boolean;
 		public var mainViewState		: int;
-		public var successTextCC		: String;
-		public var successTextCheck		: String;
-		public var successTextNone		: String;
 
 		/**
 		 * Some global variables for use during form completion
@@ -311,7 +299,7 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 		private var _contactData:Object;
 		public function set contactData ( value:Object ):void
 		{
-			_contactData = ObjectUtil.copy( value );
+			_contactData = value;
 		}
 		public function get contactData ():Object
 		{
@@ -324,7 +312,7 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 		private var _pledgeData:Object;
 		public function set pledgeData ( value:Object ):void
 		{
-			_pledgeData = ObjectUtil.copy( value );
+			_pledgeData = value;
 		}
 		public function get pledgeData ():Object
 		{
@@ -337,7 +325,7 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 		private var _transactionData:Object;
 		public function set transactionData ( value:Object ):void
 		{
-			_transactionData = ObjectUtil.copy( value );
+			_transactionData = value;
 		}
 		public function get transactionData ():Object
 		{
@@ -366,7 +354,7 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 			}	
 			
 			// copy the object to the billingData variable
-			_billingData = ObjectUtil.copy( value );
+			_billingData = value;
 		}
 		public function get billingData ():Object
 		{
@@ -391,7 +379,7 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 		{
 			if(value)
 				delete value.id;
-			_checkData = ObjectUtil.copy( value );
+			_checkData = value;
 		}
 		public function get checkData ():Object
 		{
@@ -406,7 +394,7 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 		 */
 		private var _inKindData : Object;
 		public function set inKindData( value : Object ) : void {
-			_inKindData = ObjectUtil.copy( value );	
+			_inKindData = value;	
 		}
 		public function get inKindData() : Object {
 			return _inKindData;	
@@ -417,7 +405,7 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 		 */
 		private var _cashData : Object;
 		public function set cashData( value : Object ) : void {
-			_cashData = ObjectUtil.copy( value );
+			_cashData = value;
 		}
 		public function get cashData() : Object {
 			return _cashData;
@@ -547,6 +535,17 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 		public var vo:PledgeVO;
 		public function process():void
 		{
+			// create copies of all pledge related objects since this function modifies and adds 
+			// properties on them directly.
+			var contactData		: Object = ObjectUtil.copy(this.contactData);
+			var pledgeData		: Object = ObjectUtil.copy(this.pledgeData);
+			var transactionData : Object = ObjectUtil.copy(this.transactionData);
+			var billingData 	: Object = ObjectUtil.copy(this.billingData);
+			var checkData		: Object = ObjectUtil.copy(this.checkData);
+			var inKindData		: Object = ObjectUtil.copy(this.inKindData);
+			var cashData		: Object = ObjectUtil.copy(this.cashData);
+			
+			
 			vo = new PledgeVO();
 			
 			// loop through the contact data and spread the data to the two objects
@@ -597,42 +596,44 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 			}
 			
 			// add any payments as necessary
+			var prop : String;
 			switch ( transVStack )
 			{
 				case CC_VIEW :
-					vo.check = null;
-					vo.transaction = new TransactionVO();
-					vo.transaction.data = transactionData;
+					vo.contribution 		= transactionData;
+					vo.contribution.type 	= ContributionType.CONTRIB_TYPE_TANSACTION.type; 
 					
 					// add the appropriate address data including billing data if needed
-					if ( billingData == null )
-						vo.transaction.data = vo.pledge;
+					if ( billingData == null ) {
+						for( prop in vo.pledge ) {
+							vo.contribution[prop] = vo.pledge[prop];
+						}
+					}
 					else
 					{
-						vo.transaction.data 	= billingData;
-						vo.transaction.fname 	= vo.pledge.fname;
-						vo.transaction.lname 	= vo.pledge.lname;
+						for( prop in billingData ) {
+							vo.contribution[prop] = billingData[prop];
+						}
+						vo.contribution.fname 	= vo.pledge.fname;
+						vo.contribution.lname 	= vo.pledge.lname;
 					}
-					
-					vo.paymentType = 'credit card';	
 				break;
 				case CHECK_VIEW :
-					vo.transaction = null;
-					vo.check = {};
-					vo.check = checkData;
-					delete vo.check['id'];
-					
-					vo.paymentType = 'check';
+					vo.contribution 		= checkData;
+					vo.contribution.type 	= ContributionType.CONTRIB_TYPE_CHECK.type;
+					delete vo.contribution['id'];
 				break;
 				case NO_CONTRIB_VIEW :
 					vo.contribution = null;
-//					vo.transaction = null;
-//					vo.check = null;
-					vo.paymentType = 'none';
 				break;	
 				case IN_KIND_VIEW :
 					vo.contribution = inKindData;
-					vo.contribution.type = CONTRIB_TYPE_IN_KIND;
+					vo.contribution.type = ContributionType.CONTRIB_TYPE_IN_KIND.type;
+				break;
+				case CASH_VIEW :
+					vo.contribution = cashData;
+					vo.contribution.type =  ContributionType.CONTRIB_TYPE_CASH.type;
+				break;
 					
 			}
 			

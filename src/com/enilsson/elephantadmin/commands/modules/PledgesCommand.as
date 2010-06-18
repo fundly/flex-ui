@@ -6,6 +6,7 @@ package com.enilsson.elephantadmin.commands.modules
 	import com.enilsson.elephantadmin.business.RecordsDelegate;
 	import com.enilsson.elephantadmin.business.SearchDelegate;
 	import com.enilsson.elephantadmin.events.modules.PledgeEvent;
+	import com.enilsson.elephantadmin.views.modules.pledge_workspace.model.ContributionType;
 	import com.enilsson.elephantadmin.views.modules.pledges.model.PledgesModel;
 	import com.enilsson.elephantadmin.vo.ErrorVO;
 	import com.enilsson.elephantadmin.vo.RecordsVO;
@@ -96,7 +97,7 @@ package com.enilsson.elephantadmin.commands.modules
 					for ( var i:String in d.checks)
 					{	
 						obj = d.checks[i];
-						obj['paymentType'] = 'Check';
+						obj['type'] = ContributionType.CONTRIB_TYPE_CHECK.type;
 						t.addItem(obj);
 					}
 				}
@@ -109,7 +110,7 @@ package com.enilsson.elephantadmin.commands.modules
 					for ( i in d.transactions)
 					{	
 						obj = d.transactions[i];
-						obj['paymentType'] = 'Credit Card';
+						obj['type'] = ContributionType.CONTRIB_TYPE_TANSACTION.type;
 						t.addItem(obj);
 					}
 				}
@@ -122,11 +123,23 @@ package com.enilsson.elephantadmin.commands.modules
 					for ( i in d.paypal_transactions)
 					{	
 						obj = d.paypal_transactions[i];
-						obj['paymentType'] = 'PayPal';
+						obj['type'] = ContributionType.CONTRIB_TYPE_PAYPAL.type;
 						t.addItem(obj);
 					}
 				}
-			}			
+			}
+			if(d.hasOwnProperty('contributions_misc'))
+			{
+				if(d.contributions_misc['1'])
+				{
+					for ( i in d.contributions_misc)
+					{	
+						obj = d.contributions_misc[i];
+						// obj['type'] already set on contributions_misc objects
+						t.addItem(obj);
+					}
+				}
+			}						
 			
 			var sort:Sort = new Sort();
 			sort.fields = [new SortField("created_on", true)];

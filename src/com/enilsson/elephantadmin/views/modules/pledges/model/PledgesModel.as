@@ -118,6 +118,7 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 			esql += 'transactions<amount:full_name:card_number:card_number_type:created_on:transactionid:address:city:state:zip>';
 			esql += ',checks<entry_date:created_on:amount:batch_code:batch_id>';
 			esql += ',paypal_transactions<created_on:amount:transactionid>';
+			esql += ',contributions_misc<created_on:amount:type:comments>';
 			esql += ')';
 			
 			var recordVO:RecordVO = new RecordVO(
