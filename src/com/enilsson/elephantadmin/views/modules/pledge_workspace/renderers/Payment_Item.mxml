@@ -6,13 +6,14 @@
 	paddingRight="0" paddingTop="0">
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.elephantadmin.views.modules.pledge_workspace.model.ContributionType;
 			import com.enilsson.utils.EDateUtil;
 		]]>
 	</mx:Script>
 	
-	<mx:Button styleName="{data.paymentType == 'Check' ? 'checkBtn' : 'creditCardBtn'}" />
+	<mx:Button styleName="{data.type == ContributionType.CONTRIB_TYPE_CHECK.type ? 'checkBtn' : 'creditCardBtn'}" />
 	<mx:VBox verticalGap="0" paddingBottom="0">
-		<mx:Text styleName="irTitle" text="{data.paymentType}" width="{explicitWidth}" />
+		<mx:Text styleName="irTitle" text="{ ContributionType.typeByString(data.type).label }" width="{explicitWidth}" />
 		<mx:Text styleName="irDesc" text="{cf.format(data.amount)} - {df.format( EDateUtil.timestampToLocalDate( data.created_on ))}" /> 
 	</mx:VBox>
 	

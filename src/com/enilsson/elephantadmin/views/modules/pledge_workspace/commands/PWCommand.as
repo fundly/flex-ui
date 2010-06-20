@@ -83,7 +83,7 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.commands
 			
 			if(_presentationModel.debug) Logger.info('Loading Pledge ID', event.params.pledgeID );			
 			
-			var r:RecordVO = new RecordVO( 'pledges(transactions<ALL>,checks<ALL>)', event.params.pledgeID );			
+			var r:RecordVO = new RecordVO( 'pledges(transactions<ALL>,checks<ALL>,contributions_misc<ALL>)', event.params.pledgeID );			
 			delegate.selectRecord( r );
 		}
 		

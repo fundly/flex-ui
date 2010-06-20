@@ -30,6 +30,8 @@ package com.enilsson.elephantadmin.views.modules.reporting.all_contributions.mod
 		private const FILTER_CREDIT_CARD:uint = 1;
 		private const FILTER_CHECK:uint = 2;
 		private const FILTER_PAYPAL:uint = 3;
+		private const FILTER_IN_KIND:uint = 4;
+		private const FILTER_CASH:uint = 5;
 
 		private const FILTER_PLEDGE_DATE:uint = 0;
 		private const FILTER_FULFILLED_DATE:uint = 1;
@@ -38,7 +40,9 @@ package com.enilsson.elephantadmin.views.modules.reporting.all_contributions.mod
 			{'label':'All','data':FILTER_ALL},
 			{'label':'Credit Card','data':FILTER_CREDIT_CARD},
 			{'label':'Check','data':FILTER_CHECK},
-			{'label':'PayPal','data':FILTER_PAYPAL}
+			{'label':'PayPal','data':FILTER_PAYPAL},
+			{'label':'In-Kind', 'data':FILTER_IN_KIND},
+			{'label':'Cash', 'data':FILTER_CASH}
 		]);
 		public var regionFilter:ArrayCollection = new ArrayCollection([
 			{'label':'All','data':'0'}
@@ -132,6 +136,10 @@ package com.enilsson.elephantadmin.views.modules.reporting.all_contributions.mod
 					exportTitle = 'Check Contributions';
 				else if(filter == FILTER_PAYPAL)
 					exportTitle = 'PayPal Contributions';
+				else if(filter == FILTER_IN_KIND)
+					exportTitle = 'In-Kind Contributions';
+				else if(filter == FILTER_CASH)
+					exportTitle = 'Cash Contributions';
 
 				vo.export = true;
 				vo.exportHeaders = exportHeaders;
@@ -195,6 +203,16 @@ package com.enilsson.elephantadmin.views.modules.reporting.all_contributions.mod
 						case FILTER_PAYPAL:
 							if(vo.addData['paypal_total'])
 								totalContribSum = vo.addData['paypal_total'];
+							break;
+							
+						case FILTER_IN_KIND:
+							if(vo.addData['inkind_total'])
+								totalContribSum = vo.addData['inkind_total'];
+							break;
+							
+						case FILTER_PAYPAL:
+							if(vo.addData['cash_total'])
+								totalContribSum = vo.addData['cash_total'];
 							break;
 					}
 				}

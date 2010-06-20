@@ -103,8 +103,12 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 		public var showDupBox:Boolean = false;		// show the popup of the duplicates
 		public var dupsVStack:int = 0;				// the state of the dups viewstack
 		
-		public function set transVStack( value : int ) : void { _transVStack = value; }
-		public function get transVStack() : int { return _transVStack; }
+		public function set transVStack( value : int ) : void { 
+			_transVStack = value; 
+		}
+		public function get transVStack() : int { 
+			return _transVStack; 
+		}
 		private var _transVStack : int = CC_VIEW;
 		
 		public var ccVStack:int = 0;				// the state of the credit card viewstack
