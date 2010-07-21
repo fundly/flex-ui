@@ -200,6 +200,8 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.validators.SelectionNumericValidator;
+			import mx.validators.NumberValidator;
 			import com.enilsson.common.utils.TooltipUtil;
 			import mx.core.UIComponent;
 			import mx.managers.ToolTipManager;
@@ -381,6 +383,23 @@
  
 						field = event.currentTarget.getField('amount') as TextInput;
  						BindingUtils.bindProperty(field, 'text', presentationModel, 'pledgeAmount');
+ 						
+ 						// create an amount validator for CC contributions whose minValue is based on the minValue of the
+ 						// pledge_amount validator.
+ 						var vArr 				: Array = pledgeInfo.getFieldValidators('pledge_amount', 'selection_numeric');
+ 						var pledgeAmountVal		: SelectionNumericValidator = vArr[0] as SelectionNumericValidator;
+ 						
+ 						vArr = ccForm.getFieldValidators('amount', 'numeric');
+ 						var amountVal : NumberValidator = vArr[0] as NumberValidator;
+ 						
+ 						BindingUtils.bindProperty( amountVal, 'minValue', pledgeAmountVal, 'minValue');
+ 						BindingUtils.bindSetter( 
+ 							function( val : String ) : void {
+ 								var amountLabel			: String = ccForm.getFieldLayout('amount').label;
+ 								var pledgeAmountLabel	: String = pledgeInfo.getFieldLayout('pledge_amount').label;
+ 								var pledgeAmountMinErr	: String = pledgeAmountVal.lowerThanMinError;
+ 								amountVal.lowerThanMinError = pledgeAmountMinErr.replace( pledgeAmountLabel, amountLabel );
+ 							}, pledgeAmountVal, 'lowerThanMinError' );
 					break;
 					
 					case checkForm :
