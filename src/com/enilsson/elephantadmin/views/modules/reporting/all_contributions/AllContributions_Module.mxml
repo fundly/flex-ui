@@ -40,7 +40,8 @@
 		<mx:DataGridColumn width="115" dataField="amount" headerText="Contribution Amount" textAlign="right" labelFunction="money_labelFunc" sortCompareFunction="amountCompare"/>
 		<mx:DataGridColumn width="110" dataField="created_on" headerText="Created on" labelFunction="datetime_labelFunc"/>
 		<mx:DataGridColumn width="65" dataField="pledge_date" headerText="Pledge Date" labelFunction="date_labelFunc" />
-		<mx:DataGridColumn width="65" dataField="entry_date" headerText="Fulfilled Date" labelFunction="date_labelFunc" />
+		<mx:DataGridColumn width="75" dataField="entry_date" headerText="Fulfilled Date" labelFunction="date_labelFunc" />
+		<mx:DataGridColumn width="85" dataField="number" headerText="Check Number" />
 		<mx:DataGridColumn width="100" dataField="fname" headerText="First Name" />
 		<mx:DataGridColumn width="100" dataField="lname" headerText="Last Name" />
 		<mx:DataGridColumn width="150" dataField="address1" headerText="Address" />
@@ -93,8 +94,8 @@
 			private function pledge_amountCompare(obj1:Object, obj2:Object):int
 			{
 				return ObjectUtil.numericCompare(obj1.pledge_amount,obj2.pledge_amount);
-			} 
-
+			}
+			
 			private function region_idCompare(obj1:Object, obj2:Object):int
 			{
 				return ObjectUtil.numericCompare(obj1.mod_group_id,obj2.mod_group_id);
