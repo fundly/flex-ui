@@ -1,11 +1,9 @@
 package com.enilsson.elephantadmin.interfaces
 {
-	import com.enilsson.elephantadmin.models.Icons;
 	import com.enilsson.elephantadmin.views.manage_record_base.model.RecordModuleConfiguration;
 	
-	import flash.events.Event;
-	
 	import mx.collections.ArrayCollection;
+	import mx.events.ListEvent;
 	
 	public interface IRecordModel
 	{
@@ -30,7 +28,7 @@ package com.enilsson.elephantadmin.interfaces
 		function get auditTrail ():ArrayCollection;
 
 		// Functions for list navigation and manipulation
-		function searchListSelectedIndexChange ( event:Event ):void;
+		function searchListSelectedIndexChange ( event:ListEvent ):void;
 		function clearSearch():void;
 		function indexSearch( searchLetter:String ):void;
 		function searchRecords( searchTerm:String, searchOption:Object ):void;

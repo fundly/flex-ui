@@ -27,18 +27,17 @@
 			
 			<mx:TabNavigator id="refundMethods"
 				styleName="optionsTabNav"
-				tabOffset="-15" horizontalAlign="right"
+				tabOffset="-15" horizontalAlign="right" tabWidth="65"
 				width="{width - 30}" height="100%">			
-				<mx:VBox label="Check" horizontalAlign="center">
-					<mx:Text styleName="refundText" width="90%" 
+				<mx:VBox label="Check" horizontalAlign="center" styleName="refundText">
+					<mx:Text width="90%" 
 						htmlText="This will add a refund to the desired amount as a check contribution from the campaign to the donor. Please note you can not exceed the current contributed amount of &lt;b&gt;{cf.format(presentationModel.selectedRecord.contrib_total)}&lt;/b&gt;." />
 					<struktorForm:StruktorForm id="refundCheckForm"
 						styleName="processingForm"
 						layoutProvider="{presentationModel.checkLayout}"
-						selectedFields="{['amount','full_name','entry_date','check_num','comments']}" />
-				</mx:VBox>
-				<mx:VBox label="Credit Card" horizontalAlign="center">
-					<mx:Text text="This feature is not yet available" color="#333333" />
+						selectedFields="{['amount','full_name','entry_date','check_num','comments']}"
+						formBuildComplete="handleFormBuildComplete(event)">
+					</struktorForm:StruktorForm>
 				</mx:VBox>
 			</mx:TabNavigator>
 			
@@ -47,9 +46,9 @@
 			<mx:HBox width="100%" horizontalAlign="center">
 				<common:RestrictedCreateBtn id="refundSubmit"
 					label="SUBMIT"
-					enabled="{refundMethods.selectedIndex == 0 ? refundCheckForm.isValid : false}"
+					enabled="{ (refundMethods.selectedIndex == 0 ? refundCheckForm.isValid : false) }"
 					toolTip="{refundSubmit.enabled ? 'This form is ready to submit!' : 'Please enter all required fields!'}"
-					click="presentationModel.addCheckRefund( refundCheckForm.formVariables )" />				
+					click="handleSubmitClick(event)" />				
 			</mx:HBox>
 			
 		</mx:VBox>
@@ -64,6 +63,19 @@
 	<mx:CurrencyFormatter id="cf" 
 		currencySymbol="$"
 		precision="2" />
+
+	<mx:states>
+		<mx:State name="fundTypeSelection">
+			<mx:AddChild relativeTo="{refundCheckForm}">
+				<mx:FormItem label="Fund Type" paddingLeft="20">
+					<mx:ComboBox id="fundTypeCb"
+						dataProvider="{presentationModel.fundTypeInput.dataProvider}"
+						selectedItem="{presentationModel.fundTypeInput.selectedItem}"
+						change="handleFundTypeChange(event)" />						
+				</mx:FormItem>
+			</mx:AddChild>
+		</mx:State>
+	</mx:states>
 
 	<mx:Style>
 		.refundTitle {
@@ -85,6 +97,8 @@
 
 	<mx:Script>
 		<![CDATA[
+			import mx.controls.ComboBox;
+			import mx.containers.FormItem;
 			import com.enilsson.elephantadmin.views.modules.pledges.model.PledgesModel;
 			import com.enilsson.elephantadmin.views.modules.users.model.UsersModel;
 			import mx.utils.ObjectUtil;
@@ -97,12 +111,27 @@
 			import com.enilsson.elephantadmin.models.EAModelLocator;
 
 			[Bindable] public var presentationModel:PledgesModel;
-
-			private function init():void
-			{
-				
+			
+			private function handleFundTypeChange( event : Event ) : void {
+				if( event.currentTarget.selectedIndex < 0 )
+					event.currentTarget.selectedIndex = 0;
 			}
-
+			
+			private function handleFormBuildComplete(event : Event ) : void {
+				// if the pledge has split contributions, add the fund type selection for the refund.
+				if(presentationModel.noSplitContributions == false)
+					this.currentState = "fundTypeSelection";				
+			}
+			
+			private function handleSubmitClick( event : Event ) : void {
+				var fundType : String;
+				
+				if(fundTypeCb)
+					fundType = fundTypeCb.selectedLabel;
+				
+				presentationModel.addCheckRefund( refundCheckForm.formVariables, fundType );
+			}
+			
 			private function closeComponent():void
 			{
 				PopUpManager.removePopUp(this);

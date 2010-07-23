@@ -351,6 +351,16 @@
 		fault="handleFault(event)">
 		<mx:method name="process_pledge" />
 	</mx:RemoteObject>
+	
+	<mx:RemoteObject id="struktorPluginsContributions"
+		endpoint="{_model.gatewayURL}" 
+		destination="amfphp" 
+		source="plugins.common.contributions" 
+		requestTimeout="120"
+		showBusyCursor="true"
+		fault="handleFault(event)">
+		<mx:method name="get_contributions" />
+	</mx:RemoteObject>
 
 	<mx:RemoteObject id="struktorPluginsChecks"
 		endpoint="{_model.gatewayURL}" 

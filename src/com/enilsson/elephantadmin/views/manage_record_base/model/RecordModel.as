@@ -17,6 +17,7 @@ package com.enilsson.elephantadmin.views.manage_record_base.model
 	import mx.binding.utils.BindingUtils;
 	import mx.binding.utils.ChangeWatcher;
 	import mx.collections.ArrayCollection;
+	import mx.events.ListEvent;
 	import mx.utils.ObjectUtil;
 	
 	import org.osflash.thunderbolt.Logger;
@@ -440,7 +441,7 @@ package com.enilsson.elephantadmin.views.manage_record_base.model
 		/**
 		 * Defines what happens when the module list is clicked
 		 */
-		public function searchListSelectedIndexChange ( event:Event ):void
+		public function searchListSelectedIndexChange ( event:ListEvent ):void
 		{
 			this.searchListSelectedIndex = event.currentTarget.selectedIndex;
 			this.selectedRecord = event.currentTarget.selectedItem;
@@ -693,7 +694,7 @@ package com.enilsson.elephantadmin.views.manage_record_base.model
 		/**
 		 * Retrieve the audit trail for the selected record
 		 */
-		private function getAuditTrail ():void
+		public function getAuditTrail ():void
 		{
 			auditTrailTabLoading = true;
 			auditTrail = new ArrayCollection();

@@ -28,7 +28,11 @@
 			<mx:Text styleName="listDesc" 
 				visible="{data.paymentType == 'Check'}"
 				includeInLayout="{data.paymentType == 'Check'}"
-				text="Date Created: {toDateString(data.created_on)}" /> 						
+				text="Date Created: {toDateString(data.created_on)}" />
+			<mx:Text styleName="listDesc" 
+				visible="{data.hasOwnProperty('splits') == false }"
+				includeInLayout="{data.hasOwnProperty('splits') == false }"
+				text="Fund Type: {data.fund_type}" />				
 			<mx:Text styleName="listDesc" 
 				visible="{data.paymentType == 'Credit Card' &amp;&amp; data.card_number_type != ''}"
 				includeInLayout="{data.paymentType == 'Credit Card' &amp;&amp; data.card_number_type != ''}"
@@ -43,7 +47,17 @@
 				text="TransactionID: {data.transactionid}" /> 			
 			<mx:Text styleName="listDesc" 
 				color="{data.amount &lt; 0 ? 0xFF0000 : 0x333333}"
-				text="{cf.format(data.amount)} - {generateDate()}" /> 		
+				text="{cf.format(data.amount)} - {generateDate()}" />
+			<mx:VBox borderStyle="solid" 
+				visible="{data.hasOwnProperty('splits')}"
+				includeInLayout="{data.hasOwnProperty('splits')}"
+				verticalGap="0">
+				<mx:Text styleName="listDesc" text="This contribution has been split across different fund types:" />
+				<mx:Repeater id="splitRep" dataProvider="{data.splits}">
+					<mx:Text styleName="listDesc" color="0x333333" 
+						text="{splitRep.currentItem.fund_type}: ${splitRep.currentItem.amount}" />
+				</mx:Repeater>
+			</mx:VBox>
 		</mx:VBox>		
 		
 	</mx:HBox>
