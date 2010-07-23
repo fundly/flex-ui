@@ -86,6 +86,7 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 		 */
 		override protected function getRecordDetails():void
 		{
+			getContributions();
 			getSharedCreditFundraisers();
 			getAuditTrail();
 		}
