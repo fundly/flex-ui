@@ -50,7 +50,7 @@ package com.enilsson.elephantadmin.commands.modules
 					addCheckRefund( event as PledgeEvent );
 				break;
 				case PledgeEvent.DELETE_CHECKREFUND :
-					deleteRefund( event as PledgeEvent );
+					deleteCheckRefund( event as PledgeEvent );
 				break;
 				case PledgeEvent.GET_SHARED_CREDIT_USERS :
 					getSharedCreditFundraisers( event as PledgeEvent );
@@ -266,54 +266,37 @@ package com.enilsson.elephantadmin.commands.modules
 		/**
 		 * Delete a record
 		 */		
-		private function deleteRefund( event:PledgeEvent ):void
+		private function deleteCheckRefund( event:PledgeEvent ):void
 		{
 			if(_model.debug) Logger.info(_moduleName + ' deleteRefund', ObjectUtil.toString(event.recordVO));
 
-			var handlers:IResponder = new mx.rpc.Responder(onResult_deleteRefund, onFault_deleteRefund);
-			var delegate:RecordDelegate = new RecordDelegate(handlers);
+			var handlers:IResponder = new mx.rpc.Responder(onResult_deleteCheckRefund, onFault_deleteCheckRefund);
+			var delegate:PluginsDelegate = new PluginsDelegate(handlers);
 
 			_model.dataLoading = true;
 
-			delegate.deleteRecord( event.recordVO );
+			delegate.deleteCheckRefund( event.params.id );
 		}
 				
-		private function onResult_deleteRefund( event:ResultEvent ):void 
+		private function onResult_deleteCheckRefund( event:ResultEvent ):void 
 		{
 			if(_model.debug) Logger.info(_moduleName + ' deleteRefund Success', ObjectUtil.toString(event.result));
 
 			_presentationModel.formProcessing = false;
 
-			switch(event.result.state)
-			{
-				case '88' :
-					_model.errorVO = new ErrorVO( 'That refund was deleted successfully!', 'successBox', true );
+			_model.errorVO = new ErrorVO( 'That refund was deleted successfully!', 'successBox', true );
 
-					// refresh the search list
-					_presentationModel.lastQuery.dispatch();
-					_presentationModel.searchListSelectedIndex = _presentationModel.searchListLastIndex;
+			// refresh the search list
+			_presentationModel.lastQuery.dispatch();
+			_presentationModel.searchListSelectedIndex = _presentationModel.searchListLastIndex;
 					
-					// refresh the contributions
-					_pledgesModel.updatePledge();
+			// refresh the contributions
+			_pledgesModel.updatePledge();
 						
-					_model.dataLoading = false;
-				break;
-				case '-88' :
-					var eMsg:String = '';
-					for(var j:String in event.result.errors)
-						eMsg += '- ' + event.result.errors[j] + '<br>';
-						
-					_model.errorVO = new ErrorVO( 
-						'There was a problem processing this record:<br><br>' + eMsg, 
-						'errorBox', 
-						true 
-					);
-					_model.dataLoading = false;
-				break;	
-			}
+			_model.dataLoading = false;
 		}
 		
-		private function onFault_deleteRefund( event:FaultEvent ):void
+		private function onFault_deleteCheckRefund( event:FaultEvent ):void
 		{
 			if(_model.debug) Logger.info('deleteRecord Fail', ObjectUtil.toString(event.fault));
 			

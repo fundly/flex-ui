@@ -143,7 +143,7 @@
 				new PledgeEvent (
 					PledgeEvent.DELETE_CHECKREFUND,
 			 		parentDocument.presentationModel,
-			 		new RecordVO ( 'checks', data.id, null )
+			 		{ id : data.id }
 				).dispatch();		
 
 			}
