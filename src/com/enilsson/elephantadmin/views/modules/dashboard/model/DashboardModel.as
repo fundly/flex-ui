@@ -270,8 +270,10 @@ package com.enilsson.elephantadmin.views.modules.dashboard.model
 			EAModelLocator(mainModel).dataLoading = false;
 			eventLoading = false;
 			
-			if(event.result.events[1])
+			try {
 				selectedEvent = event.result.events[1];
+			}
+			catch( e : Error ) { }
 		}
 		public function handleGetEventFault(event:FaultEvent):void
 		{
