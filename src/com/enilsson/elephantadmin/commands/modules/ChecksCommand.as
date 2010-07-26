@@ -310,11 +310,11 @@ package com.enilsson.elephantadmin.commands.modules
 		private function deleteRecord(event:ChecksEvent):void
 		{
 			var handlers:IResponder = new mx.rpc.Responder(onResults_deleteRecord, onFault_deleteRecord);
-			var delegate:RecordDelegate = new RecordDelegate(handlers);
+			var delegate:PluginsDelegate = new PluginsDelegate(handlers);
 			
 			_model[_moduleName].formProcessing = true;
 				
-			delegate.deleteRecord( event.params.recordVO );
+			delegate.deleteContribution( event.params.contributionId );
 		}
 				
 		private function onResults_deleteRecord(event:Object):void 
@@ -322,28 +322,14 @@ package com.enilsson.elephantadmin.commands.modules
 			if(_model.debug) Logger.info(_moduleName + ' deleteRecord Success', ObjectUtil.toString(event.result));
 			
 			_model[_moduleName].formProcessing = false;
-			switch(event.result.state)
-			{
-				case '88' :
-					_model.errorVO = new ErrorVO(_moduleName + ' record deleted successfully!', 'successBox', true );
-					new ChecksEvent(
-						ChecksEvent.RECORDS, {
-							'recordsVO' : _model[_moduleName].recordQuery
-						}
-					).dispatch()
-				break;
-				case '-88' :			
-					var eMsg:String = '';
-					for(var i:String in event.result.errors)
-						eMsg += '- ' + event.result.errors[i] + '<br>';
-						
-					_model.errorVO = new ErrorVO( 
-						'There was a problem processing this record:<br><br>' + eMsg, 
-						'errorBox', 
-						true 
-					);
-				break;	
-			}
+			
+			_model.errorVO = new ErrorVO(_moduleName + ' record deleted successfully!', 'successBox', true );
+			
+			new ChecksEvent(
+				ChecksEvent.RECORDS, {
+					'recordsVO' : _model[_moduleName].recordQuery
+				}
+			).dispatch();
 		}
 		
 		public function onFault_deleteRecord(event:Object):void
@@ -354,17 +340,12 @@ package com.enilsson.elephantadmin.commands.modules
 			_model[_moduleName].formProcessing = false;
 			
 			var faultString:String = '';
-			switch(event.fault.faultCode)
-			{
-				case '5':
-					faultString = event.fault.faultString;
-					_model.errorVO = new ErrorVO( 
-								'There was a problem processing this record:<br><br>' + faultString, 
-								'errorBox', 
-								true 
-							);
-				break;
-			}
+			faultString = event.fault.faultString;
+			_model.errorVO = new ErrorVO( 
+				'There was a problem deleting this record:<br><br>' + faultString, 
+				'errorBox', 
+				true 
+			);
 		}
 
 		/**

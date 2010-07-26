@@ -140,13 +140,6 @@ package com.enilsson.elephantadmin.business
 			token.addResponder(responder);
 		}
 		
-		public function deleteCheckRefund( checkId : int ) : void {
-			this.service = ServiceLocator.getInstance().getRemoteObject('struktorPluginsChecks');
-			
-			var token : AsyncToken = service.delete_refund( checkId );
-			token.addResponder(responder);
-		}
-		
 		public function upsertContact( params:Object, userID:int=0 ):void
 		{
 			this.service = ServiceLocator.getInstance().getRemoteObject('struktorPluginsContacts');
@@ -176,6 +169,13 @@ package com.enilsson.elephantadmin.business
 			this.service = ServiceLocator.getInstance().getRemoteObject('struktorPluginsContributions');
 			
 			var token : AsyncToken = service.get_contributions( pledgeId );
+			token.addResponder(responder);
+		}
+		
+		public function deleteContribution( contributionId : int ) : void {
+			this.service = ServiceLocator.getInstance().getRemoteObject('struktorPluginsContributions');
+			
+			var token : AsyncToken = service.delete_contribution( contributionId );
 			token.addResponder(responder);
 		}
 

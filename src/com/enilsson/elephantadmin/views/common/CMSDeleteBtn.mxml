@@ -5,7 +5,23 @@
 	paddingLeft="10" paddingRight="10" 
 	styleName="CMSDeleteBtn" 
 	focusSkin="{null}"
-	label="Button" width="100">
+	label="Button" width="100"
+	filters="{[dropShadow]}">
+	
+	<mx:DropShadowFilter id="dropShadow"
+		alpha="0.75"
+		angle="90"
+		color="0x000000"
+		blurX="6" blurY="6"
+		distance="1" />
+		
+	<mx:Script>
+		<![CDATA[
+			public function set included( val : Boolean ) : void {
+				visible = includeInLayout = val;
+			}
+		]]>
+	</mx:Script>
 	
 	<mx:Style>
 		.CMSDeleteBtn {

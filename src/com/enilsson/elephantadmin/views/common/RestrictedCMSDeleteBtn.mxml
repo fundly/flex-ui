@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CMSDeleteBtn xmlns="com.enilsson.elephantadmin.views.common.*" 
+	xmlns:mx="http://www.adobe.com/2006/mxml">
+	
+	<mx:Script>
+		<![CDATA[
+			
+			override public function set enabled( value : Boolean ) : void {
+				super.enabled = ( _unrestricted == true && value == true );
+			}
+			
+			protected function setUnrestricted( value : Boolean ) : void {
+				_unrestricted = value;
+				enabled = _unrestricted;
+			}
+			private var _unrestricted : Boolean = true;
+		]]>
+	</mx:Script>
+	
+</CMSDeleteBtn>

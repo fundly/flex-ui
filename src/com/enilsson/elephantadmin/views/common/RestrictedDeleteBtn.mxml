@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RestrictedCMSDeleteBtn 
+	xmlns="com.enilsson.elephantadmin.views.common.*" 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	initialize="handleInitialize()">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.binding.utils.BindingUtils;
+			import com.enilsson.elephantadmin.models.EAModelLocator;
+			
+			[Bindable] private var _model : EAModelLocator = EAModelLocator.getInstance(); 
+			
+			protected function handleInitialize() : void {
+				BindingUtils.bindSetter( this.setUnrestricted, _model, ["userUIAccess", "recordDelete"] );
+			}		
+		]]>
+	</mx:Script>
+	
+</RestrictedCMSDeleteBtn>

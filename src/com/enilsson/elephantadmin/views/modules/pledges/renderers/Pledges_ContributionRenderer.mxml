@@ -62,25 +62,16 @@
 		
 	</mx:HBox>
 	
-	<common:CMSDeleteBtn id="deleteRefund"
+	<common:RestrictedDeleteBtn id="deleteRefund"
 		visible="false"
 		verticalCenter="0" right="20"
 		label="DELETE"
 		width="70"
 		click="deleteAction()"
-		toolTip="Delete this refund!"
-		filters="{[dropShadow]}" />
-
+		toolTip="Delete this refund!"/>
 	
 	<mx:CurrencyFormatter id="cf" precision="2" currencySymbol="$" useNegativeSign="false" />
 	<mx:DateFormatter id="df" formatString="MM/DD/YY" />
-	<mx:DropShadowFilter id="dropShadow"
-		alpha="0.75"
-		angle="90"
-		color="0x000000"
-		blurX="6" blurY="6"
-		distance="1" />	
-
 
 	<mx:Script>
 		<![CDATA[
@@ -141,9 +132,9 @@
 				if( event.detail != Alert.YES ) return;
 				
 				new PledgeEvent (
-					PledgeEvent.DELETE_CHECKREFUND,
+					PledgeEvent.DELETE_CONTRIBUTION,
 			 		parentDocument.presentationModel,
-			 		{ id : data.id }
+			 		{ contributionId : data.contribution_id }
 				).dispatch();		
 
 			}

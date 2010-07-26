@@ -10,8 +10,9 @@ package com.enilsson.elephantadmin.events.modules
 		static public const LOOKUPINPUT_SEARCH:String = 'pledgeLookupInputSearch';
 		static public const GET_LABEL:String = 'pledgeGetLabel';
 		
-		static public const ADD_CHECKREFUND:String = 'addCheckRefund';
-		static public const DELETE_CHECKREFUND:String = 'deleteCheckRefund';
+		static public const DELETE_CONTRIBUTION:String = 'deleteContribution';
+		
+		static public const ADD_CHECKREFUND:String = 'addCheckRefund';		
 		
 		static public const GET_SHARED_CREDIT_USERS:String = 'pledgeGetFundraisers';
 		static public const ADD_SHARED_CREDIT:String = 'addSharedCredit';

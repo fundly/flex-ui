@@ -272,18 +272,6 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 		}
 		
 		/**
-		 * Delete a refund
-		 */
-		public function deleteCheckRefund( refundID:int ):void
-		{
-			new PledgeEvent (
-				PledgeEvent.DELETE_CHECKREFUND,
-			 	this,
-			 	new RecordVO ( 'checks', refundID, null )
-			).dispatch();		
-		}
-		
-		/**
 		 * Fire an event to update the pledge when a contribution is added
 		 */
 		public function updatePledge ():void

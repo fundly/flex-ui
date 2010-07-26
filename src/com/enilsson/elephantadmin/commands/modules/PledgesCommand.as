@@ -49,8 +49,8 @@ package com.enilsson.elephantadmin.commands.modules
 				case PledgeEvent.ADD_CHECKREFUND :
 					addCheckRefund( event as PledgeEvent );
 				break;
-				case PledgeEvent.DELETE_CHECKREFUND :
-					deleteCheckRefund( event as PledgeEvent );
+				case PledgeEvent.DELETE_CONTRIBUTION :
+					deleteContribution( event as PledgeEvent );
 				break;
 				case PledgeEvent.GET_SHARED_CREDIT_USERS :
 					getSharedCreditFundraisers( event as PledgeEvent );
@@ -266,42 +266,45 @@ package com.enilsson.elephantadmin.commands.modules
 		/**
 		 * Delete a record
 		 */		
-		private function deleteCheckRefund( event:PledgeEvent ):void
+		private function deleteContribution( event:PledgeEvent ):void
 		{
-			if(_model.debug) Logger.info(_moduleName + ' deleteRefund', ObjectUtil.toString(event.recordVO));
+			if(_model.debug) Logger.info(_moduleName + ' deleteContribution', ObjectUtil.toString(event.recordVO));
 
-			var handlers:IResponder = new mx.rpc.Responder(onResult_deleteCheckRefund, onFault_deleteCheckRefund);
+			var handlers:IResponder = new mx.rpc.Responder(onResult_deleteContribution, onFault_deleteContribution);
 			var delegate:PluginsDelegate = new PluginsDelegate(handlers);
 
 			_model.dataLoading = true;
 
-			delegate.deleteCheckRefund( event.params.id );
+			delegate.deleteContribution( event.params.contributionId );
 		}
 				
-		private function onResult_deleteCheckRefund( event:ResultEvent ):void 
+		private function onResult_deleteContribution( event:ResultEvent ):void 
 		{
-			if(_model.debug) Logger.info(_moduleName + ' deleteRefund Success', ObjectUtil.toString(event.result));
-
-			_presentationModel.formProcessing = false;
-
-			_model.errorVO = new ErrorVO( 'That refund was deleted successfully!', 'successBox', true );
-
-			// refresh the search list
-			_presentationModel.lastQuery.dispatch();
-			_presentationModel.searchListSelectedIndex = _presentationModel.searchListLastIndex;
-					
-			// refresh the contributions
-			_pledgesModel.updatePledge();
-						
+			if(_model.debug) Logger.info(_moduleName + ' deleteContribution Success', ObjectUtil.toString(event.result));
+			
+			_model.errorVO = new ErrorVO( 'The contribution was deleted successfully!', 'successBox', true );
 			_model.dataLoading = false;
+
+			if( _presentationModel ) {
+				_presentationModel.formProcessing = false;
+	
+				// refresh the search list
+				if(_presentationModel.lastQuery)
+					_presentationModel.lastQuery.dispatch();
+				
+				_presentationModel.searchListSelectedIndex = _presentationModel.searchListLastIndex;
+						
+				// refresh the contributions
+				_pledgesModel.updatePledge();
+			}		
 		}
 		
-		private function onFault_deleteCheckRefund( event:FaultEvent ):void
+		private function onFault_deleteContribution( event:FaultEvent ):void
 		{
-			if(_model.debug) Logger.info('deleteRecord Fail', ObjectUtil.toString(event.fault));
+			if(_model.debug) Logger.info('deleteContribution Fail', ObjectUtil.toString(event.fault));
 			
 			_model.dataLoading = false;			
-			_model.errorVO = new ErrorVO( 'There was a problem processing this record!<br><br>' + event.fault.faultString, 'errorBox', true );
+			_model.errorVO = new ErrorVO( 'There was a problem deleting this contribution!<br><br>' + event.fault.faultString, 'errorBox', true );
 		}
 		
 		
