@@ -17,8 +17,8 @@ package com.enilsson.elephantadmin.events.modules
 		static public var VALIDATE:String = 'checks_validate';
 
 		public var e:String;
-		public var params:Object
-		public var struktorVO:StruktorItemVO
+		public var params:Object;
+		public var struktorVO:StruktorItemVO;
 
 		public function ChecksEvent(e:String, params:Object=null)
 		{

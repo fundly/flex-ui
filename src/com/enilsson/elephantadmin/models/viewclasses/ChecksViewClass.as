@@ -11,7 +11,7 @@ package com.enilsson.elephantadmin.models.viewclasses
 	[Bindable]
 	public class ChecksViewClass
 	{
-		public var records:ArrayCollection;
+		public var records:ArrayCollection = new ArrayCollection();
 		public var totalRecords:Number = 0;
 		public var currPage:Number = 0;
 		public var selectedIndex:Number = 0;
@@ -27,7 +27,7 @@ package com.enilsson.elephantadmin.models.viewclasses
 
 		// data for the activity of a record
 		public var recordActivity:ArrayCollection;
-		public var recordQuery:RecordsVO;
+		public var recordQuery:RecordsVO = new RecordsVO('checks');
 				
 		// activity indicator for the form
 		public var formProcessing:Boolean = false;

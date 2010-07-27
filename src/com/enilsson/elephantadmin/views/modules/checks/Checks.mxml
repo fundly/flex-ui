@@ -39,11 +39,14 @@
 
 				// grab any SID data if present
 				var sid:SidVO = _model.sid;
+
+				checksGrid.clearSearch.visible = false;
 			
 				if(sid)
 				{
 					if(sid.table_name == 'checks')
 					{
+						checksGrid.clearSearch.visible = true;
 						_model.checks.sidRecord = true;
 						_model.sid = null;
 						

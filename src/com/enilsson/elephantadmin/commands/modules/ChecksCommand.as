@@ -84,7 +84,14 @@ package com.enilsson.elephantadmin.commands.modules
 			var tableName:String = event.result.table_name;
 			
 			_model[_moduleName].details = event.result[tableName][1];
+			_model[_moduleName].records.removeAll();
+			
+			for each( var item:Object in event.result[tableName]) {
+				_model[_moduleName].records.addItem(item);
+			}
+			
 			_model[_moduleName].selectedIndex = -1;
+			_model[_moduleName].selectedIndex = 0;
 		}
 		private function onFault_getRecord(event:Object):void
 		{
@@ -102,10 +109,12 @@ package com.enilsson.elephantadmin.commands.modules
 			var handlers:IResponder = new mx.rpc.Responder(onResults_getRecords, onFault_getRecords);
 			var delegate:RecordsDelegate = new RecordsDelegate(handlers);
 			
-			_model.dataLoading = true;
 			_model[_moduleName].lastQuery = event;
-
-			delegate.getRecords( event.params.recordsVO );			
+			
+			if( event.params && event.params.recordsVO ) {
+				_model.dataLoading = true;
+				delegate.getRecords( event.params.recordsVO );
+			}			
 		}
 				
 		private function onResults_getRecords(event:Object):void 
