@@ -35,6 +35,8 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 		
 		public var contributions:ArrayCollection;
 		public var contributionsTabLoading:Boolean;
+		public var noSplitContributions:Boolean = true; // temp fix
+		public var fundTypeInput : Object; // temp fix
 		
 		public var sharedCreditFundraisers : ArrayCollection;
 		public var sharedCreditTabLoading : Boolean;		
@@ -63,7 +65,7 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 			var vo:PledgeWorkspaceVO = new PledgeWorkspaceVO();
 			vo.action = PledgeWorkspaceModel.ADD_NEW;
 			EAModelLocator.getInstance().pledgeWorkspace = vo;
-			
+
 			PopUpManager.addPopUp(popup, DisplayObject(Application.application), true);
 			popup.addEventListener(Event.CLOSE, function (event:Event):void
 			{
@@ -237,7 +239,8 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 		/**
 		 * Create a refund as a check contribution
 		 */
-		public function addCheckRefund( formVariables:Object ):void
+		 // temp fix
+		public function addCheckRefund( formVariables:Object, fundType:String = null ):void
 		{
 			// check to see the user hasnt tried to refund too much
 			if( Number(formVariables.amount) > Number(selectedRecord.contrib_total) )
@@ -268,7 +271,7 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 		public function deleteCheckRefund( refundID:int ):void
 		{
 			new PledgeEvent (
-				PledgeEvent.DELETE_CHECKREFUND,
+				PledgeEvent.DELETE_CONTRIBUTION, //temp fix
 			 	this,
 			 	new RecordVO ( 'checks', refundID, null )
 			).dispatch();		

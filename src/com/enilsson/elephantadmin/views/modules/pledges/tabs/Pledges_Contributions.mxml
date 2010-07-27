@@ -80,7 +80,7 @@
 				popup.addEventListener(Event.CLOSE, function (event:Event):void
 				{
 					PopUpManager.removePopUp(PWPopupContainer(event.currentTarget));
-					_presentationModel.refreshData();
+					_presentationModel.getContributions();
 				});
 				PopUpManager.centerPopUp(popup);
 			}

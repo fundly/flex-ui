@@ -52,7 +52,8 @@ package com.enilsson.elephantadmin.commands.modules
 				case PledgeEvent.ADD_CHECKREFUND :
 					addCheckRefund( event as PledgeEvent );
 				break;
-				case PledgeEvent.DELETE_CHECKREFUND :
+				// temp fix
+				case PledgeEvent.DELETE_CONTRIBUTION :
 					deleteRefund( event as PledgeEvent );
 				break;
 				case PledgeEvent.GET_SHARED_CREDIT_USERS :
@@ -273,7 +274,8 @@ package com.enilsson.elephantadmin.commands.modules
 			
 			_model.dataLoading = true;
 			
-			delegate.addCheckRefund( event.params );
+			// temp fix
+			delegate.addCheckRefund( event.params, null );
 		}
 		
 		private function onResults_addCheckRefund( event:Object ):void 

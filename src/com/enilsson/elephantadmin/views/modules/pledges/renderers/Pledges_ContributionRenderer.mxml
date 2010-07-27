@@ -4,10 +4,7 @@
 	styleName="hBoxRenderer" 
 	horizontalScrollPolicy="off" verticalScrollPolicy="off"
 	backgroundAlpha="0"
-	backgroundColor="#ffffff"
-	rollOver="this.mouseOverHandler( event )"
-	rollOut="this.mouseOutHandler( event )"
-	>
+	backgroundColor="#ffffff">
 	
 	<mx:HBox width="{explicitWidth}"
 		verticalAlign="middle">
@@ -24,7 +21,11 @@
 			<mx:Text styleName="listDesc" 
 				visible="{data.type == ContributionType.CONTRIB_TYPE_CHECK.type}"
 				includeInLayout="{data.type == ContributionType.CONTRIB_TYPE_CHECK.type}"
-				text="Date Created: {toDateString(data.created_on)}" /> 						
+				text="Date Created: {toDateString(data.created_on)}" />
+			<mx:Text styleName="listDesc" 
+				visible="{data.hasOwnProperty('splits') == false }"
+				includeInLayout="{data.hasOwnProperty('splits') == false }"
+				text="Fund Type: {data.fund_type}" />				
 			<mx:Text styleName="listDesc" 
 				visible="{data.type == ContributionType.CONTRIB_TYPE_TANSACTION.type &amp;&amp; data.card_number_type != ''}"
 				includeInLayout="{data.type == ContributionType.CONTRIB_TYPE_TANSACTION.type &amp;&amp; data.card_number_type != ''}"
@@ -39,30 +40,23 @@
 				text="TransactionID: {data.transactionid}" /> 			
 			<mx:Text styleName="listDesc" 
 				color="{data.amount &lt; 0 ? 0xFF0000 : 0x333333}"
-				text="{cf.format(data.amount)} - {generateDate()}" /> 		
+				text="{cf.format(data.amount)} - {generateDate()}" />
+			<mx:VBox borderStyle="solid" 
+				visible="{data.hasOwnProperty('splits')}"
+				includeInLayout="{data.hasOwnProperty('splits')}"
+				verticalGap="0">
+				<mx:Text styleName="listDesc" text="This contribution has been split across different fund types:" />
+				<mx:Repeater id="splitRep" dataProvider="{data.splits}">
+					<mx:Text styleName="listDesc" color="0x333333" 
+						text="{splitRep.currentItem.fund_type}: ${splitRep.currentItem.amount}" />
+				</mx:Repeater>
+			</mx:VBox>
 		</mx:VBox>		
 		
 	</mx:HBox>
-	
-	<common:CMSDeleteBtn id="deleteRefund"
-		visible="false"
-		verticalCenter="0" right="20"
-		label="DELETE"
-		width="70"
-		click="deleteAction()"
-		toolTip="Delete this refund!"
-		filters="{[dropShadow]}" />
 
-	
 	<mx:CurrencyFormatter id="cf" precision="2" currencySymbol="$" useNegativeSign="false" />
 	<mx:DateFormatter id="df" formatString="MM/DD/YY" />
-	<mx:DropShadowFilter id="dropShadow"
-		alpha="0.75"
-		angle="90"
-		color="0x000000"
-		blurX="6" blurY="6"
-		distance="1" />	
-
 
 	<mx:Script>
 		<![CDATA[
@@ -96,41 +90,6 @@
 				var date:Date = EDateUtil.timestampToLocalDate(unixTimestamp);
 				return df.format(date);
 			}
-			
-			private function mouseOverHandler ( event:MouseEvent ):void
-			{
-				if( data.amount < 0 ) deleteRefund.visible = true;
-			}
-
-			private function mouseOutHandler ( event:MouseEvent ):void
-			{
-				deleteRefund.visible = false;
-			}
-			
-			private function deleteAction():void
-			{
-				Alert.show(
-					'Are you sure you want to delete this refund?',
-					'Delete refund',
-					(Alert.YES | Alert.NO),
-					null,
-					doDelete,
-					Icons.ALERT
-				);
-			}	
-			
-			private function doDelete ( event:CloseEvent ):void
-			{
-				if( event.detail != Alert.YES ) return;
-				
-				new PledgeEvent (
-					PledgeEvent.DELETE_CHECKREFUND,
-			 		parentDocument.presentationModel,
-			 		new RecordVO ( 'checks', data.id, null )
-				).dispatch();		
-
-			}
-
 		]]>
 	</mx:Script>
 	

@@ -132,11 +132,11 @@ package com.enilsson.elephantadmin.business
 			token.addResponder(responder);
 		}
 		
-		public function addCheckRefund( check : Object ) : void 
+		public function addCheckRefund( check : Object, fundType : String ) : void 
 		{
 			this.service = ServiceLocator.getInstance().getRemoteObject('struktorPluginsChecks');
 			
-			var token : AsyncToken = service.add_refund( check );
+			var token : AsyncToken = service.add_refund( check, fundType );
 			token.addResponder(responder);
 		}
 		
@@ -161,6 +161,21 @@ package com.enilsson.elephantadmin.business
 			this.service = ServiceLocator.getInstance().getRemoteObject('struktorPluginsPledges');
 			
 			var token:AsyncToken = service.process_pledge( p.tr_users_id, p.contact, p.pledge, p.contribution );
+			token.addResponder(responder);
+		}
+		
+		public function getContributions( pledgeId : int ) : void 
+		{
+			this.service = ServiceLocator.getInstance().getRemoteObject('struktorPluginsContributions');
+			
+			var token : AsyncToken = service.get_contributions( pledgeId );
+			token.addResponder(responder);
+		}
+		
+		public function deleteContribution( contributionId : int ) : void {
+			this.service = ServiceLocator.getInstance().getRemoteObject('struktorPluginsContributions');
+			
+			var token : AsyncToken = service.delete_contribution( contributionId );
 			token.addResponder(responder);
 		}
 
