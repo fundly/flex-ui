@@ -257,7 +257,7 @@ package com.enilsson.elephantadmin.models
 			'news' , 'events' , 'resources' , 'app_store' , 'email_log' , 'email_system' , 
 			'email_user' , 'email_attachments' , 'checks' , 'custom_reporting' , 
 			'pledges' , 'transactions' , 'transactions_failed' , 'contacts' , 
-			'paypal_transactions', 'batch', 'app_options'
+			'paypal_transactions', 'batch', 'app_options', 'contributions_misc'
 		];
 
 		/**
@@ -268,7 +268,7 @@ package com.enilsson.elephantadmin.models
 			'News' , 'Events' , 'Resources' , 'App Store' , 'Email - Log' , 'Email - System Templates' , 
 			'Email - User Templates' , 'Email - Attachments' , 'Checks' , 'Custom Reporting' , 
 			'Pledges' , 'Transactions - Successful' , 'Transactions - Failed' , 'Contacts' , 
-			'Paypal Transactions', 'Batches', 'Application Options'
+			'Paypal Transactions', 'Batches', 'Application Options', 'Other Contributions'
 		]);
 		
 		/**
@@ -298,6 +298,7 @@ package com.enilsson.elephantadmin.models
 		public static const PAYPAL_VIEW : int 				= 20;
 		public static const BATCH_VIEW : int 				= 21;
 		public static const APP_OPTIONS_VIEW : int 			= 22;
+		public static const CONTRIBUTIONS_MISC_VIEW : int	= 23;
 		
 		
 		/**
@@ -318,7 +319,8 @@ package com.enilsson.elephantadmin.models
 			'transactions_failed' : 18 ,
 			'contacts' : 19 ,
 			'paypal_transactions' : 20,
-			'reporting' : 5
+			'reporting' : 5,
+			'contributions_misc' : 23
 		};
 		
 		
@@ -364,6 +366,7 @@ package com.enilsson.elephantadmin.models
 		[Bindable] public var transactions_failed : TransactionsFailedViewClass = new TransactionsFailedViewClass();
 		[Bindable] public var paypal_transactions : PaypalTransactionsViewClass = new PaypalTransactionsViewClass();
 		[Bindable] public var batch : BatchViewClass = new BatchViewClass();
+		[Bindable] public var contributions_misc : ContribsMiscViewClass = new ContribsMiscViewClass();
 				
 		//Email submodules
 		[Bindable] public var email_log : EmailLogViewClass = new EmailLogViewClass();
@@ -427,6 +430,7 @@ package com.enilsson.elephantadmin.models
 			transactions = new TransactionsViewClass();
 			transactions_failed = new TransactionsFailedViewClass();
 			batch = new BatchViewClass();
+			contributions_misc = new ContribsMiscViewClass();
 			pledgeWorkspace = new PledgeWorkspaceVO();
 
 			// email submodules

@@ -199,6 +199,8 @@ package com.enilsson.elephantadmin.controllers
 			this.addCommand(RecordEvent.GET_FULL_RECORD, RecordCommand);
 			this.addCommand(RecordEvent.RESTORE, RecordCommand);
 			this.addCommand(RecordEvent.UPSERT, RecordCommand);
+			
+			this.addCommand(RecordsEvent.GET_RECORDS, RecordsCommand);
 
 			// record module
 			this.addCommand(RecordModuleEvent.GET_FULL_RECORD, RecordModuleCommand);

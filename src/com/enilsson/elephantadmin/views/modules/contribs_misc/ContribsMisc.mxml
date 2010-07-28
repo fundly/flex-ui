@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="utf-8"?>
+<common:LabeledContainer
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:common="com.enilsson.elephantadmin.views.common.*" 
+	xmlns:contribs_misc="com.enilsson.elephantadmin.views.modules.contribs_misc.*"
+	label="{_model.viewStateNames.getItemAt(moduleID)}">
+	
+	<mx:HBox horizontalGap="10" width="100%" height="100%">
+		<common:ModuleGrid id="moduleGrid"
+			height="100%" width="100%"
+			dataProvider="{_model.contributions_misc.records}"
+			searchComboList="{_model.contributions_misc.searchBoxCombo}"
+			listItemClick="listClickHandler()" 
+			searchStart="searchStart(event)"
+			showIndexBar="false"
+			clearSearch="resetSearch()" 
+			newPage="newPageAction(event)"
+			showDateFields="true"
+			columns="{columns}"
+			fromDateChange="fromDateChange(event)"
+			toDateChange="toDateChange(event)"
+			selectedIndex="{_model.contributions_misc.selectedIndex}" 
+			selectedPage="{_model.contributions_misc.currPage / _model.itemsPerPage}" 
+			itemsPerPage="{_model.itemsPerPage}" 
+			itemsTotal="{_model.contributions_misc.totalRecords}"
+			/>
+			
+		<contribs_misc:ContribsMisc_Detail id="contribDetail"
+			dataProvider="{_model.contributions_misc.details}"
+			width="350"
+			height="100%" />
+	</mx:HBox>
+
+	<mx:CurrencyFormatter id="currencyFormat"
+		currencySymbol="$"
+		decimalSeparatorFrom="."
+		decimalSeparatorTo="."
+		precision="2"
+		rounding="nearest"
+		thousandsSeparatorFrom=","
+		thousandsSeparatorTo=","
+		useThousandsSeparator="true"
+		/>
+	<mx:DateFormatter id="dateFormat" formatString="MM/DD/YYYY LL:NNA" />
+
+	<mx:Array id="columns">
+		<mx:DataGridColumn headerText="Type" dataField="type" width="60" />
+		<mx:DataGridColumn headerText="Amount" labelFunction="amountLabel" sortCompareFunction="numberSort" width="50" textAlign="right"/>
+		<mx:DataGridColumn headerText="Comments" dataField="comments" width="120" />
+		<mx:DataGridColumn headerText="Date" dataField="created_on" labelFunction="date_labelFunc" sortCompareFunction="timeSort" width="100"/>
+		<mx:DataGridColumn width="22">
+			<mx:itemRenderer>
+				<mx:Component>
+					<mx:HBox horizontalAlign="center">
+						<mx:Button useHandCursor="true" buttonMode="true"
+							styleName="inspectRecord"
+							click="new SidEvent ( data.pledge_id.sid ).dispatch()"
+							toolTip="View the parent pledge" />								
+						<mx:Script>
+							<![CDATA[
+								import com.enilsson.elephantadmin.events.main.SidEvent;
+							]]>
+						</mx:Script>					
+					</mx:HBox>
+				</mx:Component>
+			</mx:itemRenderer>
+		</mx:DataGridColumn>	
+	</mx:Array>
+
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.dataGridClasses.DataGridColumn;
+			import com.enilsson.elephantadmin.events.modules.RecordsEvent;
+			import com.enilsson.utils.EDateUtil;
+			import com.enilsson.elephantadmin.vo.SidVO;
+			import mx.formatters.DateFormatter;
+			import mx.utils.ObjectUtil;
+			import mx.collections.ArrayCollection;
+
+			import com.enilsson.elephantadmin.models.EAModelLocator;
+			import com.enilsson.elephantadmin.events.modules.TransactionsEvent;
+			import com.enilsson.elephantadmin.vo.RecordsVO;
+			
+			import org.osflash.thunderbolt.Logger;
+			
+			[Bindable] private var _model:EAModelLocator = EAModelLocator.getInstance();
+
+			override protected function init():void
+			{
+				super.init();
+
+				// grab any SID data if present
+				var sid:SidVO = _model.sid;
+			
+				if(sid)
+				{
+					if(sid.table_name == 'contributions_misc')
+					{
+						_model.contributions_misc.details = sid.data;
+						_model.contributions_misc.sidRecord = true;
+						_model.sid = null;
+					}
+				}
+
+				// get default list
+				resetSearch();
+				
+				// reset the data changed flag
+				_model.dataChanged = false;
+			}
+			
+			private function dispatchRecordsEvent( whereObj : Object ) : void {
+				
+				if( ! whereObj ) whereObj = {};
+				
+				new RecordsEvent( 
+						RecordsEvent.GET_RECORDS,
+						'contributions_misc', 
+						new RecordsVO (
+							'contributions_misc(pledge_id(contact_id),created_by_id<fname:lname:_fid>)',
+							whereObj, 
+							'contributions_misc.created_on DESC', 
+							_model.contributions_misc.currPage, 
+							_model.itemsPerPage, 
+							'P' 
+						)
+					).dispatch();
+			}
+			
+			private function buildWhere( index : uint, part : Object ) : Object 
+			{							
+				var indexStr : String = "(" + index + ")";
+								
+				var whereObj 	: Object;
+				var whereArray	: Array = [];
+				
+				try {
+					whereObj = _model.contributions_misc.lastQuery.recordsVO.where;	
+				}
+				catch( e : Error ) { }
+				
+				
+				if( whereObj && part )
+				{
+					whereArray = String(whereObj.statement).split(" AND ");
+					
+					if( whereArray.indexOf( indexStr ) == -1)	// if condition does not exist add to the where statement
+						whereArray.push( indexStr );
+					whereObj['statement'] = whereArray.join(" AND ");
+				} 
+				else 
+				{
+					whereObj = new Object();
+					whereObj['statement'] = indexStr;
+				}
+				
+				if( part )
+					whereObj[index] = part;
+				
+				// filter out contributions with contributions_misc_refids
+				if( whereArray.indexOf( '(1)' ) == -1 ) {
+					whereArray.push( '(1)' );
+					whereObj['statement'] = whereArray.join( " AND " );
+					whereObj[1] = {
+						what:	'contributions_misc.contributions_misc_refid',
+						op: 	'IS',
+						val: 	'NULL'
+					};
+				}
+				
+				return whereObj;
+			}
+			
+									
+			private function searchStart(event:Event):void 
+			{
+				if(moduleGrid.searchTerm != ""){
+					moduleGrid.clearSearch.visible = true;
+
+					var searchField:String = moduleGrid.searchOption.data;
+
+					var wherePart : Object = { 
+						'what' : searchField,
+						'val' : "%"+moduleGrid.searchTerm+"%",
+						'op' : 'LIKE'
+					};
+	
+					var where : Object = buildWhere( 2, wherePart );
+					dispatchRecordsEvent( where );
+				}
+			}
+			
+			private function resetSearch():void 
+			{
+				moduleGrid.clearSearch.visible = false;
+				moduleGrid.clearDateRange();
+				_model.contributions_misc.currPage = 0;
+				
+				var where : Object = buildWhere( 2, null );
+				dispatchRecordsEvent( where );
+			}
+			
+			private function newPageAction(event:Event):void 
+			{
+				_model.contributions_misc.currPage = moduleGrid.selectedPage * _model.itemsPerPage;
+				switch(_model.contributions_misc.lastQuery.type){
+					case RecordsEvent.GET_RECORDS:
+						_model.contributions_misc.lastQuery.recordsVO.iFrom = _model.contributions_misc.currPage;
+						_model.contributions_misc.lastQuery.dispatch();
+ 						break;
+				}
+			}
+
+			private function fromDateChange(event:Event):void 
+			{
+				moduleGrid.clearSearch.visible = true;
+
+				switch(_model.contributions_misc.lastQuery.type){
+					case RecordsEvent.GET_RECORDS:
+						var wherePart : Object = { 
+							'what' : 'contributions_misc.created_on',
+							'op' : '>',
+							'val' : EDateUtil.localDateToTimestamp(moduleGrid.fromDate ) //start of the date range
+						};
+						
+						var where : Object = buildWhere( 3, wherePart );
+												
+						_model.contributions_misc.lastQuery.recordsVO.where = where;
+						_model.contributions_misc.lastQuery.dispatch();
+						
+					break;
+				}
+			}
+
+			private function toDateChange(event:Event):void 
+			{
+				moduleGrid.clearSearch.visible = true;
+
+				switch(_model.contributions_misc.lastQuery.type){
+					case RecordsEvent.GET_RECORDS:
+
+						var wherePart : Object = { 
+							'what' : 'contributions_misc.created_on',
+							'op' : '<',
+							'val' : EDateUtil.localDateToTimestamp(moduleGrid.toDate) + 24*60*60 // end of the date range
+						};
+						
+						var where : Object = buildWhere( 4, wherePart );
+						
+						_model.contributions_misc.lastQuery.recordsVO.where = where;
+						_model.contributions_misc.lastQuery.dispatch();
+						
+ 					break;
+				}
+			}
+
+			private function listClickHandler():void 
+			{
+				_model.contributions_misc.sidRecord = false;
+				_model.contributions_misc.details = moduleGrid.clickedItem;
+			}
+
+			private function date_labelFunc(item:Object, column:DataGridColumn):String 
+			{
+				return dateFormat.format( EDateUtil.timestampToLocalDate( item[column.dataField] ) );
+			}
+
+			private function amountLabel(item:Object, column:DataGridColumn):String
+			{
+				return currencyFormat.format(item.amount);
+			}
+
+			private function numberSort(itemA:Object, itemB:Object):int
+			{
+				return ObjectUtil.numericCompare(itemA.amount, itemB.amount);
+			}
+
+			private function timeSort(itemA:Object, itemB:Object):int
+			{
+				return ObjectUtil.numericCompare(itemA.created_on, itemB.created_on);
+			}
+
+		]]>
+	</mx:Script>
+</common:LabeledContainer>
