@@ -28,16 +28,20 @@ package com.enilsson.elephantadmin.business
 			
 			if(_model.debug) Logger.info('getRecords RecordsVO', ObjectUtil.toString(r));
 			
-			var token:AsyncToken = service.record_tree(r.table, r.where, r.sort, r.iFrom, r.iCount, r.options);			
-			token.addResponder(responder);
+			if(r != null) {
+				var token:AsyncToken = service.record_tree(r.table, r.where, r.sort, r.iFrom, r.iCount, r.options);			
+				token.addResponder(responder);
+			}
 		}
 		
 		public function exportRecords( r : RecordsVO ):void
 		{
 			this.service = ServiceLocator.getInstance().getRemoteObject('struktorSelect');
 			
-			var token:AsyncToken = service.record_tree(r.table, r.where, null, null, 100000, 'X');
-			token.addResponder(responder);
+			if( r != null ) {
+				var token:AsyncToken = service.record_tree(r.table, r.where, null, null, 100000, 'X');
+				token.addResponder(responder);
+			}
 		}
 	}		
 }

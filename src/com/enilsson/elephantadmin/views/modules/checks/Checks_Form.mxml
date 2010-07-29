@@ -104,7 +104,6 @@
 		[Event(name="deleteRecord", type="flash.events.Event")]
 	</mx:Metadata>
 	
-	<mx:Binding source="_model.checks.details.entry_date" destination="entryDate" />
 	<mx:Binding source="_model.checks.details" destination="this.details" />
 
 	<mx:Script>
@@ -129,6 +128,8 @@
 			public function set details(value:Object):void
 			{
 				_details = value;
+				isEditable = _details && _details.hasOwnProperty('entry_date') && _details.entry_date == 0;
+				
 				dispatchEvent(new Event("detailsChanged"));
 			}
 			private var _details:Object;
@@ -159,10 +160,6 @@
 				return df.format(date);
 			}
 			
-			private function set entryDate( value : Number ) : void
-			{
-				isEditable = value == 0;
-			}
 			[Bindable] private var isEditable : Boolean;
 	]]>
 	</mx:Script>

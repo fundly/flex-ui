@@ -12,8 +12,6 @@ package com.enilsson.elephantadmin.commands.modules
 	import com.enilsson.elephantadmin.vo.SharedCreditVO;
 	
 	import mx.collections.ArrayCollection;
-	import mx.collections.Sort;
-	import mx.collections.SortField;
 	import mx.rpc.IResponder;
 	import mx.rpc.events.FaultEvent;
 	import mx.rpc.events.ResultEvent;
@@ -51,8 +49,8 @@ package com.enilsson.elephantadmin.commands.modules
 				case PledgeEvent.ADD_CHECKREFUND :
 					addCheckRefund( event as PledgeEvent );
 				break;
-				case PledgeEvent.DELETE_CHECKREFUND :
-					deleteRefund( event as PledgeEvent );
+				case PledgeEvent.DELETE_CONTRIBUTION :
+					deleteContribution( event as PledgeEvent );
 				break;
 				case PledgeEvent.GET_SHARED_CREDIT_USERS :
 					getSharedCreditFundraisers( event as PledgeEvent );
@@ -70,71 +68,45 @@ package com.enilsson.elephantadmin.commands.modules
 		private function getContributions(event:PledgeEvent):void
 		{
 			var handlers:IResponder = new mx.rpc.Responder(onResults_getContributions, onFault_getContributions);
-			var delegate:RecordDelegate = new RecordDelegate(handlers);
+			var delegate:PluginsDelegate = new PluginsDelegate(handlers);
 
-			if(_model.debug) Logger.info(_moduleName + ' getContributions Call', ObjectUtil.toString(event.recordVO));
+			if(_model.debug) Logger.info(_moduleName + ' getContributions Call');
 
 			_model.dataLoading = true;
+			_pledgesModel.contributionsTabLoading = true;
+			_pledgesModel.contributions = new ArrayCollection();
+			_pledgesModel.noSplitContributions = true;
 
-			delegate.selectRecord( event.recordVO );
+			delegate.getContributions( event.model.recordID );
 		}
 		
 		private function onResults_getContributions(event:ResultEvent):void 
 		{
 			if(_model.debug) Logger.info('Loading Contributions Success', ObjectUtil.toString(event.result));
 
-			// assign some variables
-			var d:Object = event.result.pledges['1'];
-			var t:ArrayCollection = new ArrayCollection();
-			var obj:Object = new Object();
+			var contribArr : Array = event.result as Array;
 			
-			// add any check data to the transactions object
-			if(d.hasOwnProperty('checks'))
+			for each( var contrib : Object in contribArr )
 			{
-				if(d.checks['1'])
+				var t : String;
+				switch( contrib.type ) 
 				{
-					for ( var i:String in d.checks)
-					{	
-						obj = d.checks[i];
-						obj['paymentType'] = 'Check';
-						t.addItem(obj);
-					}
+					case 'check': 		t = 'Check'; break;
+					case 'paypal': 		t = 'PayPal'; break; 
+					case 'transaction': t = 'Credit Card'; break;
+					default:			t = 'Other'; break;
 				}
+				
+				contrib.paymentType = t;
+				
+				// check if the any of the contributions for this pledge have been split.
+				// if so, set a flag that disallows changes of the contribution and fund types.
+				var splits : Array = contrib.splits as Array;
+				if(splits && splits.length > 0)
+					_pledgesModel.noSplitContributions = false;
 			}
-			// add any credit card data to the transactions object
-			if(d.hasOwnProperty('transactions'))
-			{
-				if(d.transactions['1'])
-				{
-					for ( i in d.transactions)
-					{	
-						obj = d.transactions[i];
-						obj['paymentType'] = 'Credit Card';
-						t.addItem(obj);
-					}
-				}
-			}
-			// add any paypal data to the transactions object
-			if(d.hasOwnProperty('paypal_transactions'))
-			{
-				if(d.paypal_transactions['1'])
-				{
-					for ( i in d.paypal_transactions)
-					{	
-						obj = d.paypal_transactions[i];
-						obj['paymentType'] = 'PayPal';
-						t.addItem(obj);
-					}
-				}
-			}			
 			
-			var sort:Sort = new Sort();
-			sort.fields = [new SortField("created_on", true)];
-			sort.reverse();
-			t.sort = sort;
-			t.refresh();
-			
-			_pledgesModel.contributions = t;
+			_pledgesModel.contributions = new ArrayCollection( contribArr );
 			
 			// hide the data loading graphic
 			_model.dataLoading = false;
@@ -260,7 +232,7 @@ package com.enilsson.elephantadmin.commands.modules
 			
 			_model.dataLoading = true;
 			
-			delegate.addCheckRefund( event.params );
+			delegate.addCheckRefund( event.params.formVariables, event.params.fundType );
 		}
 		
 		private function onResults_addCheckRefund( event:Object ):void 
@@ -294,59 +266,45 @@ package com.enilsson.elephantadmin.commands.modules
 		/**
 		 * Delete a record
 		 */		
-		private function deleteRefund( event:PledgeEvent ):void
+		private function deleteContribution( event:PledgeEvent ):void
 		{
-			if(_model.debug) Logger.info(_moduleName + ' deleteRefund', ObjectUtil.toString(event.recordVO));
+			if(_model.debug) Logger.info(_moduleName + ' deleteContribution', ObjectUtil.toString(event.recordVO));
 
-			var handlers:IResponder = new mx.rpc.Responder(onResult_deleteRefund, onFault_deleteRefund);
-			var delegate:RecordDelegate = new RecordDelegate(handlers);
+			var handlers:IResponder = new mx.rpc.Responder(onResult_deleteContribution, onFault_deleteContribution);
+			var delegate:PluginsDelegate = new PluginsDelegate(handlers);
 
 			_model.dataLoading = true;
 
-			delegate.deleteRecord( event.recordVO );
+			delegate.deleteContribution( event.params.contributionId );
 		}
 				
-		private function onResult_deleteRefund( event:ResultEvent ):void 
+		private function onResult_deleteContribution( event:ResultEvent ):void 
 		{
-			if(_model.debug) Logger.info(_moduleName + ' deleteRefund Success', ObjectUtil.toString(event.result));
+			if(_model.debug) Logger.info(_moduleName + ' deleteContribution Success', ObjectUtil.toString(event.result));
+			
+			_model.errorVO = new ErrorVO( 'The contribution was deleted successfully!', 'successBox', true );
+			_model.dataLoading = false;
 
-			_presentationModel.formProcessing = false;
-
-			switch(event.result.state)
-			{
-				case '88' :
-					_model.errorVO = new ErrorVO( 'That refund was deleted successfully!', 'successBox', true );
-
-					// refresh the search list
+			if( _presentationModel ) {
+				_presentationModel.formProcessing = false;
+	
+				// refresh the search list
+				if(_presentationModel.lastQuery)
 					_presentationModel.lastQuery.dispatch();
-					_presentationModel.searchListSelectedIndex = _presentationModel.searchListLastIndex;
-					
-					// refresh the contributions
-					_pledgesModel.updatePledge();
+				
+				_presentationModel.searchListSelectedIndex = _presentationModel.searchListLastIndex;
 						
-					_model.dataLoading = false;
-				break;
-				case '-88' :
-					var eMsg:String = '';
-					for(var j:String in event.result.errors)
-						eMsg += '- ' + event.result.errors[j] + '<br>';
-						
-					_model.errorVO = new ErrorVO( 
-						'There was a problem processing this record:<br><br>' + eMsg, 
-						'errorBox', 
-						true 
-					);
-					_model.dataLoading = false;
-				break;	
-			}
+				// refresh the contributions
+				_pledgesModel.updatePledge();
+			}		
 		}
 		
-		private function onFault_deleteRefund( event:FaultEvent ):void
+		private function onFault_deleteContribution( event:FaultEvent ):void
 		{
-			if(_model.debug) Logger.info('deleteRecord Fail', ObjectUtil.toString(event.fault));
+			if(_model.debug) Logger.info('deleteContribution Fail', ObjectUtil.toString(event.fault));
 			
 			_model.dataLoading = false;			
-			_model.errorVO = new ErrorVO( 'There was a problem processing this record!<br><br>' + event.fault.faultString, 'errorBox', true );
+			_model.errorVO = new ErrorVO( 'There was a problem deleting this contribution!<br><br>' + event.fault.faultString, 'errorBox', true );
 		}
 		
 		

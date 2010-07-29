@@ -84,7 +84,14 @@ package com.enilsson.elephantadmin.commands.modules
 			var tableName:String = event.result.table_name;
 			
 			_model[_moduleName].details = event.result[tableName][1];
+			_model[_moduleName].records.removeAll();
+			
+			for each( var item:Object in event.result[tableName]) {
+				_model[_moduleName].records.addItem(item);
+			}
+			
 			_model[_moduleName].selectedIndex = -1;
+			_model[_moduleName].selectedIndex = 0;
 		}
 		private function onFault_getRecord(event:Object):void
 		{
@@ -102,10 +109,12 @@ package com.enilsson.elephantadmin.commands.modules
 			var handlers:IResponder = new mx.rpc.Responder(onResults_getRecords, onFault_getRecords);
 			var delegate:RecordsDelegate = new RecordsDelegate(handlers);
 			
-			_model.dataLoading = true;
 			_model[_moduleName].lastQuery = event;
-
-			delegate.getRecords( event.params.recordsVO );			
+			
+			if( event.params && event.params.recordsVO ) {
+				_model.dataLoading = true;
+				delegate.getRecords( event.params.recordsVO );
+			}			
 		}
 				
 		private function onResults_getRecords(event:Object):void 
@@ -310,11 +319,11 @@ package com.enilsson.elephantadmin.commands.modules
 		private function deleteRecord(event:ChecksEvent):void
 		{
 			var handlers:IResponder = new mx.rpc.Responder(onResults_deleteRecord, onFault_deleteRecord);
-			var delegate:RecordDelegate = new RecordDelegate(handlers);
+			var delegate:PluginsDelegate = new PluginsDelegate(handlers);
 			
 			_model[_moduleName].formProcessing = true;
 				
-			delegate.deleteRecord( event.params.recordVO );
+			delegate.deleteContribution( event.params.contributionId );
 		}
 				
 		private function onResults_deleteRecord(event:Object):void 
@@ -322,28 +331,14 @@ package com.enilsson.elephantadmin.commands.modules
 			if(_model.debug) Logger.info(_moduleName + ' deleteRecord Success', ObjectUtil.toString(event.result));
 			
 			_model[_moduleName].formProcessing = false;
-			switch(event.result.state)
-			{
-				case '88' :
-					_model.errorVO = new ErrorVO(_moduleName + ' record deleted successfully!', 'successBox', true );
-					new ChecksEvent(
-						ChecksEvent.RECORDS, {
-							'recordsVO' : _model[_moduleName].recordQuery
-						}
-					).dispatch()
-				break;
-				case '-88' :			
-					var eMsg:String = '';
-					for(var i:String in event.result.errors)
-						eMsg += '- ' + event.result.errors[i] + '<br>';
-						
-					_model.errorVO = new ErrorVO( 
-						'There was a problem processing this record:<br><br>' + eMsg, 
-						'errorBox', 
-						true 
-					);
-				break;	
-			}
+			
+			_model.errorVO = new ErrorVO(_moduleName + ' record deleted successfully!', 'successBox', true );
+			
+			new ChecksEvent(
+				ChecksEvent.RECORDS, {
+					'recordsVO' : _model[_moduleName].recordQuery
+				}
+			).dispatch();
 		}
 		
 		public function onFault_deleteRecord(event:Object):void
@@ -354,17 +349,12 @@ package com.enilsson.elephantadmin.commands.modules
 			_model[_moduleName].formProcessing = false;
 			
 			var faultString:String = '';
-			switch(event.fault.faultCode)
-			{
-				case '5':
-					faultString = event.fault.faultString;
-					_model.errorVO = new ErrorVO( 
-								'There was a problem processing this record:<br><br>' + faultString, 
-								'errorBox', 
-								true 
-							);
-				break;
-			}
+			faultString = event.fault.faultString;
+			_model.errorVO = new ErrorVO( 
+				'There was a problem deleting this record:<br><br>' + faultString, 
+				'errorBox', 
+				true 
+			);
 		}
 
 		/**
