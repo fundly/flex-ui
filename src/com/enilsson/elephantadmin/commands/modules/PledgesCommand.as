@@ -85,6 +85,7 @@ package com.enilsson.elephantadmin.commands.modules
 			if(_model.debug) Logger.info('Loading Contributions Success', ObjectUtil.toString(event.result));
 
 			var contribArr : Array = event.result as Array;
+			var pledge : Object = _pledgesModel.selectedRecord;
 			
 			for each( var contrib : Object in contribArr )
 			{
@@ -101,8 +102,11 @@ package com.enilsson.elephantadmin.commands.modules
 				
 				// check if the any of the contributions for this pledge have been split.
 				// if so, set a flag that disallows changes of the contribution and fund types.
-				var splits : Array = contrib.splits as Array;
-				if(splits && splits.length > 0)
+				var splits : Array 					= contrib.splits as Array;
+				var hasDifferentFundType : Boolean	= ( contrib.fund_type != pledge.fund_type );
+				var hasSplits : Boolean 			= ( splits && splits.length > 0 );
+				
+				if( hasDifferentFundType || hasSplits )
 					_pledgesModel.noSplitContributions = false;
 			}
 			
