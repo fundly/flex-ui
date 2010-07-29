@@ -102,9 +102,9 @@ package com.enilsson.elephantadmin.commands.modules
 				
 				// check if the any of the contributions for this pledge have been split.
 				// if so, set a flag that disallows changes of the contribution and fund types.
-				var splits : Array 			= contrib.splits as Array;
-				var hasDifferentFundType	= ( contrib.fund_type != pledge.fund_type );
-				var hasSplits : Boolean 	= ( splits && splits.length > 0 );
+				var splits : Array 					= contrib.splits as Array;
+				var hasDifferentFundType : Boolean	= ( contrib.fund_type != pledge.fund_type );
+				var hasSplits : Boolean 			= ( splits && splits.length > 0 );
 				
 				if( hasDifferentFundType || hasSplits )
 					_pledgesModel.noSplitContributions = false;
