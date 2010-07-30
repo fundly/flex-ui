@@ -537,8 +537,12 @@ package com.enilsson.elephanttrakker.views.modules.pledge_workspace.model
 			// add the occupation and employer if needed to the contact object		
 			if ( action == ADD_NEW || action == ADD_EXISTING )
 			{
-				if(pledgeData.hasOwnProperty('occupation')) vo.contact['occupation'] = pledgeData.occupation;
-				if(pledgeData.hasOwnProperty('employer')) vo.contact['employer'] = pledgeData.employer;
+				var employerProps : Array = ['occupation', 'employer', 'employer_address', 'employer_city', 'employer_state', 'employer_zip'];
+				
+				for each( var prop : String in employerProps ) {
+					if(pledgeData.hasOwnProperty(prop)) 
+						vo.contact[prop] = pledgeData[prop];
+				}
 			}
 
 			// add the pledge data
