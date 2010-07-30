@@ -126,7 +126,7 @@ package com.enilsson.elephantadmin.views.modules.contacts.model
 					'op' : '='
 				}};
 
-			var recordsVO:RecordsVO = new RecordsVO( eSQL, where );
+			var recordsVO:RecordsVO = new RecordsVO( eSQL, where, null, 0, 10000 );
 
 			new ContactsEvent(ContactsEvent.GET_PLEDGES, this, recordsVO).dispatch();
 		}

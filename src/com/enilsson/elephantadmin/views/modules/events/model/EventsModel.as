@@ -186,7 +186,7 @@ package com.enilsson.elephantadmin.views.modules.events.model
 					'op' : '='
 				}};
 
-			var recordsVO:RecordsVO = new RecordsVO( eSQL, where );
+			var recordsVO:RecordsVO = new RecordsVO( eSQL, where, null, 0, 10000 );
 			
 			new EventsEvent( EventsEvent.GET_PLEDGES, this, recordsVO ).dispatch();
 		}
