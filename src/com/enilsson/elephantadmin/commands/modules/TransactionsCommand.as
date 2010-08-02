@@ -7,14 +7,21 @@ package com.enilsson.elephantadmin.commands.modules
 	import com.enilsson.elephantadmin.business.SearchDelegate;
 	import com.enilsson.elephantadmin.events.modules.TransactionsEvent;
 	import com.enilsson.elephantadmin.models.EAModelLocator;
+	import com.enilsson.elephantadmin.vo.RecordsVO;
+	
+	import flash.net.URLRequest;
+	import flash.net.navigateToURL;
 	
 	import mx.collections.ArrayCollection;
+	import mx.formatters.DateFormatter;
 	import mx.rpc.IResponder;
+	import mx.rpc.events.FaultEvent;
+	import mx.rpc.events.ResultEvent;
 	import mx.utils.ObjectUtil;
 	
 	import org.osflash.thunderbolt.Logger;
 
-	public class TransactionsCommand extends SequenceCommand implements ICommand, IResponder
+	public class TransactionsCommand extends SequenceCommand implements ICommand
 	{
 		private var _model:EAModelLocator = EAModelLocator.getInstance();
 		private var _moduleName:String = 'transactions';
@@ -38,6 +45,10 @@ package com.enilsson.elephantadmin.commands.modules
 					_moduleName = 'transactions';
 					searchRecords(event as TransactionsEvent);
 				break;
+				case TransactionsEvent.TRANSACTIONS_EXPORT :
+					_moduleName = 'transactions';
+					exportTable( event as TransactionsEvent )
+				break;
 				case TransactionsEvent.TRANSACTIONS_FAILED_RECORDS :
 					_moduleName = 'transactions_failed';
 					getRecords(event as TransactionsEvent);
@@ -46,16 +57,12 @@ package com.enilsson.elephantadmin.commands.modules
 					_moduleName = 'transactions_failed';
 					searchRecords(event as TransactionsEvent);
 				break;
-				}
+				case TransactionsEvent.TRANSACTIONS_FAILED_EXPORT :
+					_moduleName = 'transactions_failed';
+					exportTable( event as TransactionsEvent )
+				break;				
+			}
 		}
-
-
-		/**
-		 * Stubs required for IResponder interface; need as Delegate constructor argument
-		 */
-		public function fault(info:Object):void { Logger.info(info.toString()); }
-		public function result(data:Object):void { /* no longer used */ }
-
 
 		/**
 		 * Get the records from listing eSQL query
@@ -71,7 +78,7 @@ package com.enilsson.elephantadmin.commands.modules
 			delegate.getRecords( event.params.recordsVO );
 		}
 				
-		private function onResults_getRecords(event:Object):void 
+		private function onResults_getRecords(event:ResultEvent):void 
 		{
 			if(_model.debug) Logger.info(_moduleName + ' getRecords Success', ObjectUtil.toString(event.result));
 			
@@ -94,8 +101,7 @@ package com.enilsson.elephantadmin.commands.modules
 				} 
 			}
 		}
-		
-		public function onFault_getRecords(event:Object):void
+		public function onFault_getRecords(event:FaultEvent):void
 		{
 			if(_model.debug) Logger.info(_moduleName + ' getRecords Fail', ObjectUtil.toString(event));
 			
@@ -117,7 +123,7 @@ package com.enilsson.elephantadmin.commands.modules
 			delegate.search( event.params.searchVO );
 		}
 				
-		private function onResults_searchRecords(event:Object):void 
+		private function onResults_searchRecords(event:ResultEvent):void 
 		{
 			if(_model.debug) Logger.info(_moduleName + ' search Success', ObjectUtil.toString(event.result));
 			
@@ -139,12 +145,30 @@ package com.enilsson.elephantadmin.commands.modules
 			}
 		}
 		
-		public function onFault_searchRecords(event:Object):void
+		public function onFault_searchRecords(event:FaultEvent):void
 		{
 			if(_model.debug) Logger.info(_moduleName + ' search Fail', ObjectUtil.toString(event));
 			
 			_model.dataLoading = false;
-		}		
+		}
+		
+		private function exportTable( event : TransactionsEvent ) : void {
+			var handlers:IResponder = new mx.rpc.Responder(onResult_exportTable, onFault_exportTable);
+			var delegate:RecordsDelegate = new RecordsDelegate(handlers);
+			_model.dataLoading = true;
 
+			delegate.exportRecords( event.params.recordsVO as RecordsVO );
+		}
+		private function onResult_exportTable( event : ResultEvent ) : void {
+			if(_model.debug) Logger.info('exportTables Success', ObjectUtil.toString(event.result));
+			
+			var df : DateFormatter = new DateFormatter();
+			navigateToURL(new URLRequest(_model.gatewayBaseURL + '/export.php?id='+event.result+'&file_name='+_moduleName+"_"+df.format(new Date())+'&refresh='+new Date().getTime()),'_parent'); 
+			_model.dataLoading = false;
+		}
+		private function onFault_exportTable( event : FaultEvent ) : void {
+			if(_model.debug) Logger.info('exportTables Fault', ObjectUtil.toString(event.fault));
+			_model.dataLoading = false;	
+		}
 	}
 }

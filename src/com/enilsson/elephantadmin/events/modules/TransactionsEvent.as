@@ -8,8 +8,10 @@ package com.enilsson.elephantadmin.events.modules
 	{
 		static public var TRANSACTIONS_RECORDS:String = 'transactionsRecords';
 		static public var TRANSACTIONS_SEARCH:String = 'transactionsSearch';
+		static public var TRANSACTIONS_EXPORT:String = 'transactionsExport';
 		static public var TRANSACTIONS_FAILED_RECORDS:String = 'transactionsFailedRecords';
 		static public var TRANSACTIONS_FAILED_SEARCH:String = 'transactionsFailedSearch';
+		static public var TRANSACTIONS_FAILED_EXPORT:String = 'transactionsFailedExport';
 
 		public var e:String;
 		public var params:Object;

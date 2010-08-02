@@ -39,7 +39,7 @@ package com.enilsson.elephantadmin.models.viewclasses
 		public var searchBoxCombo:ArrayCollection = new ArrayCollection(
 			[ 
 				{ label : "NAME ON CARD", data : "transactions.full_name" },
-				{ label : "CARD TYPE", data : "transactions.card_type" },
+				{ label : "CARD TYPE", data : "transactions.card_number_type" },
 				{ label : "ENGINE", data : "transactions.engine" }
 			]
 		);
