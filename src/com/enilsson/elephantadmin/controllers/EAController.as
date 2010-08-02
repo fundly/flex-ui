@@ -155,8 +155,10 @@ package com.enilsson.elephantadmin.controllers
 			// transactions module
 			this.addCommand(TransactionsEvent.TRANSACTIONS_RECORDS, TransactionsCommand);
 			this.addCommand(TransactionsEvent.TRANSACTIONS_SEARCH, TransactionsCommand);
+			this.addCommand(TransactionsEvent.TRANSACTIONS_EXPORT, TransactionsCommand);
 			this.addCommand(TransactionsEvent.TRANSACTIONS_FAILED_RECORDS, TransactionsCommand);
 			this.addCommand(TransactionsEvent.TRANSACTIONS_FAILED_SEARCH, TransactionsCommand);
+			this.addCommand(TransactionsEvent.TRANSACTIONS_FAILED_EXPORT, TransactionsCommand);
 
 			this.addCommand(PaypalTransactionsEvent.PAYPAL_RECORDS, PaypalTransactionsCommand);
 			this.addCommand(PaypalTransactionsEvent.PAYPAL_SEARCH, PaypalTransactionsCommand);

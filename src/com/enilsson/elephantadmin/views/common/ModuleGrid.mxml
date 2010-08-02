@@ -17,6 +17,7 @@
 		[Event(name="indexSearch", type="flash.events.Event")]
 		[Event(name="fromDateChange", type="flash.events.Event")]
 		[Event(name="toDateChange", type="flash.events.Event")]
+		[Event(name="exportClick", type="flash.events.Event")]
 	</mx:Metadata>
 	
 	<mx:Script>
@@ -33,6 +34,7 @@
 			[Bindable] public var showDateFields:Boolean = false;
 			[Inspectable(defaultValue=true, category="Other")]
 			[Bindable] public var showIndexBar:Boolean = true;
+			[Bindable] public var showExportButton:Boolean = false;
 
 			[Bindable] private var _model:EAModelLocator = EAModelLocator.getInstance();
 			[Bindable] private var _dataProvider:ArrayCollection;
@@ -258,28 +260,42 @@
 			searchStart="this.dispatchEvent(event)"
 			clearSearch="this.dispatchEvent(event)"
 			/>
-
-		<mx:Canvas styleName="searchForm"  visible="{showDateFields}"
-			width="90" height="20" right="125" y="4" filters="{[ds]}"
-			horizontalScrollPolicy="off" verticalScrollPolicy="off">
-			<mx:DateField id="fromDateField" styleName="dateRangeField"
-				width="80" height="20" x="4"
-				change="setFromDate(event)"
-				selectableRange="{{rangeEnd: new Date()}}"
-				toolTip="Sets the start date of the log list"
-				/>
-		</mx:Canvas>
-		<mx:HRule x="400" y="13" width="10" right="105" visible="{showDateFields}"/>
-		<mx:Canvas styleName="searchForm" visible="{showDateFields}"
-			width="90" height="20" right="5" y="4" filters="{[ds]}"
-			horizontalScrollPolicy="off" verticalScrollPolicy="off">
-			<mx:DateField id="toDateField" styleName="dateRangeField"
-				width="80" height="20" x="4"
-				change="setToDate(event)"
-				selectableRange="{{rangeEnd: new Date()}}"
-				toolTip="Sets the end date of the log list"
-			/>
-		</mx:Canvas>
+		
+		<mx:HBox height="100%" top="4" right="5" horizontalAlign="right" verticalAlign="center" >
+		
+			<mx:Canvas visible="{showDateFields}" includeInLayout="{showDateFields}"
+				horizontalScrollPolicy="off" verticalScrollPolicy="off">
+				<mx:Canvas styleName="searchForm"
+					width="90" height="20" right="120" filters="{[ds]}"
+					horizontalScrollPolicy="off" verticalScrollPolicy="off">
+					<mx:DateField id="fromDateField" styleName="dateRangeField"
+						width="80" height="20" x="4"
+						change="setFromDate(event)"
+						selectableRange="{{rangeEnd: new Date()}}"
+						toolTip="Sets the start date of the log list"
+						/>
+				</mx:Canvas>
+				<mx:HRule right="100" verticalCenter="0" width="10" />
+				<mx:Canvas styleName="searchForm" 
+					width="90" height="20" right="0" filters="{[ds]}"
+					horizontalScrollPolicy="off" verticalScrollPolicy="off">
+					<mx:DateField id="toDateField" styleName="dateRangeField"
+						width="80" height="20" x="4"
+						change="setToDate(event)"
+						selectableRange="{{rangeEnd: new Date()}}"
+						toolTip="Sets the end date of the log list"
+					/>
+				</mx:Canvas>	
+			</mx:Canvas>
+			<mx:Canvas visible="{showExportButton}" includeInLayout="{showExportButton}">
+				<common:RestrictedCMSExportBtn 
+					label="EXPORT" 
+					left="15"
+					click="dispatchEvent( new Event('exportClick') )" />	
+			</mx:Canvas>
+				
+		</mx:HBox>
+		
 	</mx:Canvas>
 
 	<mx:DropShadowFilter id="ds" inner="true" distance="3" alpha="0.35" blurX="2" blurY="2"/>

@@ -25,19 +25,23 @@ package com.enilsson.elephantadmin.models.viewclasses
 		// data provider for the form
 		public var details:Object;
 		
+		public var sidRecord:Boolean = false;
+		
 		// data for the activity of a record
 		public var recordActivity:ArrayCollection;
 				
 		// activity indicator for the form
 		public var formProcessing:Boolean = false;
-		public var optionsViewStack:uint = 0;
 
 		public var lastQuery:TransactionsEvent;
 		public var lastIndex:int = -1;
 
 		public var searchBoxCombo:ArrayCollection = new ArrayCollection(
-			[ {label:"NAME", data:"transactions_failed.full_name"},
-			  {label:"AMOUNT", data:"transactions_failed.amount"},
-			  {label:"ZIP CODE", data:"transactions_failed.zip"}]);
+			[ 
+				{ label : "NAME ON CARD", data : "transactions_failed.full_name" },
+				{ label : "CARD TYPE", data : "transactions_failed.card_number_type" },
+				{ label : "ENGINE", data : "transactions_failed.engine" }
+			]
+		);
 	}
 }
