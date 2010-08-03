@@ -196,10 +196,6 @@
 				dateFormatter.formatString = "MM/DD/YY L:NNA"
 				return dateFormatter.format(EDateUtil.timestampToLocalDate(item[column.dataField]));
 			}
-			
-			private function parent_labelFunc( item : Object, column : DataGridColumn ) : String {
-				return item.parent_fname + " " + item.parent_lname;
-			}
 		]]>
 	</mx:Script>
 
