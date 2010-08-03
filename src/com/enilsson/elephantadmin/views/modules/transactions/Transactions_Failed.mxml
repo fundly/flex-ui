@@ -10,6 +10,7 @@
 	<mx:HBox horizontalGap="10" width="100%" height="100%">
 		<common:ModuleGrid id="moduleGrid"
 			height="100%" width="100%"
+			minWidth="585"
 			dataProvider="{_model.transactions_failed.records}"
 			searchComboList="{_model.transactions_failed.searchBoxCombo}"
 			listItemClick="listClickHandler()" 
