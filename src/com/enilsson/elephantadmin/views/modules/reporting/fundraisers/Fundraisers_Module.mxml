@@ -81,6 +81,8 @@
 		<mx:DataGridColumn width="190" dataField="shared_credit_downline_contrib" headerText="Downline Shared Credit Contribution" labelFunction="money_labelFunc" sortCompareFunction="shared_credit_downline_contribCompare" textAlign="right"/>
 		
 		<mx:DataGridColumn width="80" dataField="_fid" headerText="Fundraiser ID" sortCompareFunction="fidCompare"/>
+		<mx:DataGridColumn width="115" dataField="parent_fid" headerText="Parent Fundraiser ID" />
+		<mx:DataGridColumn width="200" dataField="parent_name" headerText="Parent Fundraiser" />
 		<mx:DataGridColumn width="100" dataField="_city" headerText="City" />
 		<mx:DataGridColumn width="35" dataField="_state" headerText="State" />
 		<mx:DataGridColumn width="45" dataField="_zip" headerText="Zip" />
