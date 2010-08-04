@@ -1,0 +1,22 @@
+package com.enilsson.elephanttrakker.modules.business
+{
+	import mx.rpc.AsyncToken;
+	
+	public class DownlineDelegate implements IDownlineDelegate
+	{
+		public function DownlineDelegate( service : Object )
+		{
+			_service = service;
+		}
+		
+		public function getDownline( userId : int, nodeLevels : int ) : AsyncToken {
+			return _service.get_downline( userId, nodeLevels );
+		}
+		
+		public function getDownlineParents( userId : int ) : AsyncToken {
+			return _service.get_parents( userId );
+		}
+		
+		private var _service : Object;
+	}
+}

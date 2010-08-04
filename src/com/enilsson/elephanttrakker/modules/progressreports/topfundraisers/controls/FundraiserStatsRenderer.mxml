@@ -53,8 +53,8 @@
 
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.elephanttrakker.modules.vo.FundraiserStatistics;
 			import com.enilsson.elephanttrakker.modules.progressreports.topfundraisers.components.FundraiserStatsWrapper;
-			import com.enilsson.elephanttrakker.modules.progressreports.vo.FundraiserStatistics;
 			import mx.controls.listClasses.BaseListData;
 			import mx.controls.listClasses.IListItemRenderer;
 			

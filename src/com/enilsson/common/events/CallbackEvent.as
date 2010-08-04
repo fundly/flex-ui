@@ -6,13 +6,13 @@ package com.enilsson.common.events
 	{
 		public var callback : Function;
 		
-		public function CallbackEvent(type:String, callback:Function=null, bubbles:Boolean=true, cancelable:Boolean=false) {
-			super(type, bubbles, cancelable);
+		public function CallbackEvent(type:String, callback:Function=null) {
+			super(type, true, false);
 			this.callback = callback;
 		}
 		
 		override public function clone() : Event {
-			return new CallbackEvent(type, callback, bubbles, cancelable );
+			return new CallbackEvent(type, callback);
 		}
 		
 	}

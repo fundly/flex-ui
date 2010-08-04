@@ -1,19 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:UIComponent xmlns:mx="http://www.adobe.com/2006/mxml">
-	
-	<mx:RemoteObject id="progressReportsService"
-		destination="amfphp"
-		endpoint="{gatewayUrl}"
-		source="plugins.{instanceId}.progress_reports"
-		showBusyCursor="true"
-		result="handleResult(event)"
-		fault="handleFault(event)">
-		<mx:method name="group_competition" />
-		<mx:method name="top_fundraisers" />
-		<mx:method name="top_fundraisers_downline_contributions" />
-		<mx:method name="top_fundraisers_downline_users" />
-	</mx:RemoteObject>
-		
+
 	<mx:Script>
 		<![CDATA[
 			import mx.logging.Log;
@@ -21,7 +8,6 @@
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
 			
-			[Bindable] public var instanceId:int;
 			[Bindable] public var gatewayUrl:String = "";
 			
 			public function handleResult( event : ResultEvent ) : void {
@@ -32,7 +18,7 @@
 				_logger.error( event.toString() );		
 			}
 		
-			private static var _logger : ILogger = Log.getLogger( "Services" );
+			private static var _logger : ILogger = Log.getLogger( "ServiceContainer" );
 		]]>
 	</mx:Script>
 	

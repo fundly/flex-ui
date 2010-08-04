@@ -13,9 +13,7 @@
 			import mx.managers.PopUpManager;
 			import mx.utils.ObjectUtil;
 			import org.osflash.thunderbolt.Logger;
-			import com.enilsson.elephanttrakker.models.ETModelLocator;
 			
-			[Bindable] private var _model:ETModelLocator = ETModelLocator.getInstance();
 			private var descPopup:MyDownline_ParentNodePopup;
 			private var popupDisplayed:Boolean = false;
 
@@ -60,7 +58,7 @@
 				if(descPopup)
 					return;
 					
-				descPopup = MyDownline_ParentNodePopup(PopUpManager.createPopUp(_model.mainScreen, MyDownline_ParentNodePopup));	
+				descPopup = MyDownline_ParentNodePopup(PopUpManager.createPopUp(parentApplication as DisplayObject, MyDownline_ParentNodePopup));	
 				descPopup.dataProvider = d;
 				descPopup.iconClass = iconClass(d.@nodeClass);
 				descPopup.x = event.stageX + 8;

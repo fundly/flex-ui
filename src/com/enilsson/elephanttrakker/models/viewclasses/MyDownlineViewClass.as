@@ -10,10 +10,6 @@ package com.enilsson.elephanttrakker.models.viewclasses
 	[Bindable]	
 	public class MyDownlineViewClass
 	{
-		public function MyDownlineViewClass()
-		{
-		}
-		
 		public var errorVO:ErrorVO;
 		
 		public var gettingDownline:Boolean = false;

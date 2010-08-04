@@ -13,6 +13,7 @@ package com.enilsson.elephanttrakker.models
 	import com.enilsson.utils.eNilssonUtils;
 	
 	import flash.display.DisplayObject;
+	import flash.system.Security;
 	import flash.utils.ByteArray;
 	
 	import mx.collections.ArrayCollection;
@@ -183,6 +184,11 @@ package com.enilsson.elephanttrakker.models
 		 */
 		public static const LOGIN_SCREEN:uint = 0;
 		public static const MAIN_SCREEN:uint = 1;
+		
+		/**
+		 * Variable to store path for external modules
+		 */
+		public static const MODULES_PATH : String = ( Security.sandboxType == Security.REMOTE ? "modules" : "com/enilsson/elephanttrakker/modules" );
 		
 		[Bindable] public var screenState:uint = LOGIN_SCREEN;
 	

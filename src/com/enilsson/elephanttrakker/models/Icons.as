@@ -2,10 +2,6 @@ package com.enilsson.elephanttrakker.models
 {
 	public class Icons
 	{
-		public function Icons()
-		{
-		}
-
 		[Embed(source="/assets/images/icons/add_contact.png")] 
 		[Bindable] public var addContact:Class;
 		

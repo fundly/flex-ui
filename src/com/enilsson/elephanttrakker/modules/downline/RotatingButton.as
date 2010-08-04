@@ -1,4 +1,4 @@
-package com.enilsson.elephanttrakker.views.modules.my_downline
+package com.enilsson.elephanttrakker.modules.downline
 {
 	import flash.events.MouseEvent;
 	

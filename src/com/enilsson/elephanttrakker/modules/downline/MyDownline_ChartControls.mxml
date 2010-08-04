@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Canvas 
 	xmlns:mx="http://www.adobe.com/2006/mxml"
-	xmlns:ns="com.enilsson.elephanttrakker.views.modules.my_downline.*"
-	verticalScrollPolicy="off">
+	verticalScrollPolicy="off" xmlns:downline="com.enilsson.elephanttrakker.modules.downline.*">
 
 	<mx:Metadata>
 		[Event(name="changeChartLayout", type="flash.events.Event")]		
@@ -11,11 +10,12 @@
 	<mx:Script>
 		<![CDATA[
 			import org.un.cava.birdeye.ravis.graphLayout.visual.VisualGraph;
-			import com.enilsson.elephanttrakker.models.ETModelLocator;
 			
-			[Bindable] private var _model:ETModelLocator = ETModelLocator.getInstance();
+			[Embed(source="/assets/images/clear_bg.png")]						
+			[Bindable] private var clear:Class;	
+			
 			[Bindable] private var _vgraph:VisualGraph;
-
+			
 			public function set vgraph(value:VisualGraph):void
 			{
 				_vgraph = value;
@@ -60,7 +60,7 @@
 		<mx:Object value="concentricRadial" label="Radial" />
 	</mx:Array>
 	
-	<ns:DownlineZoom id="chartZoom" styleName="chartZoom" vgraph="{_vgraph}" top="5" left="5" />
+	<downline:DownlineZoom id="chartZoom" styleName="chartZoom" vgraph="{_vgraph}" top="5" left="5" />
 
 	<mx:ComboBox id="seperationListCB" styleName="chartType"
 		top="5" right="150"
@@ -85,14 +85,14 @@
 	    shadowColor="0xEEEEEE"
 	    strokeWidth="1" />		
 	
-	<ns:RotatingButton id="triBtn" 
+	<downline:RotatingButton id="triBtn" 
 		bottom="3" left="2"
 		click="showHidePanel()" />		
 	
 	<mx:LinkButton styleName="zoomLabel" 
 		label="Chart controls" 
 		bottom="-2" left="8"
-		skin="{_model.icons.clear}"
+		skin="{clear}"
 		useHandCursor="true" buttonMode="true" 
 		click="showHidePanel()" />	
 	

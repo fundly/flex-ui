@@ -1,7 +1,7 @@
 package com.enilsson.elephanttrakker.modules.progressreports.topfundraisers.pm
 {
 	import com.enilsson.common.events.GetEvent;
-	import com.enilsson.elephanttrakker.modules.progressreports.events.Events;
+	import com.enilsson.elephanttrakker.modules.events.ProgressReportsEvent;
 	import com.enilsson.elephanttrakker.modules.progressreports.topfundraisers.components.FundraiserStatsWrapper;
 	import com.enilsson.elephanttrakker.modules.progressreports.topfundraisers.components.RankingIconEnum;
 	
@@ -14,9 +14,9 @@ package com.enilsson.elephanttrakker.modules.progressreports.topfundraisers.pm
 	public class TopFundraisersPm
 	{
 		public static const OPTIONS : ArrayCollection = new ArrayCollection([
-			{ label:'contributions', eventType:Events.GET_TOP_FUNDRAISERS },
-			{ label:'downline contributions', eventType:Events.GET_TOP_FUNDRAISERS_DOWNLINE_CONTRIBS },
-			{ label:'number of downline members', eventType:Events.GET_TOP_FUNDRAISERS_DOWNLINE_USERS }
+			{ label:'contributions', eventType:ProgressReportsEvent.GET_TOP_FUNDRAISERS },
+			{ label:'downline contributions', eventType:ProgressReportsEvent.GET_TOP_FUNDRAISERS_DOWNLINE_CONTRIBS },
+			{ label:'number of downline members', eventType:ProgressReportsEvent.GET_TOP_FUNDRAISERS_DOWNLINE_USERS }
 		]);
 			
 			
