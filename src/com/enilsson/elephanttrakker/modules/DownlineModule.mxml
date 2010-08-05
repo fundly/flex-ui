@@ -24,7 +24,7 @@
 		pm="{_pm}"
 		width="100%" height="100%"
 		xmlns:downline="com.enilsson.elephanttrakker.modules.downline.*" />
-	
+		
 	<mx:Script>
 		<![CDATA[
 			import com.enilsson.elephanttrakker.modules.business.DelegateFactory;
@@ -32,9 +32,27 @@
 			import com.enilsson.elephanttrakker.modules.events.DownlineEvent;
 			import com.enilsson.elephanttrakker.modules.business.DelegateMap;
 			
+			//possible service fromats - AMF is the default
+			public static const SERVICE_FORMAT_AMF	: String = 'amf';
+			public static const SERVICE_FORMAT_HTTP	: String = 'http';
+			
+			public function set serviceFormat( val : String ) : void {
+				if( val && _serviceFormat != val) {
+					_serviceFormat = val.toLowerCase();
+					_serviceFormatChanged = true;
+					_update = true;
+					invalidateProperties();
+				}
+			}
+			private var _serviceFormat : String = SERVICE_FORMAT_AMF;
+			private var _serviceFormatChanged : Boolean;
+			
 			[Bindable]
 			public function get gatewayUrl() : String { return _gatewayUrl; }
-			public function set gatewayUrl( val : String ) : void { _gatewayUrl = val; }
+			public function set gatewayUrl( val : String ) : void { 
+				_gatewayUrl = val;
+				update();
+			}
 			private var _gatewayUrl : String;
 			
 			[Bindable]
@@ -69,7 +87,20 @@
 					_pm = new MyDownlinePM( this );
 				}
 				
-				if(_pm) 
+				if( controller && _serviceFormatChanged ) {
+					_serviceFormatChanged = false;
+					
+					switch( _serviceFormat ) {
+						case SERVICE_FORMAT_AMF: 
+							controller.delegate = DelegateFactory.create( DelegateMap.DOWNLINE, serviceContainer.downlineService ); 
+						break;
+						case SERVICE_FORMAT_HTTP: 
+							controller.delegate = DelegateFactory.create( DelegateMap.DOWNLINE_HTTP, serviceContainer.downlineHTTPService ); 
+						break;
+					}
+				}
+				
+				if(_pm && gatewayUrl ) 
 				{
 					if( _userIdChanged ) {
 						_userIdChanged = false;

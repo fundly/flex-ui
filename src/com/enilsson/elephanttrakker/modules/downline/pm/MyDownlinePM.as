@@ -63,6 +63,7 @@ package com.enilsson.elephanttrakker.modules.downline.pm
 				downlineXML = null;
 				graph = null;
 				graphShow = false;
+				parents = null;
 			}
 
 			gettingDownline = false;

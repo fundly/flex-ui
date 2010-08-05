@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:ModuleLoader
-	xmlns:mx="http://www.adobe.com/2006/mxml"
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
 	width="100%" height="100%"
-	ready="handleReady(event)"
-	applicationDomain="{ApplicationDomain.currentDomain}"
-	show="handleModuleShow( event )"
-	url="{ETModelLocator.MODULES_PATH}/DownlineModule.swf?t={new Date().getTime()}">
+	horizontalScrollPolicy="off" verticalScrollPolicy="off">
 	
+	<mx:ModuleLoader
+		width="633" height="322"
+		top="0" left="0"
+		ready="handleReady(event)"
+		applicationDomain="{ApplicationDomain.currentDomain}"
+		show="handleModuleShow( event )"	
+		url="{ETModelLocator.MODULES_PATH}/DownlineModule.swf?t={new Date().getTime()}" />
+	
+	<mx:Image source="{_model.icons.downline}" top="0" right="-4" />	
+	<mx:Text id="contentTitle" styleName="contentTitle" text="MY DOWNLINE" right="-128" rotation="90" />
+		
 	<mx:Script>
 		<![CDATA[
 			import mx.binding.utils.BindingUtils;
@@ -31,10 +38,8 @@
 			}
 			
 			private function handleModuleShow( e : Event ) : void {
-				
 			}
 		]]>
 	</mx:Script>
-
 	
-</mx:ModuleLoader>
+</mx:Canvas>

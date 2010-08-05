@@ -4,7 +4,7 @@ package com.enilsson.elephanttrakker.modules.business
 	
 	public class DelegateFactory
 	{
-		public static function create( type:int, service : RemoteObject ) : Object {
+		public static function create( type:int, service : Object ) : Object {
 			
 			var m : DelegateMap = new DelegateMap();
 			var d : Object;

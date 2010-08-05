@@ -9,9 +9,6 @@
 		<![CDATA[
 			import com.enilsson.elephanttrakker.modules.downline.pm.MyDownlinePM;
 			
-			[Embed(source="/assets/images/new_icons/nav/downline.png")]						
-			[Bindable] private var downline:Class;
-
 			[Bindable] public var pm : MyDownlinePM;
 		]]>
 	</mx:Script>
@@ -74,13 +71,10 @@
 		heightTo="322"
 		duration="400" />	
 		
-	<mx:Image source="{downline}" top="0" right="-4" />
-	<mx:Text id="contentTitle" styleName="contentTitle" text="MY DOWNLINE" right="-128" rotation="90" />
-	
 	<downline:MyDownline_Container id="downlineContainer"
 		pm="{pm}"
 		top="0" left="0"
-		width="633" height="322" />
+		width="100%" height="100%" />
 		
 	<common:ErrorMsgBox id="callLoggingErrorBox"
 		verticalCenter="0" horizontalCenter="0"

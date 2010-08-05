@@ -91,7 +91,14 @@
 			
 			private function buildParentsChart():void
 			{
-				var startRoot:* = pm.parentGraph.nodeByStringId(pm.userId.toString()).vnode;
+				var startRoot:*;
+				
+				try{
+					startRoot = pm.parentGraph.nodeByStringId(pm.userId.toString()).vnode;
+				}
+				catch( e : Error ) { }
+				
+				if( ! startRoot ) return;
 				
 				var htLayouter:HierarchicalLayouter= new HierarchicalLayouter(parentChart);
 				htLayouter.siblingSpreadDistance = 20;

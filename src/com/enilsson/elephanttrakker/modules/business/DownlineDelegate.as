@@ -1,10 +1,11 @@
 package com.enilsson.elephanttrakker.modules.business
 {
 	import mx.rpc.AsyncToken;
+	import mx.rpc.remoting.mxml.RemoteObject;
 	
 	public class DownlineDelegate implements IDownlineDelegate
 	{
-		public function DownlineDelegate( service : Object )
+		public function DownlineDelegate( service : RemoteObject )
 		{
 			_service = service;
 		}
@@ -17,6 +18,6 @@ package com.enilsson.elephanttrakker.modules.business
 			return _service.get_parents( userId );
 		}
 		
-		private var _service : Object;
+		private var _service : RemoteObject;
 	}
 }
