@@ -109,7 +109,13 @@ package com.enilsson.elephanttrakker.modules.downline.pm
 		
 		
 		public function getDownline() : void {
-			if( _dispatcher && userId != 0 && nodeLevels >= 0 ) 
+			
+			if( userId == 0 ) {
+				downline = null;
+				return;
+			}
+			
+			if( _dispatcher ) 
 			{
 				gettingDownline = true;
 				
@@ -119,7 +125,13 @@ package com.enilsson.elephanttrakker.modules.downline.pm
 		}
 		
 		public function getParents() : void {
-			if( _dispatcher && userId != 0 ) {
+			
+			if( userId == 0 ) {
+				parents = null;
+				return;
+			}
+			
+			if( _dispatcher ) {
 				var e : GetEvent = new GetEvent( DownlineEvent.GET_DOWNLINE_PARENTS, this, 'parents', [ userId ] );
 				_dispatcher.dispatchEvent(e);
 			}
