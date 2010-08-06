@@ -1,7 +1,7 @@
 package com.enilsson.elephanttrakker.models.viewclasses
 {
 	import com.adobe.cairngorm.control.CairngormEvent;
-	import com.enilsson.elephanttrakker.vo.ErrorVO;
+	import com.enilsson.vo.ErrorVO;
 	
 	import mx.collections.ArrayCollection;
 	

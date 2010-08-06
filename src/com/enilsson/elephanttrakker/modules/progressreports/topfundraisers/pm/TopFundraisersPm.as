@@ -1,9 +1,9 @@
 package com.enilsson.elephanttrakker.modules.progressreports.topfundraisers.pm
 {
-	import com.enilsson.common.events.GetEvent;
 	import com.enilsson.elephanttrakker.modules.events.ProgressReportsEvent;
 	import com.enilsson.elephanttrakker.modules.progressreports.topfundraisers.components.FundraiserStatsWrapper;
 	import com.enilsson.elephanttrakker.modules.progressreports.topfundraisers.components.RankingIconEnum;
+	import com.enilsson.events.GetEvent;
 	
 	import flash.events.Event;
 	import flash.events.IEventDispatcher;

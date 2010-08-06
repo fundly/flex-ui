@@ -8,7 +8,7 @@
 	preinitialize="initialiseHandler()"
 	show="showHandler()"
 	hide="TooltipUtil.hideTooltip()"
-	verticalScrollPolicy="off" horizontalScrollPolicy="off">
+	verticalScrollPolicy="off" horizontalScrollPolicy="off" xmlns:controls="com.enilsson.controls.*">
 
 	<mx:Image source="{presentationModel.icons.pledge}" top="0" right="0" />
 	<mx:Text id="contentTitle" 
@@ -87,7 +87,7 @@
 		presentationModel="{presentationModel}"
 		visible="{presentationModel.showErrorList}"
 		showEffect="fadeIn" hideEffect="fadeOut" />
-	<common:ErrorMsgBox id="callLoggingErrorBox"
+	<controls:ErrorMsgBox id="callLoggingErrorBox"
 		verticalCenter="0" horizontalCenter="0"
 		params="{presentationModel.errorVO}" />
 	<popups:PledgeComplete id="pledgeComplete"

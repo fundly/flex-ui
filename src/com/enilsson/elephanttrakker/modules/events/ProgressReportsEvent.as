@@ -1,5 +1,7 @@
 package com.enilsson.elephanttrakker.modules.events
 {
+	import com.enilsson.modules.events.UIDGenerator;
+	
 	public class ProgressReportsEvent
 	{
 		public static const GET_TOP_FUNDRAISERS						: String = UIDGenerator.createId( 'getTopFundraisers' );

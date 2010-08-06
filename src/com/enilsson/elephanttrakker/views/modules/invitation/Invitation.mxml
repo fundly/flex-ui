@@ -7,7 +7,7 @@
 	xmlns:graphics="com.enilsson.graphics.*"
 	xmlns:effects="com.enilsson.elephanttrakker.views.common.effects.*" 
 	currentState="{_model.invitation.formState}" 
-	currentStateChange="currentState_handler(event)" >
+	currentStateChange="currentState_handler(event)" xmlns:controls="com.enilsson.controls.*">
 
 	<mx:Image source="{_model.icons.email}" top="-2" right="-3" />
 	<mx:Text id="contentTitle" styleName="contentTitle" text="RECRUIT A FUNDRAISER" top="40" right="-208" rotation="90" />
@@ -93,7 +93,7 @@
 			textMessage="Sending Emails" />
 	</mx:Canvas>
 
-	<common:ErrorMsgBox verticalCenter="0" horizontalCenter="0" params="{_model.invitation.errorVO}" onClose="{_model.invitation.onClose}" />
+	<controls:ErrorMsgBox verticalCenter="0" horizontalCenter="0" params="{_model.invitation.errorVO}" onClose="{_model.invitation.onClose}" />
 
 	<mx:transitions>
 		<mx:Transition>
@@ -155,7 +155,7 @@
 			import mx.events.StateChangeEvent;
 			import com.enilsson.elephanttrakker.events.modules.invitation.InvitationEvent;
 			import mx.events.ValidationResultEvent;
-			import com.enilsson.elephanttrakker.vo.ErrorVO;
+			import com.enilsson.vo.ErrorVO;
 			import com.enilsson.utils.eNilssonUtils;
 			import com.enilsson.elephanttrakker.events.session.PingEvent;
 			import com.enilsson.elephanttrakker.models.ETModelLocator;	

@@ -5,7 +5,7 @@
 	xmlns:mx="http://www.adobe.com/2006/mxml" 
 	xmlns:common="com.enilsson.elephanttrakker.views.common.*" 
 	xmlns:graphics="com.enilsson.graphics.*" 
-	xmlns:ns="com.enilsson.elephanttrakker.views.modules.my_details.*">
+	xmlns:ns="com.enilsson.elephanttrakker.views.modules.my_details.*" xmlns:controls="com.enilsson.controls.*">
 
 	<mx:Move id="moveLeftShow" 
         xFrom="630" xTo="0" yTo="0"
@@ -57,7 +57,7 @@
 			textMessage="Processing" />
 	</mx:Canvas>
 	
-	<common:ErrorMsgBox id="callLoggingErrorBox"
+	<controls:ErrorMsgBox id="callLoggingErrorBox"
 		verticalCenter="0" horizontalCenter="0"
 		params="{_model.my_details.errorVO}"/>
 

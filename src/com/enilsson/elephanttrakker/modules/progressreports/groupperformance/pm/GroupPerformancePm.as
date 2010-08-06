@@ -1,7 +1,7 @@
 package com.enilsson.elephanttrakker.modules.progressreports.groupperformance.pm
 {
-	import com.enilsson.common.events.GetEvent;
 	import com.enilsson.elephanttrakker.modules.events.ProgressReportsEvent;
+	import com.enilsson.events.GetEvent;
 	
 	import flash.events.IEventDispatcher;
 	

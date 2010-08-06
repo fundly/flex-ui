@@ -74,6 +74,6 @@
 			label="Save Call" />
 	</mx:HBox>
 	
-	<common:ErrorMsgBox verticalCenter="0" horizontalCenter="0" params="{_model.calls_reminders.callsErrorVO}" />
+	<controls:ErrorMsgBox verticalCenter="0" horizontalCenter="0" params="{_model.calls_reminders.callsErrorVO}" />
 	
 </mx:Canvas>

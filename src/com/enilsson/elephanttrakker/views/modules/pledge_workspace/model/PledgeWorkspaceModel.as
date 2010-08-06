@@ -5,12 +5,12 @@ package com.enilsson.elephanttrakker.views.modules.pledge_workspace.model
 	import com.enilsson.elephanttrakker.models.Icons;
 	import com.enilsson.elephanttrakker.views.modules.pledge_workspace.events.PWEvent;
 	import com.enilsson.elephanttrakker.vo.AppOptionsVO;
-	import com.enilsson.elephanttrakker.vo.ErrorVO;
 	import com.enilsson.elephanttrakker.vo.PledgeVO;
 	import com.enilsson.elephanttrakker.vo.SessionVO;
 	import com.enilsson.elephanttrakker.vo.StruktorLayoutVO;
 	import com.enilsson.elephanttrakker.vo.TransactionVO;
 	import com.enilsson.utils.eNilssonUtils;
+	import com.enilsson.vo.ErrorVO;
 	
 	import flash.events.Event;
 	import flash.events.EventDispatcher;

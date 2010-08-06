@@ -4,7 +4,7 @@
 	width="500" height="540"
 	creationComplete="init()"
 	xmlns:common="com.enilsson.elephanttrakker.views.common.*"
-	xmlns:graphics="com.enilsson.graphics.*">
+	xmlns:graphics="com.enilsson.graphics.*" xmlns:controls="com.enilsson.controls.*">
 	
 	
 	<mx:Canvas left="0" top="10" styleName="popupContent" 
@@ -96,7 +96,7 @@
 
 	<graphics:enCloseBtn top="0" right="0" size="20" click="closePopup()" />
 				
-	<common:ErrorMsgBox id="errorBox" 
+	<controls:ErrorMsgBox id="errorBox" 
 		verticalCenter="0" horizontalCenter="0" 
 		params="{_model.errorVO}" 
 		onClose="{_model.onClose}" />

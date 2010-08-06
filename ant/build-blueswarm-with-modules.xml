@@ -18,7 +18,6 @@
 	<!-- Client modules -->
 	<property name="module.groupperformance" value="GroupPerformanceModule" />
 	<property name="module.topfundraisers" value="TopFundraisersModule" />
-	<property name="module.downline" value="DownlineModule" />
 	
 	
 	<!-- Admin reporting modules -->
@@ -64,10 +63,6 @@
 		<antcall target="compile.module">
 			<param name="param.mxml" value="${client.modules.src.dir}/${module.groupperformance}.mxml" />
 			<param name="param.swf" value="${client.modules.build.dir}/${module.groupperformance}.swf" />
-		</antcall>
-		<antcall target="compile.module">
-			<param name="param.mxml" value="${client.modules.src.dir}/${module.downline}.mxml" />
-			<param name="param.swf" value="${client.modules.build.dir}/${module.downline}.swf" />
 		</antcall>
 		
 		<!-- copy the revision as a marker so that ANT knows when to rebuild -->

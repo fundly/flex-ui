@@ -39,7 +39,7 @@
 			import com.enilsson.elephanttrakker.views.modules.pledge_workspace.events.SPWEvent;
 			import com.enilsson.elephanttrakker.views.modules.pledge_workspace.model.PledgeWorkspaceVO;
 			import com.enilsson.elephanttrakker.events.modules.my_contacts.DeleteContactEvent;
-			import com.enilsson.elephanttrakker.vo.ErrorVO;
+			import com.enilsson.vo.ErrorVO;
 			import com.enilsson.elephanttrakker.models.ETModelLocator;
 			
 			[Bindable] private var _model:ETModelLocator = ETModelLocator.getInstance();

@@ -2,8 +2,9 @@
 <mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" 
 	layout="absolute"
 	width="100%" height="100%"
-	implements="com.enilsson.elephanttrakker.modules.IModule"
-	xmlns:events="com.enilsson.common.events.*">
+	implements="com.enilsson.modules.IModule"
+	xmlns:events="com.enilsson.common.events.*" 
+	xmlns:events1="com.enilsson.events.*">
 	
 	<business:ProgressReportServiceContainer id="serviceContainer" 
 		gatewayUrl="{gatewayUrl}"
@@ -14,12 +15,12 @@
 		xmlns:controllers="com.enilsson.elephanttrakker.modules.controllers.*" />
 	
 	<mx:Array id="mappings">
-		<events:EventMapping type="{ProgressReportsEvent.GET_TOP_FUNDRAISERS}" handler="{controller.getTopFundraisers}" />
-		<events:EventMapping type="{ProgressReportsEvent.GET_TOP_FUNDRAISERS_DOWNLINE_CONTRIBS}" handler="{controller.getTopFundraisersByDownlineContributions}" />
-		<events:EventMapping type="{ProgressReportsEvent.GET_TOP_FUNDRAISERS_DOWNLINE_USERS}" handler="{controller.getTopFundraisersByDownlineUsers}" />
+		<events1:EventMapping type="{ProgressReportsEvent.GET_TOP_FUNDRAISERS}" handler="{controller.getTopFundraisers}" />
+		<events1:EventMapping type="{ProgressReportsEvent.GET_TOP_FUNDRAISERS_DOWNLINE_CONTRIBS}" handler="{controller.getTopFundraisersByDownlineContributions}" />
+		<events1:EventMapping type="{ProgressReportsEvent.GET_TOP_FUNDRAISERS_DOWNLINE_USERS}" handler="{controller.getTopFundraisersByDownlineUsers}" />
 	</mx:Array>
 
-	<events:EventMap dispatcher="{this}" mappings="{mappings}" /> 
+	<events1:EventMap dispatcher="{this}" mappings="{mappings}" /> 
 	
 	<views:TopFundraisersView id="topFundraisersView" 
 		width="100%" height="100%"

@@ -1,44 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
-	width="100%" height="100%"
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%"
 	horizontalScrollPolicy="off" verticalScrollPolicy="off">
-	
-	<mx:ModuleLoader
+
+	<modules:DownlineContainer
+		xmlns:modules="com.enilsson.modules.*"
 		width="633" height="322"
-		top="0" left="0"
-		ready="handleReady(event)"
-		applicationDomain="{ApplicationDomain.currentDomain}"
-		show="handleModuleShow( event )"	
-		url="{ETModelLocator.MODULES_PATH}/DownlineModule.swf?t={new Date().getTime()}" />
+		gatewayUrl="{_model.gatewayURL}" userId="{_model.session.user_id}" />
 	
 	<mx:Image source="{_model.icons.downline}" top="0" right="-4" />	
 	<mx:Text id="contentTitle" styleName="contentTitle" text="MY DOWNLINE" right="-128" rotation="90" />
 		
 	<mx:Script>
 		<![CDATA[
-			import mx.binding.utils.BindingUtils;
-			import com.enilsson.elephanttrakker.modules.DownlineModule;
 			import com.enilsson.elephanttrakker.models.ETModelLocator;
-			import mx.events.ModuleEvent;
 			
 			[Bindable] private var _model : ETModelLocator = ETModelLocator.getInstance();
 			
 			public function set runInit( val : Boolean ) : void {
 					
 			}
-			
-			private function handleReady( event : ModuleEvent ) : void {
-				var loader : ModuleLoader = event.currentTarget as ModuleLoader;
-				var module : DownlineModule = loader.child as DownlineModule;
-				
-				if(module) {
-					BindingUtils.bindProperty( module, 'gatewayUrl', _model, 'gatewayURL' );
-					BindingUtils.bindProperty( module, 'userId', _model, ['session', 'user_id'] );
-				}	
-			}
-			
 			private function handleModuleShow( e : Event ) : void {
 			}
+			
 		]]>
 	</mx:Script>
 	

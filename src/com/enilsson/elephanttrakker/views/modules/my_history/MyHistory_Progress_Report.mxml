@@ -29,7 +29,7 @@
 		
 	<mx:Script>
 		<![CDATA[
-			import com.enilsson.elephanttrakker.modules.IModule;
+			import com.enilsson.modules.IModule;
 			import mx.events.ChildExistenceChangedEvent;
 			import mx.controls.Button;
 			import mx.modules.ModuleLoader;

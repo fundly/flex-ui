@@ -1,7 +1,8 @@
 package com.enilsson.elephanttrakker.modules.controllers
 {
-	import com.enilsson.common.events.GetEvent;
 	import com.enilsson.elephanttrakker.modules.business.IProgressReportsDelegate;
+	import com.enilsson.events.GetEvent;
+	import com.enilsson.modules.controllers.ControllerBase;
 	
 	public class ProgressReportsController extends ControllerBase
 	{
