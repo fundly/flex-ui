@@ -76,7 +76,7 @@
 		width="100%" height="100%" 
 		backgroundColor="#CCCCCC" backgroundAlpha="0.75"
 		showEffect="fadeIn" hideEffect="fadeOut" />
-	<common:ErrorMsgBox 
+	<en:ErrorMsgBox 
 		params="{_model.my_contacts.errorVO}"
 		verticalCenter="0" horizontalCenter="0" 
 		onClose="{_model.my_contacts.onClose}" />

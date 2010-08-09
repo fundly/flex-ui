@@ -5,12 +5,12 @@ package com.enilsson.elephanttrakker.views.modules.pledge_workspace.model
 	import com.enilsson.elephanttrakker.models.Icons;
 	import com.enilsson.elephanttrakker.views.modules.pledge_workspace.events.PWEvent;
 	import com.enilsson.elephanttrakker.vo.AppOptionsVO;
-	import com.enilsson.elephanttrakker.vo.ErrorVO;
 	import com.enilsson.elephanttrakker.vo.PledgeVO;
 	import com.enilsson.elephanttrakker.vo.SessionVO;
 	import com.enilsson.elephanttrakker.vo.StruktorLayoutVO;
 	import com.enilsson.elephanttrakker.vo.TransactionVO;
 	import com.enilsson.utils.eNilssonUtils;
+	import com.enilsson.vo.ErrorVO;
 	
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
@@ -537,8 +537,12 @@ package com.enilsson.elephanttrakker.views.modules.pledge_workspace.model
 			// add the occupation and employer if needed to the contact object		
 			if ( action == ADD_NEW || action == ADD_EXISTING )
 			{
-				if(pledgeData.hasOwnProperty('occupation')) vo.contact['occupation'] = pledgeData.occupation;
-				if(pledgeData.hasOwnProperty('employer')) vo.contact['employer'] = pledgeData.employer;
+				var employerProps : Array = ['occupation', 'employer', 'employer_address', 'employer_city', 'employer_state', 'employer_zip'];
+				
+				for each( var prop : String in employerProps ) {
+					if(pledgeData.hasOwnProperty(prop)) 
+						vo.contact[prop] = pledgeData[prop];
+				}
 			}
 
 			// add the pledge data

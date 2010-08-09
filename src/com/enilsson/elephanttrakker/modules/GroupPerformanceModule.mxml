@@ -2,23 +2,22 @@
 <mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" 
 	layout="absolute"
 	width="100%" height="100%"
-	implements="com.enilsson.elephanttrakker.modules.progressreports.IProgressReportModule"
-	xmlns:events="com.enilsson.common.events.*">
+	implements="com.enilsson.modules.IModule"
+	xmlns:events="com.enilsson.common.events.*" xmlns:events1="com.enilsson.events.*">
 	
-	<business:Services id="services" 
-		instanceId="{instanceId}" 
+	<business:ProgressReportServiceContainer id="serviceContainer" 
 		gatewayUrl="{gatewayUrl}"
-		xmlns:business="com.enilsson.elephanttrakker.modules.progressreports.business.*" />
+		xmlns:business="com.enilsson.elephanttrakker.modules.business.*" />
 	
 	<controllers:ProgressReportsController id="controller" 
-		delegate="{ DelegateFactory.create( DelegateFactory.PROGRESS_REPORT, services ) }" 
-		xmlns:controllers="com.enilsson.elephanttrakker.modules.progressreports.controllers.*" />
+		delegate="{ new ProgressReportsDelegate(serviceContainer.progressReportsService) }"
+		xmlns:controllers="com.enilsson.elephanttrakker.modules.controllers.*" />
 	
 	<mx:Array id="mappings">
-		<events:EventMapping type="{Events.GET_GROUP_STATS}" handler="{controller.getGroupStats}" />
+		<events1:EventMapping type="{ProgressReportsEvent.GET_GROUP_STATS}" handler="{controller.getGroupStats}" />
 	</mx:Array>
 
-	<events:EventMap dispatcher="{this}" mappings="{mappings}" /> 
+	<events1:EventMap dispatcher="{this}" mappings="{mappings}" /> 
 	
 	<views:GroupPerformanceView id="groupPerformanceView" 
 		width="100%" height="100%"
@@ -26,13 +25,10 @@
 		
 	<mx:Script>
 		<![CDATA[
-			import com.enilsson.elephanttrakker.modules.progressreports.events.Events;
-			import com.enilsson.elephanttrakker.modules.progressreports.business.DelegateFactory;
-			
-			[Bindable]
-			public function get instanceId() : int { return _instanceId; }
-			public function set instanceId( val : int ) : void { _instanceId = val; }
-			private var _instanceId : int;
+			import com.enilsson.elephanttrakker.modules.business.ProgressReportsDelegate;
+			import com.enilsson.elephanttrakker.modules.events.ProgressReportsEvent;
+			import com.enilsson.elephanttrakker.modules.business.DelegateMap;
+			import com.enilsson.elephanttrakker.modules.business.DelegateFactory;
 			
 			[Bindable]
 			public function get gatewayUrl() : String { return _gatewayUrl; }

@@ -8,11 +8,12 @@ package com.enilsson.elephanttrakker.models
 	import com.enilsson.elephanttrakker.models.viewclasses.*;
 	import com.enilsson.elephanttrakker.views.modules.pledge_workspace.model.PledgeWorkspaceVO;
 	import com.enilsson.elephanttrakker.vo.AppOptionsVO;
-	import com.enilsson.elephanttrakker.vo.ErrorVO;
+	import com.enilsson.vo.ErrorVO;
 	import com.enilsson.elephanttrakker.vo.SessionVO;
 	import com.enilsson.utils.eNilssonUtils;
 	
 	import flash.display.DisplayObject;
+	import flash.system.Security;
 	import flash.utils.ByteArray;
 	
 	import mx.collections.ArrayCollection;
@@ -184,6 +185,11 @@ package com.enilsson.elephanttrakker.models
 		public static const LOGIN_SCREEN:uint = 0;
 		public static const MAIN_SCREEN:uint = 1;
 		
+		/**
+		 * Variable to store path for external modules
+		 */
+		public static const MODULES_PATH : String = ( Security.sandboxType == Security.REMOTE ? "modules" : "com/enilsson/elephanttrakker/modules" );
+		
 		[Bindable] public var screenState:uint = LOGIN_SCREEN;
 	
 
@@ -248,7 +254,6 @@ package com.enilsson.elephanttrakker.models
 		[Bindable] public var resources:ResourceViewClass = new ResourceViewClass();
 		[Bindable] public var my_history:MyHistoryViewClass = new MyHistoryViewClass();
 		[Bindable] public var email:EmailViewClass = new EmailViewClass();
-		[Bindable] public var my_downline:MyDownlineViewClass = new MyDownlineViewClass();
 		[Bindable] public var calls_reminders:CallsRemindersViewClass = new CallsRemindersViewClass();
 		[Bindable] public var events:EventsViewClass = new EventsViewClass();
 		[Bindable] public var my_details:MyDetailsViewClass = new MyDetailsViewClass();
@@ -323,7 +328,6 @@ package com.enilsson.elephanttrakker.models
 			resources = new ResourceViewClass();
 			my_history = new MyHistoryViewClass();
 			email = new EmailViewClass();
-			my_downline = new MyDownlineViewClass();
 			calls_reminders = new CallsRemindersViewClass();
 			message_center = new MessageCenterViewClass();
 			my_details = new MyDetailsViewClass();

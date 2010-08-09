@@ -55,9 +55,9 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.elephanttrakker.modules.vo.GroupStatistics;
 			import mx.charts.chartClasses.IAxis;
 			import mx.charts.chartClasses.IAxisRenderer;
-			import com.enilsson.elephanttrakker.modules.progressreports.vo.GroupStatistics;
 			import mx.charts.series.ColumnSeries;
 			import mx.charts.HitData;
 			

@@ -12,6 +12,7 @@ package com.enilsson.elephanttrakker.views.modules.pledge_workspace.commands
 	import com.enilsson.elephanttrakker.views.modules.pledge_workspace.events.*;
 	import com.enilsson.elephanttrakker.views.modules.pledge_workspace.model.*;
 	import com.enilsson.elephanttrakker.vo.*;
+	import com.enilsson.vo.ErrorVO;
 	
 	import mx.collections.ArrayCollection;
 	import mx.collections.Sort;

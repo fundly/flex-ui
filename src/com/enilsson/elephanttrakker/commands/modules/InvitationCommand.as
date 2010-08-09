@@ -8,7 +8,7 @@ package com.enilsson.elephanttrakker.commands.modules
 	import com.enilsson.elephanttrakker.events.modules.invitation.InvitationEvent;
 	import com.enilsson.elephanttrakker.models.ETModelLocator;
 	import com.enilsson.elephanttrakker.vo.EmailVO;
-	import com.enilsson.elephanttrakker.vo.ErrorVO;
+	import com.enilsson.vo.ErrorVO;
 	import com.enilsson.elephanttrakker.vo.RecordsVO;
 	import com.enilsson.utils.EDateUtil;
 	import com.enilsson.utils.struktorForm.ConvertRTEText;

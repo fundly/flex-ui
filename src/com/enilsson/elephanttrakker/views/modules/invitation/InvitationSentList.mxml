@@ -5,7 +5,7 @@
 	creationComplete="init()"
 	xmlns:common="com.enilsson.elephanttrakker.views.common.*"
 	xmlns:graphics="com.enilsson.graphics.*"
-	>
+	xmlns:controls="com.enilsson.controls.*">
 
 	<mx:Script>
 		<![CDATA[
@@ -94,7 +94,7 @@
 
 	<graphics:enCloseBtn top="0" right="0" size="20" click="closePopup()" />
 				
-	<common:ErrorMsgBox id="errorBox" 
+	<controls:ErrorMsgBox id="errorBox" 
 		verticalCenter="0" horizontalCenter="0" 
 		params="{_model.errorVO}" 
 		onClose="{_model.onClose}" />

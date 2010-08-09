@@ -9,6 +9,7 @@ package com.enilsson.elephanttrakker.commands.modules
 	import com.enilsson.elephanttrakker.models.ETModelLocator;
 	import com.enilsson.elephanttrakker.vo.*;
 	import com.enilsson.utils.eNilssonUtils;
+	import com.enilsson.vo.ErrorVO;
 	
 	import flash.net.URLRequest;
 	import flash.net.navigateToURL;

@@ -194,7 +194,7 @@ package com.enilsson.elephantadmin.views.modules.users.model
 					}
 			};
 
-			var recordsVO:RecordsVO = new RecordsVO( esql, where );
+			var recordsVO:RecordsVO = new RecordsVO( esql, where, null, 0, 10000 );
 
 			new UsersEvent(UsersEvent.GET_PLEDGES, this, recordsVO).dispatch();
 		}

@@ -4,7 +4,7 @@
 	xmlns:common="com.enilsson.elephanttrakker.views.common.*"
 	xmlns:graphics="com.enilsson.graphics.*" 
 	creationComplete="init()"	 
-	width="400" height="410">
+	width="400" height="410" xmlns:controls="com.enilsson.controls.*">
 	
 	<mx:Script>
 		<![CDATA[
@@ -137,7 +137,7 @@
 	
 	<graphics:enCloseBtn top="0" right="0" size="20" click="closeComponent()" />
 
-	<common:ErrorMsgBox id="errorBox" 
+	<controls:ErrorMsgBox id="errorBox" 
 		verticalCenter="0" horizontalCenter="0" 
 		params="{_model.errorVO}" 
 		onClose="{_model.onClose}" />

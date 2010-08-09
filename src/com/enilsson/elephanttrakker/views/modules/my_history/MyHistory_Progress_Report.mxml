@@ -14,7 +14,7 @@
 		ready="handleReady(event)"
 		applicationDomain="{ApplicationDomain.currentDomain}"
 		show="handleModuleShow( event )"
-		url="{MODULES_PATH}/TopFundraisersModule.swf?t={new Date().getTime()}" />
+		url="{ETModelLocator.MODULES_PATH}/TopFundraisersModule.swf?t={new Date().getTime()}" />
 		
 	<mx:ModuleLoader
 		name="{GROUPPERFORMANCE}"
@@ -23,17 +23,17 @@
 		ready="handleReady(event)"
 		applicationDomain="{ApplicationDomain.currentDomain}"
 		show="handleModuleShow( event )"
-		url="{MODULES_PATH}/GroupPerformanceModule.swf?t={new Date().getTime()}" />
+		url="{ETModelLocator.MODULES_PATH}/GroupPerformanceModule.swf?t={new Date().getTime()}" />
 		
 	<mx:Binding source="_model.options.modules_config" destination="modulesConfig" />
 		
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.modules.IModule;
 			import mx.events.ChildExistenceChangedEvent;
 			import mx.controls.Button;
 			import mx.modules.ModuleLoader;
 			import mx.binding.utils.BindingUtils;
-			import com.enilsson.elephanttrakker.modules.progressreports.IProgressReportModule;
 			import mx.events.ModuleEvent;
 			import com.enilsson.elephanttrakker.models.ETModelLocator;
 			
@@ -116,21 +116,20 @@
 			
 			private function handleReady( event : ModuleEvent ) : void {
 				var loader : ModuleLoader = event.currentTarget as ModuleLoader;
-				var module : IProgressReportModule = loader.child as IProgressReportModule;
+				var module : IModule = loader.child as IModule;
 				_model.dataLoading = false;
 				
 				if(module) {
 					loader.enabled = true;
 					
 					BindingUtils.bindProperty( module, "gatewayUrl", _model, "gatewayURL" );
-					BindingUtils.bindProperty( module, "instanceId", _model, "appInstanceID" );
 				}
 				
 			}
 			
 			private function handleModuleShow( event : Event ) : void {
 				if(event.currentTarget.child) {
-					IProgressReportModule(event.currentTarget.child).update();
+					IModule(event.currentTarget.child).update();
 				}
 			}
 			
@@ -140,8 +139,6 @@
 			
 			private static const TOPFUNDRAISERS 	: String = "topfundraisers";
 			private static const GROUPPERFORMANCE	: String = "groupperformance";
-			
-			private static const MODULES_PATH : String = ( Security.sandboxType == Security.REMOTE ? "modules" : "com/enilsson/elephanttrakker/modules" );
 			
 		]]>
 	</mx:Script>

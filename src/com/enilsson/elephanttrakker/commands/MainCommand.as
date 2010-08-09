@@ -8,7 +8,7 @@ package com.enilsson.elephanttrakker.commands
 	import com.enilsson.elephanttrakker.events.modules.call_logging.*;
 	import com.enilsson.elephanttrakker.events.modules.overview.*;
 	import com.enilsson.elephanttrakker.models.ETModelLocator;
-	import com.enilsson.elephanttrakker.vo.ErrorVO;
+	import com.enilsson.vo.ErrorVO;
 	
 	import mx.rpc.IResponder;
 	import mx.utils.ObjectUtil;

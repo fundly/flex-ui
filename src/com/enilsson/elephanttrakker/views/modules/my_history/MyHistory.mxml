@@ -4,7 +4,7 @@
 	show="init()"
 	verticalScrollPolicy="off" horizontalScrollPolicy="off"
 	xmlns:myhistory="com.enilsson.elephanttrakker.views.modules.my_history.*" 
-	xmlns:common="com.enilsson.elephanttrakker.views.common.*">
+	xmlns:common="com.enilsson.elephanttrakker.views.common.*" xmlns:controls="com.enilsson.controls.*">
 
 
 	<mx:Image source="{_model.icons.myHistory}" top="0" right="-3" />
@@ -36,7 +36,7 @@
 			showEffect="moveLeftShow" hideEffect="moveRightHide" />
 	</mx:ViewStack>
 
-	<common:ErrorMsgBox id="callLoggingErrorBox"
+	<controls:ErrorMsgBox id="callLoggingErrorBox"
 		verticalCenter="0" horizontalCenter="0"
 		params="{_model.my_history.errorVO}" />
 

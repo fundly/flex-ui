@@ -1,4 +1,4 @@
-package com.enilsson.elephanttrakker.modules.progressreports.business
+package com.enilsson.elephanttrakker.modules.business
 {
 	import mx.rpc.AsyncToken;
 	

@@ -10,6 +10,7 @@
 	<mx:HBox horizontalGap="10" width="100%" height="100%">
 		<common:ModuleGrid id="moduleGrid"
 			height="100%" width="100%"
+			minWidth="585"
 			dataProvider="{_model.transactions_failed.records}"
 			searchComboList="{_model.transactions_failed.searchBoxCombo}"
 			listItemClick="listClickHandler()" 
@@ -25,6 +26,8 @@
 			selectedPage="{_model.transactions_failed.currPage / _model.itemsPerPage}" 
 			itemsPerPage="{_model.itemsPerPage}" 
 			itemsTotal="{_model.transactions_failed.totalRecords}"
+			showExportButton="true"
+			exportClick="handleExportClick(event)"
 			/>
 		<transactions:Transactions_Detail id="transactionDetail"
 			dataProvider="{_model.transactions_failed.details}"
@@ -263,6 +266,28 @@
 						_model.transactions_failed.lastQuery.dispatch();
  						break;
 				}
+			}
+			
+			private function handleExportClick( event : Event ) : void {
+				
+				var where : Object;
+				try {
+					where = (_model.transactions_failed.lastQuery.params.recordsVO as RecordsVO).where;
+				}
+				catch( e : Error ) {
+					where = null;
+				}
+				
+				new TransactionsEvent( 
+					TransactionsEvent.TRANSACTIONS_FAILED_EXPORT,
+						{ 
+							recordsVO: new RecordsVO (
+								'transactions_failed(created_by_id<fname:lname:_fid>)',
+								where,
+								'transactions_failed.created_on DESC'
+							)
+						}
+					).dispatch();	
 			}
 
 			private function listClickHandler():void 
