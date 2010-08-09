@@ -92,18 +92,25 @@
 				// grab any SID data if present
 				var sid:SidVO = _model.sid;
 			
-				if(sid)
+				if(sid && sid.table_name == 'contributions_misc')
 				{
-					if(sid.table_name == 'contributions_misc')
-					{
-						_model.contributions_misc.details = sid.data;
-						_model.contributions_misc.sidRecord = true;
-						_model.sid = null;
-					}
+					_model.contributions_misc.details = sid.data;
+					_model.contributions_misc.sidRecord = true;
+					_model.sid = null;
+					
+					var wherePart : Object = { 
+						'what' : 'contributions_misc.id',
+						'val' : sid.data.id,
+						'op' : 'IS'
+					};
+					
+					dispatchRecordsEvent( buildWhere( 1, wherePart ) );
 				}
-
-				// get default list
-				resetSearch();
+				else
+				{
+					// get default list
+					resetSearch();
+				}
 				
 				// reset the data changed flag
 				_model.dataChanged = false;
@@ -152,14 +159,15 @@
 				{
 					whereObj = new Object();
 					whereObj['statement'] = indexStr;
+					whereArray.push( indexStr );
 				}
 				
-				if( part )
+				if( part ) 
 					whereObj[index] = part;
 				
 				// filter out contributions with contributions_misc_refids
 				if( whereArray.indexOf( '(1)' ) == -1 ) {
-					whereArray.push( '(1)' );
+					whereArray.unshift( '(1)' );
 					whereObj['statement'] = whereArray.join( " AND " );
 					whereObj[1] = {
 						what:	'contributions_misc.contributions_misc_refid',
