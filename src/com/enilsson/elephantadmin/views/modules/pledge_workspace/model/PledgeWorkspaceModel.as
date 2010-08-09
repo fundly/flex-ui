@@ -549,6 +549,7 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 			var inKindData		: Object = ObjectUtil.copy(this.inKindData);
 			var cashData		: Object = ObjectUtil.copy(this.cashData);
 			
+			var prop : String;
 			
 			vo = new PledgeVO();
 			
@@ -572,9 +573,9 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 			{
 				var employerProps : Array = ['occupation', 'employer', 'employer_address', 'employer_city', 'employer_state', 'employer_zip'];
 				
-				for each( var prop : String in employerProps ) {
-					if(pledgeData.hasOwnProperty(prop)) 
-						vo.contact[prop] = pledgeData[prop];
+				for each( var p : String in employerProps ) {
+					if(pledgeData.hasOwnProperty(p)) 
+						vo.contact[p] = pledgeData[p];
 				}
 			}
 
