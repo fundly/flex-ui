@@ -1,12 +1,14 @@
 package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 {
 	import com.adobe.cairngorm.model.ModelLocator;
+	import com.enilsson.common.model.ContributionType;
 	import com.enilsson.elephantadmin.models.EAModelLocator;
 	import com.enilsson.elephantadmin.views.modules.pledge_workspace.events.PWEvent;
 	import com.enilsson.elephantadmin.vo.ErrorVO;
 	import com.enilsson.elephantadmin.vo.PledgeVO;
 	import com.enilsson.elephantadmin.vo.SessionVO;
 	import com.enilsson.elephantadmin.vo.StruktorLayoutVO;
+	import com.enilsson.elephanttrakker.vo.TransactionVO;
 	import com.enilsson.utils.eNilssonUtils;
 	
 	import flash.events.Event;
@@ -605,27 +607,15 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 			}
 			
 			// add any payments as necessary
-			var prop : String;
 			switch ( transVStack )
 			{
 				case CC_VIEW :
-					vo.contribution 		= transactionData;
+					var tvo	: TransactionVO = new TransactionVO();
+					// set contact and transaction data on TransactionVO
+					tvo.data				= contactData;
+					tvo.data 				= transactionData;
+					vo.contribution 		= tvo;
 					vo.contribution.type 	= ContributionType.CONTRIB_TYPE_TANSACTION.type; 
-					
-					// add the appropriate address data including billing data if needed
-					if ( billingData == null ) {
-						for( prop in vo.pledge ) {
-							vo.contribution[prop] = vo.pledge[prop];
-						}
-					}
-					else
-					{
-						for( prop in billingData ) {
-							vo.contribution[prop] = billingData[prop];
-						}
-						vo.contribution.fname 	= vo.pledge.fname;
-						vo.contribution.lname 	= vo.pledge.lname;
-					}
 				break;
 				case CHECK_VIEW :
 					vo.contribution 		= checkData;

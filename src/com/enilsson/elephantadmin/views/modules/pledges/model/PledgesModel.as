@@ -23,8 +23,11 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 	
 	import mx.binding.utils.BindingUtils;
 	import mx.collections.ArrayCollection;
+	import mx.controls.ComboBox;
+	import mx.controls.listClasses.ListBase;
 	import mx.core.Application;
 	import mx.core.ClassFactory;
+	import mx.events.ListEvent;
 	import mx.managers.PopUpManager;
 	
 	import org.osflash.thunderbolt.Logger;
@@ -32,16 +35,18 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 	[Bindable]
 	public class PledgesModel extends RecordModel
 	{
-		
 		public var contributions:ArrayCollection;
 		public var contributionsTabLoading:Boolean;
-		public var noSplitContributions:Boolean = true; // temp fix
-		public var fundTypeInput : Object; // temp fix
+		public var noSplitContributions:Boolean = true;
 		
 		public var sharedCreditFundraisers : ArrayCollection;
 		public var sharedCreditTabLoading : Boolean;		
 		public var sharedCreditUsersList : ArrayCollection;
 		public var sharedCreditError : ErrorVO;
+		
+		public var fundTypeInput : ComboBox;
+		public var contribTypeInput : ComboBox;
+		
 
 		public function PledgesModel(parentModel:ModelLocator=null)
 		{
@@ -65,7 +70,7 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 			var vo:PledgeWorkspaceVO = new PledgeWorkspaceVO();
 			vo.action = PledgeWorkspaceModel.ADD_NEW;
 			EAModelLocator.getInstance().pledgeWorkspace = vo;
-
+			
 			PopUpManager.addPopUp(popup, DisplayObject(Application.application), true);
 			popup.addEventListener(Event.CLOSE, function (event:Event):void
 			{
@@ -80,10 +85,9 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 		 */
 		override protected function getRecordDetails():void
 		{
-			super.getRecordDetails();
-			
 			getContributions();
 			getSharedCreditFundraisers();
+			getAuditTrail();
 		}
 		
 		/**
@@ -96,10 +100,12 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 		}
 		
 		/**
-		 * Handle selecting of SharedCredit pledges so that only the master record can be edited.
+		 * Override of the pledge selection behaviour
 		 */
 		override public function set selectedRecord ( value:Object ):void
 		{
+			// Handle selection of SharedCredit pledges so that only the master record can be edited.
+			// The cloned record shouldn't be touched.
 			if( SharedCreditUtil.isSharedCreditPledge(value) ) {
 				new SidForIdEvent( 'pledges', value.pledges_refid ).dispatch();
 			}
@@ -113,21 +119,7 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 		 */
 		public function getContributions():void
 		{
-			contributionsTabLoading = true;
-			contributions = new ArrayCollection();
-
-			var esql:String = 'pledges<fname>(';
-			esql += 'transactions<amount:full_name:card_number:card_number_type:created_on:transactionid:address:city:state:zip>';
-			esql += ',checks<entry_date:created_on:amount:batch_code:batch_id>';
-			esql += ',paypal_transactions<created_on:amount:transactionid>';
-			esql += ',contributions_misc<created_on:amount:type:comments>';
-			esql += ')';
-			
-			var recordVO:RecordVO = new RecordVO(
-				esql,
-				this.recordID
-				);
-			new PledgeEvent(PledgeEvent.GET_CONTRIBUTIONS, this, recordVO).dispatch();
+			new PledgeEvent(PledgeEvent.GET_CONTRIBUTIONS, this).dispatch();
 		}
 		
 
@@ -175,7 +167,20 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 			eventsValue = formField.dataValue;
 			BindingUtils.bindProperty(formField, 'dataValue', this, 'eventsValue');
 			
+			fundTypeInput = event.currentTarget.getField('fund_type') as ComboBox;
+			if(fundTypeInput)
+				BindingUtils.bindProperty( fundTypeInput, 'enabled', this, 'noSplitContributions' );
+			
+			contribTypeInput = event.currentTarget.getField('contribution_type') as ComboBox;
+			if(contribTypeInput)
+				BindingUtils.bindProperty( contribTypeInput, 'enabled', this, 'noSplitContributions' );
 		}
+		
+		override public function searchListSelectedIndexChange( event:ListEvent ):void 
+		{
+			selectedRecord =  (event.currentTarget as ListBase).selectedItem;	
+			getContributions();
+		} 
 		
 		/**
 		 * Handle the searches for the LookupInput fields
@@ -239,8 +244,7 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 		/**
 		 * Create a refund as a check contribution
 		 */
-		 // temp fix
-		public function addCheckRefund( formVariables:Object, fundType:String = null ):void
+		public function addCheckRefund( formVariables:Object, fundType : String = null ):void
 		{
 			// check to see the user hasnt tried to refund too much
 			if( Number(formVariables.amount) > Number(selectedRecord.contrib_total) )
@@ -258,23 +262,12 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 			formVariables['pledge_id'] = selectedRecord.id;
 			
 			// dispatch the event to upsert the data
-			new PledgeEvent (
-				PledgeEvent.ADD_CHECKREFUND,
-			 	this,
-			 	formVariables
-			).dispatch();
-		}
-		
-		/**
-		 * Delete a refund
-		 */
-		public function deleteCheckRefund( refundID:int ):void
-		{
-			new PledgeEvent (
-				PledgeEvent.DELETE_CONTRIBUTION, //temp fix
-			 	this,
-			 	new RecordVO ( 'checks', refundID, null )
-			).dispatch();		
+			new PledgeEvent ( 
+				PledgeEvent.ADD_CHECKREFUND, 
+				this, 
+				{ formVariables:formVariables, fundType:fundType } )
+			.dispatch();
+				 
 		}
 		
 		/**

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ServiceContainer
-	xmlns="com.enilsson.elephanttrakker.modules.business.*" 
+	xmlns="com.enilsson.modules.business.*" 
 	xmlns:mx="http://www.adobe.com/2006/mxml">
 	
 	<mx:RemoteObject id="progressReportsService"

@@ -9,8 +9,8 @@
 		gatewayUrl="{gatewayUrl}"
 		xmlns:business="com.enilsson.elephanttrakker.modules.business.*" />
 	
-	<controllers:ProgressReportsController id="controller" 
-		delegate="{ new ProgressReportsDelegate(serviceContainer.progressReportsService) }"
+	<controllers:ProgressReportsController id="controller"
+		delegate="{_delegate}"
 		xmlns:controllers="com.enilsson.elephanttrakker.modules.controllers.*" />
 	
 	<mx:Array id="mappings">
@@ -27,8 +27,6 @@
 		<![CDATA[
 			import com.enilsson.elephanttrakker.modules.business.ProgressReportsDelegate;
 			import com.enilsson.elephanttrakker.modules.events.ProgressReportsEvent;
-			import com.enilsson.elephanttrakker.modules.business.DelegateMap;
-			import com.enilsson.elephanttrakker.modules.business.DelegateFactory;
 			
 			[Bindable]
 			public function get gatewayUrl() : String { return _gatewayUrl; }
@@ -46,9 +44,15 @@
 					_update = false;
 					groupPerformanceView.update();
 				}
+				
+				if( !_delegate && serviceContainer ) {
+					_delegate = new ProgressReportsDelegate( serviceContainer.progressReportsService );
+				}
 			}
 			
 			private var _update : Boolean;
+			
+			[Bindable] private var _delegate : ProgressReportsDelegate;
 		]]>
 	</mx:Script>
 			

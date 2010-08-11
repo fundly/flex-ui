@@ -1,4 +1,4 @@
-package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
+package com.enilsson.common.model
 {
 	import com.enilsson.elephantadmin.models.Icons;
 	
@@ -10,13 +10,15 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 		public static const CONTRIB_TYPE_PAYPAL		: ContributionType = new ContributionType({value:'paypal', label:'PayPal', icon:Icons.PAY_PAL});		
 		public static const CONTRIB_TYPE_IN_KIND	: ContributionType = new ContributionType({value:'inkind', label:'In-kind', icon:Icons.IN_KIND});
 		public static const CONTRIB_TYPE_CASH		: ContributionType = new ContributionType({value:'cash', label:'Cash', icon:Icons.CASH});
+		public static const CONTRIB_TYPE_NONE		: ContributionType = new ContributionType({value:'none', label:'None', icon:null});
 		
 		public static const VALUES : Array = [ 
 			CONTRIB_TYPE_TANSACTION, 
 			CONTRIB_TYPE_CHECK, 
 			CONTRIB_TYPE_PAYPAL, 
 			CONTRIB_TYPE_IN_KIND, 
-			CONTRIB_TYPE_CASH 
+			CONTRIB_TYPE_CASH,
+			CONTRIB_TYPE_NONE 
 		];
 		
 		public var type : String;

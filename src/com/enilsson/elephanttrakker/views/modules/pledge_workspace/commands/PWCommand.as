@@ -3,6 +3,7 @@ package com.enilsson.elephanttrakker.views.modules.pledge_workspace.commands
 	import com.adobe.cairngorm.commands.ICommand;
 	import com.adobe.cairngorm.commands.SequenceCommand;
 	import com.adobe.cairngorm.control.CairngormEvent;
+	import com.enilsson.common.model.ContributionType;
 	import com.enilsson.elephantadmin.models.Icons;
 	import com.enilsson.elephanttrakker.business.*;
 	import com.enilsson.elephanttrakker.events.modules.overview.*;
@@ -120,7 +121,7 @@ package com.enilsson.elephanttrakker.views.modules.pledge_workspace.commands
 					for ( var i:String in d.checks)
 					{	
 						obj = d.checks[i];
-						obj['paymentType'] = 'Check';
+						obj['type'] = ContributionType.CONTRIB_TYPE_CHECK.type;
 						t.addItem(obj);				
 					}
 				}
@@ -133,11 +134,24 @@ package com.enilsson.elephanttrakker.views.modules.pledge_workspace.commands
 					for ( i in d.transactions)
 					{	
 						obj = d.transactions[i];
-						obj['paymentType'] = 'Credit Card';
+						obj['type'] = ContributionType.CONTRIB_TYPE_TANSACTION.type;
 						t.addItem(obj);				
 					}
 				}
 			}
+			if(d.hasOwnProperty('contributions_misc'))
+			{
+				if(d.contributions_misc['1'])
+				{
+					for ( i in d.contributions_misc)
+					{	
+						obj = d.contributions_misc[i];
+						// contribtions in contributions_misc already have the type property set.
+						t.addItem(obj);
+					}
+				}
+			}
+			
 			
 			// sort the data by created_on date
 			var sort:Sort = new Sort();
@@ -444,27 +458,25 @@ package com.enilsson.elephanttrakker.views.modules.pledge_workspace.commands
 						params['date'] = df.format(new Date());
 				
 					// send an email if there is a contribution
-					if ( _presentationModel.vo.check != null || _presentationModel.vo.transaction != null ) 
+					if ( _presentationModel.vo.contribution != null ) 
 					{
-						params['pledge_amount'] = _presentationModel.vo.check == null ? 
-							cf.format(_presentationModel.vo.transactionData.amount) :  
-							cf.format(_presentationModel.vo.check.amount);
+						params['pledge_amount'] = cf.format(_presentationModel.vo.contribution.amount);  
 						
 						// send an email thanking the user for a credit card transaction
-						if(_presentationModel.vo.transaction != null)
+						if( _presentationModel.vo.contribution.type == ContributionType.CONTRIB_TYPE_TANSACTION.type )
 						{						
-							// add the transaction data, unfortunately you cant loop through a typed object (WTF??)
-							params['card_type'] = _presentationModel.vo.transaction.card_type;
-							params['card_number'] = _presentationModel.vo.transaction.card_number;
-							params['amount'] = _presentationModel.vo.transaction.amount;
-							params['full_name'] = _presentationModel.vo.transaction.full_name;
-							params['fname'] = _presentationModel.vo.transaction.fname;
-							params['lname'] = _presentationModel.vo.transaction.lname;
-							params['address'] = _presentationModel.vo.transaction.address;
-							params['address2'] = _presentationModel.vo.transaction.address2;
-							params['city'] = _presentationModel.vo.transaction.city;
-							params['state'] = _presentationModel.vo.transaction.state;
-							params['zip'] = _presentationModel.vo.transaction.zip;
+							params['card_type'] = _presentationModel.vo.contribution.card_type;
+							params['card_number'] = _presentationModel.vo.contribution.card_number;
+							params['amount'] = _presentationModel.vo.contribution.amount;
+							params['full_name'] = _presentationModel.vo.contribution.full_name;
+							
+							params['fname'] = _presentationModel.vo.pledge.fname;
+							params['lname'] = _presentationModel.vo.pledge.lname;
+							params['address'] = _presentationModel.vo.pledge.address1;
+							params['address2'] = _presentationModel.vo.pledge.address2;
+							params['city'] = _presentationModel.vo.pledge.city;
+							params['state'] = _presentationModel.vo.pledge.state;
+							params['zip'] = _presentationModel.vo.pledge.zip;
 							
 							// format the amount
 							params.amount = cf.format(params.amount);
@@ -493,18 +505,16 @@ package com.enilsson.elephanttrakker.views.modules.pledge_workspace.commands
 							this.nextEvent = null;
 						}
 						// email for check contribution
-						else
+						else if( _presentationModel.vo.contribution.type == ContributionType.CONTRIB_TYPE_CHECK.type &&
+								_presentationModel.vo.contribution.form_send == 'email')
 						{
-							// check to see that the user wants to send out an email
-							if( _presentationModel.vo.check.form_send == 'email')
-							{
-								if(_presentationModel.debug) Logger.info('Email Params - Check contribution', params);								
+							if(_presentationModel.debug) Logger.info('Email Params - Check contribution', params);								
 															
 								this.nextEvent = new PWEvent(
 									PWEvent.SEND_EMAIL, 
 									_presentationModel,
 									{
-										'emails' : _presentationModel.vo.check.email, //'james@enilsson.com', 
+										'emails' : _presentationModel.vo.pledge.email, //'james@enilsson.com', 
 										'message' : '',
 										'template_id' : _model.serverVariables.donation_form_template_id,
 										'template_vars' : params,
@@ -513,9 +523,7 @@ package com.enilsson.elephanttrakker.views.modules.pledge_workspace.commands
 								);
 								this.executeNextCommand();
 								this.nextEvent = null;
-							}
 						}
-
 						
 						if(_presentationModel.action == PledgeWorkspaceModel.EDIT)
 						{

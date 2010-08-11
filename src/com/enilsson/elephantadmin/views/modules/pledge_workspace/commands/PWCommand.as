@@ -3,6 +3,7 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.commands
 	import com.adobe.cairngorm.commands.ICommand;
 	import com.adobe.cairngorm.commands.SequenceCommand;
 	import com.adobe.cairngorm.control.CairngormEvent;
+	import com.enilsson.common.model.ContributionType;
 	import com.enilsson.elephantadmin.business.*;
 	import com.enilsson.elephantadmin.events.session.*;
 	import com.enilsson.elephantadmin.models.EAModelLocator;
@@ -388,18 +389,18 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.commands
 						// send an email thanking the user for a credit card transaction
 						if( _presentationModel.vo.contribution.type == ContributionType.CONTRIB_TYPE_TANSACTION.type )
 						{						
-							// add the transaction data, unfortunately you cant loop through a typed object (WTF??)
 							params['card_type'] = _presentationModel.vo.contribution.card_type;
 							params['card_number'] = _presentationModel.vo.contribution.card_number;
 							params['amount'] = _presentationModel.vo.contribution.amount;
 							params['full_name'] = _presentationModel.vo.contribution.full_name;
-							params['fname'] = _presentationModel.vo.contribution.fname;
-							params['lname'] = _presentationModel.vo.contribution.lname;
-							params['address'] = _presentationModel.vo.contribution.address;
-							params['address2'] = _presentationModel.vo.contribution.address2;
-							params['city'] = _presentationModel.vo.contribution.city;
-							params['state'] = _presentationModel.vo.contribution.state;
-							params['zip'] = _presentationModel.vo.contribution.zip;
+							
+							params['fname'] = _presentationModel.vo.pledge.fname;
+							params['lname'] = _presentationModel.vo.pledge.lname;
+							params['address'] = _presentationModel.vo.pledge.address1;
+							params['address2'] = _presentationModel.vo.pledge.address2;
+							params['city'] = _presentationModel.vo.pledge.city;
+							params['state'] = _presentationModel.vo.pledge.state;
+							params['zip'] = _presentationModel.vo.pledge.zip;
 							
 							// format the amount
 							params.amount = cf.format(params.amount);

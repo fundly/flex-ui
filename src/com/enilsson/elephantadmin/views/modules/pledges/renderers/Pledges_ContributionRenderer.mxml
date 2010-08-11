@@ -11,32 +11,32 @@
 		
 		<mx:Image useHandCursor="true" buttonMode="true"
 			toolTip="View details on this contribution" 
-			source="{ ContributionType.typeByString(data.type).icon }"
+			source="{ _ctype.icon }"
 			click="new SidEvent( data.sid ).dispatch()" />
 		
 		<mx:VBox verticalGap="0" paddingBottom="0">
 			
 			<mx:Text styleName="listTitle" 
-				text="{ContributionType.typeByString(data.type).label}{data.amount &lt; 0 ? ' (refund)' : ''}" />
+				text="{_ctype.label}{data.amount &lt; 0 ? ' (refund)' : ''}" />
 			<mx:Text styleName="listDesc" 
-				visible="{data.type == ContributionType.CONTRIB_TYPE_CHECK.type}"
-				includeInLayout="{data.type == ContributionType.CONTRIB_TYPE_CHECK.type}"
+				visible="{_ctype == ContributionType.CONTRIB_TYPE_CHECK}"
+				includeInLayout="{_ctype == ContributionType.CONTRIB_TYPE_CHECK}"
 				text="Date Created: {toDateString(data.created_on)}" />
 			<mx:Text styleName="listDesc" 
 				visible="{data.hasOwnProperty('splits') == false }"
 				includeInLayout="{data.hasOwnProperty('splits') == false }"
 				text="Fund Type: {data.fund_type}" />				
 			<mx:Text styleName="listDesc" 
-				visible="{data.type == ContributionType.CONTRIB_TYPE_TANSACTION.type &amp;&amp; data.card_number_type != ''}"
-				includeInLayout="{data.type == ContributionType.CONTRIB_TYPE_TANSACTION.type &amp;&amp; data.card_number_type != ''}"
+				visible="{_ctype == ContributionType.CONTRIB_TYPE_TANSACTION &amp;&amp; data.card_number_type != ''}"
+				includeInLayout="{_ctype == ContributionType.CONTRIB_TYPE_TANSACTION &amp;&amp; data.card_number_type != ''}"
 				text="{data.card_number_type} - {data.card_number}" /> 						
 			<mx:Text styleName="listDesc" 
-				visible="{data.type == ContributionType.CONTRIB_TYPE_TANSACTION.type}"
-				includeInLayout="{data.type == ContributionType.CONTRIB_TYPE_TANSACTION.type}"
+				visible="{_ctype == ContributionType.CONTRIB_TYPE_TANSACTION}"
+				includeInLayout="{_ctype == ContributionType.CONTRIB_TYPE_TANSACTION}"
 				text="Billing Address: {data.address}, {data.city} {data.state} {data.zip}" /> 			
 			<mx:Text styleName="listDesc" 
-				visible="{data.type == ContributionType.CONTRIB_TYPE_PAYPAL.type}"
-				includeInLayout="{data.type == ContributionType.CONTRIB_TYPE_PAYPAL.type}"
+				visible="{_ctype == ContributionType.CONTRIB_TYPE_PAYPAL}"
+				includeInLayout="{_ctype == ContributionType.CONTRIB_TYPE_PAYPAL}"
 				text="TransactionID: {data.transactionid}" /> 			
 			<mx:Text styleName="listDesc" 
 				color="{data.amount &lt; 0 ? 0xFF0000 : 0x333333}"
@@ -60,7 +60,7 @@
 
 	<mx:Script>
 		<![CDATA[
-			import com.enilsson.elephantadmin.views.modules.pledge_workspace.model.ContributionType;
+			import com.enilsson.common.model.ContributionType;
 			import com.enilsson.elephantadmin.models.Icons;
 			import com.enilsson.utils.EDateUtil;
 			import com.enilsson.elephantadmin.vo.RecordVO;
@@ -72,9 +72,18 @@
 			
 			[Bindable] private var _model:EAModelLocator = EAModelLocator.getInstance();
 			
+			override public function set data(value:Object):void {
+				super.data = value;
+				
+				if(data)
+					_ctype = ContributionType.typeByString( data.type );	
+			}
+			
+			[Bindable] private var _ctype : ContributionType;
+			
 			private function generateDate ():String
 			{
-				if ( data.type == ContributionType.CONTRIB_TYPE_CHECK.type )
+				if ( _ctype == ContributionType.CONTRIB_TYPE_CHECK )
 				{
 					if ( data.entry_date > 0 )
 						return df.format( EDateUtil.timestampToLocalDate(data.entry_date) );
