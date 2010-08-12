@@ -102,21 +102,33 @@
 				super.init();
 
 				// grab any SID data if present
-				var sid:SidVO = _model.sid
+				var sid:SidVO = _model.sid;
+
+				moduleGrid.clearSearch.visible = false;
 			
 				if(sid)
 				{
 					if(sid.table_name == 'transactions')
 					{
+						moduleGrid.clearSearch.visible = true;
 						_model.transactions.details = sid.data;
 						_model.transactions.sidRecord = true;
 						_model.sid = null;
+						
+						var wherePart : Object = {
+													what 	: 'transactions.id',
+													op 		: '=',
+													val 	: sid.data.id											
+												}
+						
+						dispatchTransactionEvent( buildWhere( 2, wherePart ) ); 
 					}
 				}
+				else
+				{
+					resetSearch();
+				}
 
-				// get default list
-				resetSearch();
-				
 				// reset the data changed flag
 				_model.dataChanged = false;
 			}
@@ -163,11 +175,13 @@
 				else 
 				{
 					whereObj = new Object();
-					whereObj['statement'] = indexStr;
 				}
 				
-				if( part )
+				if( part ) {
+					whereObj['statement'] = indexStr;
+					whereArray.push( indexStr );
 					whereObj[index] = part;
+				}
 				
 				// filter out transactions with transaction_refids
 				if( whereArray.indexOf( '(1)' ) == -1 ) {

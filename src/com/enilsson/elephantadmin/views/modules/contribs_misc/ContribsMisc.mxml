@@ -91,20 +91,23 @@
 
 				// grab any SID data if present
 				var sid:SidVO = _model.sid;
-			
+				
+				moduleGrid.clearSearch.visible = false;
+
 				if(sid && sid.table_name == 'contributions_misc')
 				{
+					moduleGrid.clearSearch.visible = true;
 					_model.contributions_misc.details = sid.data;
 					_model.contributions_misc.sidRecord = true;
 					_model.sid = null;
 					
 					var wherePart : Object = { 
 						'what' : 'contributions_misc.id',
-						'val' : sid.data.id,
-						'op' : 'IS'
+						'op' : '=',
+						'val' : sid.data.id
 					};
 					
-					dispatchRecordsEvent( buildWhere( 1, wherePart ) );
+					dispatchRecordsEvent( buildWhere( 2, wherePart ) );
 				}
 				else
 				{
@@ -158,12 +161,13 @@
 				else 
 				{
 					whereObj = new Object();
-					whereObj['statement'] = indexStr;
-					whereArray.push( indexStr );
 				}
 				
-				if( part ) 
+				if( part ) {
+					whereObj['statement'] = indexStr;
+					whereArray.push( indexStr );
 					whereObj[index] = part;
+				}
 				
 				// filter out contributions with contributions_misc_refids
 				if( whereArray.indexOf( '(1)' ) == -1 ) {
