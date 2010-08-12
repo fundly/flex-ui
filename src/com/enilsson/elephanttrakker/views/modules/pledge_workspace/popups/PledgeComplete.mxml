@@ -36,6 +36,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.common.model.ContributionType;
 			import com.enilsson.elephanttrakker.views.modules.pledge_workspace.events.SPWEvent;
 			import com.enilsson.elephanttrakker.views.modules.pledge_workspace.events.PWEvent;
 			import com.enilsson.elephanttrakker.views.modules.pledge_workspace.model.PledgeWorkspaceModel;
@@ -50,16 +51,16 @@
 			
 			private function init():void
 			{
-				var paymentType : String = presentationModel.vo.paymentType;
+				var paymentType : String = presentationModel.vo.contribution.type;
 				
 				switch( paymentType ) {
-					case 'check':
+					case ContributionType.CONTRIB_TYPE_CHECK.type:
 						titleText.htmlText = presentationModel.options.success_check;
 					break;
-					case 'credit card':
+					case ContributionType.CONTRIB_TYPE_TANSACTION.type:
 						titleText.htmlText = presentationModel.options.success_cc;
 					break;	
-					case 'none':
+					case ContributionType.CONTRIB_TYPE_NONE.type:
 						// temporary fix until success_none has been added to site_options						
 						presentationModel.options.success_none = presentationModel.options.success_check;
 						

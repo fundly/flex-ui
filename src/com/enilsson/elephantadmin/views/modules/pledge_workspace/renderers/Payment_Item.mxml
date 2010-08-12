@@ -6,13 +6,24 @@
 	paddingRight="0" paddingTop="0">
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.common.model.ContributionType;
 			import com.enilsson.utils.EDateUtil;
+			
+			override public function set data( val : Object ) : void
+			{
+				super.data = val;
+				
+				if(data)
+					_ctype = ContributionType.typeByString( data.type );
+			}
+			
+			[Bindable] private var _ctype : ContributionType;
 		]]>
 	</mx:Script>
 	
-	<mx:Button styleName="{data.paymentType == 'Check' ? 'checkBtn' : 'creditCardBtn'}" />
+	<mx:Image source="{_ctype.icon}" />
 	<mx:VBox verticalGap="0" paddingBottom="0">
-		<mx:Text styleName="irTitle" text="{data.paymentType}" width="{explicitWidth}" />
+		<mx:Text styleName="irTitle" text="{_ctype.label}" width="{explicitWidth}" />
 		<mx:Text styleName="irDesc" text="{cf.format(data.amount)} - {df.format( EDateUtil.timestampToLocalDate( data.created_on ))}" /> 
 	</mx:VBox>
 	

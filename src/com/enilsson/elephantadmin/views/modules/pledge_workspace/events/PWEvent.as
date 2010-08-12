@@ -16,7 +16,6 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.events
 		static public const GET_LABEL:String			= 'pwe_getlabel';
 		static public const DO_TRANSACTION:String 		= 'pwe_dotransaction';
 		static public const SEND_EMAIL:String 			= 'pwe_sendemail';
-		static public const DUP_SEARCH:String 			= 'pwe_dupsearch';
 		static public const DELETE_SAVED_PLEDGE:String 	= 'pwe_delsavedpledge';
 		
 		public var e:String;

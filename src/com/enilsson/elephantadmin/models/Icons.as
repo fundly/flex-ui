@@ -23,6 +23,9 @@ package com.enilsson.elephantadmin.models
 		
 		[Embed(source="/assets/images/new_icons/nav/telephone.png")]
 		public static const CALLS:Class;
+		
+		[Embed(source="/assets/images/icons/pledge_collect.png")]
+		public static const CASH:Class;
 
 		[Embed(source="/assets/images/new_icons/nav/check.png")]
 		public static const CHECK:Class;
@@ -53,6 +56,9 @@ package com.enilsson.elephantadmin.models
 
 		[Embed(source="/assets/images/icons/small/question_purple.png")]
 		public static const HELP:Class;
+		
+		[Embed(source="/assets/images/icons/pledge_collect.png")]
+		public static const IN_KIND:Class;
 
 		[Embed(source="/assets/images/icons/small/login.png")]
 		public static const LOGOUT:Class;

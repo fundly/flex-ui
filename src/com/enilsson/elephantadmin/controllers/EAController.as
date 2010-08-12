@@ -201,6 +201,8 @@ package com.enilsson.elephantadmin.controllers
 			this.addCommand(RecordEvent.GET_FULL_RECORD, RecordCommand);
 			this.addCommand(RecordEvent.RESTORE, RecordCommand);
 			this.addCommand(RecordEvent.UPSERT, RecordCommand);
+			
+			this.addCommand(RecordsEvent.GET_RECORDS, RecordsCommand);
 
 			// record module
 			this.addCommand(RecordModuleEvent.GET_FULL_RECORD, RecordModuleCommand);
@@ -255,7 +257,6 @@ package com.enilsson.elephantadmin.controllers
 			this.addCommand(PWEvent.LOOKUP_INPUT_SEARCH, PWCommand);
 			this.addCommand(PWEvent.GET_LABEL, PWCommand);	
 			this.addCommand(PWEvent.SAVE, PWCommand);
-			this.addCommand(PWEvent.DUP_SEARCH, PWCommand);	
 			this.addCommand(PWEvent.DO_TRANSACTION, PWCommand);
 			this.addCommand(PWEvent.SEND_EMAIL, PWCommand);
 			this.addCommand(PWEvent.DELETE_SAVED_PLEDGE, PWCommand);

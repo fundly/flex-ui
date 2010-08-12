@@ -1,9 +1,9 @@
-package com.enilsson.elephanttrakker.vo
+package com.enilsson.elephantadmin.vo
 {
 	import com.adobe.cairngorm.vo.IValueObject;
 	
 	[Bindable]
-	[RemoteClass(alias="com.enilsson.elephanttrakker.vo.PledgeVO")]
+	[RemoteClass(alias="com.enilsson.elephantadmin.vo.PledgeVO")]
 	public class PledgeVO implements IValueObject
 	{
 		public var tr_users_id:Number;

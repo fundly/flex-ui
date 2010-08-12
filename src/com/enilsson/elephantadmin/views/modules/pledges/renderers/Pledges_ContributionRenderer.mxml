@@ -11,36 +11,32 @@
 		
 		<mx:Image useHandCursor="true" buttonMode="true"
 			toolTip="View details on this contribution" 
-			source="{ data.paymentType == 'Check' ? 
-				Icons.CHECK : 
-				data.paymentType == 'PayPal' ? 
-					Icons.PAY_PAL : 
-					Icons.CREDIT_CARD}"
+			source="{ _ctype.icon }"
 			click="new SidEvent( data.sid ).dispatch()" />
 		
 		<mx:VBox verticalGap="0" paddingBottom="0">
 			
 			<mx:Text styleName="listTitle" 
-				text="{data.paymentType}{data.amount &lt; 0 ? ' (refund)' : ''}" />
+				text="{_ctype.label}{data.amount &lt; 0 ? ' (refund)' : ''}" />
 			<mx:Text styleName="listDesc" 
-				visible="{data.paymentType == 'Check'}"
-				includeInLayout="{data.paymentType == 'Check'}"
+				visible="{_ctype == ContributionType.CONTRIB_TYPE_CHECK}"
+				includeInLayout="{_ctype == ContributionType.CONTRIB_TYPE_CHECK}"
 				text="Date Created: {toDateString(data.created_on)}" />
 			<mx:Text styleName="listDesc" 
 				visible="{data.hasOwnProperty('splits') == false }"
 				includeInLayout="{data.hasOwnProperty('splits') == false }"
 				text="Fund Type: {data.fund_type}" />				
 			<mx:Text styleName="listDesc" 
-				visible="{data.paymentType == 'Credit Card' &amp;&amp; data.card_number_type != ''}"
-				includeInLayout="{data.paymentType == 'Credit Card' &amp;&amp; data.card_number_type != ''}"
+				visible="{_ctype == ContributionType.CONTRIB_TYPE_TANSACTION &amp;&amp; data.card_number_type != ''}"
+				includeInLayout="{_ctype == ContributionType.CONTRIB_TYPE_TANSACTION &amp;&amp; data.card_number_type != ''}"
 				text="{data.card_number_type} - {data.card_number}" /> 						
 			<mx:Text styleName="listDesc" 
-				visible="{data.paymentType == 'Credit Card'}"
-				includeInLayout="{data.paymentType == 'Credit Card'}"
+				visible="{_ctype == ContributionType.CONTRIB_TYPE_TANSACTION}"
+				includeInLayout="{_ctype == ContributionType.CONTRIB_TYPE_TANSACTION}"
 				text="Billing Address: {data.address}, {data.city} {data.state} {data.zip}" /> 			
 			<mx:Text styleName="listDesc" 
-				visible="{data.paymentType == 'PayPal'}"
-				includeInLayout="{data.paymentType == 'PayPal'}"
+				visible="{_ctype == ContributionType.CONTRIB_TYPE_PAYPAL}"
+				includeInLayout="{_ctype == ContributionType.CONTRIB_TYPE_PAYPAL}"
 				text="TransactionID: {data.transactionid}" /> 			
 			<mx:Text styleName="listDesc" 
 				color="{data.amount &lt; 0 ? 0xFF0000 : 0x333333}"
@@ -64,6 +60,7 @@
 
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.common.model.ContributionType;
 			import com.enilsson.elephantadmin.models.Icons;
 			import com.enilsson.utils.EDateUtil;
 			import com.enilsson.elephantadmin.vo.RecordVO;
@@ -75,9 +72,18 @@
 			
 			[Bindable] private var _model:EAModelLocator = EAModelLocator.getInstance();
 			
+			override public function set data(value:Object):void {
+				super.data = value;
+				
+				if(data)
+					_ctype = ContributionType.typeByString( data.type );	
+			}
+			
+			[Bindable] private var _ctype : ContributionType;
+			
 			private function generateDate ():String
 			{
-				if ( data.paymentType == 'Check' )
+				if ( _ctype == ContributionType.CONTRIB_TYPE_CHECK )
 				{
 					if ( data.entry_date > 0 )
 						return df.format( EDateUtil.timestampToLocalDate(data.entry_date) );

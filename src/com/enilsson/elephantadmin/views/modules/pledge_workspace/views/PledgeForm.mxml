@@ -42,6 +42,7 @@
 			selectedIndex="{presentationModel.transVStack}"
 			change="vstackChangeHandler(event)"
 			width="100%" height="200">
+			<!-- 0 -->
 			<mx:Canvas label="Credit Card"
 				width="100%" height="100%"
 				showEffect="fadeIn" hideEffect="fadeOut"
@@ -101,6 +102,7 @@
 				</mx:HBox>
 			</mx:Canvas>
 			
+			<!-- 1 -->
 			<struktorForm:StruktorForm id="checkForm" 
 				styleName="processingForm"
 				label="Check" 
@@ -114,6 +116,7 @@
 				validateOnKeyPress="true"
 				formBuildComplete="formBuildCompleteAction(event)" />
 			
+			<!--2-->
 			<mx:Canvas
 				horizontalScrollPolicy="off"
 				width="100%"
@@ -134,12 +137,47 @@
 					isValidChanged="setIsValid()" 
 					validateOnKeyPress="true"
 					formBuildComplete="formBuildCompleteAction(event)" />	
-			</mx:Canvas>	
+			</mx:Canvas>
 				
+			<!-- 3 -->	
 			<views:Contributions id="listOfPayments"
 				label="List of Payments"
 				presentationModel="{presentationModel}"
 				showEffect="fadeIn" hideEffect="fadeOut" />
+				
+			<!-- 4 -->
+			<mx:Canvas horizontalScrollPolicy="off" verticalScrollPolicy="off">
+				<struktorForm:StruktorForm id="inKindForm"
+					styleName="processingForm"
+					label="In-Kind"
+					show="lastField = inKindForm.lastField"
+					showEffect="fadeIn" hideEffect="fadeOut"			
+					width="100%" height="200" maxHeight="200"
+					top="10" 
+					clearForm="{presentationModel.clearPaymentForms}"
+					layoutProvider="{presentationModel.contribMiscLayout}"
+					isValidChanged="setIsValid()" 
+					validateOnKeyPress="true"
+					formBuildComplete="formBuildCompleteAction(event)" />
+			</mx:Canvas>
+			
+				
+			<!-- 5 -->
+			<mx:Canvas horizontalScrollPolicy="off" verticalScrollPolicy="off">
+				<struktorForm:StruktorForm id="cashForm"
+					styleName="processingForm"
+					label="Cash"
+					show="lastField = cashForm.lastField"
+					showEffect="fadeIn" hideEffect="fadeOut"			
+					width="100%" height="200" maxHeight="200"
+					top="10" 
+					clearForm="{presentationModel.clearPaymentForms}"
+					layoutProvider="{presentationModel.contribMiscLayout}"
+					isValidChanged="setIsValid()" 
+					validateOnKeyPress="true"
+					formBuildComplete="formBuildCompleteAction(event)" />
+			</mx:Canvas>
+				
 		</mx:ViewStack>
 		
 		<mx:LinkBar id="transactionLinkBar" 
@@ -165,7 +203,7 @@
 	<controls:InfoBtn visible="{transactionVStack.selectedChild == listOfPayments}" 
 		right="20" top="210" 
 		infoTipTitle="Please Note"
-		text="Existing transactions can not be edited. Only one transaction (credit card or check) can be added per update. To add another transaction please update the pledge another time." />
+		text="Existing transactions can not be edited. Only one transaction (credit card, check, in-kind or cash) can be added per update. To add another transaction please update the pledge another time." />
 
 
 	<mx:Fade id="fadeIn" alphaTo="1" duration="300" />
@@ -178,20 +216,26 @@
 	<mx:Binding source="checkForm.formVariables" destination="presentationModel.checkData" />
 	<mx:Binding source="billingForm.formVariables" destination="presentationModel.billingData" />
 	<mx:Binding source="noContribForm.formVariables" destination="presentationModel.noContribData" />
+	<mx:Binding source="inKindForm.formVariables" destination="presentationModel.inKindData" />
+	<mx:Binding source="cashForm.formVariables" destination="presentationModel.cashData" />
 
 	<!-- List all the errors on each of the forms, so the popup can show what is wrong on the form -->
 	<mx:Binding source="pledgeInfo.invalidFields" destination="presentationModel.pledgeErrors" />
 	<mx:Binding source="ccForm.invalidFields" destination="presentationModel.ccErrors" />
 	<mx:Binding source="checkForm.invalidFields" destination="presentationModel.checkErrors" />
 	<mx:Binding source="billingForm.invalidFields" destination="presentationModel.billingErrors" />
-	<mx:Binding source="noContribForm.invalidFields" destination="presentationModel.noContribErrors" />	
+	<mx:Binding source="noContribForm.invalidFields" destination="presentationModel.noContribErrors" />
+	<mx:Binding source="inKindForm.invalidFields" destination="presentationModel.inKindErrors" />
+	<mx:Binding source="cashForm.invalidFields" destination="presentationModel.cashErrors" />	
 
 	<!-- List all the fields each of the forms -->
 	<mx:Binding source="pledgeInfo.fieldNames" destination="presentationModel.pledgeFields" />
 	<mx:Binding source="ccForm.fieldNames" destination="presentationModel.ccFields" />
 	<mx:Binding source="checkForm.fieldNames" destination="presentationModel.checkFields" />
 	<mx:Binding source="billingForm.fieldNames" destination="presentationModel.billingFields" />
-	<mx:Binding source="noContribForm.fieldNames" destination="presentationModel.noContribFields" />	
+	<mx:Binding source="noContribForm.fieldNames" destination="presentationModel.noContribFields" />
+	<mx:Binding source="inKindForm.fieldNames" destination="presentationModel.inKindFields" />
+	<mx:Binding source="cashForm.fieldNames" destination="presentationModel.cashFields" />	
 	
 
 	<mx:Metadata>
@@ -236,7 +280,7 @@
 			public function setIsValid():void
 			{
 				// if the form has not been built yet, set the validation to false
-				if(pledgeInfo.numChildren == 0 || !ccForm || !checkForm || !noContribForm)
+				if( pledgeInfo.numChildren == 0 || !ccForm || !checkForm || !noContribForm || !inKindForm )
 				{
 					_isValid = presentationModel.pledgeInfoValid = false;
 					return;
@@ -260,7 +304,13 @@
 					case PledgeWorkspaceModel.LIST_CONTRIBS_VIEW :
 						_isValid = pledgeInfo.isValid;
 					break;
-				}					 
+					case PledgeWorkspaceModel.IN_KIND_VIEW:
+						_isValid = pledgeInfo.isValid && inKindForm.isValid;
+					break;
+					case PledgeWorkspaceModel.CASH_VIEW:
+						_isValid = pledgeInfo.isValid && cashForm.isValid;
+					break;
+				}			
 				
 				presentationModel.pledgeInfoValid = _isValid;
 				presentationModel.workspaceValid = _isValid;
@@ -378,6 +428,8 @@
 					break;
 					
 					case ccForm :
+					case cashForm :
+					case inKindForm :
 						lastField = event.currentTarget.lastField;						
  						addLastFieldListeners( lastField );
  
@@ -565,21 +617,35 @@
 				setIsValid();
 				TooltipUtil.hideTooltip();
 				
+				var firstField : UIComponent;
+				
 				switch(event.newIndex)
 				{
 					case PledgeWorkspaceModel.CC_VIEW :
 						presentationModel.transactionData = ccForm.formVariables;
-						UIComponent(ccForm.firstField).setFocus();
+						firstField = ccForm.firstField as UIComponent;
 					break;
 					case PledgeWorkspaceModel.CHECK_VIEW :
 						presentationModel.checkData = checkForm.formVariables;
-						UIComponent(checkForm.firstField).setFocus();
+						firstField = checkForm.firstField as UIComponent;
 					break;
 					case PledgeWorkspaceModel.NO_CONTRIB_VIEW :
 						presentationModel.transactionData = null;
 						presentationModel.checkData = null;
-						UIComponent(noContribForm.firstField).setFocus();
+						firstField = noContribForm.firstField as UIComponent;
 					break;
+					case PledgeWorkspaceModel.IN_KIND_VIEW:
+						presentationModel.inKindData = inKindForm.formVariables;
+						firstField = inKindForm.firstField as UIComponent;
+					break;
+					case PledgeWorkspaceModel.CASH_VIEW:
+						presentationModel.cashData = cashForm.formVariables;
+						firstField = cashForm.firstField as UIComponent;
+					break;
+				}
+				
+				if( firstField != null ) {
+					firstField.setFocus();
 				}
 			}
 			
