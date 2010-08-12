@@ -98,7 +98,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.host_committee.model
 			
  			var amfService:RemoteObject = new RemoteObject('amfphp');
 			amfService.endpoint = gatewayURL;
-			amfService.source = 'plugins.' + instanceID + '.reporting.host_committee';
+			amfService.source = 'plugins.common.reporting.host_committee';
 			amfService.addEventListener(ResultEvent.RESULT, getEventListResult);
 			amfService.addEventListener(FaultEvent.FAULT, getEventListFault); 
 			amfService['get_event_list'].send.apply(null);
@@ -189,7 +189,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.host_committee.model
 
  			var amfService:RemoteObject = new RemoteObject('amfphp');
 			amfService.endpoint = gatewayURL;
-			amfService.source = 'plugins.' + instanceID + '.reporting.host_committee';
+			amfService.source = 'plugins.common.reporting.host_committee';
 			amfService['get_host_committee'].send.apply(null, [vo]);	
 			amfService.addEventListener(ResultEvent.RESULT, getHostsResult);
 			amfService.addEventListener(FaultEvent.FAULT, getHostsFault);
@@ -285,7 +285,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.host_committee.model
 
  			var amfService:RemoteObject = new RemoteObject('amfphp');
 			amfService.endpoint = gatewayURL;
-			amfService.source = 'plugins.' + instanceID + '.reporting.all_pledges';
+			amfService.source = 'plugins.common.reporting.all_pledges';
 			amfService['get_all_pledges'].send.apply(null, [vo]);	
 			amfService.addEventListener(ResultEvent.RESULT, getHostPledgesResult);
 			amfService.addEventListener(FaultEvent.FAULT, getHostPledgesFault); 
@@ -496,7 +496,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.host_committee.model
 
  			var amfService:RemoteObject = new RemoteObject('amfphp');
 			amfService.endpoint = gatewayURL;
-			amfService.source = 'plugins.' + instanceID + '.reporting.host_committee';
+			amfService.source = 'plugins.common.reporting.host_committee';
 			amfService.addEventListener(ResultEvent.RESULT, exportMultipleResult);
 			amfService.addEventListener(FaultEvent.FAULT, exportMultipleFault);
 			

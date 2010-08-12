@@ -47,7 +47,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.external.ocpf
 		
 		override protected function configureExportService():void {
 			super.configureExportService();
-			super.service.source = 'plugins.' + instanceID + '.reporting.ocpf';
+			super.service.source = 'plugins.common.reporting.ocpf';
 		}
 		
 		

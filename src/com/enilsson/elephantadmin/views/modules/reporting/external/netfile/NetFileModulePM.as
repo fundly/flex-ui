@@ -27,7 +27,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.external.netfile
 		
 		override protected function configureExportService():void {
 			super.configureExportService();
-			super.service.source = 'plugins.' + instanceID + '.reporting.net_file';
+			super.service.source = 'plugins.common.reporting.net_file';
 		}
 		
 		

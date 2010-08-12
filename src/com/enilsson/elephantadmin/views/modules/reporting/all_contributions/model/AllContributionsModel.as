@@ -30,8 +30,8 @@ package com.enilsson.elephantadmin.views.modules.reporting.all_contributions.mod
 		private const FILTER_CREDIT_CARD:uint = 1;
 		private const FILTER_CHECK:uint = 2;
 		private const FILTER_PAYPAL:uint = 3;
-		private const FILTER_IN_KIND:uint = 4;
-		private const FILTER_CASH:uint = 5;
+		private const FILTER_IN_KIND:uint = 5;
+		private const FILTER_CASH:uint = 6;
 
 		private const FILTER_PLEDGE_DATE:uint = 0;
 		private const FILTER_FULFILLED_DATE:uint = 1;
@@ -154,7 +154,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.all_contributions.mod
 
  			var amfService:RemoteObject = new RemoteObject('amfphp');
 			amfService.endpoint = gatewayURL;
-			amfService.source = 'plugins.' + instanceID + '.reporting.all_contributions';
+			amfService.source = 'plugins.common.reporting.all_contributions';
 			if( dateType == FILTER_PLEDGE_DATE )
 				amfService['get_all_contributions'].send.apply(null, [vo]);
 			else if(dateType == FILTER_FULFILLED_DATE )

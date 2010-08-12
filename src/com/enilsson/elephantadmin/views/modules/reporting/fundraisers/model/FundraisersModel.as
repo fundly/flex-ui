@@ -98,7 +98,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.fundraisers.model
 
  			var amfService:RemoteObject = new RemoteObject('amfphp');
 			amfService.endpoint = gatewayURL;
-			amfService.source = 'plugins.' + instanceID + '.reporting.fundraisers';
+			amfService.source = 'plugins.common.reporting.fundraisers';
 			amfService['get_fundraisers'].send.apply(null, [vo]);	
 			amfService.addEventListener(ResultEvent.RESULT, generateResult);
 			amfService.addEventListener(FaultEvent.FAULT, generateFault); 
