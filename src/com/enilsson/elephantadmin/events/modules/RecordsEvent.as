@@ -9,6 +9,7 @@ package com.enilsson.elephantadmin.events.modules
 	{
 		public static const GET_RECORDS 	: String = "getRecords";
 		public static const SEARCH_RECORDS 	: String = "searchRecords";
+		public static const EXPORT_RECORDS	: String = "exportRecords";
 	
 		public var e:String;
 		public var table:String;

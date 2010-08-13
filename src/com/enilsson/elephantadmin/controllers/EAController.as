@@ -203,6 +203,7 @@ package com.enilsson.elephantadmin.controllers
 			this.addCommand(RecordEvent.UPSERT, RecordCommand);
 			
 			this.addCommand(RecordsEvent.GET_RECORDS, RecordsCommand);
+			this.addCommand(RecordsEvent.EXPORT_RECORDS, RecordsCommand);
 
 			// record module
 			this.addCommand(RecordModuleEvent.GET_FULL_RECORD, RecordModuleCommand);

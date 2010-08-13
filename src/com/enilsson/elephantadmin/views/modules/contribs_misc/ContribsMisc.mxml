@@ -23,6 +23,8 @@
 			selectedPage="{_model.contributions_misc.currPage / _model.itemsPerPage}" 
 			itemsPerPage="{_model.itemsPerPage}" 
 			itemsTotal="{_model.contributions_misc.totalRecords}"
+			showExportButton="true"
+			exportClick="handleExportClick(event)"
 			/>
 			
 		<contribs_misc:ContribsMisc_Detail id="contribDetail"
@@ -270,6 +272,27 @@
 			{
 				_model.contributions_misc.sidRecord = false;
 				_model.contributions_misc.details = moduleGrid.clickedItem;
+			}
+			
+			private function handleExportClick( event : Event ) : void {
+				
+				var where : Object;
+				try {
+					where = RecordsVO(_model.transactions.lastQuery.params.recordsVO).where;
+				}
+				catch( e : Error ) {
+					where = buildWhere( 2, null );
+				}
+				
+				new RecordsEvent( 
+					RecordsEvent.EXPORT_RECORDS,
+					'contributions_misc', 
+					new RecordsVO (
+						'contributions_misc(pledge_id(contact_id),created_by_id<fname:lname:_fid>)',
+						where, 
+						'contributions_misc.created_on DESC'
+					)
+				).dispatch();
 			}
 
 			private function date_labelFunc(item:Object, column:DataGridColumn):String 
