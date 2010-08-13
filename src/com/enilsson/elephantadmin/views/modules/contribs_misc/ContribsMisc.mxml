@@ -152,13 +152,10 @@
 				catch( e : Error ) { }
 				
 				
-				if( whereObj && part )
+				if( whereObj )
 				{
-					whereArray = String(whereObj.statement).split(" AND ");
-					
-					if( whereArray.indexOf( indexStr ) == -1)	// if condition does not exist add to the where statement
-						whereArray.push( indexStr );
-					whereObj['statement'] = whereArray.join(" AND ");
+					if(part)
+						whereArray = String(whereObj.statement).split(" AND ");
 				} 
 				else 
 				{
@@ -166,8 +163,11 @@
 				}
 				
 				if( part ) {
-					whereObj['statement'] = indexStr;
-					whereArray.push( indexStr );
+					
+					if( whereArray.indexOf( indexStr ) == -1)	// if condition does not exist add to the where statement
+						whereArray.push( indexStr );
+					whereObj['statement'] = whereArray.join(" AND ");
+					
 					whereObj[index] = part;
 				}
 				

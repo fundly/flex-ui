@@ -15,6 +15,8 @@ package com.enilsson.elephantadmin.views.modules.reporting.base
 		public static const FILTER_CHECK			: int = 2;
 		public static const FILTER_PAYPAL			: int = 3;
 		public static const FILTER_DONATION_WIDGET	: int = 4;
+		public static const FILTER_INKIND			: int = 5;
+		public static const FILTER_CASH				: int = 6;
 
 		public var allGroups:ArrayCollection;
 		public var userGroups:Array;
