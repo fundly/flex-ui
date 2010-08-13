@@ -89,7 +89,7 @@
 			import mx.binding.utils.BindingUtils;
 			import mx.events.CloseEvent;
 			import mx.controls.Alert;
-			import com.enilsson.elephanttrakker.vo.ErrorVO;
+			import com.enilsson.vo.ErrorVO;
 			import mx.controls.ComboBox;
 			import mx.collections.ArrayCollection;
 			import mx.controls.dataGridClasses.DataGridColumn;

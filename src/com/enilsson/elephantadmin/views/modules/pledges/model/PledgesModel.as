@@ -20,12 +20,11 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 	import com.enilsson.elephantadmin.vo.SharedCreditVO;
 	
 	import flash.display.DisplayObject;
-	import flash.events.Event;
 	
 	import mx.binding.utils.BindingUtils;
 	import mx.collections.ArrayCollection;
 	import mx.controls.ComboBox;
-	import mx.controls.List;
+	import mx.controls.listClasses.ListBase;
 	import mx.core.Application;
 	import mx.core.ClassFactory;
 	import mx.events.ListEvent;
@@ -179,7 +178,7 @@ package com.enilsson.elephantadmin.views.modules.pledges.model
 		
 		override public function searchListSelectedIndexChange( event:ListEvent ):void 
 		{
-			selectedRecord =  (event.currentTarget as List).selectedItem;	
+			selectedRecord =  (event.currentTarget as ListBase).selectedItem;	
 			getContributions();
 		} 
 		

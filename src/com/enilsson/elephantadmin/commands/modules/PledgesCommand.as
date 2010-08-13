@@ -1,6 +1,7 @@
 package com.enilsson.elephantadmin.commands.modules
 {
 	import com.adobe.cairngorm.control.CairngormEvent;
+	import com.enilsson.common.model.ContributionType;
 	import com.enilsson.elephantadmin.business.PluginsDelegate;
 	import com.enilsson.elephantadmin.business.RecordDelegate;
 	import com.enilsson.elephantadmin.business.RecordsDelegate;
@@ -70,7 +71,7 @@ package com.enilsson.elephantadmin.commands.modules
 			var handlers:IResponder = new mx.rpc.Responder(onResults_getContributions, onFault_getContributions);
 			var delegate:PluginsDelegate = new PluginsDelegate(handlers);
 
-			if(_model.debug) Logger.info(_moduleName + ' getContributions Call');
+			if(_model.debug) Logger.info(_moduleName + ' getContributions Call', ObjectUtil.toString(event.recordVO));
 
 			_model.dataLoading = true;
 			_pledgesModel.contributionsTabLoading = true;
@@ -89,17 +90,6 @@ package com.enilsson.elephantadmin.commands.modules
 			
 			for each( var contrib : Object in contribArr )
 			{
-				var t : String;
-				switch( contrib.type ) 
-				{
-					case 'check': 		t = 'Check'; break;
-					case 'paypal': 		t = 'PayPal'; break; 
-					case 'transaction': t = 'Credit Card'; break;
-					default:			t = 'Other'; break;
-				}
-				
-				contrib.paymentType = t;
-				
 				// check if the any of the contributions for this pledge have been split.
 				// if so, set a flag that disallows changes of the contribution and fund types.
 				var splits : Array 					= contrib.splits as Array;

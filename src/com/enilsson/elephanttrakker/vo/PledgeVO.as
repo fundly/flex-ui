@@ -9,11 +9,6 @@ package com.enilsson.elephanttrakker.vo
 		public var tr_users_id:Number;
 		public var contact:Object = {};
 		public var pledge:Object = {};
-		public var transaction:TransactionVO;
-		public var transactionData:Object = {};
-		public var check:Object;
-		public var billing:Object = {};
-		public var paymentType:String;		
-
+		public var contribution:Object = {};
 	}
 }

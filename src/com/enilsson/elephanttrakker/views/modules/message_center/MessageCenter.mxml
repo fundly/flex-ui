@@ -190,7 +190,7 @@
 		backgroundColor="#CCCCCC" backgroundAlpha="0.75"
 		borderColor="#FFFFFF" borderStyle="solid" cornerRadius="6"
 		showEffect="fadeIn" hideEffect="fadeOut" />
-	<common:ErrorMsgBox 
+	<controls:ErrorMsgBox 
 		verticalCenter="0" horizontalCenter="0" 
 		params="{_model.message_center.errorVO}" 
 		onClose="{_model.message_center.onClose}"

@@ -187,6 +187,14 @@
 					label="{_model.viewStateNames.getItemAt(EAModelLocator.APP_OPTIONS_VIEW)}"
 					showEffect="fadeIn" hideEffect="fadeOut"
 					xmlns:appoptions="com.enilsson.elephantadmin.views.modules.app_options.view.*" />
+				<contributions_misc:ContribsMisc
+					runInit="{_model.runInit}"
+					width="100%" height="100%"
+					icon="{Icons.CASH}"
+					moduleID="{EAModelLocator.CONTRIBUTIONS_MISC_VIEW}"
+					label="{_model.viewStateNames.getItemAt(EAModelLocator.CONTRIBUTIONS_MISC_VIEW)}"
+					showEffect="fadeIn" hideEffect="fadeOut"
+					xmlns:contributions_misc="com.enilsson.elephantadmin.views.modules.contribs_misc.*" />
 			</mx:ViewStack>
 		</mx:Canvas>
 	</mx:VBox>

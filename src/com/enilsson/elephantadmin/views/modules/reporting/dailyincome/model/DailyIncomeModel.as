@@ -109,7 +109,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.dailyincome.model
 
  			var amfService:RemoteObject = new RemoteObject('amfphp');
 			amfService.endpoint = gatewayURL;
-			amfService.source = 'plugins.' + instanceID + '.reporting.daily_income';
+			amfService.source = 'plugins.common.reporting.daily_income';
 			amfService['get_graph'].send.apply(null, [vo]);	
 			amfService.addEventListener(ResultEvent.RESULT, generateGraphResult);
 			amfService.addEventListener(FaultEvent.FAULT, generateFault); 
@@ -121,7 +121,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.dailyincome.model
 			
  			var amfService:RemoteObject = new RemoteObject('amfphp');
 			amfService.endpoint = gatewayURL;
-			amfService.source = 'plugins.' + instanceID + '.reporting.daily_income';
+			amfService.source = 'plugins.common.reporting.daily_income';
 			amfService['add_expenditure'].send.apply(null, [date, amount]);	
 			amfService.addEventListener(ResultEvent.RESULT, addExpenditureResult);
 			amfService.addEventListener(FaultEvent.FAULT, generateFault); 
@@ -158,7 +158,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.dailyincome.model
 
  			var amfService:RemoteObject = new RemoteObject('amfphp');
 			amfService.endpoint = gatewayURL;
-			amfService.source = 'plugins.' + instanceID + '.reporting.daily_income';
+			amfService.source = 'plugins.common.reporting.daily_income';
 			amfService['get_summary'].send.apply(null, [vo]);	
 			amfService.addEventListener(ResultEvent.RESULT, generateSummaryResult);
 			amfService.addEventListener(FaultEvent.FAULT, generateFault); 

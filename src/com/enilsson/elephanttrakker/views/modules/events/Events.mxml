@@ -243,8 +243,8 @@
 		y="20" x="-700" 
 		visible="{_model.events.showDetails}"
 		showEffect="moveIn" hideEffect="moveOut" />
-			
-	<common:ErrorMsgBox id="errorBox" 
+	
+	<en:ErrorMsgBox id="errorBox" 
 		verticalCenter="0" horizontalCenter="0" 
 		params="{_model.events.errorVO}" 
 		onClose="{_model.events.onClose}" />

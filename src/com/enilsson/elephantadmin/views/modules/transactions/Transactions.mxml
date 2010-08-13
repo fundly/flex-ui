@@ -102,21 +102,33 @@
 				super.init();
 
 				// grab any SID data if present
-				var sid:SidVO = _model.sid
+				var sid:SidVO = _model.sid;
+
+				moduleGrid.clearSearch.visible = false;
 			
 				if(sid)
 				{
 					if(sid.table_name == 'transactions')
 					{
+						moduleGrid.clearSearch.visible = true;
 						_model.transactions.details = sid.data;
 						_model.transactions.sidRecord = true;
 						_model.sid = null;
+						
+						var wherePart : Object = {
+													what 	: 'transactions.id',
+													op 		: '=',
+													val 	: sid.data.id											
+												}
+						
+						dispatchTransactionEvent( buildWhere( 2, wherePart ) ); 
 					}
 				}
+				else
+				{
+					resetSearch();
+				}
 
-				// get default list
-				resetSearch();
-				
 				// reset the data changed flag
 				_model.dataChanged = false;
 			}
@@ -147,27 +159,29 @@
 				var whereArray	: Array = [];
 				
 				try {
-					whereObj = (_model.transactions.lastQuery.params.recordsVO as RecordsVO).where;	
+					whereObj = _model.contributions_misc.lastQuery.recordsVO.where;	
 				}
 				catch( e : Error ) { }
 				
 				
-				if( whereObj && part )
+				if( whereObj )
 				{
-					whereArray = String(whereObj.statement).split(" AND ");
-					
-					if( whereArray.indexOf( indexStr ) == -1)	// if condition does not exist add to the where statement
-						whereArray.push( indexStr );
-					whereObj['statement'] = whereArray.join(" AND ");
+					if(part)
+						whereArray = String(whereObj.statement).split(" AND ");
 				} 
 				else 
 				{
 					whereObj = new Object();
-					whereObj['statement'] = indexStr;
 				}
 				
-				if( part )
+				if( part ) {
+					
+					if( whereArray.indexOf( indexStr ) == -1)	// if condition does not exist add to the where statement
+						whereArray.push( indexStr );
+					whereObj['statement'] = whereArray.join(" AND ");
+					
 					whereObj[index] = part;
+				}
 				
 				// filter out transactions with transaction_refids
 				if( whereArray.indexOf( '(1)' ) == -1 ) {

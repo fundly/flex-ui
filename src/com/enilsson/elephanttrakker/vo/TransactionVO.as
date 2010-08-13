@@ -19,6 +19,7 @@ package com.enilsson.elephanttrakker.vo
 		public var city:String;
 		public var state:String;
 		public var zip:String;
+		public var type:String;
 
 		public function set data( data:Object ):void
 		{

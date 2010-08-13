@@ -6,7 +6,7 @@ package com.enilsson.elephanttrakker.commands.modules
 	import com.enilsson.elephanttrakker.business.EventsDelegate;
 	import com.enilsson.elephanttrakker.events.modules.events.EventsEvent;
 	import com.enilsson.elephanttrakker.models.ETModelLocator;
-	import com.enilsson.elephanttrakker.vo.ErrorVO;
+	import com.enilsson.vo.ErrorVO;
 	
 	import mx.collections.ArrayCollection;
 	import mx.rpc.IResponder;

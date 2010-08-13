@@ -1,127 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas 
-	verticalScrollPolicy="off" horizontalScrollPolicy="off"
-	show="init()"
-	xmlns:mx="http://www.adobe.com/2006/mxml"
-	xmlns:ns="com.enilsson.elephanttrakker.views.modules.my_downline.*" xmlns:common="com.enilsson.elephanttrakker.views.common.*">
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%"
+	horizontalScrollPolicy="off" verticalScrollPolicy="off">
+
+	<modules:DownlineContainer
+		xmlns:modules="com.enilsson.modules.*"
+		width="633" height="322"
+		gatewayUrl="{_model.gatewayURL}" userId="{_model.session.user_id}" />
 	
+	<mx:Image source="{_model.icons.downline}" top="0" right="-4" />	
+	<mx:Text id="contentTitle" styleName="contentTitle" text="MY DOWNLINE" right="-128" rotation="90" />
+		
 	<mx:Script>
 		<![CDATA[
-			import mx.events.ResizeEvent;
-			import mx.managers.PopUpManager;
-			import org.un.cava.birdeye.ravis.graphLayout.visual.edgeRenderers.BaseEdgeRenderer;
-			import org.un.cava.birdeye.ravis.graphLayout.visual.edgeRenderers.OrthogonalEdgeRenderer;
-			import mx.events.ListEvent;
-			import org.un.cava.birdeye.ravis.graphLayout.layout.HierarchicalLayouter;
-			import com.enilsson.elephanttrakker.events.modules.my_downline.GetDownlineEvent;
-			import com.enilsson.elephanttrakker.events.session.PingEvent;
 			import com.enilsson.elephanttrakker.models.ETModelLocator;
 			
-			import org.un.cava.birdeye.ravis.graphLayout.layout.ConcentricRadialLayouter;
-
-			import mx.utils.ObjectUtil;
-			import org.osflash.thunderbolt.Logger;
-
-			[Bindable] private var _model:ETModelLocator = ETModelLocator.getInstance();
-			private var fullScreen:MyDownline_Container;
-
-			public function set runInit(value:Boolean):void
-			{				
-				if(value && _model.mainViewState == ETModelLocator.DOWNLINE_VIEW)
-					init();			
+			[Bindable] private var _model : ETModelLocator = ETModelLocator.getInstance();
+			
+			public function set runInit( val : Boolean ) : void {
+					
 			}
-
-			private function init():void
-			{
-				if(_model.debug) 
-					Logger.info('Init My Downline');
-				
-				// ping the server to see all is well
-				new PingEvent().dispatch();
-				
-				// make sure the graphs are hidden to begin with
-				_model.my_downline.graphShow = false;
-				_model.my_downline.parentGraphShow = false;
-
-				// get the downline data
-				new GetDownlineEvent( 
-					GetDownlineEvent.EVENT_GET_DOWNLINE, 
-					_model.session.user_id, 
-					10 
-				).dispatch();
+			private function handleModuleShow( e : Event ) : void {
 			}
-
+			
 		]]>
 	</mx:Script>
-	
-	<mx:Style>
-		.nodeLabel {
-			fontFamily: silkScreen;
-			fontSize:8;
-			fontWeight:normal;
-			color:#333333;	
-		}
-		.nodeLabelBG {
-		/*	backgroundColor:#f0f0f0;	*/
-		}	
-		.edgeLabel {
-			fontFamily: silkScreen;
-			fontSize:8;
-			fontWeight:normal;
-			color:#666666;	
-		}
-		.edgeLabelBG {
-			backgroundColor:#f0f0f0;	
-		}
-		.controlsPanel {
-			backgroundColor:#666666;
-			backgroundAlpha:0.5;	
-		}
-		.zoomLabel {
-			fontFamily: silkScreen;
-			fontSize:8;
-			fontWeight:normal;
-			color:#333333;
-			fillColors:#999999, #666666;	
-		}
-		.chartType {
-			fontSize:10;
-			fontWeight:normal;
-			color:#333333;	
-		}
-		.popupTitle {
-			color:#333333;
-			fontSize:12;
-			fontWeight:bold;
-		}
-		.popupText {
-			color:#333333;
-			fontSize:9;	
-		}
-				
-	</mx:Style>
-	
-	<mx:Resize id="resizeDownlineUp" 
-		target="{downlineContainer}" 
-		widthTo="800" 
-		heightTo="600"
-		duration="600" />
-	<mx:Resize id="resizeDownlineDown" 
-		target="{downlineContainer}" 
-		widthTo="633" 
-		heightTo="322"
-		duration="400" />	
-		
-	<mx:Image source="{_model.icons.downline}" top="0" right="-4" />
-	<mx:Text id="contentTitle" styleName="contentTitle" text="MY DOWNLINE" right="-128" rotation="90" />
-	
-	<ns:MyDownline_Container id="downlineContainer"
-		top="0" left="0"
-		width="633" height="322" />
-	
-	<common:ErrorMsgBox id="callLoggingErrorBox"
-		verticalCenter="0" horizontalCenter="0"
-		params="{_model.my_downline.errorVO}" />
-	
 	
 </mx:Canvas>

@@ -10,7 +10,7 @@ package com.enilsson.elephanttrakker.commands.modules
 	import com.enilsson.elephanttrakker.events.modules.my_details.*;
 	import com.enilsson.elephanttrakker.events.session.UpdateSessionEvent;
 	import com.enilsson.elephanttrakker.models.ETModelLocator;
-	import com.enilsson.elephanttrakker.vo.ErrorVO;
+	import com.enilsson.vo.ErrorVO;
 	import com.enilsson.elephanttrakker.vo.RecordVO;
 	
 	import mx.rpc.IResponder;

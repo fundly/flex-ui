@@ -120,7 +120,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.all_pledges.model
 
  			var amfService:RemoteObject = new RemoteObject('amfphp');
 			amfService.endpoint = gatewayURL;
-			amfService.source = 'plugins.' + instanceID + '.reporting.all_pledges';
+			amfService.source = 'plugins.common.reporting.all_pledges';
 			amfService['get_all_pledges'].send.apply(null, [vo]);	
 			amfService.addEventListener(ResultEvent.RESULT, generateResult);
 			amfService.addEventListener(FaultEvent.FAULT, generateFault); 

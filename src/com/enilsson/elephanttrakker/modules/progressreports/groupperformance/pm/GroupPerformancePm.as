@@ -1,7 +1,7 @@
 package com.enilsson.elephanttrakker.modules.progressreports.groupperformance.pm
 {
-	import com.enilsson.common.events.GetEvent;
-	import com.enilsson.elephanttrakker.modules.progressreports.events.Events;
+	import com.enilsson.elephanttrakker.modules.events.ProgressReportsEvent;
+	import com.enilsson.events.GetEvent;
 	
 	import flash.events.IEventDispatcher;
 	
@@ -27,7 +27,7 @@ package com.enilsson.elephanttrakker.modules.progressreports.groupperformance.pm
 		}
 		
 		private function requestGroupStats() : void {
-			var e : GetEvent = new GetEvent( Events.GET_GROUP_STATS, this, "groupStats" );
+			var e : GetEvent = new GetEvent( ProgressReportsEvent.GET_GROUP_STATS, this, "groupStats" );
 			_dispatcher.dispatchEvent( e );
 		}
 		

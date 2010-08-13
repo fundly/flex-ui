@@ -1,4 +1,4 @@
-package com.enilsson.elephanttrakker.modules.progressreports.vo
+package com.enilsson.elephanttrakker.modules.vo
 {
 	[Bindable]
 	[RemoteClass(alias="GroupStatistics")] 

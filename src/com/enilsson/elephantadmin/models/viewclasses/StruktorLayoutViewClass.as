@@ -13,6 +13,7 @@ package com.enilsson.elephantadmin.models.viewclasses
 
 		public var checks:StruktorLayoutVO;
 		public var contacts:StruktorLayoutVO;
+		public var contributions_misc:StruktorLayoutVO;
 		public var email_attachments:StruktorLayoutVO;
 		public var email_log:StruktorLayoutVO;
 		public var email_system_templates:StruktorLayoutVO;

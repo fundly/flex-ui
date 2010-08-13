@@ -167,18 +167,6 @@ package com.enilsson.elephanttrakker.controllers
 			this.addCommand(MyHistoryEvent.DELETE_SAVED_PLEDGE, MyHistoryCommand);
 			this.addCommand(MyHistoryGetSavedCallsEvent.EVENT_MYHISTORY_GET_SAVEDCALLS, MyHistoryCommand);
 			
-			/**
-			 * My Downline events
-			 */
-			this.addCommand(GetDownlineEvent.EVENT_GET_DOWNLINE, MyDownlineCommand);
-			this.addCommand(GetDownlineEvent.EVENT_GET_PARENTS, MyDownlineCommand);
-			
-/* 			
-			// calls_reminders
-			this.addCommand(CallsReminders_Event.EVENT_CR_CALLS_LAYOUT, CallsRemindersCommand);
-			this.addCommand(CallsReminders_Event.EVENT_CR_CALLS_LIST, CallsRemindersCommand);			
-			this.addCommand(CallsReminders_Event.EVENT_CR_CALLS_SEARCHCONTACTS, CallsRemindersCommand);	
- */			
 			
 			/**
 			 * My Details events

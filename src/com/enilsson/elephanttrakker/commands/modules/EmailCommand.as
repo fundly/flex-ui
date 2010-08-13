@@ -7,8 +7,8 @@ package com.enilsson.elephanttrakker.commands.modules
 	import com.enilsson.elephanttrakker.business.RecordsDelegate;
 	import com.enilsson.elephanttrakker.events.modules.email.EmailEvent;
 	import com.enilsson.elephanttrakker.models.ETModelLocator;
-	import com.enilsson.elephanttrakker.vo.ErrorVO;
 	import com.enilsson.elephanttrakker.vo.RecordsVO;
+	import com.enilsson.vo.ErrorVO;
 	
 	import mx.collections.ArrayCollection;
 	import mx.formatters.DateFormatter;

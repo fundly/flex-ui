@@ -22,30 +22,41 @@
 	
 	<mx:Script>
 		<![CDATA[
-			import com.enilsson.elephanttrakker.vo.TransactionVO;
-			import com.enilsson.elephantadmin.views.modules.pledge_workspace.events.SPWEvent;
+			import com.enilsson.common.model.ContributionType;
 			import com.enilsson.elephantadmin.views.modules.pledge_workspace.events.PWEvent;
 			import com.enilsson.elephantadmin.views.modules.pledge_workspace.model.PledgeWorkspaceModel;
 			import com.enilsson.elephantadmin.models.Icons;
-			import com.enilsson.elephantadmin.models.EAModelLocator;
 			
 			[Bindable] public var presentationModel:PledgeWorkspaceModel;
-			[Bindable] private var _model:EAModelLocator = EAModelLocator.getInstance();
 			private var contactID:int;
 			
 			[Bindable] private var email:String = "";
 			
 			private function init():void
 			{
-				var check 		: Object = presentationModel.vo.check;
-				var transaction : TransactionVO = presentationModel.vo.transaction;
+				var contribution : Object = presentationModel.vo.contribution;
+				var typeLabel : String = "";
 				
-				if ( check != null && check.hasOwnProperty("amount") )
-					titleText.htmlText = presentationModel.successTextCheck;
-				else if( transaction && transaction.amount)
-					titleText.htmlText = presentationModel.successTextCC;
-				else
-					titleText.htmlText = presentationModel.successTextNone;
+				if( contribution.hasOwnProperty('type') && contribution.hasOwnProperty('amount') )
+				{
+					switch( contribution.type )
+					{
+						case ContributionType.CONTRIB_TYPE_TANSACTION.type:
+							typeLabel = ContributionType.CONTRIB_TYPE_TANSACTION.label;
+						break;
+						case ContributionType.CONTRIB_TYPE_CHECK.type:
+							typeLabel = ContributionType.CONTRIB_TYPE_CHECK.label;
+						break;
+						case ContributionType.CONTRIB_TYPE_IN_KIND.type:
+							typeLabel = ContributionType.CONTRIB_TYPE_IN_KIND.label;
+						break;
+						case ContributionType.CONTRIB_TYPE_CASH.type:
+							typeLabel = ContributionType.CONTRIB_TYPE_CASH.label;
+						break;
+					}
+				}
+				
+				titleText.htmlText = ("The " + typeLabel + " pledge was successful").replace(/ +/,' ');
 				
 				// if this pledge was processed from a saved one, then removed the saved pledge
 				if( presentationModel.savedID )

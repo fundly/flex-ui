@@ -1,12 +1,13 @@
 package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 {
 	import com.adobe.cairngorm.model.ModelLocator;
+	import com.enilsson.common.model.ContributionType;
 	import com.enilsson.elephantadmin.models.EAModelLocator;
 	import com.enilsson.elephantadmin.views.modules.pledge_workspace.events.PWEvent;
 	import com.enilsson.elephantadmin.vo.ErrorVO;
+	import com.enilsson.elephantadmin.vo.PledgeVO;
 	import com.enilsson.elephantadmin.vo.SessionVO;
 	import com.enilsson.elephantadmin.vo.StruktorLayoutVO;
-	import com.enilsson.elephanttrakker.vo.PledgeVO;
 	import com.enilsson.elephanttrakker.vo.TransactionVO;
 	import com.enilsson.utils.eNilssonUtils;
 	
@@ -35,6 +36,8 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 		public static const CHECK_VIEW			: int = 1;
 		public static const NO_CONTRIB_VIEW		: int = 2;
 		public static const LIST_CONTRIBS_VIEW	: int = 3;
+		public static const IN_KIND_VIEW		: int = 4;
+		public static const CASH_VIEW			: int = 5;
 		
 		public static const CONTACT_FORM_VIEW	: int = 0;
 		public static const PLEDGE_FORM_VIEW	: int = 1;
@@ -69,12 +72,10 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 				BindingUtils.bindProperty(this, 'pledgeLayout', model, ['struktorLayout','pledges'] );
 				BindingUtils.bindProperty(this, 'transactionLayout', model, ['struktorLayout', 'transactions'] );
 				BindingUtils.bindProperty(this, 'checkLayout', model, ['struktorLayout', 'checks'] );
+				BindingUtils.bindProperty(this, 'contribMiscLayout', model, ['struktorLayout', 'contributions_misc'] );
 				BindingUtils.bindProperty(this, 'siteLayoutLoaded', model, 'siteLayoutLoaded' );
 				BindingUtils.bindProperty(this, 'debug', model, 'debug' );
 				BindingUtils.bindProperty(this, 'mainViewState', model, 'mainViewState' );
-				BindingUtils.bindProperty(this, 'successTextCC', model, 'successTextCC' );
-				BindingUtils.bindProperty(this, 'successTextCheck', model, 'successTextCheck');
-				BindingUtils.bindProperty(this, 'successTextNone', model, 'successTextNone');
 			}
 			
 			if(debug) Logger.info ( 'Instantiate PledgeWorkspaceModel' );
@@ -84,12 +85,10 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 		public var pledgeLayout			: StruktorLayoutVO;
 		public var transactionLayout	: StruktorLayoutVO;
 		public var checkLayout			: StruktorLayoutVO;
+		public var contribMiscLayout	: StruktorLayoutVO;	
 		public var siteLayoutLoaded		: Boolean;
 		public var debug				: Boolean;
 		public var mainViewState		: int;
-		public var successTextCC		: String;
-		public var successTextCheck		: String;
-		public var successTextNone		: String;
 
 		/**
 		 * Some global variables for use during form completion
@@ -106,8 +105,12 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 		public var showDupBox:Boolean = false;		// show the popup of the duplicates
 		public var dupsVStack:int = 0;				// the state of the dups viewstack
 		
-		public function set transVStack( value : int ) : void { _transVStack = value; }
-		public function get transVStack() : int { return _transVStack; }
+		public function set transVStack( value : int ) : void { 
+			_transVStack = value; 
+		}
+		public function get transVStack() : int { 
+			return _transVStack; 
+		}
 		private var _transVStack : int = CC_VIEW;
 		
 		public var ccVStack:int = 0;				// the state of the credit card viewstack
@@ -302,7 +305,7 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 		private var _contactData:Object;
 		public function set contactData ( value:Object ):void
 		{
-			_contactData = ObjectUtil.copy( value );
+			_contactData = value;
 		}
 		public function get contactData ():Object
 		{
@@ -315,7 +318,7 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 		private var _pledgeData:Object;
 		public function set pledgeData ( value:Object ):void
 		{
-			_pledgeData = ObjectUtil.copy( value );
+			_pledgeData = value;
 		}
 		public function get pledgeData ():Object
 		{
@@ -328,7 +331,7 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 		private var _transactionData:Object;
 		public function set transactionData ( value:Object ):void
 		{
-			_transactionData = ObjectUtil.copy( value );
+			_transactionData = value;
 		}
 		public function get transactionData ():Object
 		{
@@ -357,7 +360,7 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 			}	
 			
 			// copy the object to the billingData variable
-			_billingData = ObjectUtil.copy( value );
+			_billingData = value;
 		}
 		public function get billingData ():Object
 		{
@@ -382,7 +385,7 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 		{
 			if(value)
 				delete value.id;
-			_checkData = ObjectUtil.copy( value );
+			_checkData = value;
 		}
 		public function get checkData ():Object
 		{
@@ -390,6 +393,29 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 		}
 		
 		public var noContribData : Object;
+		
+		
+		/**
+		 * Storage of the edited in-kind data
+		 */
+		private var _inKindData : Object;
+		public function set inKindData( value : Object ) : void {
+			_inKindData = value;	
+		}
+		public function get inKindData() : Object {
+			return _inKindData;	
+		}
+		
+		/**
+		 * Storage of the edited cash data
+		 */
+		private var _cashData : Object;
+		public function set cashData( value : Object ) : void {
+			_cashData = value;
+		}
+		public function get cashData() : Object {
+			return _cashData;
+		}
 
 		
 		/**
@@ -413,6 +439,8 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 		public var ccFields:Array;
 		public var checkFields:Array;
 		public var noContribFields:Array;
+		public var inKindFields:Array;
+		public var cashFields:Array;
 
 
 		/**
@@ -447,6 +475,8 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 		public var checkErrors		:Array = [];
 		public var billingErrors	:Array = [];
 		public var noContribErrors	:Array = [];
+		public var inKindErrors		:Array = [];
+		public var cashErrors		:Array = [];
 
 		/**
 		 * Flag to initiate a reset on the agreement initials boxes
@@ -511,6 +541,18 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 		public var vo:PledgeVO;
 		public function process():void
 		{
+			// create copies of all pledge related objects since this function modifies and adds 
+			// properties on them directly.
+			var contactData		: Object = ObjectUtil.copy(this.contactData);
+			var pledgeData		: Object = ObjectUtil.copy(this.pledgeData);
+			var transactionData : Object = ObjectUtil.copy(this.transactionData);
+			var billingData 	: Object = ObjectUtil.copy(this.billingData);
+			var checkData		: Object = ObjectUtil.copy(this.checkData);
+			var inKindData		: Object = ObjectUtil.copy(this.inKindData);
+			var cashData		: Object = ObjectUtil.copy(this.cashData);
+			
+			var prop : String;
+			
 			vo = new PledgeVO();
 			
 			// loop through the contact data and spread the data to the two objects
@@ -533,9 +575,9 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 			{
 				var employerProps : Array = ['occupation', 'employer', 'employer_address', 'employer_city', 'employer_state', 'employer_zip'];
 				
-				for each( var prop : String in employerProps ) {
-					if(pledgeData.hasOwnProperty(prop)) 
-						vo.contact[prop] = pledgeData[prop];
+				for each( var p : String in employerProps ) {
+					if(pledgeData.hasOwnProperty(p)) 
+						vo.contact[p] = pledgeData[p];
 				}
 			}
 
@@ -568,35 +610,30 @@ package com.enilsson.elephantadmin.views.modules.pledge_workspace.model
 			switch ( transVStack )
 			{
 				case CC_VIEW :
-					vo.check = null;
-					vo.transaction = new TransactionVO();
-					vo.transaction.data = transactionData;
-					
-					// add the appropriate address data including billing data if needed
-					if ( billingData == null )
-						vo.transaction.data = vo.pledge;
-					else
-					{
-						vo.transaction.data 	= billingData;
-						vo.transaction.fname 	= vo.pledge.fname;
-						vo.transaction.lname 	= vo.pledge.lname;
-					}
-					
-					vo.paymentType = 'credit card';	
+					var tvo	: TransactionVO = new TransactionVO();
+					// set contact and transaction data on TransactionVO
+					tvo.data				= contactData;
+					tvo.data 				= transactionData;
+					vo.contribution 		= tvo;
+					vo.contribution.type 	= ContributionType.CONTRIB_TYPE_TANSACTION.type; 
 				break;
 				case CHECK_VIEW :
-					vo.transaction = null;
-					vo.check = {};
-					vo.check = checkData;
-					delete vo.check['id'];
-					
-					vo.paymentType = 'check';
+					vo.contribution 		= checkData;
+					vo.contribution.type 	= ContributionType.CONTRIB_TYPE_CHECK.type;
+					delete vo.contribution['id'];
 				break;
 				case NO_CONTRIB_VIEW :
-					vo.transaction = null;
-					vo.check = null;
-					vo.paymentType = 'none';
-				break;		
+					vo.contribution = null;
+				break;	
+				case IN_KIND_VIEW :
+					vo.contribution = inKindData;
+					vo.contribution.type = ContributionType.CONTRIB_TYPE_IN_KIND.type;
+				break;
+				case CASH_VIEW :
+					vo.contribution = cashData;
+					vo.contribution.type =  ContributionType.CONTRIB_TYPE_CASH.type;
+				break;
+					
 			}
 			
 			// make some action dependant changes to the VO

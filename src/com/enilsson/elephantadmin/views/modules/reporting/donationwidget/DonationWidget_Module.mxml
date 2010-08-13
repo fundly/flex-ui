@@ -79,7 +79,7 @@
 	<!--  Service for the Donation Widget report -->
 	<mx:RemoteObject id="service"
 		destination="amfphp"
-		source="plugins.{_presentationModel.instanceID}.reporting.donation_widget"
+		source="plugins.common.reporting.donation_widget"
 		endpoint="{_presentationModel.gatewayURL}"
 		showBusyCursor="true"
 		fault="_presentationModel.handleFault(event)">

@@ -14,7 +14,7 @@ package com.enilsson.elephantadmin.views.modules.reporting.external.donors
 		
 		override protected function configureExportService():void {
 			super.configureExportService();
-			super.service.source = 'plugins.' + instanceID + '.reporting.donors';
+			super.service.source = 'plugins.common.reporting.donors';
 		}
 		
 		

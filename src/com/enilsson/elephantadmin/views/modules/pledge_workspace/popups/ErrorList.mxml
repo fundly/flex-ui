@@ -31,6 +31,8 @@
 				var ch:Array 	= presentationModel.checkErrors;
 				var b:Array 	= presentationModel.billingErrors;
 				var nc:Array	= presentationModel.noContribErrors;
+				var ik:Array	= presentationModel.inKindErrors;
+				var ca:Array	= presentationModel.cashErrors;
 				
 				var title:Text;
 				var otherTabs:Text;
@@ -53,6 +55,12 @@
 					break;
 					case PledgeWorkspaceModel.LIST_CONTRIBS_VIEW :
 						num = p.length;
+					break;
+					case PledgeWorkspaceModel.IN_KIND_VIEW:
+						num = p.length + ik.length;
+					break;
+					case PledgeWorkspaceModel.CASH_VIEW:
+						num = p.length + ca.length;
 					break;
 				}
 				
@@ -162,19 +170,17 @@
 							}
 						}
 						
-						else if( presentationModel.transVStack == PledgeWorkspaceModel.CHECK_VIEW )
-						{
-							for each ( f in ch )
+						else {
+							var arr : Array = []; 
+							switch( presentationModel.transVStack )
 							{
-								iter++;
-								if(iter > MAX_DISPLAYED_ERRORS) continue;
-								this.addChild(createErrorDescription(f.message));
+								case PledgeWorkspaceModel.CHECK_VIEW: 		arr = ch; break;
+								case PledgeWorkspaceModel.NO_CONTRIB_VIEW: 	arr = nc; break;
+								case PledgeWorkspaceModel.IN_KIND_VIEW:		arr = ik; break;
+								case PledgeWorkspaceModel.CASH_VIEW:		arr = ca; break;
 							}
-						}
-						
-						else if( presentationModel.transVStack == PledgeWorkspaceModel.NO_CONTRIB_VIEW )
-						{
-							for each( f in nc ) 
+							
+							for each ( f in arr )
 							{
 								iter++;
 								if(iter > MAX_DISPLAYED_ERRORS) continue;

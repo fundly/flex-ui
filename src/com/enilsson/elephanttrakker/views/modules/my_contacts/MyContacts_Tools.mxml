@@ -95,9 +95,10 @@
 
 	<mx:Script>
 		<![CDATA[
+			import com.enilsson.vo.ErrorVO;
 			import com.enilsson.elephanttrakker.events.modules.my_contacts.ExportContactEvent;
 			import com.enilsson.elephanttrakker.events.modules.my_contacts.ImportContactEvent;
-			import com.enilsson.elephanttrakker.vo.ErrorVO;
+			import com.enilsson.vo.ErrorVO;
 			import com.enilsson.elephanttrakker.events.session.SessionEvent;
 			import org.osflash.thunderbolt.Logger;
 			import mx.utils.ObjectUtil;

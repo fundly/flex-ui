@@ -132,7 +132,7 @@ package com.enilsson.elephanttrakker.business
 		{
 			this.service = ServiceLocator.getInstance().getRemoteObject('struktorPluginsPledges');
 			
-			var token:AsyncToken = service.process_pledge( p.tr_users_id, p.contact, p.pledge, p.transaction, p.check );			
+			var token:AsyncToken = service.process_pledge( p.tr_users_id, p.contact, p.pledge, p.contribution );
 			token.addResponder(responder);
 		}
 	}
