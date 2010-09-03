@@ -231,6 +231,8 @@
 	            	itemRenderer="com.enilsson.elephanttrakker.views.modules.my_history.MyHistory_PledgesAmount" />
 	            <mx:DataGridColumn textAlign="right" dataField="contrib_total" 
 	            	headerText="Contrib'd" width="65" labelFunction="money_labelFunc" />
+	            <mx:DataGridColumn textAlign="left" headerText="Status" 
+	            	itemRenderer="com.enilsson.elephanttrakker.views.modules.my_history.renderers.MyHistory_Unfulfilled" />	            	
 	            <mx:DataGridColumn textAlign="left" headerText="Actions"
 	            	itemRenderer="com.enilsson.elephanttrakker.views.modules.my_history.renderers.MyHistory_PledgesActions" />
 	        </mx:columns>

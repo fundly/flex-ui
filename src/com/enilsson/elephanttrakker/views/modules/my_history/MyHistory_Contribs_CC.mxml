@@ -13,7 +13,7 @@
 		<mx:columns>
 			<mx:DataGridColumn textAlign="left" dataField="contact" headerText="Full Name" />
             <mx:DataGridColumn textAlign="left" dataField="full_name" headerText="Name on Card" />
-            <mx:DataGridColumn textAlign="left" dataField="card_number" headerText="Card Number" />
+            <!--<mx:DataGridColumn textAlign="left" dataField="card_number" headerText="Card Number" />-->
             <mx:DataGridColumn textAlign="right" headerText="Amount" dataField="amount" labelFunction="money_labelFunc" />            
             <mx:DataGridColumn textAlign="left" headerText="Date" dataField="created_on" labelFunction="date_labelFunc" />            
             <mx:DataGridColumn textAlign="left" headerText="Time" dataField="created_on" labelFunction="time_labelFunc" />            
