@@ -89,6 +89,9 @@ package com.enilsson.elephanttrakker.models
 		[Embed(source="/assets/images/new_icons/upload_contacts.png")]						
 		[Bindable] public var uploadContacts:Class;							
 		
+		[Embed(source="/assets/images/new_icons/upload_contacts_small.png")]						
+		[Bindable] public var uploadContactsSmall:Class;							
+		
 		[Embed(source="/assets/images/icons/contacts.png")]						
 		[Bindable] public var users:Class;									
 	}

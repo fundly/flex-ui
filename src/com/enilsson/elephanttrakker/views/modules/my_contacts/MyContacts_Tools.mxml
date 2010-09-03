@@ -33,32 +33,25 @@
 						label="Download My Contacts" 
 						click="downloadContacts()"
 						icon="{_model.icons.excel}" />
-					<mx:LinkButton fontSize="13" fontWeight="normal" width="50%"
-						label="How to Upload Contacts" 
-						click="downloadHowTo()"
-						icon="{_model.icons.pdf}" />
 				</mx:HBox>
 				<mx:Spacer height="10" />
 				<mx:VBox styleName="uploadBox" width="100%">
 					<mx:HBox width="90%" horizontalAlign="left" verticalAlign="middle">
 						<mx:Image source="{_model.icons.uploadContacts}" />
 						<mx:Text styleName="uploadBoxTitle"
-							text="Contacts Upload" />
+							text="Import My Contacts" />
 					</mx:HBox>				
 					<mx:HBox verticalAlign="middle">
-						<mx:TextInput id="filePath" width="300" click="browseFiles()" />
-						<mx:Button label="Browse" fontSize="9" click="browseFiles()" />
 						<mx:Spacer width="10" />
 						<mx:Button id="submitBtn"
-							label="Upload" 
-							click="uploadContacts()" 
-							styleName="submitBtn" 
-							enabled="{btEnabled &amp;&amp; filePath.text != ''}" />
+							label="Import" 
+							click="this.popupImporter()" 
+							styleName="submitBtn" />
 					</mx:HBox>
 					<mx:Form width="500" fontSize="10" paddingTop="5" paddingBottom="0" horizontalScrollPolicy="off">
 						<mx:FormItem label="Please Note:" fontWeight="bold">
 							<mx:Text width="400" fontWeight="normal">
-								<mx:htmlText><![CDATA[The upload file <b>must</b> be in <a href="http://en.wikipedia.org/wiki/Comma-separated_values" target="_blank"><font color="#5ea7e0">CSV</font></a> format, and at a minimum have columns for <b>First Name</b> and <b>Last Name</b>.]]></mx:htmlText>
+								<mx:htmlText><![CDATA[A new window or tab will open with the import widget, once you have completed bringing in your contacts it will shut automatically.]]></mx:htmlText>
 							</mx:Text>
 						</mx:FormItem>
 					</mx:Form>
@@ -124,7 +117,7 @@
 			 */
 			private function browseFiles():void
 			{
-				new SessionEvent(SessionEvent.GET_SESSION_INFO).dispatch();
+/* 				new SessionEvent(SessionEvent.GET_SESSION_INFO).dispatch();
 				
 				resetForm();
 				var textTypes:FileFilter = new FileFilter("CSV File (.csv)", "*.csv;");
@@ -132,8 +125,7 @@
 				fileRef.addEventListener(Event.SELECT, function(e:Event):void{
 					filePath.text = fileRef.name;
 				});
-				fileRef.browse(allTypes);
-				
+				fileRef.browse(allTypes); */
 			}
 			
 			private function downloadContacts():void
@@ -150,7 +142,7 @@
 			private function resetForm():void
 			{
 				btEnabled = true;
-				filePath.text = '';
+				/* filePath.text = ''; */
 				fileRef = new FileReference();
 			}
 			
@@ -228,10 +220,18 @@
 			public function closeTools():void
 			{
 				vstack.selectedIndex = 0; 
-				filePath.text = '';  
+				/* filePath.text = ''; */  
 				_model.my_contacts.showContactsTools = false;				
 				new ImportContactEvent(ImportContactEvent.DELETE_IMPORTED).dispatch();
 			}
+			
+			private function popupImporter():void
+			{
+				var gKey:String = _model.gatewayURL.split('?')[1];
+				var url:String = 'https://labs-apps.blue-swarm.com/components/contact_importer.php?access_' + gKey
+				navigateToURL( new URLRequest(url), '_blank' );
+			}
+			
 			
 		]]>
 	</mx:Script>

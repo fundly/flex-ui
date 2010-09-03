@@ -24,7 +24,14 @@
 			visible="{_model.my_contacts.numContacts > 0}" 
 			verticalCenter="0" right="5" 
 			itemClick="_model.my_contacts.contactElementsViewState = event.index"
-			dataProvider="{contactElements}" />			
+			dataProvider="{contactElements}" />
+		<mx:LinkButton label="Import" 
+			icon="{_model.icons.uploadContactsSmall}"
+			verticalCenter="0" right="240" 
+			toolTip="Import your contacts from file, webmail or list!"
+			buttonMode="true" useHandCursor="true"
+			color="#ffffff" fontSize="11" fontWeight="bold"
+			click="this.popupImporter()" />				
 	</mx:Canvas>
 	<mx:ViewStack id="contactElements" clipContent="true" 
 		visible="{_model.my_contacts.numContacts > 0}"
@@ -36,7 +43,6 @@
 		<ns:MyContacts_VSHistory label="Pledges" />
 		<ns:MyContacts_Actions label="Actions" />
 	</mx:ViewStack>
-	
 	
 	<mx:Button styleName="contactsTools" 
 		toolTip="My Contacts Tools"
@@ -97,6 +103,7 @@
 
 	<mx:Script>
 		<![CDATA[
+			import flash.net.navigateToURL;
 			import mx.events.FlexEvent;
 			import com.adobe.cairngorm.control.CairngormEventDispatcher;
 			import com.enilsson.elephanttrakker.vo.LayoutVO;
@@ -176,6 +183,13 @@
 					_model.my_contacts.showContactsTools = true;
 				}			
 				
+			}
+			
+			private function popupImporter():void
+			{
+				var gKey:String = _model.gatewayURL.split('?')[1];
+				var url:String = 'https://labs-apps.blue-swarm.com/components/contact_importer.php?access_' + gKey
+				navigateToURL( new URLRequest(url), '_blank' );
 			}
 		]]>
 	</mx:Script>
