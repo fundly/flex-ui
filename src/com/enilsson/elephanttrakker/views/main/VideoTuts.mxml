@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:common="com.enilsson.elephanttrakker.views.common.*"
+	xmlns:graphics="com.enilsson.graphics.*"
+	xmlns:controls="com.enilsson.controls.*"
+	creationComplete="init()"	 
+	width="480" height="440" >
+	
+	<mx:Script>
+		<![CDATA[
+			import com.enilsson.utils.eNilssonUtils;
+			import com.enilsson.elephanttrakker.models.ETModelLocator;
+			import mx.managers.PopUpManager;
+
+			import mx.events.ValidationResultEvent;
+
+			[Bindable] private var _model:ETModelLocator = ETModelLocator.getInstance();
+			
+			private function init():void {  }
+			
+			
+			private function closeComponent():void
+			{
+				PopUpManager.removePopUp(this);
+				_model.onClose = null;
+			}
+			
+			private function goToVideos():void
+			{
+				var url:String = _model.bsAppsURL + 'components/videos.php';
+				navigateToURL( new URLRequest(url), '_blank' );
+				closeComponent()
+			}		
+				
+		]]>
+	</mx:Script>
+
+	<mx:Fade id="fadeIn" alphaTo="1" duration="300" />
+	<mx:Fade id="fadeOut" alphaTo="0" duration="300" />	
+	
+	<mx:Canvas left="0" top="10" styleName="popupContent" 
+		verticalScrollPolicy="off" horizontalScrollPolicy="off"
+		filters="{[com.enilsson.graphics.enDropShadows.standardDS()]}" 
+		width="{this.width-10}" height="{this.height-10}">
+		
+		<mx:VBox verticalGap="0" 
+			width="{width-40}" height="{height-40}"
+			backgroundColor="#FFFFFF" 
+			top="15" left="15" 
+			fontSize="11">
+			<mx:Canvas backgroundColor="#999999"
+				width="100%" height="37" 
+				paddingLeft="30">
+				<mx:Text id="supportDesc" 
+					fontSize="18" 
+					width="100%"
+					filters="{[com.enilsson.graphics.enDropShadows.textDS(0x333333)]}"
+					text="Video Tutorials" 
+					verticalCenter="0" left="20" />
+			</mx:Canvas>
+			<mx:Text width="100%"
+				color="#222222" fontSize="12"
+				paddingTop="10" paddingBottom="10"
+				paddingLeft="10" paddingRight="10"
+				text="Watch video tutorials on how to maximise your BlueSwarm fundraising activities!" />
+			<mx:Canvas width="100%">
+				<mx:Image click="goToVideos()"
+					horizontalCenter="0"
+					useHandCursor="true" buttonMode="true"
+					source="@Embed('/assets/images/video_snapshot.png')"/>				
+			</mx:Canvas>
+			<mx:HBox id="buttons" 
+				width="100%"
+				left="0" bottom="0" 
+				paddingTop="10" paddingBottom="10" 
+				horizontalAlign="center">
+				<mx:Button styleName="submitBtn"
+					useHandCursor="true" buttonMode="true" 
+					label="Watch Videos!" 
+					click="goToVideos()" />
+			</mx:HBox>		
+		</mx:VBox>
+
+	</mx:Canvas>
+	
+	<graphics:enCloseBtn top="0" right="0" size="20" click="closeComponent()" />
+	
+</mx:Canvas>

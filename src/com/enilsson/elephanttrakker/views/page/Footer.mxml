@@ -156,11 +156,12 @@
 					
 				if(_model.options.privacy_statement != null)
 					site_links.addItem('Privacy Policy');
+				
+				site_links.addItem('Video Tutorials');
 					
 				if(_model.session.data.hasOwnProperty('admin_acl'))
 					site_links.addItem('Admin');					
-					
-				site_links.addItem('Videos');
+				
 				site_links.addItem('Logout');
 					
 				siteLinks.dataProvider = site_links;
@@ -194,7 +195,7 @@
 						adminLogin.visible = false;
 						new EndSessionEvent().dispatch();
 					break;
-					case 'Videos' :
+					case 'Video Tutorials' :
 						var url:String = _model.bsAppsURL + 'components/videos.php';
 						navigateToURL( new URLRequest(url), '_blank' );
 					break;

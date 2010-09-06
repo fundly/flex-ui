@@ -46,11 +46,13 @@
 			}
 
 			/**
-			 * Remove the open popup box and fire an event to register the user having logged in for the first time
+			 * Remove the open popup box and fire an event to register the user having logged in 
+			 * for the first time
 			 */			
 			private function closeBoxPopup():void
 			{
-				// update the first login time only when the box is closed. This accounts for people you try and skip the agents agreement by reloading
+				// update the first login time only when the box is closed. This accounts 
+				// for people you try and skip the agents agreement by reloading
 				var fv:Object = { 
 					'user_id' : _model.session.user_id, 
 					'_firstlogin' : Math.round( EDateUtil.nowToTimestamp() ) 
@@ -61,6 +63,11 @@
 				
 				//_model.my_details.loginBoxState = 0;
 				PopUpManager.removePopUp(this);
+				
+				// show the video tutorials to new users
+			 	var pClass:Class = VideoTuts as Class;			 	
+			 	var p:* = PopUpManager.createPopUp( _model.mainScreen, pClass, true );
+			    PopUpManager.centerPopUp(p);				
 			}
 			
 			/**
