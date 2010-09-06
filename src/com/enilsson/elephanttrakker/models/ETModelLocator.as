@@ -8,9 +8,9 @@ package com.enilsson.elephanttrakker.models
 	import com.enilsson.elephanttrakker.models.viewclasses.*;
 	import com.enilsson.elephanttrakker.views.modules.pledge_workspace.model.PledgeWorkspaceVO;
 	import com.enilsson.elephanttrakker.vo.AppOptionsVO;
-	import com.enilsson.vo.ErrorVO;
 	import com.enilsson.elephanttrakker.vo.SessionVO;
 	import com.enilsson.utils.eNilssonUtils;
+	import com.enilsson.vo.ErrorVO;
 	
 	import flash.display.DisplayObject;
 	import flash.system.Security;
@@ -77,7 +77,7 @@ package com.enilsson.elephanttrakker.models
 
 		[Bindable] public var rssFeed:String = 'http://www.enilsson.com/news/rss'; // which RSS feed to read
 		[Bindable] public var s3URL:String = 'https://trakker.s3.amazonaws.com/'; // where to look for S3 assets
-
+		[Bindable] public var bsAppsURL:String = '';
 
 		/**
 		 * Session variables

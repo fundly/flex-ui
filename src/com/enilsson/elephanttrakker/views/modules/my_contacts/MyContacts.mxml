@@ -188,7 +188,7 @@
 			private function popupImporter():void
 			{
 				var gKey:String = _model.gatewayURL.split('?')[1];
-				var url:String = 'https://labs-apps.blue-swarm.com/components/contact_importer.php?access_' + gKey
+				var url:String = _model.bsAppsURL + 'components/contact_importer.php?access_' + gKey;
 				navigateToURL( new URLRequest(url), '_blank' );
 			}
 		]]>

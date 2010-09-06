@@ -63,7 +63,9 @@ package com.enilsson.elephanttrakker.commands
 		 */		
 		private function setSiteURL():void
 		{
-			var dwc : DomainWhitelistChecker = new DomainWhitelistChecker( [ 'enilssonator.com', 'blue-swarm.com', '127.0.0.1' ] );
+			var dwc : DomainWhitelistChecker = new DomainWhitelistChecker( 
+				[ 'enilssonator.com', 'blue-swarm.com', 'blueswarm.com', 'fundly.com', '127.0.0.1' ] 
+			);
 			// set the application's URL			
 			_model.applicationURL = Application.application.url.split(Application.application.className +".swf")[0];
 			
@@ -87,6 +89,15 @@ package com.enilsson.elephanttrakker.commands
 				_model.orgURL			= params.orgURL;
 				
 				_model.debug			= false;
+				
+				var url:String = _model.authURL;
+				if ( url.split('-')[0] == 'https://labs' )
+					_model.bsAppsURL = 'https://labs-apps.blue-swarm.com/';
+				else if ( url.split('-')[0] == 'https://sandbox' )
+					_model.bsAppsURL = 'https://sandbox-apps.blue-swarm.com/';
+				else
+					_model.bsAppsURL = 'https://apps.blue-swarm.com/';
+				
 			} 
 			else
 			{
@@ -99,6 +110,7 @@ package com.enilsson.elephanttrakker.commands
 					Alert.show("please create a \"sandbox_config.xml\" for local sandbox testing!","File Error");
 				});
 			}
+			
 		}
 
 
@@ -118,6 +130,14 @@ package com.enilsson.elephanttrakker.commands
     		_model.orgURL 			= xml.orgURL;
     		
     		_model.debug			= xml.debug == 'true' ? true : false;
+    		
+			var url:String = _model.authURL;
+			if ( url.split('-')[0] == 'https://labs' )
+				_model.bsAppsURL = 'https://labs-apps.blue-swarm.com/';
+			else if ( url.split('-')[0] == 'https://sandbox' )
+				_model.bsAppsURL = 'https://sandbox-apps.blue-swarm.com/';
+			else
+				_model.bsAppsURL = 'https://apps.blue-swarm.com/';
 		}
 		
 		
