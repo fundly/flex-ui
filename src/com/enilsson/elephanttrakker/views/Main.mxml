@@ -86,7 +86,7 @@
 		textStyleName="activityText" />
 	
 	<mx:Canvas width="703" height="45" id="bottomNav" styleName="bottomNav" />
-	<mn:NewsTicker width="500" horizontalCenter="-97" bottom="8" />
+	<mn:NewsTicker width="500" horizontalCenter="-97" bottom="5" />
 	<mn:UserInfoBox id="bnUserInfo" styleName="bnUserInfo" width="180" height="29" />
 
 

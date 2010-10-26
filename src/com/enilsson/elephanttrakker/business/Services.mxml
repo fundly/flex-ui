@@ -5,6 +5,7 @@
     
 	<mx:Script>
 		<![CDATA[
+			import mx.core.Application;
 			import com.enilsson.elephantadmin.models.Icons;
 			import mx.events.CloseEvent;
 			import mx.utils.ObjectUtil;
@@ -291,7 +292,7 @@
     </mx:RemoteObject>
     
     <mx:HTTPService id="versionService"
-		url="{_model.versionXmlUrl}"
+		url="{_model.siteURL + _model.versionXmlUrl}"
 		contentType="application/xml"
 		resultFormat="e4x"
 		showBusyCursor="true" />

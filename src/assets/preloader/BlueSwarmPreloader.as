@@ -21,7 +21,7 @@ package assets.preloader
     //  Static Properties
     //----------------------------------
     
-        [Embed(source="/assets/images/preloader/BlueSwarm_Preloader_logo.png")]
+        [Embed(source="/assets/images/preloader/Fundly_Preloader_logo.png")]
         private static const BLUESWARM_LOGO:Class;
         
     //----------------------------------
@@ -104,7 +104,7 @@ package assets.preloader
             var pbY:int = this._logo.y + this._logo.height + 10;
             
             this._progressBar.graphics.clear();
-            this._progressBar.graphics.beginFill(0x52bdec);
+            this._progressBar.graphics.beginFill(0x787878);
             this._progressBar.graphics.drawRect(pbX, pbY, Number(this._logo.width * perc), 1);
             this._progressBar.graphics.endFill();
         }

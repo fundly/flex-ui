@@ -4,9 +4,12 @@ Author: James Nicol, www.enilsson.com, September 2008
 */
 
 Application {
+/* 	
 	backgroundImage: Embed(source="../images/qcm2_body_bg.png") repeat-y center top;
 	backgroundColor: #13162f;
-	fontFamily: appFont;
+ */
+ 	backgroundGradientColors: #999, #ccc;
+ 	fontFamily: appFont;
 	fontSize:12;
 	color:#333333;
 }
@@ -16,20 +19,21 @@ Application {
 .contentContainer {
 	backgroundColor:#070b26;
 	borderThickess:1;
-	borderColor:#1c2b65;
+	/* borderColor:#1c2b65; */
+	borderColor: #999;
 	borderStyle:"solid";
 	borderSides:"top bottom";
 }
 .mainContainer {
-	backgroundImage: Embed("../images/qcm2_maincontainer_bg.png", 
+	backgroundImage: Embed("../images/fundly_skin/qcm2_maincontainer_bg.png", 
 		scaleGridTop="20", scaleGridBottom="473",
 		scaleGridLeft="5", scaleGridRight="10");
 	backgroundSize:"100%";
 }
 .homeLink {
-	upSkin: Embed("../images/qcm2_home_btn2_norefl.png");
-	overSkin: Embed("../images/qcm2_home_btn2_hover_norefl.png");
-	downSkin: Embed("../images/qcm2_home_btn2_norefl.png");
+	upSkin: Embed("../images/fundly_skin/qcm2_home_btn2_norefl.png");
+	overSkin: Embed("../images/fundly_skin/qcm2_home_btn2_hover_norefl.png");
+	downSkin: Embed("../images/fundly_skin/qcm2_home_btn2_norefl.png");
 }
 /*-- End Main Container Styles --*/
 
@@ -38,7 +42,7 @@ Application {
 .topNav {
 	horizontalCenter:0;
 	top:0;
-	backgroundImage: Embed(source="../images/qcm2_topnav_bg2.png");
+	backgroundImage: Embed(source="../images/fundly_skin/qcm2_topnav_bg2-1.png");
 	backgroundSize:"100%";
 }
 /*-- End Top Nav styles --*/
@@ -48,7 +52,7 @@ Application {
 .bottomNav {
 	horizontalCenter:0;
 	bottom:0;	
-	backgroundImage: Embed(source="../images/qcm2_bottomnav_bg2.png");
+	backgroundImage: Embed(source="../images/fundly_skin/qcm2_bottomnav_bg2.png");
 	backgroundSize:"100%";
 }
 .newsTicker {
@@ -99,12 +103,12 @@ Application {
 	right:10;
 }
 .bnUserInfo {
-	bottom:8;
+	bottom:5;
 	horizontalCenter:235;
 	borderStyle:"solid";
-	borderColor:#013DB5;
+	borderColor:#666666;
 	cornerRadius:4;
-	backgroundColor:#013DB5;
+	backgroundColor:#666666;
 	color:#FFFFFF;	
 	fontSize:9;
 	horizontalScrollPolicy:"off";
@@ -143,7 +147,7 @@ Application {
 .siteLinks {
 	top:0;
 	left:10;
-	color:#FFFFFF;	
+	color:#222222;	
 	selectable:"true";
 	condenseWhite:"true";
 	fontSize:10;
@@ -152,7 +156,7 @@ Application {
 .switchClassic {
 	top:4;
 	right:20;
-	color:#FFFFFF;	
+	color:#222222;	
 	selectable:"true";
 	condenseWhite:"true";
 	fontSize:10;
@@ -161,7 +165,7 @@ Application {
 .adminLogin {
 	horizontalCenter:0;
 	top:4;
-	color:#FFFFFF;	
+	color:#222222;	
 	selectable:"true";
 	condenseWhite:"true";
 	fontSize:10;
@@ -169,30 +173,30 @@ Application {
 .userRego {
 	top:4;
 	left:20;
-	color:#FFFFFF;	
+	color:#222222;	
 	selectable:"true";
 	condenseWhite:"true";
 	fontSize:10;
 }
 .copyRight {
-	top:5;
-	right:50;
-	color:#FFFFFF;	
-	selectable:"true";
-	condenseWhite:"true";
-	fontSize:10;
-	textAlign:right;
+	top: 5;
+	right: 40;
+	color: #222222;	
+	selectable: "true";
+	condenseWhite: "true";
+	fontSize: 10;
+	textAlign: right;
 }
 .copyRightSymbol {
-	fontFamily:"Arial";
-	top:5;
-	right:77;
-	color:#FFFFFF;
+	fontFamily: "Arial";
+	top: 5;
+	right: 66;
+	color: #222222;
 }
 .versionLabel {
 	top:5;
 	left:5;
-	color:#FFFFFF;
+	color:#222222;
 	fontSize:9;
 }
 .blueSwarmIcon {
@@ -204,7 +208,7 @@ Application {
 	horizontalCenter:0;
 }
 .siteLegalese {
-	color:#FFFFFF;	
+	color:#222222;	
 	selectable:"true";
 	condenseWhite:"true";
 	fontSize:9;
@@ -216,16 +220,17 @@ Application {
 	paddingBottom:3;
 	borderStyle:"solid";
 	borderThickness:1;
-	borderColor:#FFFFFF;
+	borderColor:#222222;
 	cornerRadius:3;
-	backgroundColor:#08286e;
+	backgroundColor:#999999;
 }
 .paidForText {
-	color:#FFFFFF;	
-	selectable:"true";
-	condenseWhite:"true";
-	textAlign:"center";
-	fontSize:11;
+	color: #222222;	
+	selectable: "true";
+	condenseWhite: "true";
+	textAlign: "center";
+	fontSize: 12;
+	fontWeight: "bold";
 }
 /*-- End Footer styles --*/
 

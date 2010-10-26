@@ -18,8 +18,8 @@
    	<mx:Text id="copyRight" styleName="copyRight" />
 	<mx:Image styleName="blueSwarmIcon" 
 		source="{_model.icons.BlueSwarmSmall}" 
-		toolTip="Visit BlueSwarm!"
-		click="navigateToURL(new URLRequest('http://www.blue-swarm.com/'),'blank')" 
+		toolTip="Visit Fundly!"
+		click="navigateToURL(new URLRequest('http://www.fundly.com/'),'blank')" 
 		useHandCursor="true" buttonMode="true" />
    	<mx:Text id="adminLogin" 
    		styleName="adminLogin"

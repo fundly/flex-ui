@@ -21,7 +21,7 @@ package com.enilsson.elephanttrakker.models
 	public class ETModelLocator implements ModelLocator
 	{
 		//versioning:
-		[Embed(source="/revision.xml", mimeType="application/octet-stream")]
+		[Embed(source="revision.xml", mimeType="application/octet-stream")]
         private var VersionFile:Class;        
         [Bindable] public var version 	: String;
         [Bindable] public var revision 	: String;

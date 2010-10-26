@@ -23,6 +23,7 @@ package com.enilsson.elephanttrakker.commands
 	import mx.controls.Alert;
 	import mx.core.Application;
 	import mx.utils.Base64Decoder;
+	import mx.utils.ObjectUtil;
 	
 	import org.osflash.thunderbolt.Logger;
 	
@@ -43,9 +44,6 @@ package com.enilsson.elephanttrakker.commands
 				// set the site parameters from the flash vars if there are any
 				setSiteURL();
 				
-				// initialise fragment reading
-				initSwfAddress();
-				
 				_executed = true;
 			}
 		}
@@ -64,7 +62,7 @@ package com.enilsson.elephanttrakker.commands
 		private function setSiteURL():void
 		{
 			var dwc : DomainWhitelistChecker = new DomainWhitelistChecker( 
-				[ 'enilssonator.com', 'blue-swarm.com', 'blueswarm.com', 'fundly.com', '127.0.0.1' ] 
+				[ 'enilssonator.com', 'blue-swarm.com', 'blueswarm.com', 'fundly.com', 'fundly.com.local:8888', '127.0.0.1' ] 
 			);
 			// set the application's URL			
 			_model.applicationURL = Application.application.url.split(Application.application.className +".swf")[0];
@@ -76,9 +74,10 @@ package com.enilsson.elephanttrakker.commands
 			if(Application.application.parameters.siteURL)
 			{
 				var params 				: Object = Application.application.parameters;
-								
+				
 				_model.authURL 			= dwc.isUrlAllowed(params.authURL) ? params.authURL : null;
 				_model.siteURL 			= dwc.isUrlAllowed(params.siteURL) ? params.siteURL : null;
+				_model.bsAppsURL		= params.appsURL;
 				_model.baseURL 			= dwc.isUrlAllowed(params.baseURL) ? params.baseURL : null;
 				_model.adminUI 			= params.adminUI;
 				_model.appName 			= params.siteTitle;
@@ -89,15 +88,9 @@ package com.enilsson.elephanttrakker.commands
 				_model.orgURL			= params.orgURL;
 				
 				_model.debug			= false;
-				
-				var url:String = _model.authURL;
-				if ( url.split('-')[0] == 'https://labs' )
-					_model.bsAppsURL = 'https://labs-apps.blue-swarm.com/';
-				else if ( url.split('-')[0] == 'https://sandbox' )
-					_model.bsAppsURL = 'https://sandbox-apps.blue-swarm.com/';
-				else
-					_model.bsAppsURL = 'https://apps.blue-swarm.com/';
-				
+					
+				// initialise fragment reading once all the appropriate URLs are in place
+				initSwfAddress();						
 			} 
 			else
 			{
@@ -110,7 +103,7 @@ package com.enilsson.elephanttrakker.commands
 					Alert.show("please create a \"sandbox_config.xml\" for local sandbox testing!","File Error");
 				});
 			}
-			
+		
 		}
 
 
@@ -122,6 +115,8 @@ package com.enilsson.elephanttrakker.commands
 			var xml:XML = new XML(event.currentTarget.data);
 
     		_model.authURL 			= xml.authURL;
+    		_model.siteURL 			= xml.siteURL;
+    		_model.bsAppsURL 		= xml.appsURL;
     		_model.appInstanceID 	= xml.appInstanceID;
     		_model.appName 			= xml.appName;
     		_model.appLogo 			= xml.appLogo;
@@ -130,14 +125,9 @@ package com.enilsson.elephanttrakker.commands
     		_model.orgURL 			= xml.orgURL;
     		
     		_model.debug			= xml.debug == 'true' ? true : false;
-    		
-			var url:String = _model.authURL;
-			if ( url.split('-')[0] == 'https://labs' )
-				_model.bsAppsURL = 'https://labs-apps.blue-swarm.com/';
-			else if ( url.split('-')[0] == 'https://sandbox' )
-				_model.bsAppsURL = 'https://sandbox-apps.blue-swarm.com/';
-			else
-				_model.bsAppsURL = 'https://apps.blue-swarm.com/';
+				
+			// initialise fragment reading once all the appropriate URLs are in place
+			initSwfAddress();					
 		}
 		
 		

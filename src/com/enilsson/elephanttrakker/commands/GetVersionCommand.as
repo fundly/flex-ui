@@ -8,11 +8,14 @@ package com.enilsson.elephanttrakker.commands
 	import com.enilsson.elephanttrakker.models.ETModelLocator;
 	import com.enilsson.elephanttrakker.views.popups.update.UpdateAvailableWindow;
 	
+	import mx.core.Application;
 	import mx.logging.ILogger;
 	import mx.logging.Log;
 	import mx.rpc.AsyncToken;
 	import mx.rpc.IResponder;
 	import mx.utils.ObjectUtil;
+	
+	import org.osflash.thunderbolt.Logger;
 	
 	public class GetVersionCommand extends SequenceCommand implements ICommand, IResponder
 	{
@@ -25,6 +28,8 @@ package com.enilsson.elephanttrakker.commands
 			var e : GetVersionEvent = event as GetVersionEvent;
 			if(e.nextEvent)
 				this.nextEvent = e.nextEvent;
+				
+			var a:Application
 			
 			var token : AsyncToken = ServiceLocator.getInstance().getHTTPService("versionService").send();
 			token.addResponder(this);

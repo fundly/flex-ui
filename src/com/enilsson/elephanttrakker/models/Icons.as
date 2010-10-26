@@ -8,7 +8,8 @@ package com.enilsson.elephanttrakker.models
 		[Embed(source="/assets/images/warning.png")] 
 		[Bindable] public var alert:Class;
 
-		[Embed(source="/assets/images/logos/BlueSwarm_icon_small.png")]
+		/* [Embed(source="/assets/images/logos/BlueSwarm_icon_small.png")] */
+		[Embed(source="/assets/images/fundly_skin/favicon.png")]
 		[Bindable] public var BlueSwarmSmall:Class;								
 		
 		[Embed(source="/assets/images/new_icons/nav/telephone.png")]						
