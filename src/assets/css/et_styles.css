@@ -8,7 +8,7 @@ Application {
 	backgroundImage: Embed(source="../images/qcm2_body_bg.png") repeat-y center top;
 	backgroundColor: #13162f;
  */
- 	backgroundGradientColors: #999, #ccc;
+ 	backgroundGradientColors: #ccc, #fff;
  	fontFamily: appFont;
 	fontSize:12;
 	color:#333333;
