@@ -12,8 +12,8 @@
 	<mx:Image source="{Icons.BLUE_SWARM_SMALL}" 
 		width="36" 
 		bottom="2" right="4"
-		toolTip="Visit BlueSwarm!"
-		click="navigateToURL(new URLRequest('http://www.blue-swarm.com/'),'blank')" 
+		toolTip="Visit Fundly!"
+		click="navigateToURL(new URLRequest('http://www.fundly.com/'),'blank')" 
 		useHandCursor="true" buttonMode="true" 
 		/>
 		

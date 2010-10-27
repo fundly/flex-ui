@@ -18,7 +18,8 @@ package com.enilsson.elephantadmin.models
 		[Embed(source="/assets/images/logos/BlueSwarm_icon.png")]
 		public static const BLUE_SWARM:Class;
 
-		[Embed(source="/assets/images/logos/BlueSwarm_icon_small.png")]
+		/* [Embed(source="/assets/images/logos/BlueSwarm_icon_small.png")] */
+		[Embed(source="/assets/images/fundly_skin/favicon.png")]
 		public static const BLUE_SWARM_SMALL:Class;
 		
 		[Embed(source="/assets/images/new_icons/nav/telephone.png")]

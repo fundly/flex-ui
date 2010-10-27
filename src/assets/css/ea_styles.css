@@ -224,7 +224,7 @@ HoverComboBox.comboBoxList {
 
 /*--- Footer Style ---*/
 .header {
-	backgroundImage: Embed(source="../images/header.png");
+	backgroundImage: Embed(source="../images/fundly_skin/header.png");
 	backgroundSize: "100%";
 	borderThickess: 1;
 	borderColor:#999999;

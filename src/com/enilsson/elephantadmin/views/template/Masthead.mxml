@@ -37,7 +37,7 @@
 		x="{orgLogo.x}" />
 
 	<mx:Canvas id="appLogoBox"
-		bottom="20" right="25">
+		bottom="15" right="25">
 		<mx:Image id="appLogo" 
 			source="{_model.appLogo}"
 			trustContent="{isRemote}"
@@ -50,10 +50,10 @@
 		width="{appLogoBox.width}" height="20" 
 		blurAmount="0" alpha="0.55" falloff="0.55"
 		y="{appLogoBox.height + appLogoBox.y + 2}"
-		x="{appLogoBox.x}" />    
+		x="{appLogoBox.x}" />
 	<mx:Label text="Admin Panel" 
 		styleName="adminPanel" height="8" 
-		bottom="{23 + appLogo.height}" right="23" />
+		bottom="{10 + appLogo.height}" right="23" />
 
 	<graphics:ActivityIndicator id="ajaxActivity" 
 		visible="{_model.dataLoading &amp;&amp; _model.screenState == EAModelLocator.MAIN_SCREEN}" 
