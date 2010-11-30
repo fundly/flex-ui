@@ -63,7 +63,7 @@
 				color="#222222" fontSize="12"
 				paddingTop="10" paddingBottom="10"
 				paddingLeft="10" paddingRight="10"
-				text="Watch video tutorials on how to maximise your BlueSwarm fundraising activities!" />
+				text="Click below to watch video tutorials on how to maximize your Fundly fundraising potential." />
 			<mx:Canvas width="100%">
 				<mx:Image click="goToVideos()"
 					horizontalCenter="0"
